@@ -80,7 +80,7 @@ public class pending_return extends Fragment {
     List<String> not_sent_sms_list=new ArrayList<>();
     List<String> keys_selected=new ArrayList<>();
     List<String> keys_copy_selected_phone=new ArrayList<>();
-
+    DatabaseReference reference;
     NeumorphButton join;
     List<String> case_data_list=new ArrayList<>();
     List<String> case_data_list_filter=new ArrayList<>();
@@ -124,6 +124,7 @@ public class pending_return extends Fragment {
         }
 
         //Initialize Database
+        reference = FirebaseDatabase.getInstance().getReference().child("data");
         user_ref=FirebaseDatabase.getInstance().getReference().child("users");
         phone_numbers_ref=FirebaseDatabase.getInstance().getReference().child("Phone numbers");
         onClickInterface = position -> {
@@ -281,17 +282,6 @@ public class pending_return extends Fragment {
                         station_name_list.add(station_name);
                         keys_selected.add(added_list.get(h));
 
-                        if (!snapshot.child(added_list.get(h)).child("reminded").exists()) {
-                            DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("data");
-                            reference.child(added_list.get(h)).child("reminded").setValue("once");
-                            Calendar cal = Calendar.getInstance();
-                            cal.add(Calendar.DAY_OF_MONTH, 4);
-                           /* SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
-                            reference.child(added_list.get(h)).child("date_of_alert").setValue(simpleDateFormat.format(cal.getTime()) + "");*/
-                        } else if (Objects.equals(snapshot.child(added_list.get(h)).child("reminded").getValue(String.class), "once")) {
-                            DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("data");
-                            reference.child(added_list.get(h)).child("reminded").setValue("twice");
-                        }
                     }
                     Log.e("district_name_list = ", district_name_list + "");
                     Log.e("station_name_list = ", station_name_list + "");
@@ -376,11 +366,6 @@ public class pending_return extends Fragment {
 
                 //TODO :Sent to next section.
                 Log.e("number does not exist = ",not_sent_sms_list+"");
-                Log.e("keys copy selected phone = ",keys_copy_selected_phone+"");
-
-                getContextNullSafety().getSharedPreferences("saving_RM_pending_return_not_noti",Context.MODE_PRIVATE).edit()
-                        .putString("RM_pending_return_list",keys_copy_selected_phone+"").apply();
-
                 getContextNullSafety().getSharedPreferences("saving_RM_pending_return_not_sms",Context.MODE_PRIVATE).edit()
                         .putString("RM_pending_return_list",not_sent_sms_list+"").apply();
 
@@ -403,6 +388,7 @@ public class pending_return extends Fragment {
                     if(phone_numbers.contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("phone").getValue(String.class)).substring(3))){
                         int index=phone_numbers.indexOf(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("phone").getValue(String.class)).substring(3));
                         String body=extract_data(index);
+                        reference.child(keys_copy_selected_phone.get(index)).child("reminded").setValue("once");
                         keys_copy_selected_phone.remove(index);
                         for(DataSnapshot dd:snapshot.child(ds.getKey()).child("token").getChildren()){
                             String token=snapshot.child(ds.getKey()).child("token").child(Objects.requireNonNull(dd.getKey())).getValue(String.class);
