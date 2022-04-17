@@ -342,6 +342,7 @@ public class today extends Fragment {
                 for(DataSnapshot ds:snapshot.getChildren()){
                     if(phone_numbers.contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("phone").getValue(String.class)).substring(3))){
                         int index=phone_numbers.indexOf(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("phone").getValue(String.class)).substring(3));
+                        reference.child(keys_copy_selected_phone.get(index)).child("reminded").setValue("once");
                         String body=extract_data(index);
                         ArrayList<String> list=sms.divideMessage(body);
                         for(String number : phone_numbers) {
