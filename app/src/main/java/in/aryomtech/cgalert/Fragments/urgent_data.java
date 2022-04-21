@@ -381,7 +381,6 @@ public class urgent_data extends Fragment {
                         int index=phone_numbers.indexOf(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("phone").getValue(String.class)).substring(3));
                         String body=extract_data(index);
                         reference = FirebaseDatabase.getInstance().getReference().child("data");
-                        keys_copy_selected_phone.remove(index);
                         if(snapshot.child(ds.getKey()).child("token").exists()) {
                             for (DataSnapshot dd : snapshot.child(ds.getKey()).child("token").getChildren()) {
                                 String token = snapshot.child(ds.getKey()).child("token").child(Objects.requireNonNull(dd.getKey())).getValue(String.class);

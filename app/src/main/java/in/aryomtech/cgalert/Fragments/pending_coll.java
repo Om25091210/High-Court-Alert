@@ -379,7 +379,6 @@ public class pending_coll extends Fragment {
                         int index=phone_numbers.indexOf(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("phone").getValue(String.class)).substring(3));
                         String body=extract_data(index);
                         reference.child(keys_copy_selected_phone.get(index)).child("reminded").setValue("once");
-                        keys_copy_selected_phone.remove(index);
                         if(snapshot.child(ds.getKey()).child("token").exists()) {
                             for (DataSnapshot dd : snapshot.child(ds.getKey()).child("token").getChildren()) {
                                 String token = snapshot.child(ds.getKey()).child("token").child(Objects.requireNonNull(dd.getKey())).getValue(String.class);
