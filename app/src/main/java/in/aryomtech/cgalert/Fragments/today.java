@@ -82,6 +82,7 @@ public class today extends Fragment {
     DatabaseReference reference;
     Excel_Adapter excel_adapter;
     DatabaseReference phone_numbers_ref;
+    List<String> noti_keys_copy_selected_phone=new ArrayList<>();
     ArrayList<String> added_list;
     NeumorphButton join;
     Dialog dialog,dialog1;
@@ -366,6 +367,7 @@ public class today extends Fragment {
     }
 
     private void send_notification(List<String> phone_numbers) {
+        noti_keys_copy_selected_phone.clear();
         user_ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -375,21 +377,26 @@ public class today extends Fragment {
                         String body=extract_data(index);
                         reference.child(keys_copy_selected_phone.get(index)).child("reminded").setValue("once");
                         keys_copy_selected_phone.remove(index);
-                        for(DataSnapshot dd:snapshot.child(ds.getKey()).child("token").getChildren()){
-                            String token=snapshot.child(ds.getKey()).child("token").child(Objects.requireNonNull(dd.getKey())).getValue(String.class);
-                            if(token!=null) {
-                                Specific specific=new Specific();
-                                specific.noti("High Court Alert", body, token);
+                        if(snapshot.child(ds.getKey()).child("token").exists()) {
+                            for (DataSnapshot dd : snapshot.child(ds.getKey()).child("token").getChildren()) {
+                                String token = snapshot.child(ds.getKey()).child("token").child(Objects.requireNonNull(dd.getKey())).getValue(String.class);
+                                if (token != null) {
+                                    Specific specific = new Specific();
+                                    specific.noti("High Court Alert", body, token);
+                                }
                             }
+                        }
+                        else{
+                            noti_keys_copy_selected_phone.add(keys_copy_selected_phone.get(index));
                         }
                     }
                 }
                 //TODO :Sent to next section.
                 Log.e("number does not exist = ",not_sent_sms_list+"");
-                Log.e("keys copy selected phone = ",keys_copy_selected_phone+"");
+                Log.e("keys copy selected phone = ",noti_keys_copy_selected_phone+"");
 
                 getContextNullSafety().getSharedPreferences("saving_RM_today_not_noti",Context.MODE_PRIVATE).edit()
-                        .putString("RM_today_list",keys_copy_selected_phone+"").apply();
+                        .putString("RM_today_list",noti_keys_copy_selected_phone+"").apply();
 
                 getContextNullSafety().getSharedPreferences("saving_RM_today_not_sms",Context.MODE_PRIVATE).edit()
                         .putString("RM_today_list",not_sent_sms_list+"").apply();
