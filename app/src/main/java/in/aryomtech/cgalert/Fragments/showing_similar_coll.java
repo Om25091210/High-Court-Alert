@@ -385,9 +385,7 @@ public class showing_similar_coll extends Fragment {
                         reference.child(keys_copy_selected_phone.get(index)).child("reminded").setValue("once");
                         String body=extract_data(index);
                         ArrayList<String> list=sms.divideMessage(body);
-                        for(String number : phone_numbers) {
-                            sms.sendMultipartTextMessage(number, null, list, null, null);
-                        }
+                        sms.sendMultipartTextMessage(phone_numbers.get(index), null, list, null, null);
                     }
                 }
                 //TODO :Sent to next section.
