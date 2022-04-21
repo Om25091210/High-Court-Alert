@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import in.aryomtech.cgalert.Fragments.model.Excel_data;
 import in.aryomtech.cgalert.R;
@@ -92,10 +93,10 @@ public class Excel_holder extends RecyclerView.ViewHolder {
             layout.setBackgroundResource(R.drawable.bg_card_red);
         else
             layout.setBackgroundResource(R.drawable.bg_card_white);
-        if(post.getType().equals("MCRC_RM_COLL")) {
+        if(post.getType().equals("RM CALL")) {
             type.setVisibility(View.VISIBLE);
             type.setImageResource(R.drawable.ic_submit_type);
-        }else if(post.getType().equals("MCRC _RM_ RETURN")) {
+        }else if(post.getType().equals("RM RETURN")) {
             type.setVisibility(View.VISIBLE);
             type.setImageResource(R.drawable.ic_return_type);
         }else
@@ -114,11 +115,11 @@ public class Excel_holder extends RecyclerView.ViewHolder {
 
     public static int nDays_Between_Dates(String date1) {
         Date date = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         String str = formatter.format(date);
         int diffDays = 0;
         try {
-            SimpleDateFormat dates = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat dates = new SimpleDateFormat("dd/MM/yyyy",Locale.getDefault());
             Date startDate = dates.parse(date1);
             Date endDate = dates.parse(str);
             long diff = endDate.getTime() - startDate.getTime();

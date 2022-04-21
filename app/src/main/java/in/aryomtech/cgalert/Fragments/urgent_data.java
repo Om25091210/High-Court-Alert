@@ -110,7 +110,7 @@ public class urgent_data extends Fragment {
         //Initialize Database
         reference = FirebaseDatabase.getInstance().getReference().child("data");
         user_ref=FirebaseDatabase.getInstance().getReference().child("users");
-        query = FirebaseDatabase.getInstance().getReference().child("data").orderByChild("type").equalTo("MCRC_RM_COLL");
+        query = FirebaseDatabase.getInstance().getReference().child("data").orderByChild("type").equalTo("RM CALL");
         phone_numbers_ref=FirebaseDatabase.getInstance().getReference().child("Phone numbers");
         getdata();
         isadmin=getContextNullSafety().getSharedPreferences("isAdmin_or_not",Context.MODE_PRIVATE)
@@ -461,7 +461,7 @@ public class urgent_data extends Fragment {
                 }
             }
         }
-        if(type.equals("MCRC _RM_ RETURN")){
+        if(type.equals("RM RETURN")){
             String current=formatter.format(date);
             return "हाईकोर्ट अलर्ट:-डायरी वापसी"+"\nदिनाँक:- "+current+" \n"
                     +"\n"+C+"\n"+D+" No. "+E+"/"+G+"\n"

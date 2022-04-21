@@ -4,13 +4,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.telephony.SmsManager;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -23,6 +16,11 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -40,7 +38,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -134,7 +131,7 @@ public class showing_similar_return extends Fragment {
         //Initialize Database
         reference = FirebaseDatabase.getInstance().getReference().child("data");
         user_ref=FirebaseDatabase.getInstance().getReference().child("users");
-        query = FirebaseDatabase.getInstance().getReference().child("data").orderByChild("type").equalTo("MCRC _RM_ RETURN");
+        query = FirebaseDatabase.getInstance().getReference().child("data").orderByChild("type").equalTo("RM RETURN");
         phone_numbers_ref=FirebaseDatabase.getInstance().getReference().child("Phone numbers");
         onClickInterface = position -> {
             if(search.getText().toString().equals("")) {
@@ -525,7 +522,7 @@ public class showing_similar_return extends Fragment {
                 }
             }
         }
-        if(type.equals("MCRC _RM_ RETURN")){
+        if(type.equals("RM RETURN")){
             String current=formatter.format(date);
             return "हाईकोर्ट अलर्ट:-डायरी वापसी"+"\nदिनाँक:- "+current+" \n"
                     +"\n"+C+"\n"+D+" No. "+E+"/"+G+"\n"

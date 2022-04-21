@@ -101,7 +101,7 @@ public class p_mcrc_rm_coll extends Fragment {
                 .getString("the_station_name2003","");
 
         //Initialize Database
-        query = FirebaseDatabase.getInstance().getReference().child("data").orderByChild("type").equalTo("MCRC_RM_COLL");
+        query = FirebaseDatabase.getInstance().getReference().child("data").orderByChild("type").equalTo("RM CALL");
         phone_numbers_ref=FirebaseDatabase.getInstance().getReference().child("Phone numbers");
         getdata();
 

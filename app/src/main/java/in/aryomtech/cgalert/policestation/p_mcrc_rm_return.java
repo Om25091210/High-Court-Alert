@@ -98,7 +98,7 @@ public class p_mcrc_rm_return extends Fragment {
             mRecyclerView.setAdapter(excel_adapter);
         excel_adapter.notifyDataSetChanged();
         //Initialize Database
-        query = FirebaseDatabase.getInstance().getReference().child("data").orderByChild("type").equalTo("MCRC _RM_ RETURN");
+        query = FirebaseDatabase.getInstance().getReference().child("data").orderByChild("type").equalTo("RM RETURN");
         phone_numbers_ref=FirebaseDatabase.getInstance().getReference().child("Phone numbers");
         stat_name= getContextNullSafety().getSharedPreferences("station_name_K",Context.MODE_PRIVATE)
                 .getString("the_station_name2003","");

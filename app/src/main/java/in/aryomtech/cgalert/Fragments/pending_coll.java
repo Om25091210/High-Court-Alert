@@ -89,7 +89,7 @@ public class pending_coll extends Fragment {
         // Inflate the layout for this fragment
         view= inflater.inflate(R.layout.fragment_pending_coll, container, false);
         if (contextNullSafe == null) getContextNullSafety();
-        query_coll = FirebaseDatabase.getInstance().getReference().child("data").orderByChild("type").equalTo("MCRC_RM_COLL");
+        query_coll = FirebaseDatabase.getInstance().getReference().child("data").orderByChild("type").equalTo("RM CALL");
         //Hide the keyboard
         getActivity().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
@@ -485,7 +485,7 @@ public class pending_coll extends Fragment {
                 }
             }
         }
-        if(type.equals("MCRC _RM_ RETURN")){
+        if(type.equals("RM RETURN")){
             String current=formatter.format(date);
             return "हाईकोर्ट अलर्ट:-डायरी वापसी"+"\nदिनाँक:- "+current+" \n"
                     +"\n"+C+"\n"+D+" No. "+E+"/"+G+"\n"

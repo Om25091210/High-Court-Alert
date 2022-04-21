@@ -133,7 +133,7 @@ public class showing_similar_coll extends Fragment {
         //Initialize Database
         reference = FirebaseDatabase.getInstance().getReference().child("data");
         user_ref=FirebaseDatabase.getInstance().getReference().child("users");
-        query = FirebaseDatabase.getInstance().getReference().child("data").orderByChild("type").equalTo("MCRC_RM_COLL");
+        query = FirebaseDatabase.getInstance().getReference().child("data").orderByChild("type").equalTo("RM CALL");
         phone_numbers_ref=FirebaseDatabase.getInstance().getReference().child("Phone numbers");
         onClickInterface = position -> {
             if(search.getText().toString().equals("")) {
@@ -522,7 +522,7 @@ public class showing_similar_coll extends Fragment {
                 }
             }
         }
-        if(type.equals("MCRC _RM_ RETURN")){
+        if(type.equals("RM RETURN")){
             String current=formatter.format(date);
             return "हाईकोर्ट अलर्ट:-डायरी वापसी"+"\nदिनाँक:- "+current+" \n"
                     +"\n"+C+"\n"+D+" No. "+E+"/"+G+"\n"

@@ -78,14 +78,14 @@ public class Frag_p_Home extends Fragment {
         coll_text=view.findViewById(R.id.textView6);
         text_return=view.findViewById(R.id.textView8);
 
-        query_coll = FirebaseDatabase.getInstance().getReference().child("data").orderByChild("type").equalTo("MCRC_RM_COLL");
-        query_return = FirebaseDatabase.getInstance().getReference().child("data").orderByChild("type").equalTo("MCRC _RM_ RETURN");
+        query_coll = FirebaseDatabase.getInstance().getReference().child("data").orderByChild("type").equalTo("RM CALL");
+        query_return = FirebaseDatabase.getInstance().getReference().child("data").orderByChild("type").equalTo("RM RETURN");
         FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
                 ((FragmentActivity)getContextNullSafety()).getSupportFragmentManager(), FragmentPagerItems.with(getContextNullSafety())
                 .add("Urgent",urgent_data.class)
-                .add("MCRC.RM.COLLECT", p_mcrc_rm_coll.class)
-                .add("MCRC.RM.RETURN", p_mcrc_rm_return.class)
-                .add("Similar Collection", p_similar_collection.class)
+                .add("RM CALL", p_mcrc_rm_coll.class)
+                .add("RM RETURN", p_mcrc_rm_return.class)
+                .add("Similar CALL", p_similar_collection.class)
                 .add("Similar Return", p_similar_return.class)
                 .create());
 

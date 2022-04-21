@@ -39,7 +39,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
-import in.aryomtech.cgalert.Frag_Home;
 import in.aryomtech.cgalert.Login;
 import in.aryomtech.cgalert.R;
 import in.aryomtech.cgalert.Splash;

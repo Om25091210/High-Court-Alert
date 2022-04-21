@@ -93,10 +93,10 @@ public class Return_Adapter extends RecyclerView.Adapter<Return_Adapter.ViewHold
             holder.layout.setBackgroundResource(R.drawable.bg_card_red);
         else
             holder.layout.setBackgroundResource(R.drawable.bg_card_white);
-        if (list.get(position).getType().equals("MCRC_RM_COLL")) {
+        if (list.get(position).getType().equals("RM CALL")) {
             holder.type.setVisibility(View.VISIBLE);
             holder.type.setImageResource(R.drawable.ic_submit_type);
-        } else if (list.get(position).getType().equals("MCRC _RM_ RETURN")) {
+        } else if (list.get(position).getType().equals("RM RETURN")) {
             holder.type.setVisibility(View.VISIBLE);
             holder.type.setImageResource(R.drawable.ic_return_type);
         } else

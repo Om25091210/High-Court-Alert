@@ -74,7 +74,7 @@ public class Similar_Return extends Fragment {
         mRecyclerView.setLayoutManager(mManager);
         //adapter
         //Initialize Database
-        query = FirebaseDatabase.getInstance().getReference().child("data").orderByChild("type").equalTo("MCRC _RM_ RETURN");
+        query = FirebaseDatabase.getInstance().getReference().child("data").orderByChild("type").equalTo("RM RETURN");
         getdata();
         //Set listener to SwipeRefreshLayout for refresh action
         mSwipeRefreshLayout.setOnRefreshListener(this::getdata);
