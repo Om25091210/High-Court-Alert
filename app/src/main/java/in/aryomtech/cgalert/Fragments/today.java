@@ -527,6 +527,7 @@ public class today extends Fragment {
             mRecyclerView.setAdapter(excel_adapter);
     }
     private void getdata() {
+        select_all.setChecked(false);
         Date dNow = new Date( );
         SimpleDateFormat ft =
                 new SimpleDateFormat ("dd.MM.yyyy",Locale.getDefault());
