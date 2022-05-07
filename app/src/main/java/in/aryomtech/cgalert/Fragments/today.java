@@ -542,7 +542,7 @@ public class today extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 excel_data.clear();
                 for(DataSnapshot ds:snapshot.getChildren()){
-                   if(cr_dt.equals(snapshot.child(ds.getKey()).child("L").getValue(String.class))){
+                   if(cr_dt.equals(snapshot.child(ds.getKey()).child("K").getValue(String.class))){
                        excel_data.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Excel_data.class));
                    }
                 }
