@@ -536,6 +536,7 @@ public class today extends Fragment {
         SimpleDateFormat ft =
                 new SimpleDateFormat ("dd.MM.yyyy",Locale.getDefault());
         String cr_dt=ft.format(dNow);
+        Log.e("date",cr_dt);
         mSwipeRefreshLayout.setRefreshing(true);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

@@ -37,6 +37,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -551,7 +552,20 @@ public class urgent_data extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 excel_data.clear();
                 for(DataSnapshot ds:snapshot.getChildren()){
-                    excel_data.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Excel_data.class));
+                    try {
+                        Date dNow = new Date( );
+                        SimpleDateFormat ft =
+                                new SimpleDateFormat ("dd.MM.yyyy",Locale.getDefault());
+
+                        Date list = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(snapshot.child(ds.getKey()).child("L").getValue(String.class) + "");
+                        Date current = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(ft.format(dNow));
+                        Log.e("date",list.before(current)+"");
+                        if(list.before(current)){
+                            excel_data.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Excel_data.class));
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 mSwipeRefreshLayout.setRefreshing(false);
