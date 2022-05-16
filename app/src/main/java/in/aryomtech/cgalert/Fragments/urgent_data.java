@@ -37,6 +37,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -78,6 +79,7 @@ public class urgent_data extends Fragment {
     NeumorphButton join;
     boolean isadmin=false;
     Dialog dialog,dialog1;
+    List<String> noti_keys_copy_selected_phone=new ArrayList<>();
     DatabaseReference reference;
     TextView message, notification,phone_sms;
     private onClickInterface onClickInterface;
@@ -349,9 +351,7 @@ public class urgent_data extends Fragment {
                         reference.child(keys_copy_selected_phone.get(index)).child("reminded").setValue("once");
                         String body=extract_data(index);
                         ArrayList<String> list=sms.divideMessage(body);
-                        for(String number : phone_numbers) {
-                            sms.sendMultipartTextMessage(number, null, list, null, null);
-                        }
+                        sms.sendMultipartTextMessage(phone_numbers.get(index), null, list, null, null);
                     }
                 }
                 //TODO :Sent to next section.
@@ -372,6 +372,7 @@ public class urgent_data extends Fragment {
     }
 
     private void send_notification(List<String> phone_numbers) {
+        noti_keys_copy_selected_phone.clear();
         user_ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -381,24 +382,28 @@ public class urgent_data extends Fragment {
                         int index=phone_numbers.indexOf(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("phone").getValue(String.class)).substring(3));
                         String body=extract_data(index);
                         reference = FirebaseDatabase.getInstance().getReference().child("data");
-                        keys_copy_selected_phone.remove(index);
-                        for(DataSnapshot dd:snapshot.child(ds.getKey()).child("token").getChildren()){
-                            String token=snapshot.child(ds.getKey()).child("token").child(Objects.requireNonNull(dd.getKey())).getValue(String.class);
-                            if(token!=null) {
-                                if(!token.equals("")) {
-                                    Specific specific = new Specific();
-                                    specific.noti("High Court Alert", body, token);
+                        if(snapshot.child(ds.getKey()).child("token").exists()) {
+                            for (DataSnapshot dd : snapshot.child(ds.getKey()).child("token").getChildren()) {
+                                String token = snapshot.child(ds.getKey()).child("token").child(Objects.requireNonNull(dd.getKey())).getValue(String.class);
+                                if (token != null) {
+                                    if (!token.equals("")) {
+                                        Specific specific = new Specific();
+                                        specific.noti("High Court Alert", body, token);
+                                    }
                                 }
                             }
+                        }
+                        else{
+                            noti_keys_copy_selected_phone.add(keys_copy_selected_phone.get(index));
                         }
                     }
                 }
                 //TODO :Sent to next section.
                 Log.e("number does not exist = ",not_sent_sms_list+"");
-                Log.e("keys copy selected phone = ",keys_copy_selected_phone+"");
+                Log.e("keys copy selected phone = ",noti_keys_copy_selected_phone+"");
 
                 getContextNullSafety().getSharedPreferences("saving_RM_urgent_not_noti",Context.MODE_PRIVATE).edit()
-                        .putString("RM_urgent_list",keys_copy_selected_phone+"").apply();
+                        .putString("RM_urgent_list",noti_keys_copy_selected_phone+"").apply();
 
                 getContextNullSafety().getSharedPreferences("saving_RM_urgent_not_sms",Context.MODE_PRIVATE).edit()
                         .putString("RM_urgent_list",not_sent_sms_list+"").apply();
@@ -547,7 +552,20 @@ public class urgent_data extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 excel_data.clear();
                 for(DataSnapshot ds:snapshot.getChildren()){
-                    excel_data.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Excel_data.class));
+                    try {
+                        Date dNow = new Date( );
+                        SimpleDateFormat ft =
+                                new SimpleDateFormat ("dd.MM.yyyy",Locale.getDefault());
+
+                        Date list = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(snapshot.child(ds.getKey()).child("L").getValue(String.class) + "");
+                        Date current = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(ft.format(dNow));
+                        Log.e("date",list.before(current)+"");
+                        if(list.before(current)){
+                            excel_data.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Excel_data.class));
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 mSwipeRefreshLayout.setRefreshing(false);

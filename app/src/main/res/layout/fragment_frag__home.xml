@@ -42,21 +42,47 @@
                     android:id="@+id/roboto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="55dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/fredokaregular"
+                        android:text="@string/welcome"
+                        android:textColor="@color/use_orange"
+                        android:textSize="@dimen/_21sdp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/textView4"
+                        android:layout_marginTop="2dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/quicksand_medium"
+                        android:text="@string/check_today_s_update"
+                        android:textColor="@color/use_light_blue"
+                        android:textSize="@dimen/_14sdp"
+                        app:layout_constraintStart_toStartOf="@+id/textView3"
+                        app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
                     <LinearLayout
                         android:id="@+id/linearLayout"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_marginStart="5dp"
+                        android:layout_marginTop="10dp"
                         android:layout_marginEnd="5dp"
                         android:orientation="horizontal"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
+                        app:layout_constraintTop_toBottomOf="@+id/textView4">
 
                         <soup.neumorphism.NeumorphCardView
                             android:id="@+id/blue"

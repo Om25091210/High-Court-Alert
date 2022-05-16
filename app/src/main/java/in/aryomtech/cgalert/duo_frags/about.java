@@ -85,6 +85,9 @@ public class about extends Fragment {
                 if (tab.getPosition() == mList.size()-1) {
                     loaddLastScreen();
                 }
+                else{
+                    btnNext.setVisibility(View.VISIBLE);
+                }
             }
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
@@ -103,7 +106,7 @@ public class about extends Fragment {
     // show the GETSTARTED Button and hide the indicator and the next button
     private void loaddLastScreen() {
         btnNext.setVisibility(View.INVISIBLE);
-        tabIndicator.setVisibility(View.INVISIBLE);
+       // tabIndicator.setVisibility(View.INVISIBLE);
         // TODO : ADD an animation the getstarted button
         // setup animation
     }

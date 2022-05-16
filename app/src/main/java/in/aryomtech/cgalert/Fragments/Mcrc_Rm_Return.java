@@ -69,6 +69,7 @@ public class Mcrc_Rm_Return extends Fragment {
     List<String> not_sent_sms_list=new ArrayList<>();
     List<String> keys_selected=new ArrayList<>();
     List<String> keys_copy_selected_phone=new ArrayList<>();
+    List<String> noti_keys_copy_selected_phone=new ArrayList<>();
 
     DatabaseReference phone_numbers_ref;
     List<Excel_data> mylist=new ArrayList<>();
@@ -114,7 +115,7 @@ public class Mcrc_Rm_Return extends Fragment {
         //Initialize Database
         reference = FirebaseDatabase.getInstance().getReference().child("data");
         user_ref=FirebaseDatabase.getInstance().getReference().child("users");
-        query = FirebaseDatabase.getInstance().getReference().child("data").orderByChild("type").equalTo("RM CALL");
+        query = FirebaseDatabase.getInstance().getReference().child("data").orderByChild("type").equalTo("RM RETURN");
         phone_numbers_ref=FirebaseDatabase.getInstance().getReference().child("Phone numbers");
         getdata();
 
@@ -411,9 +412,7 @@ public class Mcrc_Rm_Return extends Fragment {
                         reference.child(keys_copy_selected_phone.get(index)).child("reminded").setValue("once");
                         String body=extract_data(index);
                         ArrayList<String> list=sms.divideMessage(body);
-                        for(String number : phone_numbers) {
-                            sms.sendMultipartTextMessage(number, null, list, null, null);
-                        }
+                        sms.sendMultipartTextMessage(phone_numbers.get(index), null, list, null, null);
                     }
                 }
                 //TODO :Sent to next section.
@@ -434,6 +433,7 @@ public class Mcrc_Rm_Return extends Fragment {
     }
 
     private void send_notification(List<String> phone_numbers) {
+        noti_keys_copy_selected_phone.clear();
         user_ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -442,22 +442,26 @@ public class Mcrc_Rm_Return extends Fragment {
                         int index=phone_numbers.indexOf(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("phone").getValue(String.class)).substring(3));
                         String body=extract_data(index);
                         reference.child(keys_copy_selected_phone.get(index)).child("reminded").setValue("once");
-                        keys_copy_selected_phone.remove(index);
-                        for(DataSnapshot dd:snapshot.child(ds.getKey()).child("token").getChildren()){
-                            String token=snapshot.child(ds.getKey()).child("token").child(Objects.requireNonNull(dd.getKey())).getValue(String.class);
-                            if(token!=null) {
-                                Specific specific=new Specific();
-                                specific.noti("High Court Alert", body, token);
+                        if(snapshot.child(ds.getKey()).child("token").exists()) {
+                            for (DataSnapshot dd : snapshot.child(ds.getKey()).child("token").getChildren()) {
+                                String token = snapshot.child(ds.getKey()).child("token").child(Objects.requireNonNull(dd.getKey())).getValue(String.class);
+                                if (token != null) {
+                                    Specific specific = new Specific();
+                                    specific.noti("High Court Alert", body, token);
+                                }
                             }
+                        }
+                        else{
+                            noti_keys_copy_selected_phone.add(keys_copy_selected_phone.get(index));
                         }
                     }
                 }
                 //TODO :Sent to next section.
                 Log.e("number does not exist = ",not_sent_sms_list+"");
-                Log.e("keys copy selected phone = ",keys_copy_selected_phone+"");
+                Log.e("keys copy selected phone = ",noti_keys_copy_selected_phone+"");
 
                 getContextNullSafety().getSharedPreferences("saving_RM_return_not_noti",Context.MODE_PRIVATE).edit()
-                        .putString("RM_return_list",keys_copy_selected_phone+"").apply();
+                        .putString("RM_return_list",noti_keys_copy_selected_phone+"").apply();
 
                 getContextNullSafety().getSharedPreferences("saving_RM_return_not_sms",Context.MODE_PRIVATE).edit()
                         .putString("RM_return_list",not_sent_sms_list+"").apply();

@@ -57,6 +57,29 @@
     <string name="nikhil_verma">Nikhil Verma</string>
     <string name="android_developer">Android Developer</string>
     <string name="about_developers">About Developers</string>
+    <string name="form">Form</string>
+    <string name="district_name">District name</string>
+    <string name="district">District</string>
+    <string name="police_station_">Police Station</string>
+    <string name="police_station_name">Police Station name</string>
+    <string name="crime_number">Crime Number</string>
+    <string name="crime_no_">Crime No.</string>
+    <string name="crime_year">Crime Year</string>
+    <string name="year_of_crime">Year of crime</string>
+    <string name="case_type_">Case Type</string>
+    <string name="case_no_">Case No.</string>
+    <string name="case_year">Case Year</string>
+    <string name="year_of_case">Year of case</string>
+    <string name="criminal_name">Criminal Name</string>
+    <string name="criminal_name_">Criminal name</string>
+    <string name="rm_date_">RM Date</string>
+    <string name="tap_to_select">Tap to Select</string>
+    <string name="before_date">Before Date</string>
+    <string name="diary_receiving_date">Diary Receiving Date</string>
+    <string name="rm_call">RM Call</string>
+    <string name="rm_return">RM Return</string>
+    <string name="submit">Submit</string>
+    <string name="download">Download</string>
 
     <array name="menuOptions">
         <item>Home</item>
