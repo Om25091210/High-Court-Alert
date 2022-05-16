@@ -286,7 +286,9 @@ public class form extends Fragment {
                         .show();
             }
         });
-        getFileUrl();
+        view.findViewById(R.id.download_txt).setOnClickListener(v->{
+            getFileUrl();
+        });
         return view;
     }
 
