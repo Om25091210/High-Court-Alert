@@ -293,6 +293,12 @@ public class form extends Fragment {
     }
 
     private void push_to_database_and_excel(String sheet) {
+        ProgressDialog  pd = new ProgressDialog(getContext());
+        pd.setTitle("Uploading Data...");
+        pd.setMessage("Please Wait!");
+        pd.setIndeterminate(true);
+        pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pd.show();
         String pushkey=rm_Date
                        +policeStation.getText().toString().trim()
                        +ac_district.getText().toString().trim()
@@ -323,12 +329,20 @@ public class form extends Fragment {
 
         reference.child(pushkey).setValue(data_packet);
 
+        pd.dismiss();
     }
     private void getFileUrl(){
+        ProgressDialog  pd = new ProgressDialog(getContext());
+        pd.setTitle("Downloading File");
+        pd.setMessage("Please Wait...");
+        pd.setIndeterminate(true);
+        pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pd.show();
         StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("downloaded.xlsx");
         storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
             String url = uri.toString();
             downloadFile(getContext(), "downloaded", ".xlsx", DIRECTORY_PICTURES, url);
+            pd.dismiss();
         }).addOnFailureListener(e -> {
             Toast.makeText(getContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
         });
