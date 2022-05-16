@@ -39,6 +39,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import in.aryomtech.cgalert.Fragments.admin_room;
+import in.aryomtech.cgalert.Fragments.form;
 import in.aryomtech.cgalert.duo_frags.about;
 
 public class Home extends AppCompatActivity implements DuoMenuView.OnMenuClickListener{
@@ -57,7 +58,7 @@ public class Home extends AppCompatActivity implements DuoMenuView.OnMenuClickLi
     String DeviceToken;
 
     //admin
-    ImageView admin;
+    ImageView admin,entry;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +78,7 @@ public class Home extends AppCompatActivity implements DuoMenuView.OnMenuClickLi
         auth=FirebaseAuth.getInstance();
         user=auth.getCurrentUser();
         admin=findViewById(R.id.admin);
+        entry=findViewById(R.id.entry);
 
         mTitles = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.menuOptions)));
 
@@ -99,6 +101,14 @@ public class Home extends AppCompatActivity implements DuoMenuView.OnMenuClickLi
                     .beginTransaction()
                     .setCustomAnimations( R.anim.enter_from_right, R.anim.exit_to_left,R.anim.enter_from_left, R.anim.exit_to_right)
                     .add(R.id.drawer,new admin_room())
+                    .addToBackStack(null)
+                    .commit();
+        });
+        entry.setOnClickListener(v->{
+            Home.this.getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations( R.anim.enter_from_right, R.anim.exit_to_left,R.anim.enter_from_left, R.anim.exit_to_right)
+                    .add(R.id.drawer,new form())
                     .addToBackStack(null)
                     .commit();
         });

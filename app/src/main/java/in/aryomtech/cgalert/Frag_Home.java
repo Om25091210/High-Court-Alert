@@ -1,21 +1,21 @@
 package in.aryomtech.cgalert;
 
-import static android.content.Context.MODE_PRIVATE;
-
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.viewpager.widget.ViewPager;
-
-import android.util.Log;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager.widget.ViewPager;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,7 +27,6 @@ import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import in.aryomtech.cgalert.Fragments.Mcrc_Rm_Coll;
 import in.aryomtech.cgalert.Fragments.Mcrc_Rm_Return;
@@ -49,7 +48,7 @@ public class Frag_Home extends Fragment {
     long total_coll,total_return;
     Query query_coll,query_return;
     TextView coll_text,text_return;
-    DatabaseReference reference;
+    TextView welcome,check_todays;
     NeumorphCardView blue,back;
     private Context contextNullSafe;
     View view;
@@ -61,6 +60,22 @@ public class Frag_Home extends Fragment {
         view= inflater.inflate(R.layout.fragment_frag__home, container, false);
         if (contextNullSafe == null) getContextNullSafety();
 
+        welcome=view.findViewById(R.id.textView3);
+        check_todays=view.findViewById(R.id.textView4);
+        new Handler(Looper.myLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                offanimate(welcome);
+                offanimate(check_todays);
+                new Handler(Looper.myLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        welcome.setVisibility(View.GONE);
+                        check_todays.setVisibility(View.GONE);
+                    }
+                },500);
+            }
+        },3000);
         blue=view.findViewById(R.id.blue);
         back=view.findViewById(R.id.back);
         blue.setOnClickListener(v->{
@@ -105,7 +120,15 @@ public class Frag_Home extends Fragment {
 
         return view;
     }
-
+    void offanimate(View view){
+        ObjectAnimator move=ObjectAnimator.ofFloat(view, "translationX",-800f);
+        move.setDuration(1000);
+        ObjectAnimator alpha2= ObjectAnimator.ofFloat(view, "alpha",0);
+        alpha2.setDuration(500);
+        AnimatorSet animset=new AnimatorSet();
+        animset.play(alpha2).with(move);
+        animset.start();
+    }
     private void get_pending() {
         query_coll.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
