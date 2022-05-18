@@ -10,6 +10,7 @@
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/bg_card_white.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/bg_feed_home.xml" value="0.228125" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/bg_section.xml" value="0.228125" />
+        <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/bg_view.xml" value="0.193" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/border_color_focused.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/border_color_normal.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/button_profile_complete.xml" value="0.2246153846153846" />
@@ -38,12 +39,12 @@
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/layout_grp_bg.xml" value="0.228125" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/splash.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/stroke_bg.xml" value="0.228125" />
-        <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/activity_form.xml" value="0.20606884057971014" />
+        <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/activity_form.xml" value="0.21" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/activity_home.xml" value="0.22" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/activity_login.xml" value="0.22" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/activity_main.xml" value="0.21614583333333334" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/activity_navigation.xml" value="0.21197916666666666" />
-        <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/activity_phome.xml" value="0.12" />
+        <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/activity_phome.xml" value="0.25" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/activity_splash.xml" value="0.25" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/app_bar_navigation.xml" value="0.21197916666666666" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/card_admin.xml" value="0.33" />
@@ -86,7 +87,7 @@
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/message_dialog.xml" value="0.33" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/nav_header_navigation.xml" value="0.21197916666666666" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/notification_layout.xml" value="0.20878623188405798" />
-        <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/return_card_design.xml" value="0.18659420289855072" />
+        <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/return_card_design.xml" value="0.33" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/similar_layout.xml" value="0.33" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/similar_layout_2.xml" value="0.20244565217391305" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/temp.xml" value="0.13" />
