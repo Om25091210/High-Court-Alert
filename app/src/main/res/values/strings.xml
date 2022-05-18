@@ -80,6 +80,7 @@
     <string name="rm_return">RM Return</string>
     <string name="submit">Submit</string>
     <string name="download">Download</string>
+    <string name="view">View</string>
 
     <array name="menuOptions">
         <item>Home</item>

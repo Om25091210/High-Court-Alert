@@ -1,6 +1,7 @@
 package in.aryomtech.cgalert.Fragments.Adapter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.ParseException;
@@ -19,6 +21,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import in.aryomtech.cgalert.Fragments.form;
 import in.aryomtech.cgalert.Fragments.model.Excel_data;
 import in.aryomtech.cgalert.Fragments.onAgainClickInterface;
 import in.aryomtech.cgalert.Fragments.onClickInterface;
@@ -137,11 +140,48 @@ public class Return_Adapter extends RecyclerView.Adapter<Return_Adapter.ViewHold
                 // Either gone or invisible
             }
         });
+        holder.view.setOnClickListener(v->{
+            Excel_data excel_data=new Excel_data(
+                    list.get(position).getA()
+                    ,list.get(position).getB()
+                    ,list.get(position).getC()
+                    ,list.get(position).getD()
+                    ,list.get(position).getE()
+                    ,list.get(position).getF()
+                    ,list.get(position).getG()
+                    ,list.get(position).getH()
+                    ,list.get(position).getI()
+                    ,list.get(position).getJ()
+                    ,list.get(position).getK()
+                    ,list.get(position).getL()
+                    ,list.get(position).getM()
+                    ,list.get(position).getN()
+                    ,list.get(position).getDate()
+                    ,list.get(position).getType()
+                    ,list.get(position).getPushkey()
+                    ,list.get(position).getReminded()
+                    ,list.get(position).getDate_of_alert());
 
-        if(isadmin)
+            Bundle bundle=new Bundle();
+            bundle.putSerializable("excel_data_sending", excel_data);
+            form form=new form();
+            form.setArguments(bundle);
+            ((FragmentActivity) context).getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations( R.anim.enter_from_right, R.anim.exit_to_left,R.anim.enter_from_left, R.anim.exit_to_right)
+                    .add(R.id.drawer,form)
+                    .addToBackStack(null)
+                    .commit();
+
+        });
+        if(isadmin) {
             holder.add_button.setVisibility(View.VISIBLE);
-        else
+            holder.view.setVisibility(View.VISIBLE);
+        }
+        else {
             holder.add_button.setVisibility(View.GONE);
+            holder.view.setVisibility(View.GONE);
+        }
 
     }
     public static int nDays_Between_Dates(String date1) {
@@ -181,7 +221,7 @@ public class Return_Adapter extends RecyclerView.Adapter<Return_Adapter.ViewHold
     }
 
     protected static class ViewHolder extends RecyclerView.ViewHolder{
-        TextView textViewTitle,add_button;
+        TextView textViewTitle,add_button,view;
         TextView textViewBody;
         TextView Rm,mcrc,crime_no,case_no,pr_case_no,name,receiving_date;
         ConstraintLayout layout;
@@ -205,6 +245,7 @@ public class Return_Adapter extends RecyclerView.Adapter<Return_Adapter.ViewHold
             type = itemView.findViewById(R.id.type);
             name = itemView.findViewById(R.id.person_name);//
             receiving_date = itemView.findViewById(R.id.receiving_date);//
+            view = itemView.findViewById(R.id.view);//
         }
     }
 }

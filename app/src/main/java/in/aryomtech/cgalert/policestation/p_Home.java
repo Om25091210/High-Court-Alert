@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,9 +40,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
+import in.aryomtech.cgalert.Home;
 import in.aryomtech.cgalert.Login;
 import in.aryomtech.cgalert.R;
 import in.aryomtech.cgalert.Splash;
+import in.aryomtech.cgalert.about_dev;
 import in.aryomtech.cgalert.duo_frags.about;
 
 public class p_Home extends AppCompatActivity implements DuoMenuView.OnMenuClickListener{
@@ -59,7 +62,6 @@ public class p_Home extends AppCompatActivity implements DuoMenuView.OnMenuClick
     private ViewHolder mViewHolder;
     int upspeed;
     String DeviceToken;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -267,12 +269,12 @@ public class p_Home extends AppCompatActivity implements DuoMenuView.OnMenuClick
             mViewHolder.mDuoDrawerLayout.closeDrawer();
         }
         else if(position==3) {
-            /*Home.this.getSupportFragmentManager()
+            p_Home.this.getSupportFragmentManager()
                     .beginTransaction()
                     .setCustomAnimations( R.anim.enter_from_right, R.anim.exit_to_left,R.anim.enter_from_left, R.anim.exit_to_right)
-                    .add(R.id.drawer,new about_syno())
+                    .add(R.id.drawer,new about_dev())
                     .addToBackStack(null)
-                    .commit();*/
+                    .commit();
             mMenuAdapter.setViewSelected(0);
             mViewHolder.mDuoDrawerLayout.closeDrawer();
         }

@@ -10,6 +10,7 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -154,10 +155,14 @@ public class Home extends AppCompatActivity implements DuoMenuView.OnMenuClickLi
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 isadmin=snapshot.child(user.getPhoneNumber().substring(3)+"").exists();
                 if(isadmin){
+                    admin.setVisibility(View.VISIBLE);
+                    entry.setVisibility(View.VISIBLE);
                     getSharedPreferences("isAdmin_or_not",MODE_PRIVATE).edit()
                             .putBoolean("authorizing_admin",true).apply();
                 }
                 else{
+                    admin.setVisibility(View.GONE);
+                    entry.setVisibility(View.GONE);
                     getSharedPreferences("isAdmin_or_not",MODE_PRIVATE).edit()
                             .putBoolean("authorizing_admin",false).apply();
                 }

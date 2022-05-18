@@ -4,6 +4,7 @@ import static android.os.Environment.DIRECTORY_DOWNLOADS;
 import static android.os.Environment.DIRECTORY_PICTURES;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -11,6 +12,10 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +33,7 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
@@ -49,20 +55,24 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import in.aryomtech.cgalert.Fragments.model.Excel_data;
 import in.aryomtech.cgalert.R;
 
 public class form extends Fragment {
 
     View view;
-    TextView submit_txt;
+    TextView submit_txt,diary_re_txt;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     TextView rm,before,diary;
     int check_;
+    private Context contextNullSafe;
     EditText case_no_edt,name_edt,case_year_edt,crime_no_edt,crime_year_edt;
     CheckBox checkBox_RM_call,checkBox_RM_return;
     List<String> district,ps_list;
     String rm_Date,fd_dot;
     ConstraintLayout lay;
+    Dialog dialog1;
+    Excel_data excel_data;
     AutoCompleteTextView ac_district,policeStation,ac_caseType;
     DatabaseReference reference,reference_phone;
 
@@ -71,10 +81,15 @@ public class form extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view= inflater.inflate(R.layout.activity_form, container, false);
+        if (contextNullSafe == null) getContextNullSafety();
         district =new ArrayList<>();
         ps_list=new ArrayList<>();
+        if(getArguments()!=null){
+            excel_data= (Excel_data) getArguments().getSerializable("excel_data_sending");
+        }
 
         ac_district = view.findViewById(R.id.ac_district);
+        diary_re_txt = view.findViewById(R.id.diary_re_txt);
         policeStation = view.findViewById(R.id.policeStation);
         ac_caseType = view.findViewById(R.id.ac_case_type);
         case_no_edt=view.findViewById(R.id.case_no_edt);
@@ -90,7 +105,7 @@ public class form extends Fragment {
         String[] caseType = {"MCRC", "MCRCA"};
         //Creating the instance of ArrayAdapter containing list of language names
         ArrayAdapter<String> adapter1 = new ArrayAdapter<String>
-                (getContext(), android.R.layout.select_dialog_item, caseType);
+                (getContextNullSafety(), android.R.layout.select_dialog_item, caseType);
         //Getting the instance of AutoCompleteTextView
         ac_caseType.setThreshold(1);//will start working from first character
         ac_caseType.setAdapter(adapter1);//setting the adapter data into the AutoCompleteTextView
@@ -156,15 +171,33 @@ public class form extends Fragment {
             if(String.valueOf(month).length()==1)
                 m="0"+ month;
             String date = d + "." + m + "." + year;
-            rm_Date=year+m+d;
-            fd_dot=year+"-"+m+"-"+d;
-            if(check_==0)
+            if(check_==0) {
                 rm.setText(date);
+                rm_Date=year+m+d;
+                fd_dot=year+"-"+m+"-"+d;
+            }
             else if(check_==1)
                 diary.setText(date);
             else if(check_==2)
                 before.setText(date);
         };
+        if(excel_data!=null)
+            filling_values();
+
+        ac_district.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            @Override
+            public void afterTextChanged(Editable editable) {
+                get_police_station(ac_district.getText().toString().trim());
+            }
+        });
+
         checkBox_RM_call.setOnClickListener(v->{
             checkBox_RM_return.setChecked(false);
         });
@@ -292,13 +325,48 @@ public class form extends Fragment {
         return view;
     }
 
+    private void filling_values() {
+        diary_re_txt.setVisibility(View.VISIBLE);
+        diary.setVisibility(View.VISIBLE);
+
+        ac_district.setText(excel_data.getC());
+        policeStation.setText(excel_data.getB());
+        crime_no_edt.setText(excel_data.getH());
+        crime_year_edt.setText(excel_data.getI());
+        ac_caseType.setText(excel_data.getD());
+        case_no_edt.setText(excel_data.getE());
+        case_year_edt.setText(excel_data.getG());
+        case_year_edt.setText(excel_data.getG());
+        name_edt.setText(excel_data.getF());
+        rm.setText(excel_data.getK());
+        String year=excel_data.getK().substring(6);
+        String month=excel_data.getK().substring(3,5);
+        String day=excel_data.getK().substring(0,2);
+        rm_Date=year+month+day;
+        fd_dot=year+"-"+month+"-"+day;
+        before.setText(excel_data.getL());
+        if(excel_data.getType().equals("RM CALL")){
+            checkBox_RM_call.setChecked(true);
+            checkBox_RM_return.setChecked(false);
+        }
+        else{
+            checkBox_RM_return.setChecked(true);
+            checkBox_RM_call.setChecked(false);
+        }
+        if(excel_data.getJ().equals("None"))
+            diary.setText("");
+        else
+            diary.setText(excel_data.getJ());
+    }
+
     private void push_to_database_and_excel(String sheet) {
-        ProgressDialog  pd = new ProgressDialog(getContext());
-        pd.setTitle("Uploading Data...");
-        pd.setMessage("Please Wait!");
-        pd.setIndeterminate(true);
-        pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        pd.show();
+        dialog1 = new Dialog(getContextNullSafety());
+        dialog1.setCancelable(true);
+        dialog1.setContentView(R.layout.loading_dialog);
+        dialog1.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        LottieAnimationView lottieAnimationView=dialog1.findViewById(R.id.animate);
+        lottieAnimationView.setAnimation("done.json");
+        dialog1.show();
         String pushkey=rm_Date
                        +policeStation.getText().toString().trim()
                        +ac_district.getText().toString().trim()
@@ -328,8 +396,17 @@ public class form extends Fragment {
         data_packet.put("type",sheet);
 
         reference.child(pushkey).setValue(data_packet);
-
-        pd.dismiss();
+        Snackbar.make(lay,"Data Uploaded Successfully.",Snackbar.LENGTH_LONG)
+                .setActionTextColor(Color.parseColor("#171746"))
+                .setTextColor(Color.parseColor("#FF7F5C"))
+                .setBackgroundTint(Color.parseColor("#171746"))
+                .show();
+        new Handler(Looper.myLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                dialog1.dismiss();
+            }
+        },2000);
     }
     private void getFileUrl(){
         ProgressDialog  pd = new ProgressDialog(getContext());
@@ -341,10 +418,10 @@ public class form extends Fragment {
         StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("downloaded.xlsx");
         storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
             String url = uri.toString();
-            downloadFile(getContext(), "downloaded", ".xlsx", DIRECTORY_PICTURES, url);
+            downloadFile(getContextNullSafety(), "downloaded", ".xlsx", DIRECTORY_PICTURES, url);
             pd.dismiss();
         }).addOnFailureListener(e -> {
-            Toast.makeText(getContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContextNullSafety(), "Something went wrong", Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -370,35 +447,32 @@ public class form extends Fragment {
                     district.add(ds.getKey());
                     //Creating the instance of ArrayAdapter containing list of language names
                     ArrayAdapter<String> adapter = new ArrayAdapter<String>
-                            (getContext(), android.R.layout.select_dialog_item, district);
+                            (getContextNullSafety(), android.R.layout.select_dialog_item, district);
                     //Getting the instance of AutoCompleteTextView
                     ac_district.setThreshold(1);//will start working from first character
                     ac_district.setAdapter(adapter);//setting the adapter data into the AutoCompleteTextView
                     ac_district.setTextColor(Color.RED);
                 }
-                get_police_station(district);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
 
-    private void get_police_station(List<String> district) {
+    private void get_police_station(String district) {
         reference_phone.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(int i=0;i<district.size();i++){
-                    for(DataSnapshot dataSnapshot:snapshot.child(district.get(i)).getChildren()){
-                        if(dataSnapshot.getKey().substring(0,2).equals("PS")){
-                            ps_list.add(dataSnapshot.getKey().substring(3));
-                            //Creating the instance of ArrayAdapter containing list of language names
-                            ArrayAdapter<String> adapter = new ArrayAdapter<String>
-                                    (getContext(), android.R.layout.select_dialog_item, ps_list);
-                            //Getting the instance of AutoCompleteTextView
-                            policeStation.setThreshold(1);//will start working from first character
-                            policeStation.setAdapter(adapter);//setting the adapter data into the AutoCompleteTextView
-                            policeStation.setTextColor(Color.RED);
-                        }
+                for(DataSnapshot dataSnapshot:snapshot.child(district).getChildren()) {
+                    if (dataSnapshot.getKey().substring(0, 2).equals("PS")) {
+                        ps_list.add(dataSnapshot.getKey().substring(3));
+                        //Creating the instance of ArrayAdapter containing list of language names
+                        ArrayAdapter<String> adapter = new ArrayAdapter<String>
+                                (getContextNullSafety(), android.R.layout.select_dialog_item, ps_list);
+                        //Getting the instance of AutoCompleteTextView
+                        policeStation.setThreshold(1);//will start working from first character
+                        policeStation.setAdapter(adapter);//setting the adapter data into the AutoCompleteTextView
+                        policeStation.setTextColor(Color.RED);
                     }
                 }
                 Log.e("PS = ",ps_list+"");
@@ -406,5 +480,25 @@ public class form extends Fragment {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {}
         });
+    }
+    /**CALL THIS IF YOU NEED CONTEXT*/
+    public Context getContextNullSafety() {
+        if (getContext() != null) return getContext();
+        if (getActivity() != null) return getActivity();
+        if (contextNullSafe != null) return contextNullSafe;
+        if (getView() != null && getView().getContext() != null) return getView().getContext();
+        if (requireContext() != null) return requireContext();
+        if (requireActivity() != null) return requireActivity();
+        if (requireView() != null && requireView().getContext() != null)
+            return requireView().getContext();
+
+        return null;
+
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        contextNullSafe = context;
     }
 }

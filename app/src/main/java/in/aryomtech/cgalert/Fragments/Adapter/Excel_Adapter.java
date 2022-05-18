@@ -1,26 +1,32 @@
 package in.aryomtech.cgalert.Fragments.Adapter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import in.aryomtech.cgalert.Fragments.form;
 import in.aryomtech.cgalert.Fragments.model.Excel_data;
 import in.aryomtech.cgalert.Fragments.onAgainClickInterface;
 import in.aryomtech.cgalert.Fragments.onClickInterface;
+import in.aryomtech.cgalert.Home;
 import in.aryomtech.cgalert.R;
 
 public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder> {
@@ -50,6 +56,7 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
 
         isadmin=context.getSharedPreferences("isAdmin_or_not",Context.MODE_PRIVATE)
                 .getBoolean("authorizing_admin",false);
+
         holder.textViewTitle.setText(list.get(position).getB() + "");
         holder.textViewBody.setText(list.get(position).getC());
         holder.Rm.setText(list.get(position).getK());
@@ -135,11 +142,49 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
                 // Either gone or invisible
             }
         });
+        holder.view.setOnClickListener(v->{
+            Excel_data excel_data=new Excel_data(
+                    list.get(position).getA()
+                    ,list.get(position).getB()
+                    ,list.get(position).getC()
+                    ,list.get(position).getD()
+                    ,list.get(position).getE()
+                    ,list.get(position).getF()
+                    ,list.get(position).getG()
+                    ,list.get(position).getH()
+                    ,list.get(position).getI()
+                    ,list.get(position).getJ()
+                    ,list.get(position).getK()
+                    ,list.get(position).getL()
+                    ,list.get(position).getM()
+                    ,list.get(position).getN()
+                    ,list.get(position).getDate()
+                    ,list.get(position).getType()
+                    ,list.get(position).getPushkey()
+                    ,list.get(position).getReminded()
+                    ,list.get(position).getDate_of_alert());
 
-        if(isadmin)
+            Bundle bundle=new Bundle();
+            bundle.putSerializable("excel_data_sending", excel_data);
+            form form=new form();
+            form.setArguments(bundle);
+            ((FragmentActivity) context).getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations( R.anim.enter_from_right, R.anim.exit_to_left,R.anim.enter_from_left, R.anim.exit_to_right)
+                    .add(R.id.drawer,form)
+                    .addToBackStack(null)
+                    .commit();
+
+        });
+
+        if(isadmin) {
             holder.add_button.setVisibility(View.VISIBLE);
-        else
+            holder.view.setVisibility(View.VISIBLE);
+        }
+        else {
             holder.add_button.setVisibility(View.GONE);
+            holder.view.setVisibility(View.GONE);
+        }
 
     }
 
@@ -181,7 +226,7 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
 
     protected static class ViewHolder extends RecyclerView.ViewHolder{
         TextView textViewTitle,add_button;
-        TextView textViewBody;
+        TextView textViewBody,view;
         TextView day_left;
         TextView Rm,mcrc,crime_no,case_no,pr_case_no,name,receiving_date;
         ConstraintLayout layout;
@@ -204,6 +249,7 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
             type = itemView.findViewById(R.id.type);
             name = itemView.findViewById(R.id.person_name);//
             receiving_date = itemView.findViewById(R.id.receiving_date);//
+            view = itemView.findViewById(R.id.view);//
         }
     }
 }

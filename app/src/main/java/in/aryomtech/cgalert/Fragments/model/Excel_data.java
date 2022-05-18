@@ -1,6 +1,8 @@
 package in.aryomtech.cgalert.Fragments.model;
 
-public class Excel_data {
+import java.io.Serializable;
+
+public class Excel_data implements Serializable {
 
     private String A;
     private String B;
