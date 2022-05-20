@@ -1,10 +1,11 @@
 package in.aryomtech.cgalert.Fragments.Adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,6 +57,7 @@ public class Return_Adapter extends RecyclerView.Adapter<Return_Adapter.ViewHold
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.return_card_design, parent, false));
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
@@ -141,6 +143,24 @@ public class Return_Adapter extends RecyclerView.Adapter<Return_Adapter.ViewHold
             }
         });
 
+        String message = "हाईकोर्ट अलर्ट:-डायरी वापसी"+"\nदिनाँक:- "+ list.get(position).getDate()  +" \n\n" + "Last Date - " + list.get(position).getL() + "\n"
+                + "District - " + list.get(position).getC() + "\n" +
+                "Police Station - " + list.get(position).getB() + "\n"+
+                list.get(position).getD() + " No. - " + list.get(position).getE() +"/"+ list.get(position).getG()+"\n" +
+                "RM Date - " + list.get(position).getK()+ "\n" +
+                "Case Type - " + list.get(position).getD() +  "\n" +
+                "Name - " + list.get(position).getF()+  "\n" +
+                "Crime No. - " + list.get(position).getH() +"/"+ list.get(position).getI()+  "\n" +
+                "Received - " + list.get(position).getJ() + "\n\n" + "1)उपरोक्त मूल केश डायरी  महाधिवक्ता कार्यालय द्वारा दी गयी मूल पावती लाने पर ही दी जाएगी।\n"
+                +"2) उपरोक्त मूल केश डायरी "+ list.get(position).getK() +" से पांच दिवस के भीतर बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय से वापिस ले जावें।";
+
+        holder.share.setOnClickListener(v->{
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("text/plain");
+            shareIntent.putExtra(Intent.EXTRA_TEXT, message );
+            context.startActivity(Intent.createChooser(shareIntent, "Share link using"));
+        });
+
         holder.layout.setOnClickListener(v->{
             if (holder.layout_details.getVisibility() == View.VISIBLE) {
                 holder.layout_details.setVisibility(View.GONE);
@@ -150,6 +170,8 @@ public class Return_Adapter extends RecyclerView.Adapter<Return_Adapter.ViewHold
                 // Either gone or invisible
             }
         });
+
+
         holder.imageRemovedata.setOnClickListener(v->{
             Dialog dialog = new Dialog(context);
             dialog.setCancelable(true);
@@ -256,7 +278,7 @@ public class Return_Adapter extends RecyclerView.Adapter<Return_Adapter.ViewHold
         ConstraintLayout layout;
         LinearLayout layout_details;
         TextView day_left;
-        ImageView tick,type,imageRemovedata;
+        ImageView tick,type,imageRemovedata,share;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewTitle = itemView.findViewById(R.id.station_name);//
@@ -277,6 +299,7 @@ public class Return_Adapter extends RecyclerView.Adapter<Return_Adapter.ViewHold
             view = itemView.findViewById(R.id.view);//
             last_date = itemView.findViewById(R.id.last_date);//
             imageRemovedata = itemView.findViewById(R.id.imageRemoveImage);//
+            share = itemView.findViewById(R.id.share);
         }
     }
 }

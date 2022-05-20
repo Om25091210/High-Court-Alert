@@ -19,8 +19,6 @@ import java.util.List;
 import java.util.Locale;
 
 import in.aryomtech.cgalert.Fragments.model.Excel_data;
-import in.aryomtech.cgalert.Fragments.onAgainClickInterface;
-import in.aryomtech.cgalert.Fragments.onClickInterface;
 import in.aryomtech.cgalert.R;
 
 public class admin_room_Adapter extends RecyclerView.Adapter<admin_room_Adapter.ViewHolder> {
@@ -104,7 +102,6 @@ public class admin_room_Adapter extends RecyclerView.Adapter<admin_room_Adapter.
                 // Either gone or invisible
             }
         });
-
         holder.message.setText(error);
         holder.add_button.setVisibility(View.GONE);
     }
