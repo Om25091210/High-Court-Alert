@@ -94,12 +94,17 @@ public class Return_Adapter extends RecyclerView.Adapter<Return_Adapter.ViewHold
 
         if(list.get(position).getReminded()!=null) {
             if(list.get(position).getReminded().equals("once")){
+                holder.tick.setVisibility(View.VISIBLE);
                 holder.tick.setImageResource(R.drawable.ic_blue_tick);
             }
             else if(list.get(position).getReminded().equals("twice")){
+                holder.tick.setVisibility(View.VISIBLE);
                 holder.tick.setImageResource(R.drawable.ic_green_tick);
             }
         }
+        else
+            holder.tick.setVisibility(View.GONE);
+
         if (list.get(position).getJ().equals("None") || list.get(position).getJ().equals("nan"))
             holder.layout.setBackgroundResource(R.drawable.bg_card_red);
         else
