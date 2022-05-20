@@ -30,7 +30,7 @@
     <string name="message">Message</string>
     <string name="phone_sms">Phone SMS</string>
     <string name="sirgitti_police_station">Sirgitti Police Station</string>
-    <string name="days_left">5d left</string>
+    <string name="days_left">5d</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_navigation">navigation</string>
