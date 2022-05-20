@@ -47,6 +47,45 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/imageView2">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/last_date_txt"
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="15dp"
+                android:fontFamily="@font/quicksand_bold"
+                android:text="@string/last_date"
+                android:textColor="@color/use_light_blue"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/last_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="15dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/quicksand_bold"
+                android:maxLines="1"
+                android:paddingStart="1dp"
+                android:paddingEnd="15dp"
+                android:textColor="@color/use_light_blue"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="19.05.2022" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -173,8 +212,8 @@
         android:id="@+id/view"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
-        android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
         android:background="@drawable/bg_view"
         android:fontFamily="@font/quicksand_medium"
         android:gravity="center"
@@ -185,9 +224,24 @@
         android:text="@string/view"
         android:textColor="@color/use_blue"
         android:visibility="visible"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/textView21"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
         tools:ignore="TextContrastCheck" />
+
+    <ImageView
+        android:id="@+id/imageRemoveImage"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/background_delete"
+        android:contentDescription="@string/app_name"
+        android:padding="4dp"
+        android:src="@drawable/ic_delete"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/view"
+        app:layout_constraintEnd_toStartOf="@+id/view"
+        app:layout_constraintTop_toTopOf="@+id/view"
+        app:tint="@color/white" />
 
     <TextView
         android:id="@+id/textView21"
@@ -426,18 +480,17 @@
         android:id="@+id/day_left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="20dp"
+        android:drawablePadding="5dp"
         android:fontFamily="@font/quicksand_bold"
+        android:gravity="center"
         android:text="@string/days_left"
         android:textColor="@color/use_light_blue"
         android:textSize="15sp"
         android:textStyle="bold"
-        android:gravity="center"
-        app:layout_constraintEnd_toStartOf="@+id/textView21"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
         app:drawableLeftCompat="@drawable/ic_clock_time"
-        android:drawablePadding="5dp"
-        />
+        app:layout_constraintBottom_toBottomOf="@+id/type"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/type" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
