@@ -61,7 +61,7 @@ class FirebaseService : FirebaseMessagingService(){
             .setStyle(NotificationCompat.BigTextStyle().bigText(message.data["message"]))
             .setSmallIcon(R.drawable.ic_cap)
             .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.ic_cap))
-            .setAutoCancel(true)
+            .setAutoCancel(false)
             .setContent(contentView)
             .setContentIntent(pendingIntent)
             .build()

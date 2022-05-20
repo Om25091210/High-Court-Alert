@@ -1,6 +1,8 @@
 package in.aryomtech.cgalert.Fragments.Adapter;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +14,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.Serializable;
 import java.text.ParseException;
@@ -28,10 +36,12 @@ import in.aryomtech.cgalert.Fragments.onAgainClickInterface;
 import in.aryomtech.cgalert.Fragments.onClickInterface;
 import in.aryomtech.cgalert.Home;
 import in.aryomtech.cgalert.R;
+import www.sanju.motiontoast.MotionToast;
 
 public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder> {
 
     Context context;
+    DatabaseReference reference;
     List<Excel_data> list;
     boolean is_selected=false;
     boolean isadmin=false;
@@ -43,6 +53,7 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
         this.list = list;
         this.onClickInterface=onClickInterface;
         this.onAgainClickInterface=onAgainClickInterface;
+        reference= FirebaseDatabase.getInstance().getReference().child("data");
     }
     @NonNull
     @Override
@@ -57,6 +68,7 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
         isadmin=context.getSharedPreferences("isAdmin_or_not",Context.MODE_PRIVATE)
                 .getBoolean("authorizing_admin",false);
 
+        holder.last_date.setText(list.get(position).getL());
         holder.textViewTitle.setText(list.get(position).getB() + "");
         holder.textViewBody.setText(list.get(position).getC());
         holder.Rm.setText(list.get(position).getK());
@@ -123,12 +135,14 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
                 onClickInterface.setClick(position);
                 String added="Added";
                 holder.add_button.setText(added);
+                holder.add_button.setTextColor(Color.parseColor("#171746"));
                 holder.add_button.setBackgroundResource(R.drawable.add_bg_green);
             }
             else if(holder.add_button.getText().toString().equalsIgnoreCase("added")){
                 onAgainClickInterface.set_remove_click(position);
                 String add="Add";
                 holder.add_button.setText(add);
+                holder.add_button.setTextColor(Color.parseColor("#FF000000"));
                 holder.add_button.setBackgroundResource(R.drawable.add_card);
             }
         });
@@ -141,6 +155,23 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
                 holder.layout_details.setVisibility(View.VISIBLE);
                 // Either gone or invisible
             }
+        });
+        holder.imageRemovedata.setOnClickListener(v->{
+            Dialog dialog = new Dialog(context);
+            dialog.setCancelable(true);
+            dialog.setContentView(R.layout.dialog_for_sure);
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            TextView cancel=dialog.findViewById(R.id.textView96);
+            TextView yes=dialog.findViewById(R.id.textView95);
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+            dialog.show();
+            cancel.setOnClickListener(vi-> dialog.dismiss());
+            yes.setOnClickListener(vi-> {
+                reference.child(list.get(position).getPushkey()).removeValue();
+                list.remove(list.get(position));
+                notifyItemRemoved(position);
+                dialog.dismiss();
+            });
         });
         holder.view.setOnClickListener(v->{
             Excel_data excel_data=new Excel_data(
@@ -180,10 +211,12 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
         if(isadmin) {
             holder.add_button.setVisibility(View.VISIBLE);
             holder.view.setVisibility(View.VISIBLE);
+            holder.imageRemovedata.setVisibility(View.VISIBLE);
         }
         else {
             holder.add_button.setVisibility(View.GONE);
             holder.view.setVisibility(View.GONE);
+            holder.imageRemovedata.setVisibility(View.GONE);
         }
 
     }
@@ -226,12 +259,12 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
 
     protected static class ViewHolder extends RecyclerView.ViewHolder{
         TextView textViewTitle,add_button;
-        TextView textViewBody,view;
+        TextView textViewBody,view,last_date;
         TextView day_left;
         TextView Rm,mcrc,crime_no,case_no,pr_case_no,name,receiving_date;
         ConstraintLayout layout;
         LinearLayout layout_details;
-        ImageView tick,type;
+        ImageView tick,type,imageRemovedata;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewTitle = itemView.findViewById(R.id.station_name);//
@@ -250,6 +283,8 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
             name = itemView.findViewById(R.id.person_name);//
             receiving_date = itemView.findViewById(R.id.receiving_date);//
             view = itemView.findViewById(R.id.view);//
+            last_date = itemView.findViewById(R.id.last_date);//
+            imageRemovedata = itemView.findViewById(R.id.imageRemoveImage);//
         }
     }
 }

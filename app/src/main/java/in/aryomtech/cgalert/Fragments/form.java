@@ -396,6 +396,7 @@ public class form extends Fragment {
         data_packet.put("type",sheet);
 
         reference.child(pushkey).setValue(data_packet);
+        clear_field();
         Snackbar.make(lay,"Data Uploaded Successfully.",Snackbar.LENGTH_LONG)
                 .setActionTextColor(Color.parseColor("#171746"))
                 .setTextColor(Color.parseColor("#FF7F5C"))
@@ -408,6 +409,17 @@ public class form extends Fragment {
             }
         },2000);
     }
+
+    private void clear_field() {
+        ac_district.setText("");
+        policeStation.setText("");
+        crime_no_edt.setText("");
+        crime_year_edt.setText("");
+        ac_caseType.setText("");
+        case_no_edt.setText("");
+        name_edt.setText("");
+    }
+
     private void getFileUrl(){
         ProgressDialog  pd = new ProgressDialog(getContext());
         pd.setTitle("Downloading File");
