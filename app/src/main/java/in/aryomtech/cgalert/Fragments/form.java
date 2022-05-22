@@ -32,6 +32,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -64,6 +67,7 @@ public class form extends Fragment {
     TextView submit_txt,diary_re_txt;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     TextView rm,before,diary;
+    ImageView back;
     int check_;
     private Context contextNullSafe;
     EditText case_no_edt,name_edt,case_year_edt,crime_no_edt,crime_year_edt;
@@ -101,6 +105,8 @@ public class form extends Fragment {
         checkBox_RM_return=view.findViewById(R.id.checkBox_RM_return);
         submit_txt=view.findViewById(R.id.submit_txt);
         lay=view.findViewById(R.id.lay);
+        back=view.findViewById(R.id.imageView4);
+        back.setOnClickListener(v-> back());
 
         String[] caseType = {"MCRC", "MCRCA"};
         //Creating the instance of ArrayAdapter containing list of language names
@@ -324,7 +330,14 @@ public class form extends Fragment {
         });
         return view;
     }
-
+    private void back(){
+        FragmentManager fm=((FragmentActivity) getContextNullSafety()).getSupportFragmentManager();
+        FragmentTransaction ft=fm.beginTransaction();
+        if(fm.getBackStackEntryCount()>0) {
+            fm.popBackStack();
+        }
+        ft.commit();
+    }
     private void filling_values() {
         diary_re_txt.setVisibility(View.VISIBLE);
         diary.setVisibility(View.VISIBLE);
@@ -396,7 +409,8 @@ public class form extends Fragment {
         data_packet.put("type",sheet);
 
         reference.child(pushkey).setValue(data_packet);
-        clear_field();
+        if(excel_data==null)
+            clear_field();
         Snackbar.make(lay,"Data Uploaded Successfully.",Snackbar.LENGTH_LONG)
                 .setActionTextColor(Color.parseColor("#171746"))
                 .setTextColor(Color.parseColor("#FF7F5C"))
