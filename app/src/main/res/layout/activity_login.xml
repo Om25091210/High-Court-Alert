@@ -104,15 +104,15 @@
         android:id="@+id/p_back"
         android:layout_width="46dp"
         android:layout_height="46dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_card_white"
+        android:backgroundTint="@color/orange_50"
         android:contentDescription="@string/image"
         android:padding="15dp"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="@+id/edtEmail"
         app:layout_constraintTop_toBottomOf="@+id/edtEmail"
         app:srcCompat="@drawable/ic_back"
-        android:background="@drawable/bg_card_white"
-        android:backgroundTint="@color/orange_50"
-        android:layout_marginTop="20dp"
         app:tint="@color/orange_A100" />
 
     <com.chaos.view.PinView
@@ -121,9 +121,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="10dp"
         android:cursorVisible="true"
         android:inputType="number"
-        android:layout_marginTop="10dp"
         android:itemBackground="#65EAEAEA"
         android:visibility="gone"
         app:cursorColor="@color/black"
@@ -137,6 +137,49 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:lineColor="@color/use_blue"
-        app:lineWidth="1dp" />
+        app:lineWidth="1dp"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:textColor="@color/grey_600"
+        android:fontFamily="@font/fredokaregular"
+        android:textSize="@dimen/_11sdp"
+        android:textStyle="bold"
+        android:gravity="center"
+        app:layout_constraintBottom_toTopOf="@+id/sign_in"
+        app:layout_constraintEnd_toEndOf="@+id/sign_in"
+        app:layout_constraintStart_toStartOf="@+id/sign_in" />
+
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:visibility="gone"
+        android:textColor="@color/grey_600"
+        android:fontFamily="@font/fredokaregular"
+        android:text="@string/didn_t_you_receive_any_code"
+        app:layout_constraintBottom_toTopOf="@+id/sign_in"
+        app:layout_constraintEnd_toEndOf="@+id/pin_view"
+        app:layout_constraintStart_toStartOf="@+id/pin_view"
+        app:layout_constraintTop_toBottomOf="@+id/pin_view" />
+
+    <TextView
+        android:id="@+id/textView14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:textSize="@dimen/_12sdp"
+        android:visibility="gone"
+        android:text="@string/resend_new_code"
+        android:textColor="@color/use_orange"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/textView13"
+        app:layout_constraintStart_toStartOf="@+id/textView13"
+        app:layout_constraintTop_toBottomOf="@+id/textView13" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

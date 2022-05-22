@@ -43,6 +43,7 @@
 
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
+    <string name="sampleText">By providing my phone number. I hereby agree and accept the <![CDATA[<a href="http://www.google.com">Terms of Service</a>]]> and <![CDATA[<a href="http://www.google.com">Privacy Policy</a>]]> .</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="title_activity_nav">nav</string>
     <string name="welcome_to_high_court_alert">Welcome to High Court Alert</string>
@@ -82,6 +83,8 @@
     <string name="download">Download</string>
     <string name="view">View</string>
     <string name="last_date">Last Date -</string>
+    <string name="didn_t_you_receive_any_code">Didn\'t you receive any code?</string>
+    <string name="resend_new_code">RESEND NEW CODE</string>
 
     <array name="menuOptions">
         <item>Home</item>
