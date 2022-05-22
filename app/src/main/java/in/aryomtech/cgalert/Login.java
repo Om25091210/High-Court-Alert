@@ -8,9 +8,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -40,6 +43,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.simform.customcomponent.SSCustomEdittextOutlinedBorder;
 
+import java.text.DecimalFormat;
+import java.text.MessageFormat;
+import java.text.NumberFormat;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -50,7 +56,7 @@ import www.sanju.motiontoast.MotionToastStyle;
 public class Login extends AppCompatActivity {
 
     LinearLayout linearLayout,logo_layout;
-    TextView send_otp;
+    TextView send_otp,terms_and_condition,didnt,resend;
     ImageView p_back;
     String DeviceToken;
     int downspeed;
@@ -58,6 +64,8 @@ public class Login extends AppCompatActivity {
     PinView pinView;
     SSCustomEdittextOutlinedBorder edtEmail;
     int count=0;
+    CountDownTimer countDownTimer;
+    private PhoneAuthProvider.ForceResendingToken resendOTPtoken;
     // variable for FirebaseAuth class
     private FirebaseAuth mAuth;
     String station_name;
@@ -95,31 +103,52 @@ public class Login extends AppCompatActivity {
         edtEmail=findViewById(R.id.edtEmail);
         send_otp=findViewById(R.id.textView23);
         p_back=findViewById(R.id.p_back);
+        terms_and_condition=findViewById(R.id.textView12);
+        didnt=findViewById(R.id.textView13);
+        resend=findViewById(R.id.textView14);
         pinView = findViewById(R.id.pin_view);
         upAnimate(logo_layout);
 
         linearLayout.setOnClickListener(v->{
             if(edtEmail.getGetTextValue().trim().length()==10){
                 offanimate(edtEmail);
+                terms_and_condition.setVisibility(View.GONE);
+                didnt.setVisibility(View.VISIBLE);
+                resend.setVisibility(View.VISIBLE);
                 p_back.setVisibility(View.VISIBLE);
                 send_otp.setText("Verify");
                 onAnimate(pinView);
                 pinView.setVisibility(View.VISIBLE);
                 String phone = "+91" + edtEmail.getGetTextValue();
                 sendVerificationCode(phone);
-
+                countTimer();
             }
             else{
                 Toast.makeText(Login.this, "Enter 10 digit mobile number.", Toast.LENGTH_SHORT).show();
             }
         });
 
+        resend.setOnClickListener(v->{
+            if(resend.getText().toString().equals("RESEND NEW CODE")) {
+                String phone = "+91" + edtEmail.getGetTextValue();
+                resendVerificationCode(phone, resendOTPtoken);
+                countTimer();
+            }
+        });
+
+        terms_and_condition.setText(Html.fromHtml(getString(R.string.sampleText)));
+        terms_and_condition.setMovementMethod(LinkMovementMethod.getInstance());
+
         p_back.setOnClickListener(v->{
+            terms_and_condition.setVisibility(View.VISIBLE);
+            didnt.setVisibility(View.GONE);
+            resend.setVisibility(View.GONE);
             onAnimate(edtEmail);
             pinView.setText("");
             p_back.setVisibility(View.GONE);
             send_otp.setText("Send OTP");
             offanimate(pinView);
+            countDownTimer.cancel();
         });
 
         pinView.addTextChangedListener(new TextWatcher() {
@@ -275,6 +304,7 @@ public class Login extends AppCompatActivity {
                     }
 
                     user=mAuth.getCurrentUser();
+                    countDownTimer.cancel();
                     user_reference.child(user.getUid()).child("phone").setValue(user.getPhoneNumber());
                     user_reference.child(user.getUid()).child("name").setValue(station_name);
                     user_reference.child(user.getUid()).child(Objects.requireNonNull(user.getPhoneNumber()).substring(3)).setValue(user.getPhoneNumber());
@@ -315,6 +345,7 @@ public class Login extends AppCompatActivity {
                     }
 
                     user=mAuth.getCurrentUser();
+                    countDownTimer.cancel();
                     user_reference.child(user.getUid()).child("phone").setValue(user.getPhoneNumber());
                     user_reference.child(user.getUid()).child("name").setValue(station_name);
                     user_reference.child(user.getUid()).child(Objects.requireNonNull(user.getPhoneNumber()).substring(3)).setValue(user.getPhoneNumber());
@@ -380,6 +411,7 @@ public class Login extends AppCompatActivity {
                     }
 
                     user=mAuth.getCurrentUser();
+                    countDownTimer.cancel();
                     user_reference.child(user.getUid()).child("phone").setValue(user.getPhoneNumber());
                     user_reference.child(user.getUid()).child("name").setValue("admin");
                     user_reference.child(user.getUid()).child(Objects.requireNonNull(user.getPhoneNumber()).substring(3)).setValue(user.getPhoneNumber());
@@ -401,7 +433,38 @@ public class Login extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
+    private void countTimer()
+    {
+        countDownTimer=new CountDownTimer(25000, 1000)
+        {
+            public void onTick(long millisUntilFinished) {
 
+                NumberFormat f = new DecimalFormat("00");
+                long min = (millisUntilFinished / 60000) % 60;
+                long sec = (millisUntilFinished / 1000) % 60;
+                resend.setText("Retry after - "+f.format(min) + ":" + f.format(sec));
+            }
+            // When the task is over it will print 00:00:00 there
+            public void onFinish() {
+                resend.setText("RESEND NEW CODE");
+                resend.setVisibility(View.VISIBLE);
+                // btnVerify.setEnabled(true);
+            }
+        };
+        countDownTimer.start();
+    }
+    private void resendVerificationCode(String phoneNumber,
+                                        PhoneAuthProvider.ForceResendingToken token) {
+        PhoneAuthOptions options =
+                PhoneAuthOptions.newBuilder(mAuth)
+                        .setPhoneNumber(phoneNumber)
+                        .setTimeout(60L, TimeUnit.SECONDS)
+                        .setActivity(this)
+                        .setCallbacks(mCallBack)
+                        .setForceResendingToken(token)
+                        .build();
+        PhoneAuthProvider.verifyPhoneNumber(options);
+    }
     private void sendVerificationCode(String number) {
         // this method is used for getting
         // OTP on user phone number.
