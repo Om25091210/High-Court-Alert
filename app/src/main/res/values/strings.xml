@@ -58,7 +58,7 @@
     <string name="nikhil_verma">Nikhil Verma</string>
     <string name="android_developer">Android Developer</string>
     <string name="about_developers">About Developers</string>
-    <string name="form">Form</string>
+    <string name="form">Data Form</string>
     <string name="district_name">District name</string>
     <string name="district">District</string>
     <string name="police_station_">Police Station</string>
@@ -85,6 +85,8 @@
     <string name="last_date">Last Date -</string>
     <string name="didn_t_you_receive_any_code">Didn\'t you receive any code?</string>
     <string name="resend_new_code">RESEND NEW CODE</string>
+    <string name="m_b_sai_aditya">M.B.Sai Aditya</string>
+    <string name="web_developer">Web Developer</string>
 
     <array name="menuOptions">
         <item>Home</item>
