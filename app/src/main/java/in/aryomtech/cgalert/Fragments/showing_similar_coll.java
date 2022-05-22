@@ -380,14 +380,19 @@ public class showing_similar_coll extends Fragment {
         user_ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot ds:snapshot.getChildren()){
-                    if(phone_numbers.contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("phone").getValue(String.class)).substring(3))){
-                        int index=phone_numbers.indexOf(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("phone").getValue(String.class)).substring(3));
-                        reference.child(keys_copy_selected_phone.get(index)).child("reminded").setValue("once");
-                        String body=extract_data(index);
-                        ArrayList<String> list=sms.divideMessage(body);
-                        sms.sendMultipartTextMessage(phone_numbers.get(index), null, list, null, null);
+                for(int i=0;i<phone_numbers.size();i++) {
+                    int check=0;
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        if (snapshot.child(ds.getKey()).child(phone_numbers.get(i)).exists()) {
+                            check=1;
+                            reference.child(keys_copy_selected_phone.get(i)).child("reminded").setValue("once");
+                            String body = extract_data(i);
+                            ArrayList<String> list = sms.divideMessage(body);
+                            sms.sendMultipartTextMessage(phone_numbers.get(i), null, list, null, null);
+                        }
                     }
+                    if(check==0)
+                        not_sent_sms_list.add(keys_copy_selected_phone.get(i));
                 }
                 //TODO :Sent to next section.
                 Log.e("number does not exist = ",not_sent_sms_list+"");
@@ -412,24 +417,29 @@ public class showing_similar_coll extends Fragment {
         user_ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot ds:snapshot.getChildren()){
-                    if(phone_numbers.contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("phone").getValue(String.class)).substring(3))){
-                        int index=phone_numbers.indexOf(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("phone").getValue(String.class)).substring(3));
-                        String body=extract_data(index);
-                        reference.child(keys_copy_selected_phone.get(index)).child("reminded").setValue("once");
-                        if(snapshot.child(ds.getKey()).child("token").exists()) {
-                            for (DataSnapshot dd : snapshot.child(ds.getKey()).child("token").getChildren()) {
-                                String token = snapshot.child(ds.getKey()).child("token").child(Objects.requireNonNull(dd.getKey())).getValue(String.class);
-                                if (token != null) {
-                                    Specific specific = new Specific();
-                                    specific.noti("High Court Alert", body, token);
+                for(int i=0;i<phone_numbers.size();i++){
+                    int check=0;
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        if (snapshot.child(ds.getKey()).child(phone_numbers.get(i)).exists()) {
+                            check=1;
+                            String body=extract_data(i);
+                            if(snapshot.child(ds.getKey()).child("token").exists()) {
+                                reference.child(keys_copy_selected_phone.get(i)).child("reminded").setValue("once");
+                                for (DataSnapshot dd : snapshot.child(ds.getKey()).child("token").getChildren()) {
+                                    String token = snapshot.child(ds.getKey()).child("token").child(Objects.requireNonNull(dd.getKey())).getValue(String.class);
+                                    if (token != null) {
+                                        Specific specific = new Specific();
+                                        specific.noti("High Court Alert", body, token);
+                                    }
                                 }
                             }
-                        }
-                        else{
-                            noti_keys_copy_selected_phone.add(keys_copy_selected_phone.get(index));
+                            else{
+                                noti_keys_copy_selected_phone.add(keys_copy_selected_phone.get(i));
+                            }
                         }
                     }
+                    if(check==0)
+                        not_sent_sms_list.add(keys_copy_selected_phone.get(i));
                 }
                 //TODO :Sent to next section.
                 Log.e("number does not exist = ",not_sent_sms_list+"");
