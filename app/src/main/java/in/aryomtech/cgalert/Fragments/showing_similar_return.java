@@ -81,8 +81,8 @@ public class showing_similar_return extends Fragment {
     List<String> district_name_list=new ArrayList<>();
     List<Excel_data> filter_excel_data_mylist=new ArrayList<>();
     List<String> phone_numbers=new ArrayList<>();
-    private onClickInterface onClickInterface;
-    private onAgainClickInterface onAgainClickInterface;
+    private in.aryomtech.cgalert.Fragments.Interface.onClickInterface onClickInterface;
+    private in.aryomtech.cgalert.Fragments.Interface.onAgainClickInterface onAgainClickInterface;
     String data_case_type,data_case_number,data_station_name,data_district_name,data_year;
 
     @Override

@@ -28,6 +28,7 @@
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/card_admin.xml" value="0.228125" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/edittext_bg.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/google.xml" value="0.23229166666666667" />
+        <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/ic_add_admin.xml" value="0.1765" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/ic_admin_cont.xml" value="0.228125" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/ic_arrow_forward_black_24dp.xml" value="0.228125" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/ic_back.xml" value="0.23229166666666667" />
@@ -42,17 +43,19 @@
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/ic_next.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/ic_no_data.xml" value="0.228125" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/ic_previous.xml" value="0.23229166666666667" />
+        <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/ic_put_data.xml" value="0.1765" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/ic_red_clock.xml" value="0.228125" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/ic_return_type.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/ic_share.xml" value="0.219" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/ic_sms.xml" value="0.23229166666666667" />
+        <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/ic_station_add.xml" value="0.1765" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/ic_submit_type.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/indicator_default.xml" value="0.228125" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/indicator_selected.xml" value="0.121875" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/layout_grp_bg.xml" value="0.228125" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/splash.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/stroke_bg.xml" value="0.228125" />
-        <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/activity_form.xml" value="0.25" />
+        <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/activity_form.xml" value="0.22" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/activity_home.xml" value="0.22" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/activity_login.xml" value="0.22" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/activity_main.xml" value="0.21614583333333334" />
@@ -67,6 +70,7 @@
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/fragment_about.xml" value="0.2028985507246377" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/fragment_about_dev.xml" value="0.18" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/fragment_admin_room.xml" value="0.19701086956521738" />
+        <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/fragment_entries.xml" value="0.18" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/fragment_frag__home.xml" value="0.20652173913043478" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/fragment_frag_p__home.xml" value="0.18432971014492755" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/fragment_gallery.xml" value="0.21197916666666666" />
@@ -124,7 +128,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

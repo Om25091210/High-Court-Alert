@@ -40,9 +40,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -86,8 +84,8 @@ public class pending_return extends Fragment {
     List<String> case_data_list=new ArrayList<>();
     List<String> case_data_list_filter=new ArrayList<>();
     List<String> district_name_list=new ArrayList<>();
-    private onClickInterface onClickInterface;
-    private onAgainClickInterface onAgainClickInterface;
+    private in.aryomtech.cgalert.Fragments.Interface.onClickInterface onClickInterface;
+    private in.aryomtech.cgalert.Fragments.Interface.onAgainClickInterface onAgainClickInterface;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

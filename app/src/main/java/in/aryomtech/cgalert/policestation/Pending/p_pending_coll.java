@@ -36,7 +36,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -66,8 +65,8 @@ public class p_pending_coll extends Fragment {
     DatabaseReference phone_numbers_ref;
     ArrayList<String> added_list;
     NeumorphButton join;
-    private in.aryomtech.cgalert.Fragments.onClickInterface onClickInterface;
-    private in.aryomtech.cgalert.Fragments.onAgainClickInterface onAgainClickInterface;
+    private in.aryomtech.cgalert.Fragments.Interface.onClickInterface onClickInterface;
+    private in.aryomtech.cgalert.Fragments.Interface.onAgainClickInterface onAgainClickInterface;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

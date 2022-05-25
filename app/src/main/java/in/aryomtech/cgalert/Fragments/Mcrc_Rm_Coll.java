@@ -83,8 +83,8 @@ public class Mcrc_Rm_Coll extends Fragment {
     Dialog dialog,dialog1;
     DatabaseReference reference;
     TextView message, notification,phone_sms;
-    private onClickInterface onClickInterface;
-    private onAgainClickInterface onAgainClickInterface;
+    private in.aryomtech.cgalert.Fragments.Interface.onClickInterface onClickInterface;
+    private in.aryomtech.cgalert.Fragments.Interface.onAgainClickInterface onAgainClickInterface;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

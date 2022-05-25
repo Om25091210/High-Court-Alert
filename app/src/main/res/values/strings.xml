@@ -87,6 +87,12 @@
     <string name="resend_new_code">RESEND NEW CODE</string>
     <string name="m_b_sai_aditya">M.B.Sai Aditya</string>
     <string name="web_developer">Web Developer</string>
+    <string name="control_panel">Control Panel</string>
+    <string name="add_an_admin">Add an Admin</string>
+    <string name="add_station_number">Add Station</string>
+    <string name="enter_number">Enter admin number</string>
+    <string name="enter_number_">Enter number</string>
+    <string name="number">Number</string>
 
     <array name="menuOptions">
         <item>Home</item>

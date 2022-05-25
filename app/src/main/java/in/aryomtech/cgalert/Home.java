@@ -39,8 +39,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
-import in.aryomtech.cgalert.Fragments.admin_room;
-import in.aryomtech.cgalert.Fragments.form;
+import in.aryomtech.cgalert.Fragments.admin.admin_room;
+import in.aryomtech.cgalert.Fragments.admin.form;
 import in.aryomtech.cgalert.duo_frags.about;
 
 public class Home extends AppCompatActivity implements DuoMenuView.OnMenuClickListener{

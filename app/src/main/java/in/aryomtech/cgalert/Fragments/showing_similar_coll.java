@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.telephony.SmsManager;
 import android.text.Editable;
@@ -40,7 +39,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -83,8 +81,8 @@ public class showing_similar_coll extends Fragment {
     List<Excel_data> filter_excel_data_mylist=new ArrayList<>();
     List<String> phone_numbers=new ArrayList<>();
     List<String> district_name_list=new ArrayList<>();
-    private onClickInterface onClickInterface;
-    private onAgainClickInterface onAgainClickInterface;
+    private in.aryomtech.cgalert.Fragments.Interface.onClickInterface onClickInterface;
+    private in.aryomtech.cgalert.Fragments.Interface.onAgainClickInterface onAgainClickInterface;
     String data_case_type,data_case_number,data_station_name,data_district_name,data_year;
 
     @Override

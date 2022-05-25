@@ -36,7 +36,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -44,8 +43,6 @@ import java.util.Objects;
 
 import in.aryomtech.cgalert.Fragments.Adapter.Excel_Adapter;
 import in.aryomtech.cgalert.Fragments.model.Excel_data;
-import in.aryomtech.cgalert.Fragments.onAgainClickInterface;
-import in.aryomtech.cgalert.Fragments.onClickInterface;
 import in.aryomtech.cgalert.R;
 import soup.neumorphism.NeumorphButton;
 
@@ -69,8 +66,8 @@ public class p_pending_return extends Fragment {
     ArrayList<String> added_list;
     NeumorphButton join;
     List<String> district_name_list=new ArrayList<>();
-    private in.aryomtech.cgalert.Fragments.onClickInterface onClickInterface;
-    private in.aryomtech.cgalert.Fragments.onAgainClickInterface onAgainClickInterface;
+    private in.aryomtech.cgalert.Fragments.Interface.onClickInterface onClickInterface;
+    private in.aryomtech.cgalert.Fragments.Interface.onAgainClickInterface onAgainClickInterface;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

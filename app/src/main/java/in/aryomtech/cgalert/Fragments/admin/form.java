@@ -1,6 +1,5 @@
-package in.aryomtech.cgalert.Fragments;
+package in.aryomtech.cgalert.Fragments.admin;
 
-import static android.os.Environment.DIRECTORY_DOWNLOADS;
 import static android.os.Environment.DIRECTORY_PICTURES;
 
 import android.app.DatePickerDialog;
@@ -11,7 +10,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
@@ -25,7 +23,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,25 +34,19 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import in.aryomtech.cgalert.Fragments.model.Excel_data;
@@ -67,7 +58,7 @@ public class form extends Fragment {
     TextView submit_txt,diary_re_txt;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     TextView rm,before,diary;
-    ImageView back;
+    ImageView back,put_number;
     int check_;
     private Context contextNullSafe;
     EditText case_no_edt,name_edt,case_year_edt,crime_no_edt,crime_year_edt;
@@ -93,6 +84,7 @@ public class form extends Fragment {
         }
 
         ac_district = view.findViewById(R.id.ac_district);
+        put_number = view.findViewById(R.id.put_number);
         diary_re_txt = view.findViewById(R.id.diary_re_txt);
         policeStation = view.findViewById(R.id.policeStation);
         ac_caseType = view.findViewById(R.id.ac_case_type);
@@ -327,6 +319,14 @@ public class form extends Fragment {
         });
         view.findViewById(R.id.download_txt).setOnClickListener(v->{
             getFileUrl();
+        });
+        view.findViewById(R.id.put_number).setOnClickListener(v->{
+            ((FragmentActivity) getContextNullSafety()).getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations( R.anim.enter_from_right, R.anim.exit_to_left,R.anim.enter_from_left, R.anim.exit_to_right)
+                    .add(R.id.drawer,new Entries())
+                    .addToBackStack(null)
+                    .commit();
         });
         return view;
     }
