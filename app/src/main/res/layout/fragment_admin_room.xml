@@ -8,7 +8,7 @@
     android:id="@+id/inst_cont"
     android:clickable="true"
     android:background="@color/use_bg"
-    tools:context=".Fragments.admin_room">
+    tools:context=".Fragments.admin.admin_room">
 
     <ImageView
         android:id="@+id/imageView9"

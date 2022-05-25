@@ -61,11 +61,13 @@ public class Splash extends AppCompatActivity {
 
                 if(user_is.equals("p_home") && auth_entry){
                     Intent i = new Intent(Splash.this, p_Home.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(i);
                     finish();
                 }
                 else if(auth_entry){
                     Intent i = new Intent(Splash.this, Home.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(i);
                     finish();
                 }

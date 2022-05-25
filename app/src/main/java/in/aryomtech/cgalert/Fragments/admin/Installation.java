@@ -1,4 +1,4 @@
-package in.aryomtech.cgalert.Fragments;
+package in.aryomtech.cgalert.Fragments.admin;
 
 import android.content.Context;
 import android.os.Bundle;

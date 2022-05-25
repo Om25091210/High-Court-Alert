@@ -38,12 +38,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -53,7 +49,6 @@ import in.aryomtech.cgalert.Fragments.Adapter.Excel_Adapter;
 import in.aryomtech.cgalert.Fragments.model.Excel_data;
 import in.aryomtech.cgalert.R;
 import in.aryomtech.cgalert.fcm.Specific;
-import in.aryomtech.cgalert.policestation.p_mcrc_rm_coll;
 import soup.neumorphism.NeumorphButton;
 
 
@@ -87,8 +82,8 @@ public class today extends Fragment {
     NeumorphButton join;
     Dialog dialog,dialog1;
     TextView message, notification,phone_sms;
-    private onClickInterface onClickInterface;
-    private onAgainClickInterface onAgainClickInterface;
+    private in.aryomtech.cgalert.Fragments.Interface.onClickInterface onClickInterface;
+    private in.aryomtech.cgalert.Fragments.Interface.onAgainClickInterface onAgainClickInterface;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

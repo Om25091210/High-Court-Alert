@@ -83,8 +83,8 @@ public class Mcrc_Rm_Return extends Fragment {
     Return_Adapter excel_adapter;
     List<String> district_name_list=new ArrayList<>();
     NeumorphButton join;
-    private onClickInterface onClickInterface;
-    private onAgainClickInterface onAgainClickInterface;
+    private in.aryomtech.cgalert.Fragments.Interface.onClickInterface onClickInterface;
+    private in.aryomtech.cgalert.Fragments.Interface.onAgainClickInterface onAgainClickInterface;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

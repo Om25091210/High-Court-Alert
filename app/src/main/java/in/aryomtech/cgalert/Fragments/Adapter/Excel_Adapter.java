@@ -11,33 +11,26 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
-import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import in.aryomtech.cgalert.Fragments.form;
+import in.aryomtech.cgalert.Fragments.admin.form;
 import in.aryomtech.cgalert.Fragments.model.Excel_data;
-import in.aryomtech.cgalert.Fragments.onAgainClickInterface;
-import in.aryomtech.cgalert.Fragments.onClickInterface;
-import in.aryomtech.cgalert.Home;
+import in.aryomtech.cgalert.Fragments.Interface.onAgainClickInterface;
+import in.aryomtech.cgalert.Fragments.Interface.onClickInterface;
 import in.aryomtech.cgalert.R;
-import www.sanju.motiontoast.MotionToast;
 
 public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder> {
 
@@ -117,9 +110,11 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
         else
             holder.layout.setBackgroundResource(R.drawable.bg_card_white);
         if (list.get(position).getType().equals("RM CALL")) {
+            holder.message.setText("उपरोक्त मूल केश डायरी दिनाँक "+list.get(position).getK()+" तक बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय छतीसगढ़ में  अनिवार्यतः जमा करें।");
             holder.type.setVisibility(View.VISIBLE);
             holder.type.setImageResource(R.drawable.ic_submit_type);
         } else if (list.get(position).getType().equals("RM RETURN")) {
+            holder.message.setText("उपरोक्त मूल केश डायरी "+list.get(position).getK()+" से पांच दिवस के भीतर बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय से वापिस ले जावें।");
             holder.type.setVisibility(View.VISIBLE);
             holder.type.setImageResource(R.drawable.ic_return_type);
         } else
@@ -282,7 +277,7 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
     }
 
     protected static class ViewHolder extends RecyclerView.ViewHolder{
-        TextView textViewTitle,add_button;
+        TextView textViewTitle,add_button,message;
         TextView textViewBody,view,last_date;
         TextView day_left;
         TextView Rm,mcrc,crime_no,case_no,pr_case_no,name,receiving_date;
@@ -310,6 +305,7 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
             last_date = itemView.findViewById(R.id.last_date);//
             imageRemovedata = itemView.findViewById(R.id.imageRemoveImage);//
             share = itemView.findViewById(R.id.share);
+            message = itemView.findViewById(R.id.message);
         }
     }
 }

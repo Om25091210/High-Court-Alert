@@ -59,6 +59,20 @@
                     android:textColor="@color/use_orange"
                     android:textSize="25sp" />
 
+                <ImageView
+                    android:id="@+id/put_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:background="@drawable/bg_back_view"
+                    android:backgroundTint="@color/use_neumorph_orange"
+                    android:contentDescription="@string/image"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_put_data"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ImageContrastCheck" />
+
             </LinearLayout>
 
             <TextView
@@ -190,8 +204,6 @@
                 android:padding="15dp"
                 android:textSize="16sp"
                 tools:ignore="SpeakableTextPresentCheck">
-
-                <requestFocus />
 
             </AutoCompleteTextView>
 

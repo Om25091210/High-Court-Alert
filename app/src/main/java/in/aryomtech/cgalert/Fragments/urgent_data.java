@@ -82,8 +82,8 @@ public class urgent_data extends Fragment {
     List<String> noti_keys_copy_selected_phone=new ArrayList<>();
     DatabaseReference reference;
     TextView message, notification,phone_sms;
-    private onClickInterface onClickInterface;
-    private onAgainClickInterface onAgainClickInterface;
+    private in.aryomtech.cgalert.Fragments.Interface.onClickInterface onClickInterface;
+    private in.aryomtech.cgalert.Fragments.Interface.onAgainClickInterface onAgainClickInterface;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -112,7 +112,7 @@ public class urgent_data extends Fragment {
         //Initialize Database
         reference = FirebaseDatabase.getInstance().getReference().child("data");
         user_ref=FirebaseDatabase.getInstance().getReference().child("users");
-        query = FirebaseDatabase.getInstance().getReference().child("data").orderByChild("type").equalTo("RM CALL");
+        query = FirebaseDatabase.getInstance().getReference().child("data");
         phone_numbers_ref=FirebaseDatabase.getInstance().getReference().child("Phone numbers");
         getdata();
         isadmin=getContextNullSafety().getSharedPreferences("isAdmin_or_not",Context.MODE_PRIVATE)

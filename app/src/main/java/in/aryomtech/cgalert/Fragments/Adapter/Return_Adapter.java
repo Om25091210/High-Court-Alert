@@ -27,10 +27,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import in.aryomtech.cgalert.Fragments.form;
+import in.aryomtech.cgalert.Fragments.admin.form;
 import in.aryomtech.cgalert.Fragments.model.Excel_data;
-import in.aryomtech.cgalert.Fragments.onAgainClickInterface;
-import in.aryomtech.cgalert.Fragments.onClickInterface;
+import in.aryomtech.cgalert.Fragments.Interface.onAgainClickInterface;
+import in.aryomtech.cgalert.Fragments.Interface.onClickInterface;
 import in.aryomtech.cgalert.R;
 
 public class Return_Adapter extends RecyclerView.Adapter<Return_Adapter.ViewHolder> {
@@ -112,9 +112,11 @@ public class Return_Adapter extends RecyclerView.Adapter<Return_Adapter.ViewHold
         else
             holder.layout.setBackgroundResource(R.drawable.bg_card_white);
         if (list.get(position).getType().equals("RM CALL")) {
+            holder.message.setText("उपरोक्त मूल केश डायरी दिनाँक "+list.get(position).getK()+" तक बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय छतीसगढ़ में  अनिवार्यतः जमा करें।");
             holder.type.setVisibility(View.VISIBLE);
             holder.type.setImageResource(R.drawable.ic_submit_type);
         } else if (list.get(position).getType().equals("RM RETURN")) {
+            holder.message.setText("उपरोक्त मूल केश डायरी "+list.get(position).getK()+" से पांच दिवस के भीतर बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय से वापिस ले जावें।");
             holder.type.setVisibility(View.VISIBLE);
             holder.type.setImageResource(R.drawable.ic_return_type);
         } else
@@ -277,7 +279,7 @@ public class Return_Adapter extends RecyclerView.Adapter<Return_Adapter.ViewHold
     }
 
     protected static class ViewHolder extends RecyclerView.ViewHolder{
-        TextView textViewTitle,add_button,view,last_date;
+        TextView textViewTitle,add_button,view,last_date,message;
         TextView textViewBody;
         TextView Rm,mcrc,crime_no,case_no,pr_case_no,name,receiving_date;
         ConstraintLayout layout;
@@ -305,6 +307,7 @@ public class Return_Adapter extends RecyclerView.Adapter<Return_Adapter.ViewHold
             last_date = itemView.findViewById(R.id.last_date);//
             imageRemovedata = itemView.findViewById(R.id.imageRemoveImage);//
             share = itemView.findViewById(R.id.share);
+            message = itemView.findViewById(R.id.message);
         }
     }
 }
