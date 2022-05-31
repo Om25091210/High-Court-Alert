@@ -34,7 +34,8 @@ class FirebaseService : FirebaseMessagingService(){
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
 
-        val intent= Intent(this, Splash::class.java)
+        val intent= Intent(this, temp_notification::class.java)
+        intent.putExtra("sending_msg_data",""+message.data["key"])
         val notificationManager=getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         val notificationID = Random.nextInt()
 
@@ -61,7 +62,7 @@ class FirebaseService : FirebaseMessagingService(){
             .setStyle(NotificationCompat.BigTextStyle().bigText(message.data["message"]))
             .setSmallIcon(R.drawable.ic_cap)
             .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.ic_cap))
-            .setAutoCancel(false)
+            .setAutoCancel(true)
             .setContent(contentView)
             .setContentIntent(pendingIntent)
             .build()

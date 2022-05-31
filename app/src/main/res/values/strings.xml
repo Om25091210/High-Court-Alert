@@ -94,6 +94,7 @@
     <string name="enter_number_">Enter number</string>
     <string name="number">Number</string>
 
+
     <array name="menuOptions">
         <item>Home</item>
         <item>About</item>
