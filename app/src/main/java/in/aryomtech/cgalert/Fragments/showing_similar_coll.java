@@ -427,7 +427,7 @@ public class showing_similar_coll extends Fragment {
                                     String token = snapshot.child(ds.getKey()).child("token").child(Objects.requireNonNull(dd.getKey())).getValue(String.class);
                                     if (token != null) {
                                         Specific specific = new Specific();
-                                        specific.noti("High Court Alert", body, token);
+                                        specific.noti("High Court Alert", body, token,keys_copy_selected_phone.get(i));
                                     }
                                 }
                             }

@@ -21,7 +21,7 @@ class topic {
 
         if(name.isNotEmpty() && phone.isNotEmpty()){
             PushNotification(
-                NotificationData(name, phone),
+                NotificationData(name, phone,""),
                 TOPIC
             ).also {
                 sendNotification(it)
