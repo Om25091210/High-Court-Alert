@@ -528,7 +528,7 @@ public class Mcrc_Rm_Coll extends Fragment {
                 mylist.add(object);
             } else if (object.getC().toLowerCase().contains(str.toLowerCase().trim())) {
                 mylist.add(object);
-            } else if (object.getE().toLowerCase().contains(str.toLowerCase().trim())) {
+            } else if (object.getE().toLowerCase().contains(str.toLowerCase().trim())) {//TODO : tolowercase error
                 mylist.add(object);
             } else if (object.getH().toLowerCase().contains(str.toLowerCase().trim())) {
                 mylist.add(object);
