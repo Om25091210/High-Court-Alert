@@ -55,6 +55,8 @@ public class about extends Fragment {
         btnAnim = AnimationUtils.loadAnimation(getContextNullSafety().getApplicationContext(),R.anim.button_animation);
         // fill list screen
         final List<ScreenItem> mList = new ArrayList<>();
+        mList.add(new ScreenItem("Man Behind This App","Sub Inspector Telecom\n" +
+                "Posted in police Legal section advocate general office, High-Court Bilaspur",R.drawable.lucky_bhaiya));
         mList.add(new ScreenItem("Submit Case Diaries","For case hearings high court needs the case diaries in time and it should be submitted in time, we will help you by alerting through our app.",R.drawable.ic_onboarding_one));
         mList.add(new ScreenItem("How it works.","The card which is in red means that the case diary needs to be Submitted or you will have to bring it back, The clock will show you the days left respectively.",R.drawable.ic_onboarding_two));
         mList.add(new ScreenItem("Finally","Your case diary which you submitted will be seen by judges of High Court. After completion of work the diary must be brought back by you within the given days.",R.drawable.ic_onboarding_three));
