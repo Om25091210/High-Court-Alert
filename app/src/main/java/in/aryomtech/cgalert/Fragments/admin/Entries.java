@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import in.aryomtech.cgalert.R;
+import in.aryomtech.cgalert.databinding.FragmentEntriesBinding;
 
 
 public class Entries extends Fragment {
@@ -44,8 +45,10 @@ public class Entries extends Fragment {
     private Context contextNullSafe;
     EditText name_edt,num;
     ImageView back;
+    String prefix;
+    TextView ps,csp,sdop,asp,sp,dgp,adg,sdg,ig;
     TextView submit_txt,sub_txt,district_txt,pr_roll,admin_num;
-    LinearLayout add_admin,add_station;
+    LinearLayout add_admin,add_station,linearLayout17;
     AutoCompleteTextView ac_district,policeStation;
     DatabaseReference reference,reference_phone;
     List<String> district,ps_list;
@@ -62,6 +65,18 @@ public class Entries extends Fragment {
         add_station=view.findViewById(R.id.add_station);
         submit_txt=view.findViewById(R.id.submit_txt);
         sub_txt=view.findViewById(R.id.sub_txt);
+        linearLayout17=view.findViewById(R.id.linearLayout17);
+
+        ps=view.findViewById(R.id.ps);
+        csp=view.findViewById(R.id.csp);
+        sdop=view.findViewById(R.id.sdop);
+        asp=view.findViewById(R.id.asp);
+        sp=view.findViewById(R.id.sp);
+        dgp=view.findViewById(R.id.dgp);
+        adg=view.findViewById(R.id.adg);
+        sdg=view.findViewById(R.id.sdg);
+        ig=view.findViewById(R.id.ig);
+
         name_edt=view.findViewById(R.id.name_edt);
         district_txt=view.findViewById(R.id.textView11);
         ac_district=view.findViewById(R.id.ac_district);
@@ -79,6 +94,7 @@ public class Entries extends Fragment {
             submit_txt.setVisibility(View.VISIBLE);
             name_edt.setVisibility(View.VISIBLE);
             district_txt.setVisibility(View.GONE);
+            linearLayout17.setVisibility(View.GONE);
             admin_num.setVisibility(View.GONE);
             num.setVisibility(View.GONE);
             ac_district.setVisibility(View.GONE);
@@ -92,6 +108,7 @@ public class Entries extends Fragment {
             submit_txt.setVisibility(View.GONE);
             name_edt.setVisibility(View.GONE);
             num.setVisibility(View.VISIBLE);
+            linearLayout17.setVisibility(View.VISIBLE);
             admin_num.setVisibility(View.VISIBLE);
             district_txt.setVisibility(View.VISIBLE);
             ac_district.setVisibility(View.VISIBLE);
@@ -117,8 +134,8 @@ public class Entries extends Fragment {
                && !ac_district.getText().toString().trim().equals("")
                && !policeStation.getText().toString().trim().equals("")) {
 
-                reference_phone.child(ac_district.getText().toString().trim())
-                        .child(policeStation.getText().toString().trim())
+                reference_phone.child(ac_district.getText().toString().toUpperCase().trim())
+                        .child(prefix+" "+policeStation.getText().toString().toUpperCase().trim())
                         .setValue(num.getText().toString().trim());
 
                 num.setText("");
@@ -145,6 +162,124 @@ public class Entries extends Fragment {
                 get_police_station(ac_district.getText().toString().trim());
             }
         });
+
+        ps.setOnClickListener(v->{
+            prefix="PS";
+            ps.setBackgroundResource(R.drawable.bg_active);
+            csp.setBackgroundResource(R.drawable.border_amount_bg);
+            sdop.setBackgroundResource(R.drawable.border_amount_bg);
+            asp.setBackgroundResource(R.drawable.border_amount_bg);
+            sp.setBackgroundResource(R.drawable.border_amount_bg);
+            dgp.setBackgroundResource(R.drawable.border_amount_bg);
+            adg.setBackgroundResource(R.drawable.border_amount_bg);
+            sdg.setBackgroundResource(R.drawable.border_amount_bg);
+            ig.setBackgroundResource(R.drawable.border_amount_bg);
+        });
+
+        csp.setOnClickListener(v->{
+            prefix="CSP";
+            ps.setBackgroundResource(R.drawable.border_amount_bg);
+            csp.setBackgroundResource(R.drawable.bg_active);
+            sdop.setBackgroundResource(R.drawable.border_amount_bg);
+            asp.setBackgroundResource(R.drawable.border_amount_bg);
+            sp.setBackgroundResource(R.drawable.border_amount_bg);
+            dgp.setBackgroundResource(R.drawable.border_amount_bg);
+            adg.setBackgroundResource(R.drawable.border_amount_bg);
+            sdg.setBackgroundResource(R.drawable.border_amount_bg);
+            ig.setBackgroundResource(R.drawable.border_amount_bg);
+        });
+
+        sdop.setOnClickListener(v->{
+            prefix="SDOP";
+            ps.setBackgroundResource(R.drawable.border_amount_bg);
+            csp.setBackgroundResource(R.drawable.border_amount_bg);
+            sdop.setBackgroundResource(R.drawable.bg_active);
+            asp.setBackgroundResource(R.drawable.border_amount_bg);
+            sp.setBackgroundResource(R.drawable.border_amount_bg);
+            dgp.setBackgroundResource(R.drawable.border_amount_bg);
+            adg.setBackgroundResource(R.drawable.border_amount_bg);
+            sdg.setBackgroundResource(R.drawable.border_amount_bg);
+            ig.setBackgroundResource(R.drawable.border_amount_bg);
+        });
+
+        asp.setOnClickListener(v->{
+            prefix="ASP";
+            ps.setBackgroundResource(R.drawable.border_amount_bg);
+            csp.setBackgroundResource(R.drawable.border_amount_bg);
+            sdop.setBackgroundResource(R.drawable.border_amount_bg);
+            asp.setBackgroundResource(R.drawable.bg_active);
+            sp.setBackgroundResource(R.drawable.border_amount_bg);
+            dgp.setBackgroundResource(R.drawable.border_amount_bg);
+            adg.setBackgroundResource(R.drawable.border_amount_bg);
+            sdg.setBackgroundResource(R.drawable.border_amount_bg);
+            ig.setBackgroundResource(R.drawable.border_amount_bg);
+        });
+
+        sp.setOnClickListener(v->{
+            prefix="SP";
+            ps.setBackgroundResource(R.drawable.border_amount_bg);
+            csp.setBackgroundResource(R.drawable.border_amount_bg);
+            sdop.setBackgroundResource(R.drawable.border_amount_bg);
+            asp.setBackgroundResource(R.drawable.border_amount_bg);
+            sp.setBackgroundResource(R.drawable.bg_active);
+            dgp.setBackgroundResource(R.drawable.border_amount_bg);
+            adg.setBackgroundResource(R.drawable.border_amount_bg);
+            sdg.setBackgroundResource(R.drawable.border_amount_bg);
+            ig.setBackgroundResource(R.drawable.border_amount_bg);
+        });
+
+        dgp.setOnClickListener(v->{
+            prefix="DGP";
+            ps.setBackgroundResource(R.drawable.border_amount_bg);
+            csp.setBackgroundResource(R.drawable.border_amount_bg);
+            sdop.setBackgroundResource(R.drawable.border_amount_bg);
+            asp.setBackgroundResource(R.drawable.border_amount_bg);
+            sp.setBackgroundResource(R.drawable.border_amount_bg);
+            dgp.setBackgroundResource(R.drawable.bg_active);
+            adg.setBackgroundResource(R.drawable.border_amount_bg);
+            sdg.setBackgroundResource(R.drawable.border_amount_bg);
+            ig.setBackgroundResource(R.drawable.border_amount_bg);
+        });
+
+        adg.setOnClickListener(v->{
+            prefix="ADG";
+            ps.setBackgroundResource(R.drawable.border_amount_bg);
+            csp.setBackgroundResource(R.drawable.border_amount_bg);
+            sdop.setBackgroundResource(R.drawable.border_amount_bg);
+            asp.setBackgroundResource(R.drawable.border_amount_bg);
+            sp.setBackgroundResource(R.drawable.border_amount_bg);
+            dgp.setBackgroundResource(R.drawable.border_amount_bg);
+            adg.setBackgroundResource(R.drawable.bg_active);
+            sdg.setBackgroundResource(R.drawable.border_amount_bg);
+            ig.setBackgroundResource(R.drawable.border_amount_bg);
+        });
+
+        sdg.setOnClickListener(v->{
+            prefix="SDG";
+            ps.setBackgroundResource(R.drawable.border_amount_bg);
+            csp.setBackgroundResource(R.drawable.border_amount_bg);
+            sdop.setBackgroundResource(R.drawable.border_amount_bg);
+            asp.setBackgroundResource(R.drawable.border_amount_bg);
+            sp.setBackgroundResource(R.drawable.border_amount_bg);
+            dgp.setBackgroundResource(R.drawable.border_amount_bg);
+            adg.setBackgroundResource(R.drawable.border_amount_bg);
+            sdg.setBackgroundResource(R.drawable.bg_active);
+            ig.setBackgroundResource(R.drawable.border_amount_bg);
+        });
+
+        ig.setOnClickListener(v->{
+            prefix="IG";
+            ps.setBackgroundResource(R.drawable.border_amount_bg);
+            csp.setBackgroundResource(R.drawable.border_amount_bg);
+            sdop.setBackgroundResource(R.drawable.border_amount_bg);
+            asp.setBackgroundResource(R.drawable.border_amount_bg);
+            sp.setBackgroundResource(R.drawable.border_amount_bg);
+            dgp.setBackgroundResource(R.drawable.border_amount_bg);
+            adg.setBackgroundResource(R.drawable.border_amount_bg);
+            sdg.setBackgroundResource(R.drawable.border_amount_bg);
+            ig.setBackgroundResource(R.drawable.bg_active);
+        });
+
 
         return view;
     }

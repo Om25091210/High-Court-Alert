@@ -394,6 +394,7 @@ public class Mcrc_Rm_Coll extends Fragment {
                                     String token = snapshot.child(ds.getKey()).child("token").child(Objects.requireNonNull(dd.getKey())).getValue(String.class);
                                     if (token != null) {
                                         Specific specific = new Specific();
+                                        Log.e("This",keys_copy_selected_phone.get(i));
                                         specific.noti("High Court Alert", body, token,keys_copy_selected_phone.get(i));
                                     }
                                 }

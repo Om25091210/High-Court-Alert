@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -105,10 +106,21 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
         else
             holder.tick.setVisibility(View.GONE);
 
-        if (list.get(position).getJ().equals("None") || list.get(position).getJ().equals("nan"))
+        if (list.get(position).getJ().equals("None") || list.get(position).getJ().equals("nan")) {
             holder.layout.setBackgroundResource(R.drawable.bg_card_red);
-        else
+            if(list.get(position).getSeen()!=null && isadmin)
+                holder.seen.setVisibility(View.VISIBLE);
+            else
+                holder.seen.setVisibility(View.GONE);
+        }
+        else {
             holder.layout.setBackgroundResource(R.drawable.bg_card_white);
+            if(list.get(position).getSeen()!=null && isadmin)
+                holder.seen.setVisibility(View.VISIBLE);
+            else
+                holder.seen.setVisibility(View.GONE);
+        }
+
         if (list.get(position).getType().equals("RM CALL")) {
             holder.message.setText("उपरोक्त मूल केश डायरी दिनाँक "+list.get(position).getK()+" तक बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय छतीसगढ़ में  अनिवार्यतः जमा करें।");
             holder.type.setVisibility(View.VISIBLE);
@@ -212,7 +224,8 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
                     ,list.get(position).getType()
                     ,list.get(position).getPushkey()
                     ,list.get(position).getReminded()
-                    ,list.get(position).getDate_of_alert());
+                    ,list.get(position).getDate_of_alert()
+                    ,list.get(position).getSeen());
 
             Bundle bundle=new Bundle();
             bundle.putSerializable("excel_data_sending", excel_data);
@@ -283,7 +296,7 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
         TextView Rm,mcrc,crime_no,case_no,pr_case_no,name,receiving_date;
         ConstraintLayout layout;
         LinearLayout layout_details;
-        ImageView tick,type,imageRemovedata, share;
+        ImageView tick,type,imageRemovedata,seen, share;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewTitle = itemView.findViewById(R.id.station_name);//
@@ -305,6 +318,7 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
             last_date = itemView.findViewById(R.id.last_date);//
             imageRemovedata = itemView.findViewById(R.id.imageRemoveImage);//
             share = itemView.findViewById(R.id.share);
+            seen = itemView.findViewById(R.id.seen);
             message = itemView.findViewById(R.id.message);
         }
     }
