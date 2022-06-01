@@ -415,12 +415,12 @@ public class form extends Fragment {
         data_packet.put("date",fd_dot);
         data_packet.put("pushkey",pushkey);
         data_packet.put("type",sheet);
-
+        Log.e("Success","Called "+pushkey);
         reference.child(pushkey).setValue(data_packet);
         if(excel_data==null)
-            clear_field();
+            update_bulk_excel(sheet);
         else
-            update_Excel();
+            update_J_Excel(sheet);
         Snackbar.make(lay,"Data Uploaded Successfully.",Snackbar.LENGTH_LONG)
                 .setActionTextColor(Color.parseColor("#171746"))
                 .setTextColor(Color.parseColor("#FF7F5C"))
@@ -434,14 +434,79 @@ public class form extends Fragment {
         },2000);
     }
 
-    private void update_Excel() {
+    private void update_bulk_excel(String sheet) {
+
+            JSONObject jsonBody = new JSONObject();
+            try
+            {
+                jsonBody.put("ps", policeStation.getText().toString().trim());
+                jsonBody.put("nod", ac_district.getText().toString().trim());
+                jsonBody.put("ct", ac_caseType.getText().toString().trim());
+                jsonBody.put("cn", Integer.parseInt(case_no_edt.getText().toString().trim()));
+                jsonBody.put("n", name_edt.getText().toString().trim());
+                jsonBody.put("yoc", Integer.parseInt(case_year_edt.getText().toString().trim()));
+                jsonBody.put("crno", Integer.parseInt(crime_no_edt.getText().toString().trim()));
+                jsonBody.put("yocr", Integer.parseInt(crime_year_edt.getText().toString().trim()));
+                jsonBody.put("rmd", rm.getText().toString().trim());
+                jsonBody.put("b", before.getText().toString().trim());
+                jsonBody.put("subject", sheet);
+
+                Log.d("body", "httpCall_collect: "+jsonBody);
+            }
+            catch (Exception e)
+            {
+                Log.e("Error","JSON ERROR");
+            }
+
+            RequestQueue requestQueue = Volley.newRequestQueue(getContextNullSafety());
+            String URL = "https://high-court-alertsystem.herokuapp.com/total_data_push";
+
+            JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, URL,jsonBody,
+                    new com.android.volley.Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            // enjoy your response
+                            clear_field();
+                            Log.e("BULK response",response.toString());
+                        }
+                    }, new com.android.volley.Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    // enjoy your error status
+                    Log.e("Status of code = ","Wrong");
+                }
+            });
+            stringRequest.setRetryPolicy(new RetryPolicy() {
+                @Override
+                public int getCurrentTimeout() {
+                    return 15000;
+                }
+
+                @Override
+                public int getCurrentRetryCount() {
+                    return 15000;
+                }
+
+                @Override
+                public void retry(VolleyError error) throws VolleyError {
+                }
+            });
+            Log.d("string", stringRequest.toString());
+            requestQueue.add(stringRequest);
+
+
+    }
+
+    private void update_J_Excel(String sheet) {
+        Log.e("Sheet",sheet.toUpperCase()+"");
         JSONObject jsonBody = new JSONObject();
         try
         {
-            jsonBody.put("cno", case_no_edt.getText().toString().trim());
-            jsonBody.put("crno", crime_no_edt.getText().toString().trim());
-            jsonBody.put("ps", policeStation.getText().toString().trim());
-            jsonBody.put("nod", ac_district.getText().toString().trim());
+            jsonBody.put("cno", Integer.parseInt(case_no_edt.getText().toString().trim()));
+            jsonBody.put("crno", Integer.parseInt(crime_no_edt.getText().toString().trim()));
+            jsonBody.put("ps", policeStation.getText().toString().toLowerCase().trim());
+            jsonBody.put("nod", ac_district.getText().toString().toLowerCase().trim());
+            jsonBody.put("subject", sheet.toUpperCase());
             jsonBody.put("j_column", diary.getText().toString().trim());
             Log.d("body", "httpCall_collect: "+jsonBody);
         }
