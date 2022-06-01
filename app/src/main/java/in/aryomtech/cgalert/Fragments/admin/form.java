@@ -34,6 +34,12 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -42,6 +48,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -411,6 +419,8 @@ public class form extends Fragment {
         reference.child(pushkey).setValue(data_packet);
         if(excel_data==null)
             clear_field();
+        else
+            update_Excel();
         Snackbar.make(lay,"Data Uploaded Successfully.",Snackbar.LENGTH_LONG)
                 .setActionTextColor(Color.parseColor("#171746"))
                 .setTextColor(Color.parseColor("#FF7F5C"))
@@ -422,6 +432,60 @@ public class form extends Fragment {
                 dialog1.dismiss();
             }
         },2000);
+    }
+
+    private void update_Excel() {
+        JSONObject jsonBody = new JSONObject();
+        try
+        {
+            jsonBody.put("cno", case_no_edt.getText().toString().trim());
+            jsonBody.put("crno", crime_no_edt.getText().toString().trim());
+            jsonBody.put("ps", policeStation.getText().toString().trim());
+            jsonBody.put("nod", ac_district.getText().toString().trim());
+            jsonBody.put("j_column", diary.getText().toString().trim());
+            Log.d("body", "httpCall_collect: "+jsonBody);
+        }
+        catch (Exception e)
+        {
+            Log.e("Error","JSON ERROR");
+        }
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getContextNullSafety());
+        String URL = "https://high-court-alertsystem.herokuapp.com/j_column";
+
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, URL,jsonBody,
+                new com.android.volley.Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // enjoy your response
+
+                        Log.e("response",response.toString());
+                    }
+                }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // enjoy your error status
+                Log.e("Status of code = ","Wrong");
+            }
+        });
+        stringRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 15000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 15000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+            }
+        });
+        Log.d("string", stringRequest.toString());
+        requestQueue.add(stringRequest);
+
     }
 
     private void clear_field() {

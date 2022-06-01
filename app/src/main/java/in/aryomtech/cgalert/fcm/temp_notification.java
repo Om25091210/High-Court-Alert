@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -51,9 +52,8 @@ public class temp_notification extends AppCompatActivity {
         binding.share.setVisibility(View.GONE);
         binding.imageView2.setVisibility(View.GONE);
 
-        reference.child(key).child("seen").setValue(1);
-
         reference = FirebaseDatabase.getInstance().getReference().child("data").child(key + "");
+        reference.child("seen").setValue("1");
         fetch_data();
     }
 
@@ -103,9 +103,9 @@ public class temp_notification extends AppCompatActivity {
 
         //red white logic
         if (excel_data.get(0).getJ().equals("None") || excel_data.get(0).getJ().equals("nan"))
-            binding.layout.setBackgroundResource(R.drawable.bg_card_red);
+            binding.layout.setBackgroundColor(Color.parseColor("#FAD8D9"));
         else
-            binding.layout.setBackgroundResource(R.drawable.bg_card_white);
+            binding.layout.setBackgroundColor(Color.parseColor("#FFFFFF"));
 
         //tick logic
         if (excel_data.get(0).getReminded() != null) {
