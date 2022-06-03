@@ -122,11 +122,11 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
         }
 
         if (list.get(position).getType().equals("RM CALL")) {
-            holder.message.setText("उपरोक्त मूल केश डायरी दिनाँक "+list.get(position).getK()+" तक बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय छतीसगढ़ में  अनिवार्यतः जमा करें।");
+            holder.message.setText("उपरोक्त मूल केस डायरी दिनाँक "+list.get(position).getL()+" तक बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय छतीसगढ़ में  अनिवार्यतः जमा करें।");
             holder.type.setVisibility(View.VISIBLE);
             holder.type.setImageResource(R.drawable.ic_submit_type);
         } else if (list.get(position).getType().equals("RM RETURN")) {
-            holder.message.setText("उपरोक्त मूल केश डायरी "+list.get(position).getK()+" से पांच दिवस के भीतर बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय से वापिस ले जावें।");
+            holder.message.setText("उपरोक्त मूल केस डायरी "+list.get(position).getL()+" से पांच दिवस के भीतर बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय से वापिस ले जावें।");
             holder.type.setVisibility(View.VISIBLE);
             holder.type.setImageResource(R.drawable.ic_return_type);
         } else
