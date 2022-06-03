@@ -69,13 +69,13 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/last_date_txt"
+                android:id="@+id/pr_rm"
                 android:layout_width="110dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:fontFamily="@font/quicksand_bold"
-                android:text="@string/last_date"
+                android:text="@string/rm_date"
                 android:textColor="@color/use_light_blue"
                 android:textSize="15sp"
                 android:textStyle="bold"
@@ -83,11 +83,11 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/last_date"
+                android:id="@+id/name_rm"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:ellipsize="end"
                 android:fontFamily="@font/quicksand_bold"
                 android:maxLines="1"
@@ -98,7 +98,7 @@
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="19.05.2022" />
+                tools:text="04-01-2021" />
 
         </LinearLayout>
 
@@ -319,7 +319,6 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="उपरोक्त मूल केश डायरी 16.05.2022 से पांच दिवस के भीतर बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय से वापिस ले जावें।" />
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -327,13 +326,13 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/pr_rm"
+                android:id="@+id/last_date_txt"
                 android:layout_width="110dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 android:fontFamily="@font/quicksand_bold"
-                android:text="@string/rm_date"
+                android:text="@string/last_date"
                 android:textColor="@color/use_light_blue"
                 android:textSize="15sp"
                 android:textStyle="bold"
@@ -341,11 +340,11 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/name_rm"
+                android:id="@+id/last_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 android:ellipsize="end"
                 android:fontFamily="@font/quicksand_bold"
                 android:maxLines="1"
@@ -356,9 +355,10 @@
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="04-01-2021" />
+                tools:text="19.05.2022" />
 
         </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
