@@ -127,7 +127,7 @@ public class Return_Adapter extends RecyclerView.Adapter<Return_Adapter.ViewHold
             holder.type.setVisibility(View.VISIBLE);
             holder.type.setImageResource(R.drawable.ic_submit_type);
         } else if (list.get(position).getType().equals("RM RETURN")) {
-            holder.message.setText("उपरोक्त मूल केस डायरी "+list.get(position).getL()+" से पांच दिवस के भीतर बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय से वापिस ले जावें।");
+            holder.message.setText("उपरोक्त मूल केस डायरी "+list.get(position).getL()+" के भीतर बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय से वापिस ले जावें।");
             holder.type.setVisibility(View.VISIBLE);
             holder.type.setImageResource(R.drawable.ic_return_type);
         } else
