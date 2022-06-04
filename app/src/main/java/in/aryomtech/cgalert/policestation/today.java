@@ -1,4 +1,4 @@
-package in.aryomtech.cgalert.Fragments;
+package in.aryomtech.cgalert.policestation;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.telephony.SmsManager;
 import android.text.Editable;
@@ -20,7 +21,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +40,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -52,66 +53,55 @@ import in.aryomtech.cgalert.fcm.Specific;
 import soup.neumorphism.NeumorphButton;
 
 
-public class showing_similar_coll extends Fragment {
+public class today extends Fragment {
+
 
     View view;
-    private Context contextNullSafe;
-    Bundle b;
     List<String> case_data_list=new ArrayList<>();
     List<String> case_data_list_filter=new ArrayList<>();
-    DatabaseReference user_ref;
-    Dialog dialog,dialog1;
-    TextView message, notification,phone_sms;
+    private Context contextNullSafe;
+    SwipeRefreshLayout mSwipeRefreshLayout;
     RecyclerView mRecyclerView;
+    DatabaseReference user_ref;
     Query query;
-    List<Excel_data> excel_data;
-    List<Excel_data> filter_excel_data=new ArrayList<>();
-    ArrayList<String> added_list;
+    String stat_name;
+    List<Excel_data> excel_data=new ArrayList<>();
+    List<Excel_data> mylist=new ArrayList<>();
+    EditText search;
+    CheckBox select_all;
+    List<String> phone_numbers=new ArrayList<>();
+    List<String> station_name_list=new ArrayList<>();
+    List<String> district_name_list=new ArrayList<>();
+
     List<String> not_sent_sms_list=new ArrayList<>();
     List<String> keys_selected=new ArrayList<>();
     List<String> keys_copy_selected_phone=new ArrayList<>();
-    CheckBox select_all;
-    Excel_Adapter excel_adapter;
-    NeumorphButton join;
-    ImageView bulk_delete;
-    EditText search;
     DatabaseReference reference;
-    List<String> noti_keys_copy_selected_phone=new ArrayList<>();
-    boolean isadmin=false;
+    Excel_Adapter excel_adapter;
     DatabaseReference phone_numbers_ref;
-    List<String> station_name_list=new ArrayList<>();
-    List<Excel_data> filter_excel_data_mylist=new ArrayList<>();
-    List<String> phone_numbers=new ArrayList<>();
-    List<String> district_name_list=new ArrayList<>();
+    List<String> noti_keys_copy_selected_phone=new ArrayList<>();
+    ArrayList<String> added_list;
+    NeumorphButton join;
+    Dialog dialog,dialog1;
+    TextView message, notification,phone_sms;
     private in.aryomtech.cgalert.Fragments.Interface.onClickInterface onClickInterface;
     private in.aryomtech.cgalert.Fragments.Interface.onAgainClickInterface onAgainClickInterface;
-    String data_case_type,data_case_number,data_station_name,data_district_name,data_year;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view= inflater.inflate(R.layout.fragment_showing_similar_coll, container, false);
-
-        b=getArguments();
-        if(b!=null){
-            data_case_type=b.getString("data_case_type");
-            data_case_number=b.getString("data_case_number");
-            data_station_name=b.getString("data_station_name");
-            data_district_name=b.getString("data_district_name");
-            data_year=b.getString("data_case_year");
-            excel_data= (List<Excel_data>) b.getSerializable("data_array_list");
-        }
+        view= inflater.inflate(R.layout.fragment_today2, container, false);
+        if (contextNullSafe == null) getContextNullSafety();
         //Hide the keyboard
         getActivity().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
         );
-
         added_list=new ArrayList<>();
-        join=view.findViewById(R.id.join);
-        select_all=view.findViewById(R.id.checkBox4);
+        mSwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         search=view.findViewById(R.id.search);
-        bulk_delete=view.findViewById(R.id.imageRemoveImage);
+        select_all=view.findViewById(R.id.checkBox4);
+        join=view.findViewById(R.id.join);
         //Initialize RecyclerView
         mRecyclerView = view.findViewById(R.id.recycler_view);
         LinearLayoutManager mManager = new LinearLayoutManager(getContextNullSafety());
@@ -121,48 +111,40 @@ public class showing_similar_coll extends Fragment {
         mRecyclerView.setLayoutManager(mManager);
         excel_adapter= new Excel_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface);
 
-        isadmin=getContextNullSafety().getSharedPreferences("isAdmin_or_not",Context.MODE_PRIVATE)
-                .getBoolean("authorizing_admin",false);
-        if(isadmin) {
-            join.setVisibility(View.VISIBLE);
-            bulk_delete.setVisibility(View.VISIBLE);
-            select_all.setVisibility(View.VISIBLE);
-        }
-        else {
-            join.setVisibility(View.GONE);
-            bulk_delete.setVisibility(View.GONE);
-            select_all.setVisibility(View.GONE);
-        }
+        stat_name= getContextNullSafety().getSharedPreferences("station_name_K",Context.MODE_PRIVATE)
+                .getString("the_station_name2003","");
 
         //Initialize Database
         reference = FirebaseDatabase.getInstance().getReference().child("data");
         user_ref=FirebaseDatabase.getInstance().getReference().child("users");
-        query = FirebaseDatabase.getInstance().getReference().child("data").orderByChild("type").equalTo("RM CALL");
+        query = FirebaseDatabase.getInstance().getReference().child("data");
         phone_numbers_ref=FirebaseDatabase.getInstance().getReference().child("Phone numbers");
+
+
         onClickInterface = position -> {
             if(search.getText().toString().equals("")) {
-                added_list.add(filter_excel_data.get(position).getPushkey());
+                added_list.add(excel_data.get(position).getPushkey());
                 String txt = "Send " + "(" + added_list.size() + ")";
-                select_all.setChecked(added_list.size() == filter_excel_data.size());
+                select_all.setChecked(added_list.size() == excel_data.size());
                 join.setText(txt);
             }
             else{
-                added_list.add(filter_excel_data_mylist.get(position).getPushkey());
+                added_list.add(mylist.get(position).getPushkey());
                 String txt = "Send " + "(" + added_list.size() + ")";
-                select_all.setChecked(added_list.size() == filter_excel_data_mylist.size());
+                select_all.setChecked(added_list.size() == mylist.size());
                 join.setText(txt);
             }
         };
 
         onAgainClickInterface=removePosition -> {
             if(search.getText().toString().equals("")) {
-                added_list.remove(filter_excel_data.get(removePosition).getPushkey());
+                added_list.remove(excel_data.get(removePosition).getPushkey());
                 String txt = "Send " + "(" + added_list.size() + ")";
                 select_all.setChecked(false);
                 join.setText(txt);
             }
             else{
-                added_list.remove(filter_excel_data_mylist.get(removePosition).getPushkey());
+                added_list.remove(mylist.get(removePosition).getPushkey());
                 String txt = "Send " + "(" + added_list.size() + ")";
                 select_all.setChecked(false);
                 join.setText(txt);
@@ -171,16 +153,16 @@ public class showing_similar_coll extends Fragment {
         select_all.setOnClickListener(v->{
             if (select_all.isChecked()){
                 if(search.getText().toString().equals("")) {
-                    for (int i = 0; i < filter_excel_data.size(); i++) {
-                        added_list.add(filter_excel_data.get(i).getPushkey());
+                    for (int i = 0; i < excel_data.size(); i++) {
+                        added_list.add(excel_data.get(i).getPushkey());
                     }
                     String txt = "Send " + "(" + added_list.size() + ")";
                     join.setText(txt);
                     excel_adapter.selectAll();
                 }
                 else{
-                    for (int i = 0; i < filter_excel_data_mylist.size(); i++) {
-                        added_list.add(filter_excel_data_mylist.get(i).getPushkey());
+                    for (int i = 0; i < mylist.size(); i++) {
+                        added_list.add(mylist.get(i).getPushkey());
                     }
                     String txt = "Send " + "(" + added_list.size() + ")";
                     join.setText(txt);
@@ -196,11 +178,8 @@ public class showing_similar_coll extends Fragment {
             excel_adapter.notifyDataSetChanged();
             Log.e("added_peeps",added_list+"");
         });
-        //adapter
-        //Initialize Database
-        getdata();
         //Set listener to SwipeRefreshLayout for refresh action
-        //mSwipeRefreshLayout.setOnRefreshListener(this::getdata);
+        mSwipeRefreshLayout.setOnRefreshListener(this::getdata);
         search.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {}
@@ -216,34 +195,7 @@ public class showing_similar_coll extends Fragment {
             }
         });
 
-        bulk_delete.setOnClickListener(v->{
-            Dialog dialog = new Dialog(getContextNullSafety());
-            dialog.setCancelable(true);
-            dialog.setContentView(R.layout.dialog_for_sure);
-            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-            TextView cancel=dialog.findViewById(R.id.textView96);
-            TextView text=dialog.findViewById(R.id.textView94);
-            text.setText("Delete All?");
-            TextView yes=dialog.findViewById(R.id.textView95);
-            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-            dialog.show();
-            cancel.setOnClickListener(vi-> dialog.dismiss());
-            yes.setOnClickListener(vi-> {
-                if(added_list!=null){
-                    for(int i=0;i<added_list.size();i++){
-                        reference.child(added_list.get(i)).removeValue();
-                        for(int j=0;j<excel_data.size();j++){
-                            if(excel_data.get(j).getPushkey().equals(added_list.get(i)))
-                                excel_adapter.remove(excel_data.get(j));
-                        }
-                    }
-                }
-                dialog.dismiss();
-            });
-
-        });
-
-        join.setOnClickListener(v-> {
+        join.setOnClickListener(v->{
             dialog = new Dialog(getContextNullSafety());
             dialog.setContentView(R.layout.message_dialog);
             dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
@@ -269,34 +221,8 @@ public class showing_similar_coll extends Fragment {
             });
 
         });
+        getdata();
         return view;
-    }
-    private void search(String str) {
-        filter_excel_data_mylist.clear();
-        for(Excel_data object:filter_excel_data) {
-            if (object.getB().toLowerCase().contains(str.toLowerCase().trim())) {
-                filter_excel_data_mylist.add(object);
-            } else if (object.getC().toLowerCase().contains(str.toLowerCase().trim())) {
-                filter_excel_data_mylist.add(object);
-            } else if (object.getE().toLowerCase().contains(str.toLowerCase().trim())) {
-                filter_excel_data_mylist.add(object);
-            } else if (object.getH().toLowerCase().contains(str.toLowerCase().trim())) {
-                filter_excel_data_mylist.add(object);
-            }
-            else if(object.getK().toLowerCase().contains(str.toLowerCase().trim())){
-                filter_excel_data_mylist.add(object);
-            }
-            else if(object.getJ().toLowerCase().contains(str.toLowerCase().trim())){
-                filter_excel_data_mylist.add(object);
-            }
-            else if(object.getDate().toLowerCase().contains(str.toLowerCase().trim())){
-                filter_excel_data_mylist.add(object);
-            }
-        }
-        excel_adapter=new Excel_Adapter(getContextNullSafety(),filter_excel_data_mylist,onClickInterface,onAgainClickInterface);
-        excel_adapter.notifyDataSetChanged();
-        if(mRecyclerView!=null)
-            mRecyclerView.setAdapter(excel_adapter);
     }
     public void gather_number(String type) {
         dialog1 = new Dialog(getContextNullSafety());
@@ -312,16 +238,16 @@ public class showing_similar_coll extends Fragment {
         station_name_list.clear();
         district_name_list.clear();
         case_data_list.clear();
+        case_data_list_filter.clear();
         not_sent_sms_list.clear();
         keys_selected.clear();
         keys_copy_selected_phone.clear();
-        case_data_list_filter.clear();
         phone_numbers.clear();
         Log.e("added_pushkey",added_list+"");
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (added_list.size() != 0) {
+                if(added_list.size()!=0) {
                     for (int h = 0; h < added_list.size(); h++) {
                         String station_name = "PS " + snapshot.child(added_list.get(h)).child("B").getValue(String.class).trim();
                         String district_name = snapshot.child(added_list.get(h)).child("C").getValue(String.class).trim();
@@ -427,9 +353,8 @@ public class showing_similar_coll extends Fragment {
                 }
                 //TODO :Sent to next section.
                 Log.e("number does not exist = ",not_sent_sms_list+"");
-                getContextNullSafety().getSharedPreferences("saving_RM_showing_call_not_sms",Context.MODE_PRIVATE).edit()
-                        .putString("RM_showing_call_list",not_sent_sms_list+"").apply();
-
+                getContextNullSafety().getSharedPreferences("saving_RM_today_not_sms",Context.MODE_PRIVATE).edit()
+                        .putString("RM_today_list",not_sent_sms_list+"").apply();
 
                 Snackbar.make(mRecyclerView,"Notified successfully...",Snackbar.LENGTH_LONG)
                         .setActionTextColor(Color.parseColor("#ea4a1f"))
@@ -476,11 +401,11 @@ public class showing_similar_coll extends Fragment {
                 Log.e("number does not exist = ",not_sent_sms_list+"");
                 Log.e("keys copy selected phone = ",noti_keys_copy_selected_phone+"");
 
-                getContextNullSafety().getSharedPreferences("saving_RM_showing_call_not_noti",Context.MODE_PRIVATE).edit()
-                        .putString("RM_showing_call_list",noti_keys_copy_selected_phone+"").apply();
+                getContextNullSafety().getSharedPreferences("saving_RM_today_not_noti",Context.MODE_PRIVATE).edit()
+                        .putString("RM_today_list",noti_keys_copy_selected_phone+"").apply();
 
-                getContextNullSafety().getSharedPreferences("saving_RM_showing_call_not_sms",Context.MODE_PRIVATE).edit()
-                        .putString("RM_showing_call_list",not_sent_sms_list+"").apply();
+                getContextNullSafety().getSharedPreferences("saving_RM_today_not_sms",Context.MODE_PRIVATE).edit()
+                        .putString("RM_today_list",not_sent_sms_list+"").apply();
 
                 Snackbar.make(mRecyclerView,"Notified successfully...",Snackbar.LENGTH_LONG)
                         .setActionTextColor(Color.parseColor("#ea4a1f"))
@@ -522,7 +447,7 @@ public class showing_similar_coll extends Fragment {
         queue.add(stringRequest);
     }
     private String extract_data(int index) {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy",Locale.getDefault());
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
         Date date = new Date();
         String format=case_data_list_filter.get(index);
         String C=null,B=null,K=null,D=null,E=null,G=null,H=null,I=null,type=null;
@@ -585,24 +510,67 @@ public class showing_similar_coll extends Fragment {
                     +"उपरोक्त मूल केश डायरी दिनाँक "+K+" तक बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय छतीसगढ़ में  अनिवार्यतः जमा करें।";
         }
     }
-    private void getdata() {
-        search.setText("");
-        select_all.setChecked(false);
-        added_list.clear();
-        String txt="Send "+"("+added_list.size()+")";
-        join.setText(txt);
-        filter_excel_data.clear();
-        for(int i=0;i<excel_data.size();i++){
-            if(excel_data.get(i).getH().trim().equals(data_case_number)){
-                filter_excel_data.add(excel_data.get(i));
+    private void search(String str) {
+        mylist.clear();
+        for(Excel_data object:excel_data) {
+            if (object.getB().toLowerCase().contains(str.toLowerCase().trim())) {
+                mylist.add(object);
+            } else if (object.getC().toLowerCase().contains(str.toLowerCase().trim())) {
+                mylist.add(object);
+            } else if (object.getE().toLowerCase().contains(str.toLowerCase().trim())) {
+                mylist.add(object);
+            } else if (object.getH().toLowerCase().contains(str.toLowerCase().trim())) {
+                mylist.add(object);
+            }
+            else if(object.getK().toLowerCase().contains(str.toLowerCase().trim())){
+                mylist.add(object);
+            }
+            else if(object.getJ().toLowerCase().contains(str.toLowerCase().trim())){
+                mylist.add(object);
+            }
+            else if(object.getDate().toLowerCase().contains(str.toLowerCase().trim())){
+                mylist.add(object);
             }
         }
-        excel_adapter=new Excel_Adapter(getContextNullSafety(),filter_excel_data,onClickInterface,onAgainClickInterface);
+        excel_adapter=new Excel_Adapter(getContextNullSafety(),mylist,onClickInterface,onAgainClickInterface);
         excel_adapter.notifyDataSetChanged();
         if(mRecyclerView!=null)
             mRecyclerView.setAdapter(excel_adapter);
     }
-
+    private void getdata() {
+        select_all.setChecked(false);
+        Date dNow = new Date( );
+        SimpleDateFormat ft =
+                new SimpleDateFormat ("dd.MM.yyyy",Locale.getDefault());
+        String cr_dt=ft.format(dNow);
+        Log.e("date",cr_dt);
+        mSwipeRefreshLayout.setRefreshing(true);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                excel_data.clear();
+                for(DataSnapshot ds:snapshot.getChildren()){
+                    if(snapshot.child(ds.getKey()).child("B").getValue(String.class).equals(stat_name.substring(3))) {
+                        if (cr_dt.equals(snapshot.child(ds.getKey()).child("K").getValue(String.class))) {
+                            excel_data.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Excel_data.class));
+                        }
+                    }
+                }
+                mSwipeRefreshLayout.setRefreshing(false);
+                added_list.clear();
+                String txt="Send "+"("+added_list.size()+")";
+                join.setText(txt);
+                excel_adapter.unselectall();
+                Collections.reverse(excel_data);
+                excel_adapter=new Excel_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface);
+                excel_adapter.notifyDataSetChanged();
+                if(mRecyclerView!=null)
+                    mRecyclerView.setAdapter(excel_adapter);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
+    }
     /**CALL THIS IF YOU NEED CONTEXT*/
     public Context getContextNullSafety() {
         if (getContext() != null) return getContext();

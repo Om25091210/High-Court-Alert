@@ -78,6 +78,7 @@ public class form extends Fragment {
     Excel_data excel_data;
     AutoCompleteTextView ac_district,policeStation,ac_caseType;
     DatabaseReference reference,reference_phone;
+    String pushkey;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -382,27 +383,31 @@ public class form extends Fragment {
 
     private void push_to_database_and_excel(String sheet) {
         dialog1 = new Dialog(getContextNullSafety());
-        dialog1.setCancelable(true);
+        dialog1.setCancelable(false);
         dialog1.setContentView(R.layout.loading_dialog);
         dialog1.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         LottieAnimationView lottieAnimationView=dialog1.findViewById(R.id.animate);
         lottieAnimationView.setAnimation("done.json");
         dialog1.show();
-        String pushkey=rm_Date
+        /*String pushkey=rm_Date
                        +policeStation.getText().toString().trim()
                        +ac_district.getText().toString().trim()
                        +ac_caseType.getText().toString().trim()
                        +case_no_edt.getText().toString().trim()
                        +case_year_edt.getText().toString().trim()
                        +crime_no_edt.getText().toString().trim()
-                       +crime_year_edt.getText().toString().trim();
+                       +crime_year_edt.getText().toString().trim();*/
+        if(excel_data==null)
+            pushkey=reference.push().getKey();
+        else
+            pushkey=excel_data.getPushkey();
         Map<String,String> data_packet=new HashMap<>();
         data_packet.put("A","");
-        data_packet.put("B",policeStation.getText().toString().trim());
-        data_packet.put("C",ac_district.getText().toString().trim());
-        data_packet.put("D",ac_caseType.getText().toString().trim());
+        data_packet.put("B",policeStation.getText().toString().toLowerCase().trim());
+        data_packet.put("C",ac_district.getText().toString().toUpperCase().trim());
+        data_packet.put("D",ac_caseType.getText().toString().toUpperCase().trim());
         data_packet.put("E",case_no_edt.getText().toString().trim());
-        data_packet.put("F",name_edt.getText().toString().trim());
+        data_packet.put("F",name_edt.getText().toString().toUpperCase().trim());
         data_packet.put("G",case_year_edt.getText().toString().trim());
         data_packet.put("H",crime_no_edt.getText().toString().trim());
         data_packet.put("I",crime_year_edt.getText().toString().trim());
@@ -421,17 +426,12 @@ public class form extends Fragment {
             update_bulk_excel(sheet);
         else
             update_J_Excel(sheet);
-        Snackbar.make(lay,"Data Uploaded Successfully.",Snackbar.LENGTH_LONG)
+        Snackbar.make(lay,"Data Uploaded to database.",Snackbar.LENGTH_LONG)
                 .setActionTextColor(Color.parseColor("#171746"))
                 .setTextColor(Color.parseColor("#FF7F5C"))
                 .setBackgroundTint(Color.parseColor("#171746"))
                 .show();
-        new Handler(Looper.myLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                dialog1.dismiss();
-            }
-        },2000);
+
     }
 
     private void update_bulk_excel(String sheet) {
@@ -466,7 +466,38 @@ public class form extends Fragment {
                         @Override
                         public void onResponse(JSONObject response) {
                             // enjoy your response
-                            clear_field();
+                            String code=response.optString("code")+"";
+                            if(code.equals("202")){
+                                Snackbar.make(lay,"Data Uploaded to Excel.",Snackbar.LENGTH_LONG)
+                                        .setActionTextColor(Color.parseColor("#171746"))
+                                        .setTextColor(Color.parseColor("#FF7F5C"))
+                                        .setBackgroundTint(Color.parseColor("#171746"))
+                                        .show();
+                                new Handler(Looper.myLooper()).postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        dialog1.dismiss();
+                                    }
+                                },2000);
+                                clear_field();
+                            }
+                            else{
+                                Snackbar.make(lay,"Failed to Upload in Excel.",Snackbar.LENGTH_LONG)
+                                        .setActionTextColor(Color.parseColor("#000000"))
+                                        .setTextColor(Color.parseColor("#000000"))
+                                        .setBackgroundTint(Color.parseColor("#FF5252"))
+                                        .show();
+                                LottieAnimationView lottieAnimationView=dialog1.findViewById(R.id.animate);
+                                lottieAnimationView.setAnimation("error.json");
+                                dialog1.show();
+                                new Handler(Looper.myLooper()).postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        dialog1.dismiss();
+                                    }
+                                },2000);
+                            }
+                            Log.e("BULK code",code+"");
                             Log.e("BULK response",response.toString());
                         }
                     }, new com.android.volley.Response.ErrorListener() {
@@ -523,7 +554,37 @@ public class form extends Fragment {
                     @Override
                     public void onResponse(JSONObject response) {
                         // enjoy your response
-
+                        String code=response.optString("code")+"";
+                        if(code.equals("202")){
+                            Snackbar.make(lay,"Data Uploaded to Excel.",Snackbar.LENGTH_LONG)
+                                    .setActionTextColor(Color.parseColor("#171746"))
+                                    .setTextColor(Color.parseColor("#FF7F5C"))
+                                    .setBackgroundTint(Color.parseColor("#171746"))
+                                    .show();
+                            new Handler(Looper.myLooper()).postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    dialog1.dismiss();
+                                }
+                            },2000);
+                        }
+                        else{
+                            Snackbar.make(lay,"Failed to Upload in Excel.",Snackbar.LENGTH_LONG)
+                                    .setActionTextColor(Color.parseColor("#000000"))
+                                    .setTextColor(Color.parseColor("#000000"))
+                                    .setBackgroundTint(Color.parseColor("#FF5252"))
+                                    .show();
+                            LottieAnimationView lottieAnimationView=dialog1.findViewById(R.id.animate);
+                            lottieAnimationView.setAnimation("error.json");
+                            dialog1.show();
+                            new Handler(Looper.myLooper()).postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    dialog1.dismiss();
+                                }
+                            },2000);
+                        }
+                        Log.e("BULK code",code+"");
                         Log.e("response",response.toString());
                     }
                 }, new com.android.volley.Response.ErrorListener() {

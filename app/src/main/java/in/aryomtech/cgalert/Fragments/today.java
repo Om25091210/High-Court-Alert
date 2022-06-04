@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +41,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -80,6 +82,8 @@ public class today extends Fragment {
     List<String> noti_keys_copy_selected_phone=new ArrayList<>();
     ArrayList<String> added_list;
     NeumorphButton join;
+    boolean isadmin=false;
+    ImageView bulk_delete;
     Dialog dialog,dialog1;
     TextView message, notification,phone_sms;
     private in.aryomtech.cgalert.Fragments.Interface.onClickInterface onClickInterface;
@@ -98,6 +102,7 @@ public class today extends Fragment {
         added_list=new ArrayList<>();
         mSwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         search=view.findViewById(R.id.search);
+        bulk_delete=view.findViewById(R.id.imageRemoveImage);
         select_all=view.findViewById(R.id.checkBox4);
         join=view.findViewById(R.id.join);
         //Initialize RecyclerView
@@ -118,6 +123,18 @@ public class today extends Fragment {
         query = FirebaseDatabase.getInstance().getReference().child("data");
         phone_numbers_ref=FirebaseDatabase.getInstance().getReference().child("Phone numbers");
 
+        isadmin=getContextNullSafety().getSharedPreferences("isAdmin_or_not",Context.MODE_PRIVATE)
+                .getBoolean("authorizing_admin",false);
+        if(isadmin) {
+            join.setVisibility(View.VISIBLE);
+            bulk_delete.setVisibility(View.VISIBLE);
+            select_all.setVisibility(View.VISIBLE);
+        }
+        else {
+            join.setVisibility(View.GONE);
+            bulk_delete.setVisibility(View.GONE);
+            select_all.setVisibility(View.GONE);
+        }
 
         onClickInterface = position -> {
             if(search.getText().toString().equals("")) {
@@ -191,6 +208,33 @@ public class today extends Fragment {
                 join.setText(txt);
                 search(s+"");
             }
+        });
+
+        bulk_delete.setOnClickListener(v->{
+            Dialog dialog = new Dialog(getContextNullSafety());
+            dialog.setCancelable(true);
+            dialog.setContentView(R.layout.dialog_for_sure);
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            TextView cancel=dialog.findViewById(R.id.textView96);
+            TextView text=dialog.findViewById(R.id.textView94);
+            text.setText("Delete All?");
+            TextView yes=dialog.findViewById(R.id.textView95);
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+            dialog.show();
+            cancel.setOnClickListener(vi-> dialog.dismiss());
+            yes.setOnClickListener(vi-> {
+                if(added_list!=null){
+                    for(int i=0;i<added_list.size();i++){
+                        reference.child(added_list.get(i)).removeValue();
+                        for(int j=0;j<excel_data.size();j++){
+                            if(excel_data.get(j).getPushkey().equals(added_list.get(i)))
+                                excel_adapter.remove(excel_data.get(j));
+                        }
+                    }
+                }
+                dialog.dismiss();
+            });
+
         });
 
         join.setOnClickListener(v->{
@@ -557,7 +601,7 @@ public class today extends Fragment {
                 String txt="Send "+"("+added_list.size()+")";
                 join.setText(txt);
                 excel_adapter.unselectall();
-                //Collections.reverse(excel_data);
+                Collections.reverse(excel_data);
                 excel_adapter=new Excel_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface);
                 excel_adapter.notifyDataSetChanged();
                 if(mRecyclerView!=null)

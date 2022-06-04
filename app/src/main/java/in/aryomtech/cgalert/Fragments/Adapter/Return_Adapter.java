@@ -69,7 +69,7 @@ public class Return_Adapter extends RecyclerView.Adapter<Return_Adapter.ViewHold
         holder.textViewBody.setText(list.get(position).getC());
         holder.Rm.setText(list.get(position).getK());
         holder.mcrc.setText(list.get(position).getD());
-        holder.pr_case_no.setText(list.get(position).getD()+" No.");
+        holder.pr_case_no.setText(list.get(position).getD()+" No. -");
         holder.crime_no.setText(list.get(position).getH() +"/"+ list.get(position).getI());
         holder.case_no.setText(list.get(position).getE() +"/"+ list.get(position).getG());
         holder.name.setText(list.get(position).getF());
@@ -202,8 +202,10 @@ public class Return_Adapter extends RecyclerView.Adapter<Return_Adapter.ViewHold
             cancel.setOnClickListener(vi-> dialog.dismiss());
             yes.setOnClickListener(vi-> {
                 reference.child(list.get(position).getPushkey()).removeValue();
-                list.remove(list.get(position));
-                notifyItemRemoved(position);
+                int actualPosition = holder.getAdapterPosition();
+                list.remove(actualPosition);
+                notifyItemRemoved(actualPosition);
+                notifyItemRangeChanged(actualPosition, list.size());
                 dialog.dismiss();
             });
         });
@@ -284,6 +286,12 @@ public class Return_Adapter extends RecyclerView.Adapter<Return_Adapter.ViewHold
     public void unselect_all(){
         is_selected=false;
         notifyDataSetChanged();
+    }
+    public void remove(Excel_data key){
+        int actualPosition=list.indexOf(key);
+        list.remove(actualPosition);
+        notifyItemRemoved(actualPosition);
+        notifyItemRangeChanged(actualPosition, list.size());
     }
     @Override
     public int getItemCount() {

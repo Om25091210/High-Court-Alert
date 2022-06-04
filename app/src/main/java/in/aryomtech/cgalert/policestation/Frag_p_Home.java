@@ -83,6 +83,7 @@ public class Frag_p_Home extends Fragment {
         FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
                 ((FragmentActivity)getContextNullSafety()).getSupportFragmentManager(), FragmentPagerItems.with(getContextNullSafety())
                 .add("Urgent",urgent_data.class)
+                .add("Today",today.class)
                 .add("RM CALL", p_mcrc_rm_coll.class)
                 .add("RM RETURN", p_mcrc_rm_return.class)
                 .add("Similar CALL", p_similar_collection.class)
