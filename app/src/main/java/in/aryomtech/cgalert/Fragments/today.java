@@ -83,9 +83,9 @@ public class today extends Fragment {
     ArrayList<String> added_list;
     NeumorphButton join;
     boolean isadmin=false;
-    ImageView bulk_delete;
+    ImageView bulk_delete,cg_logo;
     Dialog dialog,dialog1;
-    TextView message, notification,phone_sms;
+    TextView message, notification,phone_sms,no_data;
     private in.aryomtech.cgalert.Fragments.Interface.onClickInterface onClickInterface;
     private in.aryomtech.cgalert.Fragments.Interface.onAgainClickInterface onAgainClickInterface;
 
@@ -105,6 +105,8 @@ public class today extends Fragment {
         bulk_delete=view.findViewById(R.id.imageRemoveImage);
         select_all=view.findViewById(R.id.checkBox4);
         join=view.findViewById(R.id.join);
+        cg_logo=view.findViewById(R.id.imageView3);
+        no_data=view.findViewById(R.id.no_data);
         //Initialize RecyclerView
         mRecyclerView = view.findViewById(R.id.recycler_view);
         LinearLayoutManager mManager = new LinearLayoutManager(getContextNullSafety());
@@ -586,6 +588,8 @@ public class today extends Fragment {
                 new SimpleDateFormat ("dd.MM.yyyy",Locale.getDefault());
         String cr_dt=ft.format(dNow);
         Log.e("date",cr_dt);
+        cg_logo.setVisibility(View.VISIBLE);
+        no_data.setVisibility(View.VISIBLE);
         mSwipeRefreshLayout.setRefreshing(true);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -595,6 +599,10 @@ public class today extends Fragment {
                    if(cr_dt.equals(snapshot.child(ds.getKey()).child("K").getValue(String.class))){
                        excel_data.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Excel_data.class));
                    }
+                }
+                if(excel_data.size()!=0){
+                    cg_logo.setVisibility(View.GONE);
+                    no_data.setVisibility(View.GONE);
                 }
                 mSwipeRefreshLayout.setRefreshing(false);
                 added_list.clear();

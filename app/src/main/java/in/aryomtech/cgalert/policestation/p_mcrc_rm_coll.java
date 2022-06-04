@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,6 +57,8 @@ public class p_mcrc_rm_coll extends Fragment {
     RecyclerView mRecyclerView;
     Query query;
     String stat_name;
+    ImageView cg_logo;
+    TextView no_data;
     List<Excel_data> excel_data=new ArrayList<>();
     List<Excel_data> mylist=new ArrayList<>();
     EditText search;
@@ -85,6 +88,8 @@ public class p_mcrc_rm_coll extends Fragment {
         added_list=new ArrayList<>();
         mSwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         search=view.findViewById(R.id.search);
+        cg_logo=view.findViewById(R.id.imageView3);
+        no_data=view.findViewById(R.id.no_data);
         select_all=view.findViewById(R.id.checkBox4);
         join=view.findViewById(R.id.join);
         //Initialize RecyclerView
@@ -283,6 +288,8 @@ public class p_mcrc_rm_coll extends Fragment {
             mRecyclerView.setAdapter(excel_adapter);
     }
     private void getdata() {
+        cg_logo.setVisibility(View.VISIBLE);
+        no_data.setVisibility(View.VISIBLE);
         mSwipeRefreshLayout.setRefreshing(true);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -293,7 +300,10 @@ public class p_mcrc_rm_coll extends Fragment {
                         excel_data.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Excel_data.class));
                     }
                 }
-
+                if(excel_data.size()!=0){
+                    cg_logo.setVisibility(View.GONE);
+                    no_data.setVisibility(View.GONE);
+                }
                 mSwipeRefreshLayout.setRefreshing(false);
                 added_list.clear();
                 String txt="Send "+"("+added_list.size()+")";

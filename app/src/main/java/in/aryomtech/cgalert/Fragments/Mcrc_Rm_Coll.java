@@ -80,11 +80,11 @@ public class Mcrc_Rm_Coll extends Fragment {
     DatabaseReference phone_numbers_ref;
     ArrayList<String> added_list;
     NeumorphButton join;
-    ImageView bulk_delete;
+    ImageView bulk_delete,cg_logo;
     boolean isadmin=false;
     Dialog dialog,dialog1;
     DatabaseReference reference;
-    TextView message, notification,phone_sms;
+    TextView message, notification,no_data,phone_sms;
     private in.aryomtech.cgalert.Fragments.Interface.onClickInterface onClickInterface;
     private in.aryomtech.cgalert.Fragments.Interface.onAgainClickInterface onAgainClickInterface;
 
@@ -103,6 +103,8 @@ public class Mcrc_Rm_Coll extends Fragment {
         search=view.findViewById(R.id.search);
         bulk_delete=view.findViewById(R.id.imageRemoveImage);
         select_all=view.findViewById(R.id.checkBox4);
+        cg_logo=view.findViewById(R.id.imageView3);
+        no_data=view.findViewById(R.id.no_data);
         join=view.findViewById(R.id.join);
         //Initialize RecyclerView
         mRecyclerView = view.findViewById(R.id.recycler_view);
@@ -587,6 +589,8 @@ public class Mcrc_Rm_Coll extends Fragment {
         String txt="Send "+"("+added_list.size()+")";
         join.setText(txt);
         mSwipeRefreshLayout.setRefreshing(true);
+        cg_logo.setVisibility(View.VISIBLE);
+        no_data.setVisibility(View.VISIBLE);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -594,7 +598,10 @@ public class Mcrc_Rm_Coll extends Fragment {
                 for(DataSnapshot ds:snapshot.getChildren()){
                     excel_data.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Excel_data.class));
                 }
-
+                if(excel_data.size()!=0){
+                    cg_logo.setVisibility(View.GONE);
+                    no_data.setVisibility(View.GONE);
+                }
                 mSwipeRefreshLayout.setRefreshing(false);
                 added_list.clear();
                 String txt="Send "+"("+added_list.size()+")";

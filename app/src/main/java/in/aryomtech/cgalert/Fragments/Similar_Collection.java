@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -46,6 +48,8 @@ public class Similar_Collection extends Fragment {
     List<Excel_data> excel_data_duplicates=new ArrayList<>();
     List<filterdata> filtered_mylist=new ArrayList<>();
     EditText search;
+    ImageView cg_logo;
+    TextView no_data;
     List<filterdata> save_locally_list=new ArrayList<>();
     List<String> filtered_data=new ArrayList<>();
     List<String> joined_list=new ArrayList<>();
@@ -65,6 +69,8 @@ public class Similar_Collection extends Fragment {
         );
         mSwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         search=view.findViewById(R.id.search);
+        cg_logo=view.findViewById(R.id.imageView3);
+        no_data=view.findViewById(R.id.no_data);
         //Initialize RecyclerView
         mRecyclerView = view.findViewById(R.id.recycler_view);
         LinearLayoutManager mManager = new LinearLayoutManager(getContextNullSafety());
@@ -117,6 +123,8 @@ public class Similar_Collection extends Fragment {
     }
     private void getdata() {
         mSwipeRefreshLayout.setRefreshing(true);
+        cg_logo.setVisibility(View.VISIBLE);
+        no_data.setVisibility(View.VISIBLE);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -150,7 +158,10 @@ public class Similar_Collection extends Fragment {
                 //Log.e("data_excel",excel_data_duplicates.get(1).getH()+"");
                 Log.e("filtered data",filtered_data+"");
                 Log.e("station list",filtered_station_dist+"");
-
+                if(excel_data_duplicates.size()!=0){
+                    cg_logo.setVisibility(View.GONE);
+                    no_data.setVisibility(View.GONE);
+                }
                 similarAdapter similarAdapter=new similarAdapter(getContextNullSafety(),save_locally_list,excel_data_duplicates);
                 similarAdapter.notifyDataSetChanged();
                 if(mRecyclerView!=null)

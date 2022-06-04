@@ -59,7 +59,7 @@ public class Mcrc_Rm_Return extends Fragment {
     private Context contextNullSafe;
     SwipeRefreshLayout mSwipeRefreshLayout;
     RecyclerView mRecyclerView;
-    TextView message, notification,phone_sms;
+    TextView message, notification,phone_sms,no_data;
     Query query;
     List<String> case_data_list=new ArrayList<>();
     List<String> case_data_list_filter=new ArrayList<>();
@@ -84,7 +84,7 @@ public class Mcrc_Rm_Return extends Fragment {
     Return_Adapter excel_adapter;
     List<String> district_name_list=new ArrayList<>();
     NeumorphButton join;
-    ImageView bulk_delete;
+    ImageView bulk_delete,cg_logo;
     private in.aryomtech.cgalert.Fragments.Interface.onClickInterface onClickInterface;
     private in.aryomtech.cgalert.Fragments.Interface.onAgainClickInterface onAgainClickInterface;
     @Override
@@ -105,6 +105,8 @@ public class Mcrc_Rm_Return extends Fragment {
         mRecyclerView = view.findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
         select_all=view.findViewById(R.id.checkBox4);
+        cg_logo=view.findViewById(R.id.imageView3);
+        no_data=view.findViewById(R.id.no_data);
         LinearLayoutManager mManager = new LinearLayoutManager(getContextNullSafety());
         mRecyclerView.setItemViewCacheSize(20);
         mRecyclerView.setDrawingCacheEnabled(true);
@@ -302,6 +304,8 @@ public class Mcrc_Rm_Return extends Fragment {
         String txt="Send "+"("+added_list.size()+")";
         join.setText(txt);
         mSwipeRefreshLayout.setRefreshing(true);
+        cg_logo.setVisibility(View.VISIBLE);
+        no_data.setVisibility(View.VISIBLE);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -310,6 +314,10 @@ public class Mcrc_Rm_Return extends Fragment {
                     if(ds.hasChildren()) {
                         excel_data.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Excel_data.class));
                     }
+                }
+                if(excel_data.size()!=0){
+                    cg_logo.setVisibility(View.GONE);
+                    no_data.setVisibility(View.GONE);
                 }
                 mSwipeRefreshLayout.setRefreshing(false);
                 added_list.clear();
