@@ -68,7 +68,7 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
         holder.textViewBody.setText(list.get(position).getC());
         holder.Rm.setText(list.get(position).getK());
         holder.mcrc.setText(list.get(position).getD());
-        holder.pr_case_no.setText(list.get(position).getD()+" No.");
+        holder.pr_case_no.setText(list.get(position).getD()+" No. -");
         holder.crime_no.setText(list.get(position).getH() +"/"+ list.get(position).getI());
         holder.case_no.setText(list.get(position).getE() +"/"+ list.get(position).getG());
         holder.name.setText(list.get(position).getF());
@@ -126,7 +126,7 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
             holder.type.setVisibility(View.VISIBLE);
             holder.type.setImageResource(R.drawable.ic_submit_type);
         } else if (list.get(position).getType().equals("RM RETURN")) {
-            holder.message.setText("उपरोक्त मूल केस डायरी "+list.get(position).getL()+" से पांच दिवस के भीतर बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय से वापिस ले जावें।");
+            holder.message.setText("उपरोक्त मूल केस डायरी "+list.get(position).getL()+" के भीतर बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय से वापिस ले जावें।");
             holder.type.setVisibility(View.VISIBLE);
             holder.type.setImageResource(R.drawable.ic_return_type);
         } else
@@ -199,8 +199,10 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
             cancel.setOnClickListener(vi-> dialog.dismiss());
             yes.setOnClickListener(vi-> {
                 reference.child(list.get(position).getPushkey()).removeValue();
-                list.remove(list.get(position));
-                notifyItemRemoved(position);
+                int actualPosition = holder.getAdapterPosition();
+                list.remove(actualPosition);
+                notifyItemRemoved(actualPosition);
+                notifyItemRangeChanged(actualPosition, list.size());
                 dialog.dismiss();
             });
         });
@@ -283,6 +285,12 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
     public void unselectall(){
         is_selected=false;
         notifyDataSetChanged();
+    }
+    public void remove(Excel_data key){
+        int actualPosition=list.indexOf(key);
+        list.remove(actualPosition);
+        notifyItemRemoved(actualPosition);
+        notifyItemRangeChanged(actualPosition, list.size());
     }
     @Override
     public int getItemCount() {

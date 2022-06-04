@@ -95,5 +95,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:neumorph_insetBottom="5dp"
             app:neumorph_insetTop="5dp" />
+
+        <ImageView
+            android:id="@+id/imageRemoveImage"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:contentDescription="@string/app_name"
+            android:padding="4dp"
+            android:src="@drawable/ic_delete"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@+id/join"
+            app:layout_constraintEnd_toStartOf="@+id/join"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recycler_view"
+            app:tint="@color/use_orange" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

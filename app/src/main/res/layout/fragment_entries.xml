@@ -416,26 +416,55 @@
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/ig"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/border_amount_bg"
-                android:fontFamily="@font/quicksand_medium"
-                android:gravity="center"
-                android:padding="15dp"
-                android:text="IG"
-                android:textColor="@color/use_orange"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:drawableStartCompat="@drawable/ic_sdg"
-                app:layout_constraintEnd_toEndOf="@+id/editTextTextMultiLine"
-                app:layout_constraintStart_toStartOf="@+id/editTextTextMultiLine"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout14"
-                tools:ignore="SpeakableTextPresentCheck,TextContrastCheck" />
+                android:orientation="horizontal">
 
+                <TextView
+                    android:id="@+id/dsp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/border_amount_bg"
+                    android:fontFamily="@font/quicksand_medium"
+                    android:gravity="center"
+                    android:padding="15dp"
+                    android:text="DSP"
+                    android:textColor="@color/use_orange"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:drawableStartCompat="@drawable/ic_sdg"
+                    app:layout_constraintEnd_toEndOf="@+id/editTextTextMultiLine"
+                    app:layout_constraintStart_toStartOf="@+id/editTextTextMultiLine"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout14"
+                    tools:ignore="SpeakableTextPresentCheck,TextContrastCheck" />
+
+                <TextView
+                    android:id="@+id/ig"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/border_amount_bg"
+                    android:fontFamily="@font/quicksand_medium"
+                    android:gravity="center"
+                    android:padding="15dp"
+                    android:text="IG"
+                    android:textColor="@color/use_orange"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:drawableStartCompat="@drawable/ic_sdg"
+                    app:layout_constraintEnd_toEndOf="@+id/editTextTextMultiLine"
+                    app:layout_constraintStart_toStartOf="@+id/editTextTextMultiLine"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout14"
+                    tools:ignore="SpeakableTextPresentCheck,TextContrastCheck" />
+
+            </LinearLayout>
         </LinearLayout>
 
         <TextView
