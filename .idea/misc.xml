@@ -138,10 +138,12 @@
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/myapplication2/src/main/res/layout/duo_view_header.xml" value="0.1956521739130435" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/myapplication2/src/main/res/layout/duo_view_menu.xml" value="0.1956521739130435" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/myapplication2/src/main/res/layout/duo_view_option.xml" value="0.1956521739130435" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/HC Alert/app/src/main/res/layout/activity_home.xml" value="0.14130434782608695" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/HC Alert/app/src/main/res/layout/layout_screen.xml" value="0.14130434782608695" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

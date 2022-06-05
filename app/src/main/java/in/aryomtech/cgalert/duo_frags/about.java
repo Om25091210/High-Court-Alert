@@ -55,11 +55,11 @@ public class about extends Fragment {
         btnAnim = AnimationUtils.loadAnimation(getContextNullSafety().getApplicationContext(),R.anim.button_animation);
         // fill list screen
         final List<ScreenItem> mList = new ArrayList<>();
-        mList.add(new ScreenItem("Man Behind This App-\nAbhinav Verma","Sub Inspector Telecom\n" +
-                "Posted in police Legal section advocate general office, High-Court Bilaspur",R.drawable.lucky_bhaiya));
-        mList.add(new ScreenItem("Submit Case Diaries","For case hearings high court needs the case diaries in time and it should be submitted in time, we will help you by alerting through our app.",R.drawable.ic_onboarding_one));
-        mList.add(new ScreenItem("How it works.","The card which is in red means that the case diary needs to be Submitted or you will have to bring it back, The clock will show you the days left respectively.",R.drawable.ic_onboarding_two));
-        mList.add(new ScreenItem("Finally","Your case diary which you submitted will be seen by judges of High Court. After completion of work the diary must be brought back by you within the given days.",R.drawable.ic_onboarding_three));
+        mList.add(new ScreenItem("Man Behind This App-\nAbhinav Verma","Sub Inspector Telecom Department,\n" +
+                "Posted in Police Legal Section of Advocate General's Office, High Court, Bilaspur.",R.drawable.lucky_bhaiya));
+        mList.add(new ScreenItem("Submission Alert","The High Court needs case diaries to be submitted on time for case hearings and this app will help the court via alerting the Police Stations.",R.drawable.ic_onboarding_one));
+        mList.add(new ScreenItem("How it works?","The color red indicates that the case diary is supposed to be submitted or withdrawn whereas the clock shows the number of days left for the same.",R.drawable.ic_onboarding_two));
+        mList.add(new ScreenItem("Finally","Once the diary is submitted, it will be inspected by the respective judges of the court.",R.drawable.ic_onboarding_three));
         // setup viewpager
         screenPager =view.findViewById(R.id.screen_viewpager);
         introViewPagerAdapter = new IntroViewPagerAdapter(getContextNullSafety(),mList);
