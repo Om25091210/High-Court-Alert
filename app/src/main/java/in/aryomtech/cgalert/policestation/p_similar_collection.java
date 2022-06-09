@@ -17,6 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -42,6 +44,8 @@ public class p_similar_collection extends Fragment {
     SwipeRefreshLayout mSwipeRefreshLayout;
     RecyclerView mRecyclerView;
     Query query;
+    ImageView cg_logo;
+    TextView no_data;
     List<Excel_data> excel_data=new ArrayList<>();
     List<Excel_data> excel_data_duplicates=new ArrayList<>();
     List<filterdata> filtered_mylist=new ArrayList<>();
@@ -64,6 +68,8 @@ public class p_similar_collection extends Fragment {
         );
         mSwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         search=view.findViewById(R.id.search);
+        cg_logo=view.findViewById(R.id.imageView3);
+        no_data=view.findViewById(R.id.no_data);
         //Initialize RecyclerView
         mRecyclerView = view.findViewById(R.id.recycler_view);
         LinearLayoutManager mManager = new LinearLayoutManager(getContextNullSafety());
@@ -117,6 +123,8 @@ public class p_similar_collection extends Fragment {
         //adapter
     }
     private void getdata() {
+        cg_logo.setVisibility(View.VISIBLE);
+        no_data.setVisibility(View.VISIBLE);
         mSwipeRefreshLayout.setRefreshing(true);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -153,7 +161,10 @@ public class p_similar_collection extends Fragment {
                 //Log.e("data_excel",excel_data_duplicates.get(1).getH()+"");
                 Log.e("filtered data",filtered_data+"");
                 Log.e("station list",filtered_station_dist+"");
-
+                if(excel_data_duplicates.size()!=0){
+                    cg_logo.setVisibility(View.GONE);
+                    no_data.setVisibility(View.GONE);
+                }
                 similarAdapter similarAdapter=new similarAdapter(getContextNullSafety(),save_locally_list,excel_data_duplicates);
                 similarAdapter.notifyDataSetChanged();
                 if(mRecyclerView!=null)

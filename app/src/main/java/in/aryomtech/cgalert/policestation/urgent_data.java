@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,6 +70,8 @@ public class urgent_data extends Fragment {
     ArrayList<String> added_list;
     NeumorphButton join;
     Dialog dialog;
+    ImageView cg_logo;
+    TextView no_data;
     TextView message, notification;
     private in.aryomtech.cgalert.Fragments.Interface.onClickInterface onClickInterface;
     private in.aryomtech.cgalert.Fragments.Interface.onAgainClickInterface onAgainClickInterface;
@@ -86,6 +89,8 @@ public class urgent_data extends Fragment {
         added_list=new ArrayList<>();
         mSwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         search=view.findViewById(R.id.search);
+        cg_logo=view.findViewById(R.id.imageView3);
+        no_data=view.findViewById(R.id.no_data);
         select_all=view.findViewById(R.id.checkBox4);
         join=view.findViewById(R.id.join);
         //Initialize RecyclerView
@@ -283,6 +288,8 @@ public class urgent_data extends Fragment {
             mRecyclerView.setAdapter(excel_adapter);
     }
     private void getdata() {
+        cg_logo.setVisibility(View.VISIBLE);
+        no_data.setVisibility(View.VISIBLE);
         mSwipeRefreshLayout.setRefreshing(true);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -306,6 +313,10 @@ public class urgent_data extends Fragment {
                         }
 
                     }
+                }
+                if(excel_data.size()!=0){
+                    cg_logo.setVisibility(View.GONE);
+                    no_data.setVisibility(View.GONE);
                 }
                 mSwipeRefreshLayout.setRefreshing(false);
                 added_list.clear();

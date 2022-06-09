@@ -68,7 +68,7 @@ public class pending_return extends Fragment {
     EditText search;
     DatabaseReference user_ref;
     Dialog dialog,dialog1;
-    TextView message, notification,phone_sms;
+    TextView message, notification,phone_sms,no_data;
     CheckBox select_all;
     LinkedList<String> phone_numbers=new LinkedList<>();
     LinkedList<String> station_name_list=new LinkedList<>();
@@ -82,7 +82,7 @@ public class pending_return extends Fragment {
     List<String> keys_copy_selected_phone=new ArrayList<>();
     DatabaseReference reference;
     NeumorphButton join;
-    ImageView bulk_delete;
+    ImageView bulk_delete,cg_logo;
     List<String> case_data_list=new ArrayList<>();
     List<String> case_data_list_filter=new ArrayList<>();
     List<String> district_name_list=new ArrayList<>();
@@ -104,6 +104,8 @@ public class pending_return extends Fragment {
         search=view.findViewById(R.id.search);
         select_all=view.findViewById(R.id.checkBox4);
         join=view.findViewById(R.id.join);
+        cg_logo=view.findViewById(R.id.imageView3);
+        no_data=view.findViewById(R.id.no_data);
         bulk_delete=view.findViewById(R.id.imageRemoveImage);
         //Initialize RecyclerView
         mRecyclerView = view.findViewById(R.id.recycler_view);
@@ -591,6 +593,8 @@ public class pending_return extends Fragment {
         added_list.clear();
         String txt="Send "+"("+added_list.size()+")";
         join.setText(txt);
+        cg_logo.setVisibility(View.VISIBLE);
+        no_data.setVisibility(View.VISIBLE);
         mSwipeRefreshLayout.setRefreshing(true);
         query_return.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -600,6 +604,10 @@ public class pending_return extends Fragment {
                     if(snapshot.child(ds.getKey()).child("J").getValue(String.class).equals("None")){
                         excel_data.add(snapshot.child(ds.getKey()).getValue(Excel_data.class));
                     }
+                }
+                if(excel_data.size()!=0){
+                    cg_logo.setVisibility(View.GONE);
+                    no_data.setVisibility(View.GONE);
                 }
                 added_list.clear();
                 String txt="Send "+"("+added_list.size()+")";
