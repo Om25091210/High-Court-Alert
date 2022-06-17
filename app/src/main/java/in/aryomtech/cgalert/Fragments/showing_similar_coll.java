@@ -1,5 +1,6 @@
 package in.aryomtech.cgalert.Fragments;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
@@ -10,6 +11,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.telephony.SmsManager;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -24,10 +27,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.snackbar.Snackbar;
@@ -38,8 +44,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -60,7 +69,10 @@ public class showing_similar_coll extends Fragment {
     List<String> case_data_list=new ArrayList<>();
     List<String> case_data_list_filter=new ArrayList<>();
     DatabaseReference user_ref;
-    Dialog dialog,dialog1;
+    Dialog dialog,dialog1,j_dialog;
+    private DatePickerDialog.OnDateSetListener mDateSetListener;
+    int c=0;
+    List<Excel_data> j_data_list=new ArrayList<>();
     TextView message, notification,phone_sms;
     RecyclerView mRecyclerView;
     Query query;
@@ -73,7 +85,7 @@ public class showing_similar_coll extends Fragment {
     CheckBox select_all;
     Excel_Adapter excel_adapter;
     NeumorphButton join;
-    ImageView bulk_delete;
+    ImageView bulk_delete,j_column;
     EditText search;
     DatabaseReference reference;
     List<String> noti_keys_copy_selected_phone=new ArrayList<>();
@@ -111,6 +123,7 @@ public class showing_similar_coll extends Fragment {
         join=view.findViewById(R.id.join);
         select_all=view.findViewById(R.id.checkBox4);
         search=view.findViewById(R.id.search);
+        j_column=view.findViewById(R.id.j_column);
         bulk_delete=view.findViewById(R.id.imageRemoveImage);
         //Initialize RecyclerView
         mRecyclerView = view.findViewById(R.id.recycler_view);
@@ -267,7 +280,83 @@ public class showing_similar_coll extends Fragment {
                 dialog.dismiss();
                 gather_number("phonesms");
             });
+        });
 
+        j_column.setOnClickListener(v->{
+            reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                    if(added_list!=null){
+                        if(added_list.size()!=0) {
+                            j_dialog = new Dialog(getContextNullSafety());
+                            j_dialog.setCancelable(true);
+                            j_dialog.setContentView(R.layout.j_column_dialog);
+                            TextView dates=j_dialog.findViewById(R.id.diary);
+                            j_dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                            j_dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+                            j_dialog.show();
+                            dates.setOnClickListener(view -> {
+                                Calendar cal = Calendar.getInstance();
+                                int year = cal.get(Calendar.YEAR);
+                                int month = cal.get(Calendar.MONTH);
+                                int day = cal.get(Calendar.DAY_OF_MONTH);
+
+                                DatePickerDialog dialog = new DatePickerDialog(
+                                        getActivity(),
+                                        mDateSetListener,
+                                        year,month,day);
+
+                                dialog.show();
+                            });
+
+                            mDateSetListener = (datePicker, year, month, day) -> {
+
+                                String d=String.valueOf(day);
+                                String m=String.valueOf(month+1);
+                                Log.e("month",m+"");
+                                month = month + 1;
+                                Log.e("month",month+"");
+                                if(String.valueOf(day).length()==1)
+                                    d="0"+ day;
+                                if(String.valueOf(month).length()==1)
+                                    m="0"+ month;
+                                String date = d + "." + m + "." + year;
+                                dates.setText(date);
+                            };
+
+                            TextView cancel=j_dialog.findViewById(R.id.textView96);
+                            TextView yes=j_dialog.findViewById(R.id.textView95);
+                            cancel.setOnClickListener(vi-> j_dialog.dismiss());
+                            yes.setOnClickListener(vi-> {
+                                Snackbar.make(mRecyclerView,"Gathering data...",Snackbar.LENGTH_LONG)
+                                        .setActionTextColor(Color.parseColor("#ea4a1f"))
+                                        .setTextColor(Color.parseColor("#000000"))
+                                        .setBackgroundTint(Color.parseColor("#D9F5F8"))
+                                        .show();
+                                for (int i = 0; i < added_list.size(); i++) {
+                                    j_data_list.add(snapshot.child(added_list.get(i)).getValue(Excel_data.class));
+                                }
+
+                                dialog1 = new Dialog(getContextNullSafety());
+                                dialog1.setCancelable(false);
+                                dialog1.setContentView(R.layout.loading_dialog);
+                                dialog1.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                                LottieAnimationView lottieAnimationView=dialog1.findViewById(R.id.animate);
+                                lottieAnimationView.setAnimation("done.json");
+                                dialog1.show();
+
+                                update_J_Excel(j_data_list,dates.getText().toString());
+
+                                Log.e("dates",j_data_list.size()+"");
+                            });
+                        }
+                    }
+                    //TODO: dialog k andar date and ok mai send all
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {}
+            });
         });
         return view;
     }
@@ -601,6 +690,109 @@ public class showing_similar_coll extends Fragment {
         excel_adapter.notifyDataSetChanged();
         if(mRecyclerView!=null)
             mRecyclerView.setAdapter(excel_adapter);
+    }
+
+    private void update_J_Excel(List<Excel_data> j_dates_list,String j_date) {
+        Snackbar.make(mRecyclerView,"Updating dates...",Snackbar.LENGTH_LONG)
+                .setActionTextColor(Color.parseColor("#ea4a1f"))
+                .setTextColor(Color.parseColor("#000000"))
+                .setBackgroundTint(Color.parseColor("#D9F5F8"))
+                .show();
+        j_dialog.dismiss();
+        Log.e("Sheet",j_date+"");
+        JSONObject jsonBody = new JSONObject();
+        try
+        {
+            jsonBody.put("cno", Integer.parseInt(j_dates_list.get(c).getE()));
+            jsonBody.put("crno", Integer.parseInt(j_dates_list.get(c).getH()));
+            jsonBody.put("ps", j_dates_list.get(c).getB());
+            jsonBody.put("nod", j_dates_list.get(c).getC());
+            jsonBody.put("subject", j_dates_list.get(c).getType());
+            jsonBody.put("j_column", j_date);
+            Log.d("body", "httpCall_collect: "+jsonBody);
+        }
+        catch (Exception e)
+        {
+            Log.e("Error","JSON ERROR");
+        }
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getContextNullSafety());
+        String URL = "https://high-court-alertsystem.herokuapp.com/j_column";
+
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, URL,jsonBody,
+                new com.android.volley.Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // enjoy your response
+                        String code=response.optString("code")+"";
+                        if(code.equals("202")){
+                            reference.child(added_list.get(c)).child("J").setValue(j_date);
+                            Snackbar.make(join,"Data Uploaded to Excel.",Snackbar.LENGTH_LONG)
+                                    .setActionTextColor(Color.parseColor("#171746"))
+                                    .setTextColor(Color.parseColor("#FF7F5C"))
+                                    .setBackgroundTint(Color.parseColor("#171746"))
+                                    .show();
+                            new Handler(Looper.myLooper()).postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    dialog1.dismiss();
+                                    c++;
+                                    if(c!=j_dates_list.size())
+                                        update_J_Excel(j_dates_list, j_date);
+                                    else
+                                        c=0;
+                                }
+                            },2000);
+                        }
+                        else{
+                            Snackbar.make(join,"Failed to Upload in Excel.",Snackbar.LENGTH_LONG)
+                                    .setActionTextColor(Color.parseColor("#000000"))
+                                    .setTextColor(Color.parseColor("#000000"))
+                                    .setBackgroundTint(Color.parseColor("#FF5252"))
+                                    .show();
+                            LottieAnimationView lottieAnimationView=dialog1.findViewById(R.id.animate);
+                            lottieAnimationView.setAnimation("error.json");
+                            dialog1.show();
+                            new Handler(Looper.myLooper()).postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    dialog1.dismiss();
+                                    c++;
+                                    if(c!=j_dates_list.size())
+                                        update_J_Excel(j_dates_list, j_date);
+                                    else
+                                        c=0;
+                                }
+                            },2000);
+                        }
+                        Log.e("BULK code",code+"");
+                        Log.e("response",response.toString());
+                    }
+                }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // enjoy your error status
+                Log.e("Status of code = ","Wrong");
+            }
+        });
+        stringRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 15000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 15000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+            }
+        });
+        Log.d("string", stringRequest.toString());
+        requestQueue.add(stringRequest);
+
     }
 
     /**CALL THIS IF YOU NEED CONTEXT*/

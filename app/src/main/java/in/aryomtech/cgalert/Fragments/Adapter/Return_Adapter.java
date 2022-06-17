@@ -122,6 +122,11 @@ public class Return_Adapter extends RecyclerView.Adapter<Return_Adapter.ViewHold
                 holder.seen.setVisibility(View.GONE);
         }
 
+        if(list.get(position).getSent()!=null)
+            holder.notified.setVisibility(View.VISIBLE);
+        else
+            holder.notified.setVisibility(View.GONE);
+        
         if (list.get(position).getType().equals("RM CALL")) {
             holder.message.setText("उपरोक्त मूल केस डायरी दिनाँक "+list.get(position).getL()+" तक बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय छतीसगढ़ में  अनिवार्यतः जमा करें।");
             holder.type.setVisibility(View.VISIBLE);
@@ -230,7 +235,8 @@ public class Return_Adapter extends RecyclerView.Adapter<Return_Adapter.ViewHold
                     ,list.get(position).getPushkey()
                     ,list.get(position).getReminded()
                     ,list.get(position).getDate_of_alert()
-                    ,list.get(position).getSeen());
+                    ,list.get(position).getSeen()
+                    ,list.get(position).getSent());
 
             Bundle bundle=new Bundle();
             bundle.putSerializable("excel_data_sending", excel_data);
@@ -305,7 +311,7 @@ public class Return_Adapter extends RecyclerView.Adapter<Return_Adapter.ViewHold
         ConstraintLayout layout;
         LinearLayout layout_details;
         TextView day_left;
-        ImageView tick,type,imageRemovedata,share,seen;
+        ImageView tick,type,imageRemovedata,share,notified,seen;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewTitle = itemView.findViewById(R.id.station_name);//
@@ -329,6 +335,7 @@ public class Return_Adapter extends RecyclerView.Adapter<Return_Adapter.ViewHold
             share = itemView.findViewById(R.id.share);
             seen = itemView.findViewById(R.id.seen);
             message = itemView.findViewById(R.id.message);
+            notified = itemView.findViewById(R.id.notified);
         }
     }
 }
