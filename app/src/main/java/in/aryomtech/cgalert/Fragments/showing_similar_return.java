@@ -413,8 +413,8 @@ public class showing_similar_return extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (added_list.size() != 0) {
                     for (int h = 0; h < added_list.size(); h++) {
-                        String station_name = "PS " + snapshot.child(added_list.get(h)).child("B").getValue(String.class).trim();
-                        String district_name = snapshot.child(added_list.get(h)).child("C").getValue(String.class).trim();
+                        String station_name = "PS " + snapshot.child(added_list.get(h)).child("B").getValue(String.class).toUpperCase().trim();
+                        String district_name = snapshot.child(added_list.get(h)).child("C").getValue(String.class).toUpperCase().trim();
 
                         String K = snapshot.child(added_list.get(h)).child("K").getValue(String.class).trim();
                         String C = snapshot.child(added_list.get(h)).child("C").getValue(String.class).trim();
