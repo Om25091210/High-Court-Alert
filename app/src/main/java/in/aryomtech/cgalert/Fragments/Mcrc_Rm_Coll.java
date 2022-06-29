@@ -1,5 +1,7 @@
 package in.aryomtech.cgalert.Fragments;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -92,6 +94,7 @@ public class Mcrc_Rm_Coll extends Fragment {
     ArrayList<String> added_list;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     NeumorphButton join;
+    String sp_of;
     ImageView bulk_delete,cg_logo,j_column;
     boolean isadmin=false;
     Dialog dialog,dialog1,j_dialog;
@@ -127,14 +130,18 @@ public class Mcrc_Rm_Coll extends Fragment {
         mRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         mRecyclerView.setLayoutManager(mManager);
         excel_adapter= new Excel_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface);
-
+        sp_of=getContextNullSafety().getSharedPreferences("Is_SP",MODE_PRIVATE)
+                .getString("Yes_of","none");
         //Initialize Database
         reference = FirebaseDatabase.getInstance().getReference().child("data");
         user_ref=FirebaseDatabase.getInstance().getReference().child("users");
         query = FirebaseDatabase.getInstance().getReference().child("data").orderByChild("type").equalTo("RM CALL");
         phone_numbers_ref=FirebaseDatabase.getInstance().getReference().child("Phone numbers");
-        getdata();
-        isadmin=getContextNullSafety().getSharedPreferences("isAdmin_or_not",Context.MODE_PRIVATE)
+        if(sp_of.equals("none"))
+            getdata();
+        else
+            getdata_for_sp();
+        isadmin=getContextNullSafety().getSharedPreferences("isAdmin_or_not", MODE_PRIVATE)
                 .getBoolean("authorizing_admin",false);
         if(isadmin) {
             join.setVisibility(View.VISIBLE);
@@ -204,7 +211,12 @@ public class Mcrc_Rm_Coll extends Fragment {
             Log.e("added_peeps",added_list+"");
         });
         //Set listener to SwipeRefreshLayout for refresh action
-        mSwipeRefreshLayout.setOnRefreshListener(this::getdata);
+        mSwipeRefreshLayout.setOnRefreshListener(() -> {
+            if(sp_of.equals("no"))
+                getdata();
+            else
+                getdata_for_sp();
+        });
         search.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {}
@@ -487,7 +499,7 @@ public class Mcrc_Rm_Coll extends Fragment {
                 }
                 //TODO :Sent to next section.
                 Log.e("number does not exist = ",not_sent_sms_list+"");
-                getContextNullSafety().getSharedPreferences("saving_RM_Call_not_sms",Context.MODE_PRIVATE).edit()
+                getContextNullSafety().getSharedPreferences("saving_RM_Call_not_sms", MODE_PRIVATE).edit()
                         .putString("RM_CALL_list",not_sent_sms_list+"").apply();
 
                 Snackbar.make(mRecyclerView,"Notified successfully...",Snackbar.LENGTH_LONG)
@@ -536,10 +548,10 @@ public class Mcrc_Rm_Coll extends Fragment {
                 Log.e("number does not exist = ",not_sent_sms_list+"");
                 Log.e("keys copy selected phone = ",noti_keys_copy_selected_phone+"");
 
-                getContextNullSafety().getSharedPreferences("saving_RM_Call_not_noti",Context.MODE_PRIVATE).edit()
+                getContextNullSafety().getSharedPreferences("saving_RM_Call_not_noti", MODE_PRIVATE).edit()
                         .putString("RM_CALL_list",noti_keys_copy_selected_phone+"").apply();
 
-                getContextNullSafety().getSharedPreferences("saving_RM_Call_not_sms",Context.MODE_PRIVATE).edit()
+                getContextNullSafety().getSharedPreferences("saving_RM_Call_not_sms", MODE_PRIVATE).edit()
                         .putString("RM_CALL_list",not_sent_sms_list+"").apply();
 
                 Snackbar.make(mRecyclerView,"Notified successfully...",Snackbar.LENGTH_LONG)
@@ -688,6 +700,45 @@ public class Mcrc_Rm_Coll extends Fragment {
                 excel_data.clear();
                 for(DataSnapshot ds:snapshot.getChildren()){
                     excel_data.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Excel_data.class));
+                }
+                if(excel_data.size()!=0){
+                    cg_logo.setVisibility(View.GONE);
+                    no_data.setVisibility(View.GONE);
+                }
+                mSwipeRefreshLayout.setRefreshing(false);
+                added_list.clear();
+                String txt="Send "+"("+added_list.size()+")";
+                join.setText(txt);
+                excel_adapter.unselectall();
+                Collections.reverse(excel_data);
+                excel_adapter=new Excel_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface);
+                excel_adapter.notifyDataSetChanged();
+                if(mRecyclerView!=null)
+                    mRecyclerView.setAdapter(excel_adapter);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
+    }
+
+    private void getdata_for_sp() {
+        Log.e("sp","triggered");
+        search.setText("");
+        select_all.setChecked(false);
+        added_list.clear();
+        String txt="Send "+"("+added_list.size()+")";
+        join.setText(txt);
+        mSwipeRefreshLayout.setRefreshing(true);
+        cg_logo.setVisibility(View.VISIBLE);
+        no_data.setVisibility(View.VISIBLE);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                excel_data.clear();
+                for(DataSnapshot ds:snapshot.getChildren()){
+                    if(snapshot.child(ds.getKey()).child("C").getValue(String.class).equals(sp_of)) {
+                        excel_data.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Excel_data.class));
+                    }
                 }
                 if(excel_data.size()!=0){
                     cg_logo.setVisibility(View.GONE);

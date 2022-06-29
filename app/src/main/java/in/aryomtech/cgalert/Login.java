@@ -109,6 +109,9 @@ public class Login extends AppCompatActivity {
         pinView = findViewById(R.id.pin_view);
         upAnimate(logo_layout);
 
+        getSharedPreferences("Is_SP",MODE_PRIVATE).edit()
+                .putString("Yes_of","none").apply();
+
         linearLayout.setOnClickListener(v->{
             if(edtEmail.getGetTextValue().trim().length()==10){
                 offanimate(edtEmail);
@@ -264,6 +267,10 @@ public class Login extends AppCompatActivity {
                         if (edtEmail.getGetTextValue().trim().equals(ds_1.getValue(String.class))){
                             count=1;
                             station_name=ds_1.getKey();
+                            if(Objects.requireNonNull(station_name).startsWith("SP")){
+                                getSharedPreferences("Is_SP",MODE_PRIVATE).edit()
+                                        .putString("Yes_of",ds.getKey()).apply();
+                            }
                             getSharedPreferences("station_name_K",MODE_PRIVATE).edit()
                                     .putString("the_station_name2003",station_name).apply();
                             break;
@@ -272,7 +279,7 @@ public class Login extends AppCompatActivity {
                     if(count==1)
                         break;
                 }
-                if(count==1 && station_name.substring(0,2).equals("PS")){
+                if(count==1 && station_name.startsWith("PS")){
                     Log.e("police station if","entered");
                     getSharedPreferences("useris?",MODE_PRIVATE).edit()
                             .putString("the_user_is?","p_home").apply();

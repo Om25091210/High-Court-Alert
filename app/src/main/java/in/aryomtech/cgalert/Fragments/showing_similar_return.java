@@ -1,5 +1,7 @@
 package in.aryomtech.cgalert.Fragments;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -65,6 +67,7 @@ public class showing_similar_return extends Fragment {
     View view;
     private Context contextNullSafe;
     Bundle b;
+    String sp_of;
     List<String> case_data_list=new ArrayList<>();
     List<String> case_data_list_filter=new ArrayList<>();
     RecyclerView mRecyclerView;
@@ -210,7 +213,12 @@ public class showing_similar_return extends Fragment {
         });
         //adapter
         //Initialize Database
-        getdata();
+        sp_of=getContextNullSafety().getSharedPreferences("Is_SP",MODE_PRIVATE)
+                .getString("Yes_of","none");
+        if(sp_of.equals("none"))
+            getdata();
+        else
+            getdata_for_sp();
         //Set listener to SwipeRefreshLayout for refresh action
         //mSwipeRefreshLayout.setOnRefreshListener(this::getdata);
         search.addTextChangedListener(new TextWatcher() {
@@ -358,6 +366,26 @@ public class showing_similar_return extends Fragment {
             });
         });
         return view;
+    }
+
+    private void getdata_for_sp() {
+        search.setText("");
+        select_all.setChecked(false);
+        added_list.clear();
+        String txt="Send "+"("+added_list.size()+")";
+        join.setText(txt);
+        filter_excel_data.clear();
+        for(int i=0;i<excel_data.size();i++){
+            if(excel_data.get(i).getH().trim().equals(data_case_number)){
+                if(excel_data.get(i).getC().equals(sp_of)) {
+                    filter_excel_data.add(excel_data.get(i));
+                }
+            }
+        }
+        excel_adapter=new Excel_Adapter(getContextNullSafety(),filter_excel_data,onClickInterface,onAgainClickInterface);
+        excel_adapter.notifyDataSetChanged();
+        if(mRecyclerView!=null)
+            mRecyclerView.setAdapter(excel_adapter);
     }
 
     private void search(String str) {

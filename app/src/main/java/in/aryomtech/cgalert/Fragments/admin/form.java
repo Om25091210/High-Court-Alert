@@ -676,6 +676,7 @@ public class form extends Fragment {
     }
 
     private void get_police_station(String district) {
+        ps_list.clear();
         reference_phone.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

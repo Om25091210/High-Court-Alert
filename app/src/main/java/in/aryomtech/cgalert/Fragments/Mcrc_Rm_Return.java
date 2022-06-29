@@ -1,5 +1,7 @@
 package in.aryomtech.cgalert.Fragments;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -55,6 +57,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+import in.aryomtech.cgalert.Fragments.Adapter.Excel_Adapter;
 import in.aryomtech.cgalert.Fragments.Adapter.Return_Adapter;
 import in.aryomtech.cgalert.Fragments.model.Excel_data;
 import in.aryomtech.cgalert.R;
@@ -82,7 +85,7 @@ public class Mcrc_Rm_Return extends Fragment {
     List<String> keys_selected=new ArrayList<>();
     List<String> keys_copy_selected_phone=new ArrayList<>();
     List<String> noti_keys_copy_selected_phone=new ArrayList<>();
-
+    String sp_of;
     DatabaseReference phone_numbers_ref;
     List<Excel_data> mylist=new ArrayList<>();
     EditText search;
@@ -134,7 +137,12 @@ public class Mcrc_Rm_Return extends Fragment {
         user_ref=FirebaseDatabase.getInstance().getReference().child("users");
         query = FirebaseDatabase.getInstance().getReference().child("data").orderByChild("type").equalTo("RM RETURN");
         phone_numbers_ref=FirebaseDatabase.getInstance().getReference().child("Phone numbers");
-        getdata();
+        sp_of=getContextNullSafety().getSharedPreferences("Is_SP",MODE_PRIVATE)
+                .getString("Yes_of","none");
+        if(sp_of.equals("none"))
+            getdata();
+        else
+            getdata_for_sp();
 
         isadmin=getContextNullSafety().getSharedPreferences("isAdmin_or_not",Context.MODE_PRIVATE)
                 .getBoolean("authorizing_admin",false);
@@ -211,7 +219,12 @@ public class Mcrc_Rm_Return extends Fragment {
             Log.e("added_peeps",added_list+"");
         });
         //Set listener to SwipeRefreshLayout for refresh action
-        mSwipeRefreshLayout.setOnRefreshListener(this::getdata);
+        mSwipeRefreshLayout.setOnRefreshListener(() -> {
+            if(sp_of.equals("no"))
+                getdata();
+            else
+                getdata_for_sp();
+        });
         search.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {}
@@ -358,6 +371,46 @@ public class Mcrc_Rm_Return extends Fragment {
         });
 
         return view;
+    }
+    private void getdata_for_sp() {
+        Log.e("sp","triggered");
+        search.setText("");
+        select_all.setChecked(false);
+        added_list.clear();
+        String txt="Send "+"("+added_list.size()+")";
+        join.setText(txt);
+        mSwipeRefreshLayout.setRefreshing(true);
+        cg_logo.setVisibility(View.VISIBLE);
+        no_data.setVisibility(View.VISIBLE);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                excel_data.clear();
+                for(DataSnapshot ds:snapshot.getChildren()){
+                    if(ds.hasChildren()) {
+                        if(snapshot.child(ds.getKey()).child("C").getValue(String.class).equals(sp_of)) {
+                            excel_data.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Excel_data.class));
+                        }
+                    }
+                }
+                if(excel_data.size()!=0){
+                    cg_logo.setVisibility(View.GONE);
+                    no_data.setVisibility(View.GONE);
+                }
+                mSwipeRefreshLayout.setRefreshing(false);
+                added_list.clear();
+                String txt="Send "+"("+added_list.size()+")";
+                join.setText(txt);
+                excel_adapter.unselect_all();
+                Collections.reverse(excel_data);
+                excel_adapter=new Return_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface);
+                excel_adapter.notifyDataSetChanged();
+                if(mRecyclerView!=null)
+                    mRecyclerView.setAdapter(excel_adapter);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
     }
     private void search(String str) {
         mylist.clear();

@@ -1,5 +1,7 @@
 package in.aryomtech.cgalert.Fragments;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -78,6 +80,7 @@ public class pending_return extends Fragment {
     DatabaseReference user_ref;
     Dialog dialog,dialog1,j_dialog;
     int c=0;
+    String sp_of;
     List<Excel_data> j_data_list=new ArrayList<>();
     TextView message, notification,phone_sms,no_data;
     CheckBox select_all;
@@ -212,7 +215,12 @@ public class pending_return extends Fragment {
             Log.e("added_peeps",added_list+"");
         });
         //Set listener to SwipeRefreshLayout for refresh action
-        mSwipeRefreshLayout.setOnRefreshListener(this::get_pending);
+        mSwipeRefreshLayout.setOnRefreshListener(() -> {
+            if(sp_of.equals("no"))
+                get_pending();
+            else
+                getdata_for_sp();
+        });
         search.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {}
@@ -359,8 +367,54 @@ public class pending_return extends Fragment {
             });
         });
 
-        get_pending();
+        sp_of=getContextNullSafety().getSharedPreferences("Is_SP",MODE_PRIVATE)
+                .getString("Yes_of","none");
+        if(sp_of.equals("none"))
+            get_pending();
+        else
+            getdata_for_sp();
         return view;
+    }
+
+    private void getdata_for_sp() {
+        search.setText("");
+        select_all.setChecked(false);
+        added_list.clear();
+        String txt="Send "+"("+added_list.size()+")";
+        join.setText(txt);
+        cg_logo.setVisibility(View.VISIBLE);
+        no_data.setVisibility(View.VISIBLE);
+        mSwipeRefreshLayout.setRefreshing(true);
+        query_return.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                excel_data.clear();
+                for(DataSnapshot ds:snapshot.getChildren()){
+                    if(snapshot.child(ds.getKey()).child("J").getValue(String.class).equals("None")){
+                        if(snapshot.child(ds.getKey()).child("C").getValue(String.class).equals(sp_of)) {
+                            excel_data.add(snapshot.child(ds.getKey()).getValue(Excel_data.class));
+                        }
+                    }
+                }
+                if(excel_data.size()!=0){
+                    cg_logo.setVisibility(View.GONE);
+                    no_data.setVisibility(View.GONE);
+                }
+                added_list.clear();
+                String txt="Send "+"("+added_list.size()+")";
+                join.setText(txt);
+                excel_adapter.unselectall();
+                mSwipeRefreshLayout.setRefreshing(false);
+                Collections.reverse(excel_data);
+                excel_adapter=new Excel_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface);
+                excel_adapter.notifyDataSetChanged();
+                if(mRecyclerView!=null)
+                    mRecyclerView.setAdapter(excel_adapter);
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
     }
 
     public void gather_number(String type) {

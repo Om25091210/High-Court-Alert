@@ -1,5 +1,7 @@
 package in.aryomtech.cgalert.Fragments;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -75,6 +77,7 @@ public class urgent_data extends Fragment {
     List<Excel_data> mylist=new ArrayList<>();
     EditText search;
     CheckBox select_all;
+    String sp_of;
     List<String> phone_numbers=new ArrayList<>();
     List<String> station_name_list=new ArrayList<>();
     List<String> district_name_list=new ArrayList<>();
@@ -132,7 +135,12 @@ public class urgent_data extends Fragment {
         user_ref=FirebaseDatabase.getInstance().getReference().child("users");
         query = FirebaseDatabase.getInstance().getReference().child("data");
         phone_numbers_ref=FirebaseDatabase.getInstance().getReference().child("Phone numbers");
-        getdata();
+        sp_of=getContextNullSafety().getSharedPreferences("Is_SP",MODE_PRIVATE)
+                .getString("Yes_of","none");
+        if(sp_of.equals("none"))
+            getdata();
+        else
+            getdata_for_sp();
         isadmin=getContextNullSafety().getSharedPreferences("isAdmin_or_not",Context.MODE_PRIVATE)
                 .getBoolean("authorizing_admin",false);
         if(isadmin) {
@@ -203,7 +211,12 @@ public class urgent_data extends Fragment {
             Log.e("added_peeps",added_list+"");
         });
         //Set listener to SwipeRefreshLayout for refresh action
-        mSwipeRefreshLayout.setOnRefreshListener(this::getdata);
+        mSwipeRefreshLayout.setOnRefreshListener(() -> {
+            if(sp_of.equals("no"))
+                getdata();
+            else
+                getdata_for_sp();
+        });
         search.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {}
@@ -353,6 +366,57 @@ public class urgent_data extends Fragment {
 
 
         return view;
+    }
+
+    private void getdata_for_sp() {
+        search.setText("");
+        select_all.setChecked(false);
+        added_list.clear();
+        String txt="Send "+"("+added_list.size()+")";
+        join.setText(txt);
+        mSwipeRefreshLayout.setRefreshing(true);
+        cg_logo.setVisibility(View.VISIBLE);
+        no_data.setVisibility(View.VISIBLE);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                excel_data.clear();
+                for(DataSnapshot ds:snapshot.getChildren()){
+                    try {
+                        Date dNow = new Date( );
+                        SimpleDateFormat ft =
+                                new SimpleDateFormat ("dd.MM.yyyy",Locale.getDefault());
+
+                        Date list = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(snapshot.child(ds.getKey()).child("L").getValue(String.class) + "");
+                        Date current = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(ft.format(dNow));
+                        Log.e("date",list.before(current)+"");
+                        if(list.before(current)){
+                            if(snapshot.child(ds.getKey()).child("C").getValue(String.class).equals(sp_of)) {
+                                excel_data.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Excel_data.class));
+                            }
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if(excel_data.size()!=0){
+                    cg_logo.setVisibility(View.GONE);
+                    no_data.setVisibility(View.GONE);
+                }
+                mSwipeRefreshLayout.setRefreshing(false);
+                added_list.clear();
+                String txt="Send "+"("+added_list.size()+")";
+                join.setText(txt);
+                excel_adapter.unselectall();
+                Collections.reverse(excel_data);
+                excel_adapter=new Excel_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface);
+                excel_adapter.notifyDataSetChanged();
+                if(mRecyclerView!=null)
+                    mRecyclerView.setAdapter(excel_adapter);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
     }
 
     public void gather_number(String type) {
