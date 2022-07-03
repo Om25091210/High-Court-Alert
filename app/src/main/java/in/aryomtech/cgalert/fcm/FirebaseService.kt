@@ -2,7 +2,6 @@ package `in`.aryomtech.cgalert.fcm
 
 
 import `in`.aryomtech.cgalert.R
-import `in`.aryomtech.cgalert.Splash
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -15,6 +14,7 @@ import android.util.Log
 import android.widget.RemoteViews
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import kotlin.random.Random
@@ -23,7 +23,6 @@ import kotlin.random.Random
 private const val CHANNEL_ID="my_channel"
 
 class FirebaseService : FirebaseMessagingService(){
-
 
     override fun onNewToken(p0: String) {
         super.onNewToken(p0)
@@ -69,6 +68,10 @@ class FirebaseService : FirebaseMessagingService(){
             .build()
 
         notificationManager.notify(notificationID, notification)
+
+        //Initialize Database
+        val reference = FirebaseDatabase.getInstance().reference.child("data")
+        reference.child(""+message.data["key"]).child("sent").setValue("1")
 
     }
     @RequiresApi(Build.VERSION_CODES.O)

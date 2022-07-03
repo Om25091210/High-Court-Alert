@@ -676,12 +676,13 @@ public class form extends Fragment {
     }
 
     private void get_police_station(String district) {
+        ps_list.clear();
         reference_phone.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot dataSnapshot:snapshot.child(district).getChildren()) {
                     if (dataSnapshot.getKey().substring(0, 2).equals("PS")) {
-                        ps_list.add(dataSnapshot.getKey().substring(3));
+                        ps_list.add(dataSnapshot.getKey().substring(2));
                         //Creating the instance of ArrayAdapter containing list of language names
                         ArrayAdapter<String> adapter = new ArrayAdapter<String>
                                 (getContextNullSafety(), android.R.layout.select_dialog_item, ps_list);

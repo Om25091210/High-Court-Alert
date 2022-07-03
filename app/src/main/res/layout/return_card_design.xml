@@ -25,6 +25,19 @@
         app:tint="@color/use_light_blue" />
 
     <ImageView
+        android:id="@+id/notified"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="20dp"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/ic_bell"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@+id/seen"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/use_light_blue" />
+
+    <ImageView
         android:id="@+id/share"
         android:layout_width="25dp"
         android:layout_height="25dp"

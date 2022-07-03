@@ -19,8 +19,21 @@
         android:layout_marginStart="20dp"
         android:contentDescription="@string/app_name"
         android:src="@drawable/ic_seen"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/use_light_blue" />
+
+    <ImageView
+        android:id="@+id/notified"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="20dp"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/ic_bell"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@+id/seen"
         app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/use_light_blue" />
 

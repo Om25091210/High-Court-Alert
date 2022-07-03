@@ -1,5 +1,7 @@
 package in.aryomtech.cgalert.Fragments;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Context;
 import android.os.Bundle;
 
@@ -45,6 +47,7 @@ public class Similar_Return extends Fragment {
     SwipeRefreshLayout mSwipeRefreshLayout;
     RecyclerView mRecyclerView;
     Query query;
+    String sp_of;
     List<Excel_data> excel_data=new ArrayList<>();
     List<Excel_data> excel_data_duplicates=new ArrayList<>();
     List<filterdata> filtered_mylist=new ArrayList<>();
@@ -81,9 +84,19 @@ public class Similar_Return extends Fragment {
         //adapter
         //Initialize Database
         query = FirebaseDatabase.getInstance().getReference().child("data").orderByChild("type").equalTo("RM RETURN");
-        getdata();
+        sp_of=getContextNullSafety().getSharedPreferences("Is_SP",MODE_PRIVATE)
+                .getString("Yes_of","none");
+        if(sp_of.equals("none"))
+            getdata();
+        else
+            getdata_for_sp();
         //Set listener to SwipeRefreshLayout for refresh action
-        mSwipeRefreshLayout.setOnRefreshListener(this::getdata);
+        mSwipeRefreshLayout.setOnRefreshListener(() -> {
+            if(sp_of.equals("no"))
+                getdata();
+            else
+                getdata_for_sp();
+        });
         search.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {}
@@ -96,6 +109,61 @@ public class Similar_Return extends Fragment {
         });
         return view;
     }
+
+    private void getdata_for_sp() {
+        cg_logo.setVisibility(View.VISIBLE);
+        no_data.setVisibility(View.VISIBLE);
+        mSwipeRefreshLayout.setRefreshing(true);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                excel_data.clear();
+                joined_list.clear();
+                excel_data_duplicates.clear();
+                save_locally_list.clear();
+                filtered_data.clear();
+                station_dist.clear();
+                filtered_station_dist.clear();
+                for(DataSnapshot ds:snapshot.getChildren()) {
+                    if (sp_of.equals(snapshot.child(ds.getKey()).child("C").getValue(String.class))) {
+                        excel_data.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Excel_data.class));
+                        joined_list.add(excel_data.get(excel_data.size() - 1).getD().toLowerCase().trim() + " " + excel_data.get(excel_data.size() - 1).getH().trim() + " " + excel_data.get(excel_data.size() - 1).getI().trim() + "=" + excel_data.get(excel_data.size() - 1).getB().trim() + " " + excel_data.get(excel_data.size() - 1).getC().trim());
+                        station_dist.add(excel_data.get(excel_data.size() - 1).getB().trim() + " " + excel_data.get(excel_data.size() - 1).getC().trim());
+                    }
+                }
+                mSwipeRefreshLayout.setRefreshing(false);
+                Collections.reverse(excel_data);
+                Collections.reverse(joined_list);
+                Collections.reverse(station_dist);
+                //filtering data
+                for(int i=0;i<joined_list.size();i++){//n
+                    if(Collections.frequency(joined_list,joined_list.get(i))>1){ //n   7292 = 7
+                        excel_data_duplicates.add(excel_data.get(i));
+                        if(!filtered_data.contains(joined_list.get(i))){//n
+                            filtered_data.add(joined_list.get(i)); // n
+                            filtered_station_dist.add(station_dist.get(i));
+                            remove_spaces_and_store(filtered_data,filtered_station_dist);
+                        }
+                    }
+                }
+
+                Log.e("filtered data",filtered_data+"");
+                Log.e("station list",filtered_station_dist+"");
+                if(excel_data_duplicates.size()!=0){
+                    cg_logo.setVisibility(View.GONE);
+                    no_data.setVisibility(View.GONE);
+                }
+                similarAdapter2 similarAdapter2=new similarAdapter2(getContextNullSafety(),save_locally_list,excel_data_duplicates);
+                similarAdapter2.notifyDataSetChanged();
+                if(mRecyclerView!=null)
+                    mRecyclerView.setAdapter(similarAdapter2);
+                //adapter
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
+    }
+
     private void search(String str) {
         filtered_mylist.clear();
         for(filterdata object:save_locally_list){

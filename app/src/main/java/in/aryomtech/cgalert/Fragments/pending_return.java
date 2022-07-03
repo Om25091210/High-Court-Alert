@@ -1,5 +1,8 @@
 package in.aryomtech.cgalert.Fragments;
 
+import static android.content.Context.MODE_PRIVATE;
+
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
@@ -11,6 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.telephony.SmsManager;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -25,10 +30,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.snackbar.Snackbar;
@@ -39,8 +47,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
@@ -67,7 +78,10 @@ public class pending_return extends Fragment {
     LinkedList<Excel_data> mylist=new LinkedList<>();
     EditText search;
     DatabaseReference user_ref;
-    Dialog dialog,dialog1;
+    Dialog dialog,dialog1,j_dialog;
+    int c=0;
+    String sp_of;
+    List<Excel_data> j_data_list=new ArrayList<>();
     TextView message, notification,phone_sms,no_data;
     CheckBox select_all;
     LinkedList<String> phone_numbers=new LinkedList<>();
@@ -82,7 +96,8 @@ public class pending_return extends Fragment {
     List<String> keys_copy_selected_phone=new ArrayList<>();
     DatabaseReference reference;
     NeumorphButton join;
-    ImageView bulk_delete,cg_logo;
+    private DatePickerDialog.OnDateSetListener mDateSetListener;
+    ImageView bulk_delete,cg_logo,j_column;
     List<String> case_data_list=new ArrayList<>();
     List<String> case_data_list_filter=new ArrayList<>();
     List<String> district_name_list=new ArrayList<>();
@@ -107,6 +122,7 @@ public class pending_return extends Fragment {
         cg_logo=view.findViewById(R.id.imageView3);
         no_data=view.findViewById(R.id.no_data);
         bulk_delete=view.findViewById(R.id.imageRemoveImage);
+        j_column=view.findViewById(R.id.j_column);
         //Initialize RecyclerView
         mRecyclerView = view.findViewById(R.id.recycler_view);
         LinearLayoutManager mManager = new LinearLayoutManager(getContextNullSafety());
@@ -199,7 +215,12 @@ public class pending_return extends Fragment {
             Log.e("added_peeps",added_list+"");
         });
         //Set listener to SwipeRefreshLayout for refresh action
-        mSwipeRefreshLayout.setOnRefreshListener(this::get_pending);
+        mSwipeRefreshLayout.setOnRefreshListener(() -> {
+            if(sp_of.equals("no"))
+                get_pending();
+            else
+                getdata_for_sp();
+        });
         search.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {}
@@ -268,8 +289,132 @@ public class pending_return extends Fragment {
             });
 
         });
-        get_pending();
+
+        j_column.setOnClickListener(v->{
+            reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                    if(added_list!=null){
+                        if(added_list.size()!=0) {
+                            j_dialog = new Dialog(getContextNullSafety());
+                            j_dialog.setCancelable(true);
+                            j_dialog.setContentView(R.layout.j_column_dialog);
+                            TextView dates=j_dialog.findViewById(R.id.diary);
+                            j_dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                            j_dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+                            j_dialog.show();
+                            dates.setOnClickListener(view -> {
+                                Calendar cal = Calendar.getInstance();
+                                int year = cal.get(Calendar.YEAR);
+                                int month = cal.get(Calendar.MONTH);
+                                int day = cal.get(Calendar.DAY_OF_MONTH);
+
+                                DatePickerDialog dialog = new DatePickerDialog(
+                                        getActivity(),
+                                        mDateSetListener,
+                                        year,month,day);
+
+                                dialog.show();
+                            });
+
+                            mDateSetListener = (datePicker, year, month, day) -> {
+
+                                String d=String.valueOf(day);
+                                String m=String.valueOf(month+1);
+                                Log.e("month",m+"");
+                                month = month + 1;
+                                Log.e("month",month+"");
+                                if(String.valueOf(day).length()==1)
+                                    d="0"+ day;
+                                if(String.valueOf(month).length()==1)
+                                    m="0"+ month;
+                                String date = d + "." + m + "." + year;
+                                dates.setText(date);
+                            };
+
+                            TextView cancel=j_dialog.findViewById(R.id.textView96);
+                            TextView yes=j_dialog.findViewById(R.id.textView95);
+                            cancel.setOnClickListener(vi-> j_dialog.dismiss());
+                            yes.setOnClickListener(vi-> {
+                                Snackbar.make(mRecyclerView,"Gathering data...",Snackbar.LENGTH_LONG)
+                                        .setActionTextColor(Color.parseColor("#ea4a1f"))
+                                        .setTextColor(Color.parseColor("#000000"))
+                                        .setBackgroundTint(Color.parseColor("#D9F5F8"))
+                                        .show();
+                                for (int i = 0; i < added_list.size(); i++) {
+                                    j_data_list.add(snapshot.child(added_list.get(i)).getValue(Excel_data.class));
+                                }
+
+                                dialog1 = new Dialog(getContextNullSafety());
+                                dialog1.setCancelable(false);
+                                dialog1.setContentView(R.layout.loading_dialog);
+                                dialog1.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                                LottieAnimationView lottieAnimationView=dialog1.findViewById(R.id.animate);
+                                lottieAnimationView.setAnimation("done.json");
+                                dialog1.show();
+
+                                update_J_Excel(j_data_list,dates.getText().toString());
+
+                                Log.e("dates",j_data_list.size()+"");
+                            });
+                        }
+                    }
+                    //TODO: dialog k andar date and ok mai send all
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {}
+            });
+        });
+
+        sp_of=getContextNullSafety().getSharedPreferences("Is_SP",MODE_PRIVATE)
+                .getString("Yes_of","none");
+        if(sp_of.equals("none"))
+            get_pending();
+        else
+            getdata_for_sp();
         return view;
+    }
+
+    private void getdata_for_sp() {
+        search.setText("");
+        select_all.setChecked(false);
+        added_list.clear();
+        String txt="Send "+"("+added_list.size()+")";
+        join.setText(txt);
+        cg_logo.setVisibility(View.VISIBLE);
+        no_data.setVisibility(View.VISIBLE);
+        mSwipeRefreshLayout.setRefreshing(true);
+        query_return.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                excel_data.clear();
+                for(DataSnapshot ds:snapshot.getChildren()){
+                    if(snapshot.child(ds.getKey()).child("J").getValue(String.class).equals("None")){
+                        if(snapshot.child(ds.getKey()).child("C").getValue(String.class).equals(sp_of)) {
+                            excel_data.add(snapshot.child(ds.getKey()).getValue(Excel_data.class));
+                        }
+                    }
+                }
+                if(excel_data.size()!=0){
+                    cg_logo.setVisibility(View.GONE);
+                    no_data.setVisibility(View.GONE);
+                }
+                added_list.clear();
+                String txt="Send "+"("+added_list.size()+")";
+                join.setText(txt);
+                excel_adapter.unselectall();
+                mSwipeRefreshLayout.setRefreshing(false);
+                Collections.reverse(excel_data);
+                excel_adapter=new Excel_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface);
+                excel_adapter.notifyDataSetChanged();
+                if(mRecyclerView!=null)
+                    mRecyclerView.setAdapter(excel_adapter);
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
     }
 
     public void gather_number(String type) {
@@ -297,8 +442,8 @@ public class pending_return extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(added_list.size()!=0) {
                     for (int h = 0; h < added_list.size(); h++) {
-                        String station_name = "PS " + snapshot.child(added_list.get(h)).child("B").getValue(String.class).trim();
-                        String district_name = snapshot.child(added_list.get(h)).child("C").getValue(String.class).trim();
+                        String station_name = "PS " + snapshot.child(added_list.get(h)).child("B").getValue(String.class).toUpperCase().trim();
+                        String district_name = snapshot.child(added_list.get(h)).child("C").getValue(String.class).toUpperCase().trim();
 
                         String K = snapshot.child(added_list.get(h)).child("K").getValue(String.class).trim();
                         String C = snapshot.child(added_list.get(h)).child("C").getValue(String.class).trim();
@@ -626,6 +771,110 @@ public class pending_return extends Fragment {
         });
 
     }
+
+    private void update_J_Excel(List<Excel_data> j_dates_list,String j_date) {
+        Snackbar.make(mRecyclerView,"Updating dates...",Snackbar.LENGTH_LONG)
+                .setActionTextColor(Color.parseColor("#ea4a1f"))
+                .setTextColor(Color.parseColor("#000000"))
+                .setBackgroundTint(Color.parseColor("#D9F5F8"))
+                .show();
+        j_dialog.dismiss();
+        Log.e("Sheet",j_date+"");
+        JSONObject jsonBody = new JSONObject();
+        try
+        {
+            jsonBody.put("cno", Integer.parseInt(j_dates_list.get(c).getE()));
+            jsonBody.put("crno", Integer.parseInt(j_dates_list.get(c).getH()));
+            jsonBody.put("ps", j_dates_list.get(c).getB());
+            jsonBody.put("nod", j_dates_list.get(c).getC());
+            jsonBody.put("subject", j_dates_list.get(c).getType());
+            jsonBody.put("j_column", j_date);
+            Log.d("body", "httpCall_collect: "+jsonBody);
+        }
+        catch (Exception e)
+        {
+            Log.e("Error","JSON ERROR");
+        }
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getContextNullSafety());
+        String URL = "https://high-court-alertsystem.herokuapp.com/j_column";
+
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, URL,jsonBody,
+                new com.android.volley.Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // enjoy your response
+                        String code=response.optString("code")+"";
+                        if(code.equals("202")){
+                            reference.child(added_list.get(c)).child("J").setValue(j_date);
+                            Snackbar.make(join,"Data Uploaded to Excel.",Snackbar.LENGTH_LONG)
+                                    .setActionTextColor(Color.parseColor("#171746"))
+                                    .setTextColor(Color.parseColor("#FF7F5C"))
+                                    .setBackgroundTint(Color.parseColor("#171746"))
+                                    .show();
+                            new Handler(Looper.myLooper()).postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    dialog1.dismiss();
+                                    c++;
+                                    if(c!=j_dates_list.size())
+                                        update_J_Excel(j_dates_list, j_date);
+                                    else
+                                        c=0;
+                                }
+                            },2000);
+                        }
+                        else{
+                            Snackbar.make(join,"Failed to Upload in Excel.",Snackbar.LENGTH_LONG)
+                                    .setActionTextColor(Color.parseColor("#000000"))
+                                    .setTextColor(Color.parseColor("#000000"))
+                                    .setBackgroundTint(Color.parseColor("#FF5252"))
+                                    .show();
+                            LottieAnimationView lottieAnimationView=dialog1.findViewById(R.id.animate);
+                            lottieAnimationView.setAnimation("error.json");
+                            dialog1.show();
+                            new Handler(Looper.myLooper()).postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    dialog1.dismiss();
+                                    c++;
+                                    if(c!=j_dates_list.size())
+                                        update_J_Excel(j_dates_list, j_date);
+                                    else
+                                        c=0;
+                                }
+                            },2000);
+                        }
+                        Log.e("BULK code",code+"");
+                        Log.e("response",response.toString());
+                    }
+                }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // enjoy your error status
+                Log.e("Status of code = ","Wrong");
+            }
+        });
+        stringRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 15000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 15000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+            }
+        });
+        Log.d("string", stringRequest.toString());
+        requestQueue.add(stringRequest);
+
+    }
+
     /**CALL THIS IF YOU NEED CONTEXT*/
     public Context getContextNullSafety() {
         if (getContext() != null) return getContext();

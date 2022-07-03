@@ -121,6 +121,11 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
                 holder.seen.setVisibility(View.GONE);
         }
 
+        if(list.get(position).getSent()!=null)
+            holder.notified.setVisibility(View.VISIBLE);
+        else
+            holder.notified.setVisibility(View.GONE);
+
         if (list.get(position).getType().equals("RM CALL")) {
             holder.message.setText("उपरोक्त मूल केस डायरी दिनाँक "+list.get(position).getL()+" तक बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय छतीसगढ़ में  अनिवार्यतः जमा करें।");
             holder.type.setVisibility(View.VISIBLE);
@@ -227,7 +232,8 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
                     ,list.get(position).getPushkey()
                     ,list.get(position).getReminded()
                     ,list.get(position).getDate_of_alert()
-                    ,list.get(position).getSeen());
+                    ,list.get(position).getSeen()
+                    ,list.get(position).getSent());
 
             Bundle bundle=new Bundle();
             bundle.putSerializable("excel_data_sending", excel_data);
@@ -304,7 +310,7 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
         TextView Rm,mcrc,crime_no,case_no,pr_case_no,name,receiving_date;
         ConstraintLayout layout;
         LinearLayout layout_details;
-        ImageView tick,type,imageRemovedata,seen, share;
+        ImageView tick,type,imageRemovedata,notified,seen, share;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewTitle = itemView.findViewById(R.id.station_name);//
@@ -328,6 +334,7 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
             share = itemView.findViewById(R.id.share);
             seen = itemView.findViewById(R.id.seen);
             message = itemView.findViewById(R.id.message);
+            notified = itemView.findViewById(R.id.notified);
         }
     }
 }
