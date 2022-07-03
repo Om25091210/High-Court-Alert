@@ -64,14 +64,14 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
                 .getBoolean("authorizing_admin",false);
 
         holder.last_date.setText(list.get(position).getL());
-        holder.textViewTitle.setText(list.get(position).getB() + "");
-        holder.textViewBody.setText(list.get(position).getC());
+        holder.textViewTitle.setText(list.get(position).getB().toUpperCase() + "");
+        holder.textViewBody.setText(list.get(position).getC().toUpperCase());
         holder.Rm.setText(list.get(position).getK());
-        holder.mcrc.setText(list.get(position).getD());
+        holder.mcrc.setText(list.get(position).getD().toUpperCase());
         holder.pr_case_no.setText(list.get(position).getD()+" No. -");
         holder.crime_no.setText(list.get(position).getH() +"/"+ list.get(position).getI());
         holder.case_no.setText(list.get(position).getE() +"/"+ list.get(position).getG());
-        holder.name.setText(list.get(position).getF());
+        holder.name.setText(list.get(position).getF().toUpperCase());
         holder.receiving_date.setText(list.get(position).getJ());
         if(list.get(position).getL()!=null){
             if(!list.get(position).getL().equals("None")) {

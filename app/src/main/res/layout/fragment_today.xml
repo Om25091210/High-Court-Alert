@@ -8,7 +8,7 @@
     android:clickable="true"
     android:id="@+id/swipe_refresh_layout"
     android:focusable="true"
-    tools:context=".policestation.urgent_data">
+    >
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

@@ -105,7 +105,7 @@ public class Frag_p_Home extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot ds:snapshot.getChildren()){
-                    if(snapshot.child(ds.getKey()).child("B").getValue(String.class).equals(stat_name.substring(3))) {
+                    if(snapshot.child(ds.getKey()).child("B").getValue(String.class).toUpperCase().equals(stat_name.substring(3))) {
                         if (snapshot.child(ds.getKey()).child("J").getValue(String.class).equals("None")) {
                             total_coll++;
                         }
@@ -121,7 +121,7 @@ public class Frag_p_Home extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot ds:snapshot.getChildren()){
-                    if(snapshot.child(ds.getKey()).child("B").getValue(String.class).equals(stat_name.substring(3))) {
+                    if(snapshot.child(ds.getKey()).child("B").getValue(String.class).toUpperCase().equals(stat_name.substring(3))) {
                         if (snapshot.child(ds.getKey()).child("J").getValue(String.class).equals("None")) {
                             total_return++;
                             pending_return.add(snapshot.child(ds.getKey()).getValue(Excel_data.class));
