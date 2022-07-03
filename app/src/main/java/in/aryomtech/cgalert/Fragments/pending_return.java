@@ -216,7 +216,7 @@ public class pending_return extends Fragment {
         });
         //Set listener to SwipeRefreshLayout for refresh action
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
-            if(sp_of.equals("no"))
+            if(sp_of.equals("none"))
                 get_pending();
             else
                 getdata_for_sp();

@@ -92,7 +92,7 @@ public class Similar_Return extends Fragment {
             getdata_for_sp();
         //Set listener to SwipeRefreshLayout for refresh action
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
-            if(sp_of.equals("no"))
+            if(sp_of.equals("none"))
                 getdata();
             else
                 getdata_for_sp();
