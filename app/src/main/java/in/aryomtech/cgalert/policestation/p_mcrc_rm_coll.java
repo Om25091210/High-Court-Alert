@@ -185,8 +185,8 @@ public class p_mcrc_rm_coll extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(int h=0;h<added_list.size();h++){
-                    String station_name=snapshot.child(added_list.get(h)).child("B").getValue(String.class).trim();
-                    String district_name=snapshot.child(added_list.get(h)).child("C").getValue(String.class).trim();
+                    String station_name=snapshot.child(added_list.get(h)).child("B").getValue(String.class).trim().toUpperCase();
+                    String district_name=snapshot.child(added_list.get(h)).child("C").getValue(String.class).trim().toUpperCase();
                     if(district_name_list.contains(district_name)) {
                         district_name_list.add(district_name);
                     }
@@ -296,7 +296,7 @@ public class p_mcrc_rm_coll extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 excel_data.clear();
                 for(DataSnapshot ds:snapshot.getChildren()){
-                    if(snapshot.child(ds.getKey()).child("B").getValue(String.class).equals(stat_name.substring(3))) {
+                    if(snapshot.child(ds.getKey()).child("B").getValue(String.class).toUpperCase().equals(stat_name.substring(3))) {
                         excel_data.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Excel_data.class));
                     }
                 }

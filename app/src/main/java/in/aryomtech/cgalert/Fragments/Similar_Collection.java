@@ -92,7 +92,7 @@ public class Similar_Collection extends Fragment {
             getdata_for_sp();
         //Set listener to SwipeRefreshLayout for refresh action
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
-            if(sp_of.equals("no"))
+            if(sp_of.equals("none"))
                 getdata();
             else
                 getdata_for_sp();
@@ -205,13 +205,15 @@ public class Similar_Collection extends Fragment {
                 filtered_station_dist.clear();
                 for(DataSnapshot ds:snapshot.getChildren()){
                     excel_data.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Excel_data.class));
-                    joined_list.add(excel_data.get(excel_data.size()-1).getD().toLowerCase().trim()+" "+excel_data.get(excel_data.size()-1).getH().trim()+" "+excel_data.get(excel_data.size()-1).getI().trim()+"="+excel_data.get(excel_data.size()-1).getB().trim()+" "+excel_data.get(excel_data.size()-1).getC().trim());
-                    station_dist.add(excel_data.get(excel_data.size()-1).getB().trim()+" "+excel_data.get(excel_data.size()-1).getC().trim());
+                    joined_list.add(excel_data.get(excel_data.size()-1).getD().toUpperCase().trim()+" "+excel_data.get(excel_data.size()-1).getH().trim()+" "+excel_data.get(excel_data.size()-1).getI().trim()+"="+excel_data.get(excel_data.size()-1).getB().toUpperCase().trim()+" "+excel_data.get(excel_data.size()-1).getC().toUpperCase().trim());
+                    station_dist.add(excel_data.get(excel_data.size()-1).getB().toUpperCase().trim()+" "+excel_data.get(excel_data.size()-1).getC().toUpperCase().trim());
                 }
                 mSwipeRefreshLayout.setRefreshing(false);
                 Collections.reverse(excel_data);
                 Collections.reverse(joined_list);
                 Collections.reverse(station_dist);
+                Log.e("filtered data",joined_list+"");
+                Log.e("station list",station_dist+"");
                 //filtering data
                 for(int i=0;i<joined_list.size();i++){//n
                     if(Collections.frequency(joined_list,joined_list.get(i))>1){ //n   7292 = 7

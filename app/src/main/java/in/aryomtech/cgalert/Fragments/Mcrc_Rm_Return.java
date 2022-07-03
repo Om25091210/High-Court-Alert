@@ -220,7 +220,7 @@ public class Mcrc_Rm_Return extends Fragment {
         });
         //Set listener to SwipeRefreshLayout for refresh action
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
-            if(sp_of.equals("no"))
+            if(sp_of.equals("none"))
                 getdata();
             else
                 getdata_for_sp();
@@ -758,7 +758,7 @@ public class Mcrc_Rm_Return extends Fragment {
                     +"\n"+C+"\n"+D+" No. "+E+"/"+G+"\n"
                     +"Crime No. "+H+"/"+I+"\n"
                     +"Police station: "+B+"\n"
-                    +"उपरोक्त मूल केश डायरी दिनाँक "+K+" तक बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय छतीसगढ़ में  अनिवार्यतः जमा करें।";
+                    +"उपरोक्त मूल केश डायरी तथा पूर्व अपराधिक रिकॉर्ड, दिनाँक "+K+" तक बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय छतीसगढ़ में  अनिवार्यतः जमा करें।";
         }
     }
 

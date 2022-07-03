@@ -403,11 +403,11 @@ public class form extends Fragment {
             pushkey=excel_data.getPushkey();
         Map<String,String> data_packet=new HashMap<>();
         data_packet.put("A","");
-        data_packet.put("B",policeStation.getText().toString().toLowerCase().trim());
-        data_packet.put("C",ac_district.getText().toString().toUpperCase().trim());
-        data_packet.put("D",ac_caseType.getText().toString().toUpperCase().trim());
+        data_packet.put("B",policeStation.getText().toString().toLowerCase().trim().toUpperCase());
+        data_packet.put("C",ac_district.getText().toString().toUpperCase().trim().toUpperCase());
+        data_packet.put("D",ac_caseType.getText().toString().toUpperCase().trim().toUpperCase());
         data_packet.put("E",case_no_edt.getText().toString().trim());
-        data_packet.put("F",name_edt.getText().toString().toUpperCase().trim());
+        data_packet.put("F",name_edt.getText().toString().toUpperCase().trim().toUpperCase());
         data_packet.put("G",case_year_edt.getText().toString().trim());
         data_packet.put("H",crime_no_edt.getText().toString().trim());
         data_packet.put("I",crime_year_edt.getText().toString().trim());

@@ -271,7 +271,7 @@ public class p_pending_return extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 excel_data.clear();
                 for(DataSnapshot ds:snapshot.getChildren()){
-                    if(snapshot.child(ds.getKey()).child("B").getValue(String.class).equals(stat_name.substring(3))) {
+                    if(snapshot.child(ds.getKey()).child("B").getValue(String.class).toUpperCase().equals(stat_name.substring(3))) {
                         if (snapshot.child(ds.getKey()).child("J").getValue(String.class).equals("None")) {
                             excel_data.add(snapshot.child(ds.getKey()).getValue(Excel_data.class));
                         }

@@ -113,21 +113,31 @@ public class Login extends AppCompatActivity {
                 .putString("Yes_of","none").apply();
 
         linearLayout.setOnClickListener(v->{
-            if(edtEmail.getGetTextValue().trim().length()==10){
-                offanimate(edtEmail);
-                terms_and_condition.setVisibility(View.GONE);
-                didnt.setVisibility(View.VISIBLE);
-                resend.setVisibility(View.VISIBLE);
-                p_back.setVisibility(View.VISIBLE);
-                send_otp.setText("Verify");
-                onAnimate(pinView);
-                pinView.setVisibility(View.VISIBLE);
-                String phone = "+91" + edtEmail.getGetTextValue();
-                sendVerificationCode(phone);
-                countTimer();
+            if(!send_otp.getText().toString().trim().equals("Verify")) {
+                if (edtEmail.getGetTextValue().trim().length() == 10) {
+                    offanimate(edtEmail);
+                    terms_and_condition.setVisibility(View.GONE);
+                    didnt.setVisibility(View.VISIBLE);
+                    resend.setVisibility(View.VISIBLE);
+                    p_back.setVisibility(View.VISIBLE);
+                    send_otp.setText("Verify");
+                    onAnimate(pinView);
+                    pinView.setVisibility(View.VISIBLE);
+                    String phone = "+91" + edtEmail.getGetTextValue();
+                    sendVerificationCode(phone);
+                    countTimer();
+                } else {
+                    Toast.makeText(Login.this, "Enter 10 digit mobile number.", Toast.LENGTH_SHORT).show();
+                }
             }
             else{
-                Toast.makeText(Login.this, "Enter 10 digit mobile number.", Toast.LENGTH_SHORT).show();
+                MotionToast.Companion.darkColorToast(Login.this,
+                        "Failed ☹️",
+                        "Phone No. Is Not In Our Database",
+                        MotionToastStyle.ERROR,
+                        MotionToast.GRAVITY_BOTTOM,
+                        MotionToast.LONG_DURATION,
+                        ResourcesCompat.getFont(Login.this, R.font.helvetica_regular));
             }
         });
 
@@ -225,11 +235,15 @@ public class Login extends AppCompatActivity {
     private void verifyCode(String code) {
         // below line is used for getting getting
         // credentials from our verification id and code.
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
+        try {
+            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
 
-        // after getting credential we are
-        // calling sign in method.
-        signInWithCredential(credential);
+            // after getting credential we are
+            // calling sign in method.
+            signInWithCredential(credential);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     private void signInWithCredential(PhoneAuthCredential credential) {
         // inside this method we are checking if
@@ -247,6 +261,7 @@ public class Login extends AppCompatActivity {
                             // if the code is not correct then we are
                             // displaying an error message to the user.
                             Log.e("task result",task.getException().getMessage());
+                            pinView.setError("Wrong Pin");
                         }
                     }
                 });

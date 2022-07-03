@@ -296,7 +296,7 @@ public class urgent_data extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 excel_data.clear();
                 for(DataSnapshot ds:snapshot.getChildren()){
-                    if(snapshot.child(ds.getKey()).child("B").getValue(String.class).equals(stat_name.substring(3))) {
+                    if(snapshot.child(ds.getKey()).child("B").getValue(String.class).toUpperCase().equals(stat_name.substring(3))) {
                         try {
                             Date dNow = new Date( );
                             SimpleDateFormat ft =

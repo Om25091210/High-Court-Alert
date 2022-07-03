@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
+import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -116,6 +117,46 @@ public class Home extends AppCompatActivity implements DuoMenuView.OnMenuClickLi
         getting_device_token();
         get_status_of_admin();
         check_if_token();
+
+        findViewById(R.id.card_fb).setOnClickListener(s-> {
+            String facebookUrl ="https://www.facebook.com/chhattisgarh.police";
+            Intent facebookAppIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(facebookUrl));
+            facebookAppIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+            startActivity(facebookAppIntent);
+        });
+        findViewById(R.id.card_twitter).setOnClickListener(s->{
+            String url = "https://twitter.com/CG_Police";
+            Intent twitterAppIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            twitterAppIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+            startActivity(twitterAppIntent);
+        });
+
+        findViewById(R.id.card_whatsapp).setOnClickListener(s->{
+            String url = "https://api.whatsapp.com/send?phone=" +"+91"+ "8269737971";
+            try {
+                PackageManager pm = getPackageManager();
+                pm.getPackageInfo("com.whatsapp", PackageManager.GET_ACTIVITIES);
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            } catch (PackageManager.NameNotFoundException e) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+            }
+        });
+        findViewById(R.id.card_insta).setOnClickListener(s->{
+            Intent insta_in;
+            Toast.makeText(this, "clicked", Toast.LENGTH_SHORT).show();
+            String scheme = "http://instagram.com/_u/"+"chhattisgarhpolice_";
+            String path = "https://instagram.com/"+"chhattisgarhpolice_";
+            String nomPackageInfo ="com.instagram.android";
+            try {
+                getPackageManager().getPackageInfo(nomPackageInfo, 0);
+                insta_in = new Intent(Intent.ACTION_VIEW, Uri.parse(scheme));
+            } catch (Exception e) {
+                insta_in = new Intent(Intent.ACTION_VIEW, Uri.parse(path));
+            }
+            startActivity(insta_in);
+        });
 
     }
 
@@ -316,17 +357,34 @@ public class Home extends AppCompatActivity implements DuoMenuView.OnMenuClickLi
             mViewHolder.mDuoDrawerLayout.closeDrawer();
         }
         else if(position==4) {
-            /*Home.this.getSupportFragmentManager()
-                    .beginTransaction()
-                    .setCustomAnimations( R.anim.enter_from_right, R.anim.exit_to_left,R.anim.enter_from_left, R.anim.exit_to_right)
-                    .add(R.id.drawer,new about_dev())
-                    .addToBackStack(null)
-                    .commit();*/
+            DatabaseReference reference=FirebaseDatabase.getInstance().getReference().child("handles");
+            reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    String url = snapshot.child("privacy_policy").getValue(String.class);
+                    Intent twitterAppIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    twitterAppIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+                    startActivity(twitterAppIntent);
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {}
+            });
             mMenuAdapter.setViewSelected(0);
             mViewHolder.mDuoDrawerLayout.closeDrawer();
         }
         else if(position==5){
-
+            DatabaseReference reference=FirebaseDatabase.getInstance().getReference().child("handles");
+            reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    String url = snapshot.child("terms_condition").getValue(String.class);
+                    Intent twitterAppIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    twitterAppIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+                    startActivity(twitterAppIntent);
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {}
+            });
             mMenuAdapter.setViewSelected(0);
             mViewHolder.mDuoDrawerLayout.closeDrawer();
         }
