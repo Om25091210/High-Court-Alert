@@ -3,8 +3,10 @@ package in.aryomtech.cgalert.policestation;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -20,6 +22,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -64,6 +67,7 @@ public class p_mcrc_rm_return extends Fragment {
     ImageView cg_logo;
     TextView no_data;
     ArrayList<String> added_list;
+    int onback=0;
     CheckBox select_all;
     Return_Adapter excel_adapter;
     List<String> district_name_list=new ArrayList<>();
@@ -154,6 +158,19 @@ public class p_mcrc_rm_return extends Fragment {
         });
 
         join.setOnClickListener(v-> gather_number());
+        OnBackPressedCallback callback=new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if(onback==0){
+                    Toast.makeText(contextNullSafe, "Press back again to exit", Toast.LENGTH_SHORT).show();
+                    onback=1;
+                }
+                else{
+                    ((FragmentActivity) getContextNullSafety()).finish();
+                }
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),callback);
 
         return view;
     }

@@ -318,17 +318,34 @@ public class p_Home extends AppCompatActivity implements DuoMenuView.OnMenuClick
             mViewHolder.mDuoDrawerLayout.closeDrawer();
         }
         else if(position==4) {
-            /*Home.this.getSupportFragmentManager()
-                    .beginTransaction()
-                    .setCustomAnimations( R.anim.enter_from_right, R.anim.exit_to_left,R.anim.enter_from_left, R.anim.exit_to_right)
-                    .add(R.id.drawer,new about_dev())
-                    .addToBackStack(null)
-                    .commit();*/
+            DatabaseReference reference=FirebaseDatabase.getInstance().getReference().child("handles");
+            reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    String url = snapshot.child("privacy_policy").getValue(String.class);
+                    Intent twitterAppIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    twitterAppIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+                    startActivity(twitterAppIntent);
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {}
+            });
             mMenuAdapter.setViewSelected(0);
             mViewHolder.mDuoDrawerLayout.closeDrawer();
         }
         else if(position==5){
-
+            DatabaseReference reference=FirebaseDatabase.getInstance().getReference().child("handles");
+            reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    String url = snapshot.child("terms_condition").getValue(String.class);
+                    Intent twitterAppIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    twitterAppIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+                    startActivity(twitterAppIntent);
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {}
+            });
             mMenuAdapter.setViewSelected(0);
             mViewHolder.mDuoDrawerLayout.closeDrawer();
         }

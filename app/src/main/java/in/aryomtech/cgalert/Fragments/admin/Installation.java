@@ -10,8 +10,12 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -66,6 +70,20 @@ public class Installation extends Fragment {
             }
         });
         get_user();
+
+        OnBackPressedCallback callback=new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                FragmentManager fm=((FragmentActivity) getContextNullSafety()).getSupportFragmentManager();
+                FragmentTransaction ft=fm.beginTransaction();
+                if(fm.getBackStackEntryCount()>0) {
+                    fm.popBackStack();
+                }
+                ft.commit();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),callback);
+
         return view;
     }
 

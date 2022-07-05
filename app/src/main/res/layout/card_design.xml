@@ -13,9 +13,10 @@
 
     <ImageView
         android:id="@+id/seen"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="@dimen/_20sdp"
+        android:layout_height="@dimen/_20sdp"
         android:layout_marginTop="10dp"
+        android:padding="2dp"
         android:layout_marginStart="20dp"
         android:contentDescription="@string/app_name"
         android:src="@drawable/ic_seen"
@@ -26,10 +27,11 @@
 
     <ImageView
         android:id="@+id/notified"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="@dimen/_22sdp"
+        android:layout_height="@dimen/_22sdp"
         android:layout_marginTop="10dp"
         android:layout_marginStart="20dp"
+        android:padding="2dp"
         android:contentDescription="@string/app_name"
         android:src="@drawable/ic_bell"
         android:visibility="gone"
@@ -39,10 +41,11 @@
 
     <ImageView
         android:id="@+id/share"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="@dimen/_20sdp"
+        android:layout_height="@dimen/_20sdp"
         android:layout_marginEnd="15dp"
         android:layout_marginTop="10dp"
+        android:padding="2dp"
         android:contentDescription="@string/app_name"
         android:src="@drawable/ic_share"
         android:visibility="visible"
@@ -53,9 +56,10 @@
     <ImageView
 
         android:id="@+id/type"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/_22sdp"
+        android:layout_height="@dimen/_22sdp"
         android:layout_marginStart="20dp"
+        android:padding="2dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:layout_weight="1"
@@ -84,14 +88,14 @@
 
             <TextView
                 android:id="@+id/pr_rm"
-                android:layout_width="110dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="15dp"
                 android:fontFamily="@font/quicksand_bold"
                 android:text="@string/rm_date"
                 android:textColor="@color/use_light_blue"
-                android:textSize="15sp"
+                android:textSize="@dimen/_11sdp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -101,14 +105,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 android:ellipsize="end"
                 android:fontFamily="@font/quicksand_bold"
                 android:maxLines="1"
                 android:paddingStart="1dp"
                 android:paddingEnd="15dp"
                 android:textColor="@color/use_light_blue"
-                android:textSize="13sp"
+                android:textSize="@dimen/_10sdp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -124,14 +128,14 @@
 
             <TextView
                 android:id="@+id/parent_police"
-                android:layout_width="110dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/quicksand_bold"
                 android:text="@string/police_station"
                 android:textColor="@color/use_light_blue"
-                android:textSize="15sp"
+                android:textSize="@dimen/_11sdp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -148,7 +152,7 @@
                 android:paddingStart="1dp"
                 android:paddingEnd="15dp"
                 android:textColor="@color/use_light_blue"
-                android:textSize="13sp"
+                android:textSize="@dimen/_10sdp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -163,15 +167,55 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/number_prt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/quicksand_bold"
+                android:text="@string/number_"
+                android:textColor="@color/use_light_blue"
+                android:textSize="@dimen/_11sdp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/num"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="10dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/quicksand_bold"
+                android:maxLines="1"
+                android:paddingStart="1dp"
+                android:paddingEnd="15dp"
+                android:textColor="@color/use_light_blue"
+                android:textSize="@dimen/_10sdp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="@tools:sample/us_phones" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
                 android:id="@+id/parent_dist"
-                android:layout_width="110dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/quicksand_bold"
                 android:text="@string/name_of_dist"
                 android:textColor="@color/use_light_blue"
-                android:textSize="15sp"
+                android:textSize="@dimen/_11sdp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -188,7 +232,7 @@
                 android:paddingStart="1dp"
                 android:paddingEnd="15dp"
                 android:textColor="@color/use_light_blue"
-                android:textSize="13sp"
+                android:textSize="@dimen/_10sdp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -204,14 +248,14 @@
 
             <TextView
                 android:id="@+id/pr_case_no"
-                android:layout_width="110dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/quicksand_bold"
                 android:text="@string/case_no"
                 android:textColor="@color/use_light_blue"
-                android:textSize="15sp"
+                android:textSize="@dimen/_11sdp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -228,19 +272,20 @@
                 android:paddingStart="1dp"
                 android:paddingEnd="15dp"
                 android:textColor="@color/use_light_blue"
-                android:textSize="13sp"
+                android:textSize="@dimen/_10sdp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="7292/2020" />
 
         </LinearLayout>
+
     </LinearLayout>
 
     <TextView
         android:id="@+id/view"
         android:layout_width="wrap_content"
-        android:layout_height="35dp"
+        android:layout_height="@dimen/_30sdp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
         android:background="@drawable/bg_view"
@@ -250,6 +295,7 @@
         android:paddingTop="3dp"
         android:paddingEnd="20dp"
         android:paddingBottom="3dp"
+        android:textSize="@dimen/_9sdp"
         android:text="@string/view"
         android:textColor="@color/use_blue"
         android:visibility="visible"
@@ -259,10 +305,10 @@
 
     <ImageView
         android:id="@+id/imageRemoveImage"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="@dimen/_22sdp"
+        android:layout_height="@dimen/_22sdp"
         android:contentDescription="@string/app_name"
-        android:padding="4dp"
+        android:padding="2dp"
         android:src="@drawable/ic_delete"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/view"
@@ -273,10 +319,11 @@
 
     <ImageView
         android:id="@+id/imageView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/_22sdp"
+        android:layout_height="@dimen/_22sdp"
         android:layout_marginEnd="15dp"
         android:layout_weight="1"
+        android:padding="2dp"
         android:contentDescription="@string/image"
         android:src="@drawable/ic_blue_tick"
         android:visibility="visible"
@@ -288,7 +335,7 @@
     <TextView
         android:id="@+id/textView21"
         android:layout_width="wrap_content"
-        android:layout_height="35dp"
+        android:layout_height="@dimen/_30sdp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
         android:background="@drawable/add_card"
@@ -298,6 +345,7 @@
         android:paddingTop="3dp"
         android:paddingEnd="20dp"
         android:paddingBottom="3dp"
+        android:textSize="@dimen/_9sdp"
         android:text="@string/add__"
         android:textColor="@color/black"
         android:visibility="visible"
@@ -327,7 +375,7 @@
             android:fontFamily="@font/quicksand_bold"
             android:gravity="center"
             android:textColor="@color/use_light_blue"
-            android:textSize="12sp"
+            android:textSize="@dimen/_9sdp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -341,14 +389,14 @@
 
             <TextView
                 android:id="@+id/last_date_txt"
-                android:layout_width="110dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/quicksand_bold"
                 android:text="@string/last_date"
                 android:textColor="@color/use_light_blue"
-                android:textSize="15sp"
+                android:textSize="@dimen/_10sdp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -365,7 +413,7 @@
                 android:paddingStart="1dp"
                 android:paddingEnd="15dp"
                 android:textColor="@color/use_light_blue"
-                android:textSize="13sp"
+                android:textSize="@dimen/_9sdp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -381,14 +429,14 @@
 
             <TextView
                 android:id="@+id/case_pr"
-                android:layout_width="110dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/quicksand_bold"
                 android:text="@string/case_type"
                 android:textColor="@color/use_light_blue"
-                android:textSize="15sp"
+                android:textSize="@dimen/_10sdp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -405,7 +453,7 @@
                 android:paddingStart="1dp"
                 android:paddingEnd="15dp"
                 android:textColor="@color/use_light_blue"
-                android:textSize="13sp"
+                android:textSize="@dimen/_9sdp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -421,14 +469,14 @@
 
             <TextView
                 android:id="@+id/name_person"
-                android:layout_width="110dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/quicksand_bold"
                 android:text="@string/name"
                 android:textColor="@color/use_light_blue"
-                android:textSize="15sp"
+                android:textSize="@dimen/_10sdp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -445,7 +493,7 @@
                 android:paddingStart="1dp"
                 android:paddingEnd="15dp"
                 android:textColor="@color/use_light_blue"
-                android:textSize="13sp"
+                android:textSize="@dimen/_9sdp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -461,14 +509,14 @@
 
             <TextView
                 android:id="@+id/crime_no_pr"
-                android:layout_width="110dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/quicksand_bold"
                 android:text="@string/crime_no"
                 android:textColor="@color/use_light_blue"
-                android:textSize="15sp"
+                android:textSize="@dimen/_10sdp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -485,7 +533,7 @@
                 android:paddingStart="1dp"
                 android:paddingEnd="15dp"
                 android:textColor="@color/use_light_blue"
-                android:textSize="13sp"
+                android:textSize="@dimen/_9sdp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -501,14 +549,14 @@
 
             <TextView
                 android:id="@+id/receiving_date_pr"
-                android:layout_width="110dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/quicksand_bold"
                 android:text="@string/receiving_date"
                 android:textColor="@color/use_light_blue"
-                android:textSize="15sp"
+                android:textSize="@dimen/_10sdp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -525,7 +573,7 @@
                 android:paddingStart="1dp"
                 android:paddingEnd="15dp"
                 android:textColor="@color/use_light_blue"
-                android:textSize="13sp"
+                android:textSize="@dimen/_9sdp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -544,7 +592,7 @@
         android:gravity="center"
         tools:text="@string/days_left"
         android:textColor="@color/use_light_blue"
-        android:textSize="15sp"
+        android:textSize="@dimen/_9sdp"
         android:textStyle="bold"
         app:drawableLeftCompat="@drawable/ic_clock_time"
         app:layout_constraintBottom_toBottomOf="@+id/type"
