@@ -145,7 +145,6 @@ public class Home extends AppCompatActivity implements DuoMenuView.OnMenuClickLi
         });
         findViewById(R.id.card_insta).setOnClickListener(s->{
             Intent insta_in;
-            Toast.makeText(this, "clicked", Toast.LENGTH_SHORT).show();
             String scheme = "http://instagram.com/_u/"+"chhattisgarhpolice_";
             String path = "https://instagram.com/"+"chhattisgarhpolice_";
             String nomPackageInfo ="com.instagram.android";

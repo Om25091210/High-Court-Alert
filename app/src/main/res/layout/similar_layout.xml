@@ -24,9 +24,10 @@
 
     <ImageView
         android:id="@+id/type"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/_22sdp"
+        android:layout_height="@dimen/_22sdp"
         android:layout_marginStart="20dp"
+        android:padding="2dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:layout_weight="1"
@@ -56,14 +57,14 @@
 
             <TextView
                 android:id="@+id/parent_police"
-                android:layout_width="110dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="15dp"
                 android:fontFamily="@font/quicksand_bold"
                 android:text="@string/police_station"
                 android:textColor="@color/use_light_blue"
-                android:textSize="15sp"
+                android:textSize="@dimen/_11sdp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -80,7 +81,7 @@
                 android:paddingStart="1dp"
                 android:paddingEnd="15dp"
                 android:textColor="@color/use_light_blue"
-                android:textSize="13sp"
+                android:textSize="@dimen/_10sdp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -96,14 +97,14 @@
 
             <TextView
                 android:id="@+id/parent_dist"
-                android:layout_width="110dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/quicksand_bold"
                 android:text="@string/name_of_dist"
                 android:textColor="@color/use_light_blue"
-                android:textSize="15sp"
+                android:textSize="@dimen/_11sdp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -120,7 +121,7 @@
                 android:paddingStart="1dp"
                 android:paddingEnd="15dp"
                 android:textColor="@color/use_light_blue"
-                android:textSize="13sp"
+                android:textSize="@dimen/_10sdp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -136,14 +137,14 @@
 
             <TextView
                 android:id="@+id/pr_case_no"
-                android:layout_width="110dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/quicksand_bold"
                 android:text="@string/crime_no"
                 android:textColor="@color/use_light_blue"
-                android:textSize="15sp"
+                android:textSize="@dimen/_11sdp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -160,7 +161,7 @@
                 android:paddingStart="1dp"
                 android:paddingEnd="15dp"
                 android:textColor="@color/use_light_blue"
-                android:textSize="13sp"
+                android:textSize="@dimen/_10sdp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -176,14 +177,14 @@
 
             <TextView
                 android:id="@+id/case_pr"
-                android:layout_width="110dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/quicksand_bold"
                 android:text="@string/case_type"
                 android:textColor="@color/use_light_blue"
-                android:textSize="15sp"
+                android:textSize="@dimen/_11sdp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -200,7 +201,7 @@
                 android:paddingStart="1dp"
                 android:paddingEnd="15dp"
                 android:textColor="@color/use_light_blue"
-                android:textSize="13sp"
+                android:textSize="@dimen/_10sdp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

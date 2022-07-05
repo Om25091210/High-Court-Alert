@@ -16,8 +16,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -51,6 +53,7 @@ public class Similar_Collection extends Fragment {
     List<filterdata> filtered_mylist=new ArrayList<>();
     EditText search;
     ImageView cg_logo;
+    int onback=0;
     TextView no_data;
     String sp_of;
     List<filterdata> save_locally_list=new ArrayList<>();
@@ -108,6 +111,19 @@ public class Similar_Collection extends Fragment {
             }
         });
 
+        OnBackPressedCallback callback=new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if(onback==0){
+                    Toast.makeText(contextNullSafe, "Press back again to exit", Toast.LENGTH_SHORT).show();
+                    onback=1;
+                }
+                else{
+                    ((FragmentActivity) getContextNullSafety()).finish();
+                }
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),callback);
 
         return view;
     }

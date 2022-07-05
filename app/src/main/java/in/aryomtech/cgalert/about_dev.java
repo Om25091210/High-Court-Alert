@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -16,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import soup.neumorphism.NeumorphCardView;
 
@@ -190,6 +192,19 @@ public class about_dev extends Fragment {
         });
 
         back.setOnClickListener(v-> back());
+        OnBackPressedCallback callback=new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                FragmentManager fm=((FragmentActivity) getContextNullSafety()).getSupportFragmentManager();
+                FragmentTransaction ft=fm.beginTransaction();
+                if(fm.getBackStackEntryCount()>0) {
+                    fm.popBackStack();
+                }
+                ft.commit();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),callback);
+
         return view;
     }
     private void back(){

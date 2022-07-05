@@ -23,8 +23,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -59,6 +61,7 @@ import java.util.Objects;
 
 import in.aryomtech.cgalert.Fragments.Adapter.Excel_Adapter;
 import in.aryomtech.cgalert.Fragments.model.Excel_data;
+import in.aryomtech.cgalert.Home;
 import in.aryomtech.cgalert.R;
 import in.aryomtech.cgalert.fcm.Specific;
 import soup.neumorphism.NeumorphButton;
@@ -74,6 +77,7 @@ public class Mcrc_Rm_Coll extends Fragment {
     List<String> case_data_list_filter=new ArrayList<>();
     DatabaseReference user_ref;
     Query query;
+    int onback=0;
     int c=0;
     List<Excel_data> excel_data=new ArrayList<>();
     List<Excel_data> mylist=new ArrayList<>();
@@ -364,7 +368,19 @@ public class Mcrc_Rm_Coll extends Fragment {
                 public void onCancelled(@NonNull DatabaseError error) {}
             });
         });
-
+        OnBackPressedCallback callback=new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if(onback==0){
+                    Toast.makeText(contextNullSafe, "Press back again to exit", Toast.LENGTH_SHORT).show();
+                    onback=1;
+                }
+                else{
+                    ((FragmentActivity) getContextNullSafety()).finish();
+                }
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),callback);
         return view;
     }
 

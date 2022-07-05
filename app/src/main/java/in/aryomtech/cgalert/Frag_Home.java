@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -27,6 +28,7 @@ import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import in.aryomtech.cgalert.Fragments.Mcrc_Rm_Coll;
 import in.aryomtech.cgalert.Fragments.Mcrc_Rm_Return;
@@ -50,6 +52,7 @@ public class Frag_Home extends Fragment {
     TextView coll_text,text_return;
     TextView welcome,check_todays;
     NeumorphCardView blue,back;
+    int c=0;
     private Context contextNullSafe;
     View view;
 

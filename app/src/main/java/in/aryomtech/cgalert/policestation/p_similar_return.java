@@ -3,8 +3,10 @@ package in.aryomtech.cgalert.policestation;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -19,6 +21,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -43,6 +46,7 @@ public class p_similar_return extends Fragment {
     private Context contextNullSafe;
     SwipeRefreshLayout mSwipeRefreshLayout;
     RecyclerView mRecyclerView;
+    int onback=0;
     Query query;
     List<Excel_data> excel_data=new ArrayList<>();
     List<Excel_data> excel_data_duplicates=new ArrayList<>();
@@ -96,6 +100,21 @@ public class p_similar_return extends Fragment {
                 search(s+"");
             }
         });
+
+        OnBackPressedCallback callback=new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if(onback==0){
+                    Toast.makeText(contextNullSafe, "Press back again to exit", Toast.LENGTH_SHORT).show();
+                    onback=1;
+                }
+                else{
+                    ((FragmentActivity) getContextNullSafety()).finish();
+                }
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),callback);
+
         return view;
     }
     private void search(String str) {

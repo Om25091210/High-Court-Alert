@@ -8,8 +8,10 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -75,6 +77,7 @@ public class today extends Fragment {
     RecyclerView mRecyclerView;
     DatabaseReference user_ref;
     Query query;
+    int onback=0;
     String stat_name;
     List<Excel_data> excel_data=new ArrayList<>();
     List<Excel_data> mylist=new ArrayList<>();
@@ -369,6 +372,21 @@ public class today extends Fragment {
             getdata();
         else
             getdata_for_sp();
+
+        OnBackPressedCallback callback=new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if(onback==0){
+                    Toast.makeText(contextNullSafe, "Press back again to exit", Toast.LENGTH_SHORT).show();
+                    onback=1;
+                }
+                else{
+                    ((FragmentActivity) getContextNullSafety()).finish();
+                }
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),callback);
+
         return view;
     }
 

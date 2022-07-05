@@ -68,6 +68,8 @@ public class Return_Adapter extends RecyclerView.Adapter<Return_Adapter.ViewHold
         holder.textViewTitle.setText(list.get(position).getB().toUpperCase() + "");
         holder.textViewBody.setText(list.get(position).getC().toUpperCase());
         holder.Rm.setText(list.get(position).getK());
+        if(list.get(position).getNumber()!=null)
+            holder.number.setText(list.get(position).getNumber());
         holder.mcrc.setText(list.get(position).getD().toUpperCase());
         holder.pr_case_no.setText(list.get(position).getD()+" No. -");
         holder.crime_no.setText(list.get(position).getH() +"/"+ list.get(position).getI());
@@ -128,7 +130,7 @@ public class Return_Adapter extends RecyclerView.Adapter<Return_Adapter.ViewHold
             holder.notified.setVisibility(View.GONE);
         
         if (list.get(position).getType().equals("RM CALL")) {
-            holder.message.setText("उपरोक्त मूल केस डायरी दिनाँक "+list.get(position).getL()+" तक बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय छतीसगढ़ में  अनिवार्यतः जमा करें।");
+            holder.message.setText("उपरोक्त मूल केस डायरी तथा पूर्व अपराधिक रिकॉर्ड, दिनाँक "+list.get(position).getL()+" तक बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय छतीसगढ़ में  अनिवार्यतः जमा करें।");
             holder.type.setVisibility(View.VISIBLE);
             holder.type.setImageResource(R.drawable.ic_submit_type);
         } else if (list.get(position).getType().equals("RM RETURN")) {
@@ -236,7 +238,8 @@ public class Return_Adapter extends RecyclerView.Adapter<Return_Adapter.ViewHold
                     ,list.get(position).getReminded()
                     ,list.get(position).getDate_of_alert()
                     ,list.get(position).getSeen()
-                    ,list.get(position).getSent());
+                    ,list.get(position).getSent()
+                    ,list.get(position).getNumber());
 
             Bundle bundle=new Bundle();
             bundle.putSerializable("excel_data_sending", excel_data);
@@ -306,7 +309,7 @@ public class Return_Adapter extends RecyclerView.Adapter<Return_Adapter.ViewHold
 
     protected static class ViewHolder extends RecyclerView.ViewHolder{
         TextView textViewTitle,add_button,view,last_date,message;
-        TextView textViewBody;
+        TextView textViewBody,number;
         TextView Rm,mcrc,crime_no,case_no,pr_case_no,name,receiving_date;
         ConstraintLayout layout;
         LinearLayout layout_details;
@@ -325,6 +328,7 @@ public class Return_Adapter extends RecyclerView.Adapter<Return_Adapter.ViewHold
             pr_case_no = itemView.findViewById(R.id.pr_case_no);//
             tick = itemView.findViewById(R.id.imageView2);
             layout = itemView.findViewById(R.id.layout);
+            number=itemView.findViewById(R.id.num);
             layout_details = itemView.findViewById(R.id.linearLayout3);
             type = itemView.findViewById(R.id.type);
             name = itemView.findViewById(R.id.person_name);//

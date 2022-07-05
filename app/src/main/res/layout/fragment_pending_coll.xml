@@ -31,6 +31,7 @@
 
             <EditText
                 android:id="@+id/search"
+                android:textSize="@dimen/_10sdp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="10dp"
@@ -56,6 +57,7 @@
             android:id="@+id/checkBox4"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
+            android:textSize="@dimen/_10sdp"
             android:layout_marginEnd="10dp"
             android:buttonTint="@color/use_orange"
             android:minHeight="48dp"

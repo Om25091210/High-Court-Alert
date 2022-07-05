@@ -3,8 +3,12 @@ package in.aryomtech.cgalert.policestation.Pending;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -149,6 +153,20 @@ public class p_pending_return extends Fragment {
 
         join.setOnClickListener(v-> gather_number());
         get_pending();
+
+        OnBackPressedCallback callback=new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                FragmentManager fm=((FragmentActivity) getContextNullSafety()).getSupportFragmentManager();
+                FragmentTransaction ft=fm.beginTransaction();
+                if(fm.getBackStackEntryCount()>0) {
+                    fm.popBackStack();
+                }
+                ft.commit();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),callback);
+
         return view;
     }
     private void gather_number() {

@@ -520,7 +520,7 @@ public class Login extends AppCompatActivity {
     }
 
     void upAnimate(View view){
-        ObjectAnimator move=ObjectAnimator.ofFloat(view, "translationY",-200f);
+        ObjectAnimator move=ObjectAnimator.ofFloat(view, "translationY",-180f);
         move.setDuration(500);
         ObjectAnimator alpha2= ObjectAnimator.ofFloat(view, "alpha",100);
         alpha2.setDuration(500);

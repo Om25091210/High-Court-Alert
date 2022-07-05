@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -303,6 +304,18 @@ public class Entries extends Fragment {
             ig.setBackgroundResource(R.drawable.bg_active);
         });
 
+        OnBackPressedCallback callback=new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                FragmentManager fm=((FragmentActivity) getContextNullSafety()).getSupportFragmentManager();
+                FragmentTransaction ft=fm.beginTransaction();
+                if(fm.getBackStackEntryCount()>0) {
+                    fm.popBackStack();
+                }
+                ft.commit();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),callback);
 
         return view;
     }

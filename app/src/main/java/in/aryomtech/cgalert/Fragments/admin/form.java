@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
@@ -50,6 +51,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -337,6 +339,20 @@ public class form extends Fragment {
                     .addToBackStack(null)
                     .commit();
         });
+
+        OnBackPressedCallback callback=new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                FragmentManager fm=((FragmentActivity) getContextNullSafety()).getSupportFragmentManager();
+                FragmentTransaction ft=fm.beginTransaction();
+                if(fm.getBackStackEntryCount()>0) {
+                    fm.popBackStack();
+                }
+                ft.commit();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),callback);
+
         return view;
     }
     private void back(){
@@ -389,6 +405,7 @@ public class form extends Fragment {
         LottieAnimationView lottieAnimationView=dialog1.findViewById(R.id.animate);
         lottieAnimationView.setAnimation("done.json");
         dialog1.show();
+        fetch_number(ac_district.getText().toString().toUpperCase().trim(),"PS "+policeStation.getText().toString().toUpperCase().trim(),sheet);
         /*String pushkey=rm_Date
                        +policeStation.getText().toString().trim()
                        +ac_district.getText().toString().trim()
@@ -397,41 +414,77 @@ public class form extends Fragment {
                        +case_year_edt.getText().toString().trim()
                        +crime_no_edt.getText().toString().trim()
                        +crime_year_edt.getText().toString().trim();*/
-        if(excel_data==null)
-            pushkey=reference.push().getKey();
-        else
-            pushkey=excel_data.getPushkey();
-        Map<String,String> data_packet=new HashMap<>();
-        data_packet.put("A","");
-        data_packet.put("B",policeStation.getText().toString().toLowerCase().trim().toUpperCase());
-        data_packet.put("C",ac_district.getText().toString().toUpperCase().trim().toUpperCase());
-        data_packet.put("D",ac_caseType.getText().toString().toUpperCase().trim().toUpperCase());
-        data_packet.put("E",case_no_edt.getText().toString().trim());
-        data_packet.put("F",name_edt.getText().toString().toUpperCase().trim().toUpperCase());
-        data_packet.put("G",case_year_edt.getText().toString().trim());
-        data_packet.put("H",crime_no_edt.getText().toString().trim());
-        data_packet.put("I",crime_year_edt.getText().toString().trim());
-        if(diary.getText().toString().trim().equals(""))
-            data_packet.put("J","None");
-        else
-            data_packet.put("J",diary.getText().toString().trim()+"");
-        data_packet.put("K",rm.getText().toString().trim());
-        data_packet.put("L",before.getText().toString().trim());
-        data_packet.put("date",fd_dot);
-        data_packet.put("pushkey",pushkey);
-        data_packet.put("type",sheet);
-        Log.e("Success","Called "+pushkey);
-        reference.child(pushkey).setValue(data_packet);
-        if(excel_data==null)
-            update_bulk_excel(sheet);
-        else
-            update_J_Excel(sheet);
-        Snackbar.make(lay,"Data Uploaded to database.",Snackbar.LENGTH_LONG)
-                .setActionTextColor(Color.parseColor("#171746"))
-                .setTextColor(Color.parseColor("#FF7F5C"))
-                .setBackgroundTint(Color.parseColor("#171746"))
-                .show();
 
+    }
+
+    private void fetch_number(String dis, String ps,String sheet) {
+        reference_phone.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.child(dis).child(ps).exists()){
+                    if(excel_data==null)
+                        pushkey=reference.push().getKey();
+                    else
+                        pushkey=excel_data.getPushkey();
+                    Map<String,String> data_packet=new HashMap<>();
+                    data_packet.put("A","");
+                    data_packet.put("B",policeStation.getText().toString().trim().toUpperCase());
+                    data_packet.put("C",ac_district.getText().toString().trim().toUpperCase());
+                    data_packet.put("D",ac_caseType.getText().toString().trim().toUpperCase());
+                    data_packet.put("E",case_no_edt.getText().toString().trim());
+                    data_packet.put("F",name_edt.getText().toString().trim().toUpperCase());
+                    data_packet.put("G",case_year_edt.getText().toString().trim());
+                    data_packet.put("H",crime_no_edt.getText().toString().trim());
+                    data_packet.put("I",crime_year_edt.getText().toString().trim());
+                    data_packet.put("number",snapshot.child(dis).child(ps).getValue(String.class));
+                    if(diary.getText().toString().trim().equals(""))
+                        data_packet.put("J","None");
+                    else
+                        data_packet.put("J",diary.getText().toString().trim()+"");
+                    data_packet.put("K",rm.getText().toString().trim());
+                    data_packet.put("L",before.getText().toString().trim());
+                    data_packet.put("date",fd_dot);
+                    data_packet.put("pushkey",pushkey);
+                    data_packet.put("type",sheet);
+                    Log.e("Success","Called "+pushkey);
+                    reference.child(pushkey).setValue(data_packet);
+                    if(excel_data==null)
+                        update_bulk_excel(sheet);
+                    else
+                        update_J_Excel(sheet);
+                    Snackbar.make(lay,"Data Uploaded to database.",Snackbar.LENGTH_LONG)
+                            .setActionTextColor(Color.parseColor("#171746"))
+                            .setTextColor(Color.parseColor("#FF7F5C"))
+                            .setBackgroundTint(Color.parseColor("#171746"))
+                            .show();
+
+                }
+                else{
+                    Dialog dialog1 = new Dialog(getContextNullSafety());
+                    dialog1.setCancelable(true);
+                    dialog1.setContentView(R.layout.number_exist_dialog);
+                    dialog1.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                    TextView text=dialog1.findViewById(R.id.textView15);
+                    text.setText("The number for Distict - "+dis+" and Station "+ps+" does not exist, Please add it first then add the data.");
+                    TextView button=dialog1.findViewById(R.id.but);
+                    button.setOnClickListener(v->{
+                        ((FragmentActivity) getContextNullSafety()).getSupportFragmentManager()
+                                .beginTransaction()
+                                .setCustomAnimations( R.anim.enter_from_right, R.anim.exit_to_left,R.anim.enter_from_left, R.anim.exit_to_right)
+                                .add(R.id.drawer,new Entries())
+                                .addToBackStack(null)
+                                .commit();
+                        dialog1.dismiss();
+                    });
+                    dialog1.show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void update_bulk_excel(String sheet) {
