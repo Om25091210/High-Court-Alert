@@ -92,7 +92,7 @@
                                     android:gravity="center"
                                     android:text="@string/pending_r_m"
                                     android:textColor="@color/white"
-                                    android:textSize="15sp" />
+                                    android:textSize="@dimen/_9sdp" />
 
                                 <TextView
                                     android:id="@+id/textView6"
@@ -140,7 +140,7 @@
                                     android:gravity="center"
                                     android:text="@string/not_received"
                                     android:textColor="@color/white"
-                                    android:textSize="15sp" />
+                                    android:textSize="@dimen/_9sdp" />
 
                                 <TextView
                                     android:id="@+id/textView8"
