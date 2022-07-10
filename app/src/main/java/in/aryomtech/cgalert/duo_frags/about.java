@@ -59,8 +59,10 @@ public class about extends Fragment {
         btnAnim = AnimationUtils.loadAnimation(getContextNullSafety().getApplicationContext(),R.anim.button_animation);
         // fill list screen
         final List<ScreenItem> mList = new ArrayList<>();
-        mList.add(new ScreenItem("Man Behind This App-\nAbhinav Verma","Sub Inspector Telecom Department,\n" +
-                "Posted in Police Legal Section of Advocate General's Office, High Court, Bilaspur.",R.drawable.lucky_bhaiya));
+        mList.add(new ScreenItem("","माननीय महाधिवक्ता सतिशचंद्र वर्मा तथा श्रीमान पुलिस महानिदेशक अशोक जुनेजा के सानिध्य में " +
+                "स्थापित पुलिस लीगल सेक्शन,कैंप बिलासपुर के द्वारा कार्यालय को पेपरलेस बनाए जाने के प्रयास में इस एंड्रायड एप C.G HighCourt Alert के " +
+                "माध्यम से पुलिस थानों को तत्काल सूचना संप्रेषित करने  के उद्देश्य से बनाया गया है, ताकि केश- डायरियों को सही समय पर माननीय न्यायालय के समक्ष" +
+                " प्रस्तुत किया जा सके।",R.drawable.adikari_photos));
         mList.add(new ScreenItem("Submission Alert","The High Court needs case diaries to be submitted on time for case hearings and this app will help the court via alerting the Police Stations.",R.drawable.ic_onboarding_one));
         mList.add(new ScreenItem("How it works?","The color red indicates that the case diary is supposed to be submitted or withdrawn whereas the clock shows the number of days left for the same.",R.drawable.ic_onboarding_two));
         mList.add(new ScreenItem("Finally","Once the diary is submitted, it will be inspected by the respective judges of the court.",R.drawable.ic_onboarding_three));
