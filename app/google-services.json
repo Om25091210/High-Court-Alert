@@ -39,6 +39,14 @@
           }
         },
         {
+          "client_id": "1059294088093-t7tnfps5hg1f3a705dc3drkl5vm6huuv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "in.aryomtech.cgalert",
+            "certificate_hash": "bba240e300fe73b9ff68b31c3ac8eac2b7e229d7"
+          }
+        },
+        {
           "client_id": "1059294088093-ep5hjre49m10vpjh6789b4imt6f30ec6.apps.googleusercontent.com",
           "client_type": 3
         }
