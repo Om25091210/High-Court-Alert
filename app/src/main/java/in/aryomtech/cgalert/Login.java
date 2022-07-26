@@ -49,6 +49,7 @@ import java.text.NumberFormat;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
+import in.aryomtech.cgalert.Fragments.Select_District;
 import in.aryomtech.cgalert.policestation.p_Home;
 import www.sanju.motiontoast.MotionToast;
 import www.sanju.motiontoast.MotionToastStyle;
@@ -110,6 +111,12 @@ public class Login extends AppCompatActivity {
         upAnimate(logo_layout);
 
         getSharedPreferences("Is_SP",MODE_PRIVATE).edit()
+                .putString("Yes_of","none").apply();
+
+        getSharedPreferences("Is_SDOP",MODE_PRIVATE).edit()
+                .putString("Yes_of","none").apply();
+
+        getSharedPreferences("Is_IG",MODE_PRIVATE).edit()
                 .putString("Yes_of","none").apply();
 
         linearLayout.setOnClickListener(v->{
@@ -286,6 +293,14 @@ public class Login extends AppCompatActivity {
                                 getSharedPreferences("Is_SP",MODE_PRIVATE).edit()
                                         .putString("Yes_of",ds.getKey()).apply();
                             }
+                            else if(Objects.requireNonNull(station_name).startsWith("SDOP")){
+                                getSharedPreferences("Is_SDOP",MODE_PRIVATE).edit()
+                                        .putString("Yes_of",ds.getKey()).apply();
+                            }
+                            else if(Objects.requireNonNull(station_name).startsWith("IG")){
+                                getSharedPreferences("Is_IG",MODE_PRIVATE).edit()
+                                        .putString("Yes_of",ds.getKey()).apply();
+                            }
                             getSharedPreferences("station_name_K",MODE_PRIVATE).edit()
                                     .putString("the_station_name2003",station_name).apply();
                             break;
@@ -366,14 +381,31 @@ public class Login extends AppCompatActivity {
                         });
                     }
 
-                    user=mAuth.getCurrentUser();
+                    user = mAuth.getCurrentUser();
                     countDownTimer.cancel();
                     user_reference.child(user.getUid()).child("phone").setValue(user.getPhoneNumber());
                     user_reference.child(user.getUid()).child("name").setValue(station_name);
                     user_reference.child(user.getUid()).child(Objects.requireNonNull(user.getPhoneNumber()).substring(3)).setValue(user.getPhoneNumber());
-                    Intent i = new Intent(Login.this, Home.class);
-                    startActivity(i);
-                    finish();
+
+                    if(Objects.requireNonNull(station_name).startsWith("SDOP")){
+                        Intent i = new Intent(Login.this, Select_District.class);
+                        i.putExtra("choice_number",1);
+                        i.putExtra("choice_station",10);
+                        startActivity(i);
+                        finish();
+                    }
+                    else if(Objects.requireNonNull(station_name).startsWith("IG")){
+                        Intent i = new Intent(Login.this, Select_District.class);
+                        i.putExtra("choice_number",8);
+                        i.putExtra("choice_station",0);
+                        startActivity(i);
+                        finish();
+                    }
+                    else {
+                        Intent i = new Intent(Login.this, Home.class);
+                        startActivity(i);
+                        finish();
+                    }
                 }
                 else
                     check_for_admin();

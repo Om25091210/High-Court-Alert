@@ -19,6 +19,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Design.Light.NoActionBar">
         <activity
+            android:name=".Fragments.Select_District"
+            android:exported="false" />
+        <activity
             android:name=".fcm.temp_notification"
             android:exported="false" />
         <activity

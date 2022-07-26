@@ -1,0 +1,75 @@
+package in.aryomtech.cgalert.Fragments;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+
+import android.graphics.Color;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.GridLayout;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import in.aryomtech.cgalert.Fragments.Adapter.SelectDistrictAdapter;
+import in.aryomtech.cgalert.R;
+import in.aryomtech.cgalert.databinding.ActivitySelectDistrictBinding;
+
+public class Select_District extends AppCompatActivity {
+
+    ActivitySelectDistrictBinding binding;
+    int num_of_station,num_of_districts;
+    DatabaseReference reference_phone;
+    List<String> list=new ArrayList<>();
+
+    //TODO: 1. Set on click on the layout of card for selecting districts in case of SDOP its value of selecting will be 1 then
+    //TODO: will change layout for Thane selection in case of SDOP.
+    //TODO: 2. Same for IG but only districts.
+    //TODO: SharedPreferences for Select_Districts in case of back button.
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        binding=ActivitySelectDistrictBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        reference_phone = FirebaseDatabase.getInstance().getReference().child("Phone numbers");
+        getSharedPreferences("authorized_entry",MODE_PRIVATE).edit()
+                .putBoolean("entry_done",true).apply();
+
+        num_of_station=getIntent().getIntExtra("choice_number",0);
+        num_of_districts=getIntent().getIntExtra("choice_station",0);
+        GridLayoutManager gridLayoutManager=new GridLayoutManager(this,2);
+        binding.rec.setItemViewCacheSize(500);
+        binding.rec.setDrawingCacheEnabled(true);
+        binding.rec.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+        binding.rec.setLayoutManager(gridLayoutManager);
+        get_districts();
+
+    }
+
+    public void get_districts(){
+        reference_phone.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot ds:snapshot.getChildren()){
+                    list.add(ds.getKey());
+                }
+                SelectDistrictAdapter selectDistrictAdapter=new SelectDistrictAdapter(list,Select_District.this);
+                selectDistrictAdapter.notifyDataSetChanged();
+                binding.rec.setAdapter(selectDistrictAdapter);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
+    }
+
+}

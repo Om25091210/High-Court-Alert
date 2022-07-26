@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="140dp"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_marginTop="5dp"
+    android:layout_marginStart="5dp"
+    android:background="@drawable/bg_district"
+    android:paddingVertical="10dp">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:src="@drawable/ic_district"
+        android:contentDescription="@string/image" />
+
+    <TextView
+        android:id="@+id/dis"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="Bilaspur"
+        android:textColor="@color/use_orange"
+        android:gravity="center"
+        android:layout_marginTop="10dp"/>
+
+</LinearLayout>
