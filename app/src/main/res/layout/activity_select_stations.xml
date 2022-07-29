@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.Select_District">
+    tools:context=".Fragments.Select_stations">
 
     <TextView
         android:id="@+id/textView16"
@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:gravity="center"
-        android:text="@string/select_district"
+        android:text="@string/select_stations"
         android:textColor="@color/use_orange"
         android:textSize="@dimen/_15sdp"
         android:textStyle="bold"

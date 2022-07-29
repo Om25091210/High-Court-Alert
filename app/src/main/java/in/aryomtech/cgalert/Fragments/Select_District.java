@@ -3,12 +3,16 @@ package in.aryomtech.cgalert.Fragments;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.GridLayout;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -19,7 +23,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import in.aryomtech.cgalert.DB.TinyDB;
 import in.aryomtech.cgalert.Fragments.Adapter.SelectDistrictAdapter;
+import in.aryomtech.cgalert.Home;
 import in.aryomtech.cgalert.R;
 import in.aryomtech.cgalert.databinding.ActivitySelectDistrictBinding;
 
@@ -29,8 +35,9 @@ public class Select_District extends AppCompatActivity {
     int num_of_station,num_of_districts;
     DatabaseReference reference_phone;
     List<String> list=new ArrayList<>();
+    ArrayList<String> emptylist=new ArrayList<>();
 
-    //TODO: 1. Set on click on the layout of card for selecting districts in case of SDOP its value of selecting will be 1 then
+    //TODO: 1. Set on click on the layout of card for selecting districts in case of SDOP its value of selecting will be 1 then.
     //TODO: will change layout for Thane selection in case of SDOP.
     //TODO: 2. Same for IG but only districts.
     //TODO: SharedPreferences for Select_Districts in case of back button.
@@ -44,15 +51,43 @@ public class Select_District extends AppCompatActivity {
         reference_phone = FirebaseDatabase.getInstance().getReference().child("Phone numbers");
         getSharedPreferences("authorized_entry",MODE_PRIVATE).edit()
                 .putBoolean("entry_done",true).apply();
+        TinyDB tinydb=new TinyDB(Select_District.this);
 
-        num_of_station=getIntent().getIntExtra("choice_number",0);
-        num_of_districts=getIntent().getIntExtra("choice_station",0);
+        num_of_districts=tinydb.getInt("num_districts");
+        num_of_station=tinydb.getInt("num_station");
         GridLayoutManager gridLayoutManager=new GridLayoutManager(this,2);
+        gridLayoutManager.setOrientation(RecyclerView.VERTICAL);
         binding.rec.setItemViewCacheSize(500);
         binding.rec.setDrawingCacheEnabled(true);
         binding.rec.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         binding.rec.setLayoutManager(gridLayoutManager);
         get_districts();
+
+        binding.next.setOnClickListener(v->{
+            if(num_of_station!=0){
+                if(tinydb.getListString("districts_list").size()==1) {
+                    //for sdop its not true ->Entered select district
+                    String district = tinydb.getListString("districts_list").get(0);
+                    Intent intent = new Intent(Select_District.this, Select_stations.class);
+                    intent.putExtra("Station_choice_num", 10);
+                    intent.putExtra("district", district);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+            else{
+                if(tinydb.getListString("districts_list").size()>=1) {
+                    //User opened the screen or not.
+                    tinydb.putBoolean("entered_select_district",true);
+                    String district = tinydb.getListString("districts_list").get(0);
+                    Intent intent = new Intent(Select_District.this, Home.class);
+                    intent.putExtra("Station_choice_num", 10);
+                    intent.putExtra("district", district);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        });
 
     }
 
@@ -63,7 +98,7 @@ public class Select_District extends AppCompatActivity {
                 for(DataSnapshot ds:snapshot.getChildren()){
                     list.add(ds.getKey());
                 }
-                SelectDistrictAdapter selectDistrictAdapter=new SelectDistrictAdapter(list,Select_District.this);
+                SelectDistrictAdapter selectDistrictAdapter=new SelectDistrictAdapter(list,Select_District.this,num_of_districts);
                 selectDistrictAdapter.notifyDataSetChanged();
                 binding.rec.setAdapter(selectDistrictAdapter);
             }

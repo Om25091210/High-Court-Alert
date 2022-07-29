@@ -19,8 +19,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Design.Light.NoActionBar">
         <activity
-            android:name=".Fragments.Select_District"
+            android:name=".Fragments.Select_stations"
             android:exported="false" />
+        <activity
+            android:name=".Fragments.Select_District"
+            android:exported="false"/>
         <activity
             android:name=".fcm.temp_notification"
             android:exported="false" />
@@ -32,7 +35,7 @@
             android:exported="false" />
         <activity
             android:name=".Home"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".Splash"
             android:exported="true"

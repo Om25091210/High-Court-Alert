@@ -1,13 +1,11 @@
 package in.aryomtech.cgalert.Fragments.Adapter;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +19,7 @@ import java.util.List;
 import in.aryomtech.cgalert.DB.TinyDB;
 import in.aryomtech.cgalert.R;
 
-public class SelectDistrictAdapter extends RecyclerView.Adapter<SelectDistrictAdapter.ViewHolder> {
+public class SelectStationAdapter  extends RecyclerView.Adapter<SelectStationAdapter.ViewHolder> {
 
     List<String> list;
     Context context;
@@ -29,7 +27,7 @@ public class SelectDistrictAdapter extends RecyclerView.Adapter<SelectDistrictAd
     ArrayList<String> selection_list=new ArrayList<>();
     TinyDB tinydb;
 
-    public SelectDistrictAdapter(List<String> list, Context context, int num_of_districts) {
+    public SelectStationAdapter(List<String> list, Context context, int num_of_districts) {
         this.list = list;
         this.context=context;
         this.num_of_districts=num_of_districts;
@@ -45,8 +43,8 @@ public class SelectDistrictAdapter extends RecyclerView.Adapter<SelectDistrictAd
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        selection_list=tinydb.getListString("districts_list");
-        Log.e("selection_list",selection_list+"");
+        selection_list=tinydb.getListString("stations_list");
+        Log.e("selection_list1",selection_list+"");
         if (selection_list.contains(list.get(position))) {
             holder.tick.setVisibility(View.VISIBLE);
         }
@@ -56,7 +54,7 @@ public class SelectDistrictAdapter extends RecyclerView.Adapter<SelectDistrictAd
                 holder.tick.setVisibility(View.GONE);
                 selection_list.remove(list.get(position));
             } else {
-                if(selection_list.size()<=num_of_districts-1) {
+                if(selection_list.size()<=num_of_districts) {
                     holder.tick.setVisibility(View.VISIBLE);
                     selection_list.add(list.get(position));
                 }
@@ -64,8 +62,7 @@ public class SelectDistrictAdapter extends RecyclerView.Adapter<SelectDistrictAd
                     Toast.makeText(context, "You can only select "+num_of_districts+" district/s", Toast.LENGTH_SHORT).show();
                 }
             }
-            tinydb.putListString("districts_list", selection_list);
-
+            tinydb.putListString("stations_list", selection_list);
         });
     }
 

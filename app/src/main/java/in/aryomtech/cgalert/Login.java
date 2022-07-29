@@ -46,9 +46,11 @@ import com.simform.customcomponent.SSCustomEdittextOutlinedBorder;
 import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
+import in.aryomtech.cgalert.DB.TinyDB;
 import in.aryomtech.cgalert.Fragments.Select_District;
 import in.aryomtech.cgalert.policestation.p_Home;
 import www.sanju.motiontoast.MotionToast;
@@ -73,6 +75,7 @@ public class Login extends AppCompatActivity {
     // string for storing our verification ID
     private String verificationId;
     DatabaseReference user_reference;
+    ArrayList<String> emptylist=new ArrayList<>();
     FirebaseUser user;
 
     @Override
@@ -85,6 +88,13 @@ public class Login extends AppCompatActivity {
 
         getSharedPreferences("isAdmin_or_not",MODE_PRIVATE).edit()
                 .putBoolean("authorizing_admin",false).apply();
+
+        TinyDB tinyDB=new TinyDB(Login.this);
+        tinyDB.putBoolean("entered_select_district",false);
+        tinyDB.putInt("num_districts",-1);
+        tinyDB.putInt("num_station",-1);
+        tinyDB.putListString("stations_list", emptylist);
+        tinyDB.putListString("districts_list", emptylist);
 
         // below line is for getting instance
         // of our FirebaseAuth.
@@ -386,8 +396,10 @@ public class Login extends AppCompatActivity {
                     user_reference.child(user.getUid()).child("phone").setValue(user.getPhoneNumber());
                     user_reference.child(user.getUid()).child("name").setValue(station_name);
                     user_reference.child(user.getUid()).child(Objects.requireNonNull(user.getPhoneNumber()).substring(3)).setValue(user.getPhoneNumber());
-
+                    TinyDB tinyDB=new TinyDB(Login.this);
                     if(Objects.requireNonNull(station_name).startsWith("SDOP")){
+                        tinyDB.putInt("num_districts",1);
+                        tinyDB.putInt("num_station",10);
                         Intent i = new Intent(Login.this, Select_District.class);
                         i.putExtra("choice_number",1);
                         i.putExtra("choice_station",10);
@@ -396,12 +408,15 @@ public class Login extends AppCompatActivity {
                     }
                     else if(Objects.requireNonNull(station_name).startsWith("IG")){
                         Intent i = new Intent(Login.this, Select_District.class);
+                        tinyDB.putInt("num_districts",8);
+                        tinyDB.putInt("num_station",0);
                         i.putExtra("choice_number",8);
                         i.putExtra("choice_station",0);
                         startActivity(i);
                         finish();
                     }
                     else {
+                        tinyDB.putBoolean("entered_select_district",true);
                         Intent i = new Intent(Login.this, Home.class);
                         startActivity(i);
                         finish();
@@ -463,7 +478,8 @@ public class Login extends AppCompatActivity {
                             public void onCancelled(@NonNull DatabaseError error) {}
                         });
                     }
-
+                    TinyDB tinyDB=new TinyDB(Login.this);
+                    tinyDB.putBoolean("entered_select_district",true);
                     user=mAuth.getCurrentUser();
                     countDownTimer.cancel();
                     user_reference.child(user.getUid()).child("phone").setValue(user.getPhoneNumber());
