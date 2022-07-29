@@ -54,7 +54,7 @@ public class SelectStationAdapter  extends RecyclerView.Adapter<SelectStationAda
                 holder.tick.setVisibility(View.GONE);
                 selection_list.remove(list.get(position));
             } else {
-                if(selection_list.size()<=num_of_districts) {
+                if(selection_list.size()<=num_of_districts-1) {
                     holder.tick.setVisibility(View.VISIBLE);
                     selection_list.add(list.get(position));
                 }
