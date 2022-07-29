@@ -52,7 +52,7 @@ public class Select_District extends AppCompatActivity {
         getSharedPreferences("authorized_entry",MODE_PRIVATE).edit()
                 .putBoolean("entry_done",true).apply();
         TinyDB tinydb=new TinyDB(Select_District.this);
-
+        tinydb.putListString("stations_list", emptylist);
         num_of_districts=tinydb.getInt("num_districts");
         num_of_station=tinydb.getInt("num_station");
         GridLayoutManager gridLayoutManager=new GridLayoutManager(this,2);
