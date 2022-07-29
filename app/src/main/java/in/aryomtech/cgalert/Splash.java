@@ -28,6 +28,8 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.Locale;
 
+import in.aryomtech.cgalert.DB.TinyDB;
+import in.aryomtech.cgalert.Fragments.Select_District;
 import in.aryomtech.cgalert.policestation.p_Home;
 
 public class Splash extends AppCompatActivity {
@@ -66,10 +68,20 @@ public class Splash extends AppCompatActivity {
                     finish();
                 }
                 else if(auth_entry){
-                    Intent i = new Intent(Splash.this, Home.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(i);
-                    finish();
+                    TinyDB tinyDB=new TinyDB(Splash.this);
+                    boolean tiny_sel_dist=tinyDB.getBoolean("entered_select_district");
+                    if(tiny_sel_dist) {
+                        Intent i = new Intent(Splash.this, Home.class);
+                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(i);
+                        finish();
+                    }
+                    else{
+                        Intent i = new Intent(Splash.this, Select_District.class);
+                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(i);
+                        finish();
+                    }
                 }
 
             }

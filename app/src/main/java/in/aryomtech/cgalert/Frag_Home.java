@@ -1,5 +1,7 @@
 package in.aryomtech.cgalert;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
@@ -30,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import in.aryomtech.cgalert.DB.TinyDB;
 import in.aryomtech.cgalert.Fragments.Mcrc_Rm_Coll;
 import in.aryomtech.cgalert.Fragments.Mcrc_Rm_Return;
 import in.aryomtech.cgalert.Fragments.Similar_Collection;
@@ -55,6 +58,8 @@ public class Frag_Home extends Fragment {
     int c=0;
     private Context contextNullSafe;
     View view;
+    String sp_of;
+    TinyDB tinyDB;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,7 +67,7 @@ public class Frag_Home extends Fragment {
         // Inflate the layout for this fragment
         view= inflater.inflate(R.layout.fragment_frag__home, container, false);
         if (contextNullSafe == null) getContextNullSafety();
-
+        tinyDB=new TinyDB(getContextNullSafety());
         welcome=view.findViewById(R.id.textView3);
         check_todays=view.findViewById(R.id.textView4);
         new Handler(Looper.myLooper()).postDelayed(new Runnable() {
@@ -119,10 +124,135 @@ public class Frag_Home extends Fragment {
         SmartTabLayout viewPagerTab = view.findViewById(R.id.viewpagertab);
         viewPagerTab.setViewPager(viewPager);
 
-        get_pending();
+        sp_of=getContextNullSafety().getSharedPreferences("Is_SP",MODE_PRIVATE)
+                .getString("Yes_of","none");
+        if(sp_of.equals("none")) {
+            if (tinyDB.getInt("num_station") == 0) {
+                getDataForIG();
+            } else if (tinyDB.getInt("num_station") == 10) {
+                getDataForSDOP();
+            } else {
+                get_pending();
+            }
+        }
+        else
+            getdata_for_sp();
 
         return view;
     }
+
+    private void getdata_for_sp() {
+        query_coll.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot ds:snapshot.getChildren()){
+                    if(snapshot.child(ds.getKey()).child("J").getValue(String.class).equals("None")){
+                        if(snapshot.child(ds.getKey()).child("C").getValue(String.class).equals(sp_of)) {
+                            total_coll++;
+                        }
+                    }
+                }
+                String text=total_coll+"";
+                coll_text.setText(text);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
+        query_return.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot ds:snapshot.getChildren()){
+                    if(snapshot.child(ds.getKey()).child("J").getValue(String.class).equals("None")){
+                        if(snapshot.child(ds.getKey()).child("C").getValue(String.class).equals(sp_of)) {
+                            total_return++;
+                            pending_return.add(snapshot.child(ds.getKey()).getValue(Excel_data.class));
+                        }
+                    }
+                }
+                String text=total_return+"";
+                text_return.setText(text);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
+    }
+
+    private void getDataForSDOP() {
+        query_coll.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot ds:snapshot.getChildren()){
+                    if(snapshot.child(ds.getKey()).child("J").getValue(String.class).equals("None")){
+                        if(tinyDB.getListString("districts_list")
+                                .contains(snapshot.child(Objects.requireNonNull(ds.getKey())).child("C").getValue(String.class))
+                                && tinyDB.getListString("stations_list").contains("PS "+snapshot.child(Objects.requireNonNull(ds.getKey())).child("B").getValue(String.class))) {
+                            total_coll++;
+                        }
+                    }
+                }
+                String text=total_coll+"";
+                coll_text.setText(text);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
+        query_return.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot ds:snapshot.getChildren()){
+                    if(snapshot.child(ds.getKey()).child("J").getValue(String.class).equals("None")){
+                        if(tinyDB.getListString("districts_list")
+                                .contains(snapshot.child(Objects.requireNonNull(ds.getKey())).child("C").getValue(String.class))
+                                && tinyDB.getListString("stations_list").contains("PS "+snapshot.child(Objects.requireNonNull(ds.getKey())).child("B").getValue(String.class))) {
+                            total_return++;
+                            pending_return.add(snapshot.child(ds.getKey()).getValue(Excel_data.class));
+                        }
+                    }
+                }
+                String text=total_return+"";
+                text_return.setText(text);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
+    }
+
+    private void getDataForIG() {
+        query_coll.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot ds:snapshot.getChildren()){
+                    if(snapshot.child(ds.getKey()).child("J").getValue(String.class).equals("None")){
+                        if(tinyDB.getListString("districts_list").contains(snapshot.child(Objects.requireNonNull(ds.getKey())).child("C").getValue(String.class))) {
+                            total_coll++;
+                        }
+                    }
+                }
+                String text=total_coll+"";
+                coll_text.setText(text);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
+        query_return.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot ds:snapshot.getChildren()){
+                    if(snapshot.child(ds.getKey()).child("J").getValue(String.class).equals("None")){
+                        if(tinyDB.getListString("districts_list").contains(snapshot.child(Objects.requireNonNull(ds.getKey())).child("C").getValue(String.class))) {
+                            total_return++;
+                            pending_return.add(snapshot.child(ds.getKey()).getValue(Excel_data.class));
+                        }
+                    }
+                }
+                String text=total_return+"";
+                text_return.setText(text);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
+    }
+
     void offanimate(View view){
         ObjectAnimator move=ObjectAnimator.ofFloat(view, "translationX",-800f);
         move.setDuration(1000);
