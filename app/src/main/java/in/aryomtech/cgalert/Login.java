@@ -324,14 +324,6 @@ public class Login extends AppCompatActivity {
                                 getSharedPreferences("Is_SP",MODE_PRIVATE).edit()
                                         .putString("Yes_of",ds.getKey()).apply();
                             }
-                            else if(Objects.requireNonNull(station_name).startsWith("SDOP")){
-                                getSharedPreferences("Is_SDOP",MODE_PRIVATE).edit()
-                                        .putString("Yes_of",ds.getKey()).apply();
-                            }
-                            else if(Objects.requireNonNull(station_name).startsWith("IG")){
-                                getSharedPreferences("Is_IG",MODE_PRIVATE).edit()
-                                        .putString("Yes_of",ds.getKey()).apply();
-                            }
                             getSharedPreferences("station_name_K",MODE_PRIVATE).edit()
                                     .putString("the_station_name2003",station_name).apply();
                             break;
