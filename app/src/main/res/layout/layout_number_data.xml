@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:background="@drawable/bg_data_card"
@@ -51,14 +52,29 @@
 
     <ImageView
         android:id="@+id/call"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="5dp"
+        android:layout_gravity="center"
         android:src="@drawable/ic_call_btn"/>
 
+    <ImageView
+        android:id="@+id/wp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="5dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_wp1"/>
 
+
+    <ImageView
+        android:id="@+id/delete"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_delete_"
+        app:tint="@color/red_600" />
 
 </LinearLayout>

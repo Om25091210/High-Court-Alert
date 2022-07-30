@@ -3,6 +3,7 @@ package in.aryomtech.cgalert;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,11 +63,30 @@ public class Adapter_PhoneNo extends RecyclerView.Adapter<Adapter_PhoneNo.ViewHo
                     Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
                     context.startActivity(intent);
                 });
+
+
+                holder.wp_btn.setOnClickListener(v->{
+                    String url = "https://api.whatsapp.com/send?phone=" +"+91" + snapshot.getValue(String.class);
+                    try {
+                        PackageManager pm = v.getContext().getPackageManager();
+                        pm.getPackageInfo("com.whatsapp", PackageManager.GET_ACTIVITIES);
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        i.setData(Uri.parse(url));
+                        v.getContext().startActivity(i);
+                    } catch (PackageManager.NameNotFoundException e) {
+                        v.getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+                    }
+                });
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
+        });
+        
+        holder.delete.setOnClickListener(v->{
+            reference.removeValue();
         });
     }
 
@@ -79,7 +99,7 @@ public class Adapter_PhoneNo extends RecyclerView.Adapter<Adapter_PhoneNo.ViewHo
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView name;
         TextView number;
-        ImageView call_btn;
+        ImageView call_btn, wp_btn, delete;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -87,6 +107,8 @@ public class Adapter_PhoneNo extends RecyclerView.Adapter<Adapter_PhoneNo.ViewHo
             name = itemView.findViewById(R.id.ps_name);
             number = itemView.findViewById(R.id.ps_number);
             call_btn = itemView.findViewById(R.id.call);
+            wp_btn = itemView.findViewById(R.id.wp);
+            delete = itemView.findViewById(R.id.delete);
         }
     }
 }
