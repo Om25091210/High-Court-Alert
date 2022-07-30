@@ -85,9 +85,14 @@ public class Return_Adapter extends RecyclerView.Adapter<Return_Adapter.ViewHold
                 } else if (nDays_Between_Dates(list.get(position).getL()) <= 5) {
                     holder.day_left.setText(nDays_Between_Dates(list.get(position).getL()) + "d");
                     holder.day_left.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_clock_time, 0, 0, 0);
-                } else {
+                }
+                else if(nDays_Between_Dates(list.get(position).getL())==6){
                     holder.day_left.setText("--");
                     holder.day_left.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_red_clock, 0, 0, 0);
+                }
+                else {
+                    holder.day_left.setText("--");
+                    holder.day_left.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_time_exceed, 0, 0, 0);
                 }
             }
             else
