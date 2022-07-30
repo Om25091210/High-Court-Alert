@@ -189,6 +189,7 @@ public class admin_room extends Fragment {
         menu.add(0, 1, 0, "Number Error");
         menu.add(0, 2, 0, "Clear");
         menu.add(0, 3, 0, "Installation");
+        menu.add(0,4,0,"Phone Numbers");
         // OR inflate your menu from an XML:
         dropDownMenu.getMenuInflater().inflate(R.menu.layout_menu, menu);
         dropDownMenu.setOnMenuItemClickListener(item -> {
@@ -229,6 +230,10 @@ public class admin_room extends Fragment {
                             .add(R.id.inst_cont,new Installation())
                             .addToBackStack(null)
                             .commit();
+                    return true;
+                case 4:
+                    //add your code here...
+                    //idhar idhar dalna lwde
             }
             return false;
         });

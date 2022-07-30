@@ -43,6 +43,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.simform.customcomponent.SSCustomEdittextOutlinedBorder;
 
+import java.io.File;
 import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.text.NumberFormat;
@@ -88,8 +89,10 @@ public class Login extends AppCompatActivity {
 
         getSharedPreferences("isAdmin_or_not",MODE_PRIVATE).edit()
                 .putBoolean("authorizing_admin",false).apply();
-
         TinyDB tinyDB=new TinyDB(Login.this);
+        Log.e("this cache1",tinyDB.getInt("num_districts")+"");
+        deleteCache(this);
+        Log.e("this cache2",tinyDB.getInt("num_districts")+"");
         tinyDB.putBoolean("entered_select_district",false);
         tinyDB.putInt("num_districts",-1);
         tinyDB.putInt("num_station",-1);
@@ -128,7 +131,6 @@ public class Login extends AppCompatActivity {
 
         getSharedPreferences("Is_IG",MODE_PRIVATE).edit()
                 .putString("Yes_of","none").apply();
-
         linearLayout.setOnClickListener(v->{
             if(!send_otp.getText().toString().trim().equals("Verify")) {
                 if (edtEmail.getGetTextValue().trim().length() == 10) {
@@ -283,7 +285,26 @@ public class Login extends AppCompatActivity {
                     }
                 });
     }
+    public void deleteCache(Context context) {
+        try {
+            File dir = context.getCacheDir();
+            if (dir.list() != null) {
+                deleteDir2(dir);
+            }
+        } catch (Exception e) { e.printStackTrace();}
+    }
 
+    public boolean deleteDir2(File dir) {
+        if (dir.isDirectory()) {
+            for (File child : dir.listFiles()) {
+                boolean success = deleteDir2(child);
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        return dir.delete();
+    }
     private void update_ui() {
         mAuth=FirebaseAuth.getInstance();
         user=mAuth.getCurrentUser();
@@ -398,6 +419,15 @@ public class Login extends AppCompatActivity {
                     user_reference.child(user.getUid()).child(Objects.requireNonNull(user.getPhoneNumber()).substring(3)).setValue(user.getPhoneNumber());
                     TinyDB tinyDB=new TinyDB(Login.this);
                     if(Objects.requireNonNull(station_name).startsWith("SDOP")){
+                        tinyDB.putInt("num_districts",1);
+                        tinyDB.putInt("num_station",10);
+                        Intent i = new Intent(Login.this, Select_District.class);
+                        i.putExtra("choice_number",1);
+                        i.putExtra("choice_station",10);
+                        startActivity(i);
+                        finish();
+                    }
+                    else if(Objects.requireNonNull(station_name).startsWith("CSP")){
                         tinyDB.putInt("num_districts",1);
                         tinyDB.putInt("num_station",10);
                         Intent i = new Intent(Login.this, Select_District.class);
