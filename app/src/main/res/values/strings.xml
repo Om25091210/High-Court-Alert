@@ -97,6 +97,7 @@
     <string name="no_data">No Data</string>
     <string name="add_number">Add Number</string>
     <string name="number_">Mob. no. -</string>
+    <string name="number_data">Number Data</string>
 
 
     <array name="menuOptions">

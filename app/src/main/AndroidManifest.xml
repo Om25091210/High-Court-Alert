@@ -18,6 +18,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Design.Light.NoActionBar">
+
+        <activity
+            android:name=".Data_show"
+            android:exported="false" />
+
         <activity
             android:name=".fcm.temp_notification"
             android:exported="false" />
