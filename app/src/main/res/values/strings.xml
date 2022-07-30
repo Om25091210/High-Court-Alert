@@ -101,6 +101,7 @@
     <string name="number_data">Number Data</string>
     <string name="select_district">Select District (चयनित जिला)</string>
     <string name="select_stations">Select Stations (चयनित थाना)</string>
+    <string name="are_you_sure_to_delete_this_number_permanently">Are you sure to delete this number permanently?</string>
 
 
     <array name="menuOptions">

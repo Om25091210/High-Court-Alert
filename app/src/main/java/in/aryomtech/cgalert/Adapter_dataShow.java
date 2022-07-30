@@ -22,8 +22,8 @@ public class Adapter_dataShow extends RecyclerView.Adapter<Adapter_dataShow.View
     List<String> list;
     Context context;
 
-    public Adapter_dataShow(Data_show data_show, List<String> list){
-        this.context = data_show;
+        public Adapter_dataShow(Context context, List<String> list){
+        this.context = context;
         this.list = list;
     }
 

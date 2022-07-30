@@ -35,6 +35,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import in.aryomtech.cgalert.DistrictData;
 import in.aryomtech.cgalert.Fragments.Adapter.admin_room_Adapter;
 import in.aryomtech.cgalert.Fragments.model.Excel_data;
 import in.aryomtech.cgalert.R;
@@ -232,8 +233,13 @@ public class admin_room extends Fragment {
                             .commit();
                     return true;
                 case 4:
-                    //add your code here...
-                    //idhar idhar dalna lwde
+                    ((FragmentActivity) getContext()).getSupportFragmentManager()
+                            .beginTransaction()
+                            .setCustomAnimations( R.anim.enter_from_right, R.anim.exit_to_left,R.anim.enter_from_left, R.anim.exit_to_right)
+                            .add(R.id.inst_cont,new DistrictData())
+                            .addToBackStack(null)
+                            .commit();
+                    return true;
             }
             return false;
         });

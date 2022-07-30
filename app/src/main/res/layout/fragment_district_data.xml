@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:id="@+id/data_show"
+    android:background="@color/use_bg"
     android:layout_height="match_parent"
-    tools:context=".Data_show">
+    tools:ignore="MissingClass">
 
     <ImageView
         android:id="@+id/imageView4"
@@ -36,11 +38,49 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/imageView4" />
 
+    <soup.neumorphism.NeumorphCardView
+        android:id="@+id/neumorphCardView2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@color/white"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/imageView4"
+        app:layout_constraintTop_toBottomOf="@+id/textView10"
+        app:neumorph_shadowColorDark="@color/gray"
+        app:neumorph_shadowColorLight="@color/white"
+        app:neumorph_shadowElevation="5dp"
+        app:neumorph_shapeType="basin"
+        tools:ignore="MissingConstraints">
+
+        <EditText
+            android:id="@+id/search"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_weight="8"
+            android:alignmentMode="alignMargins"
+            android:autofillHints="Search"
+            android:background="@null"
+            android:drawableStart="@drawable/ic_baseline_search_24"
+            android:drawablePadding="5dp"
+            android:hint="@string/search_here"
+            android:inputType="textNoSuggestions"
+            android:paddingStart="10dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="10dp"
+            android:textAlignment="textStart"
+            android:textColor="@color/blue_grey_800"
+            android:textColorHint="@color/blue_grey_800" />
+    </soup.neumorphism.NeumorphCardView>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="10dp"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
         android:layout_marginBottom="15dp"
@@ -48,7 +88,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView10" />
+        app:layout_constraintTop_toBottomOf="@+id/neumorphCardView2" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
