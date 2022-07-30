@@ -1,6 +1,7 @@
 package in.aryomtech.cgalert;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,8 +29,9 @@ public class Adapter_PhoneNo extends RecyclerView.Adapter<Adapter_PhoneNo.ViewHo
     List<String> list;
     Context context;
     String district;
-    DatabaseReference reference;
+    DatabaseReference reference, reference1;
     String num;
+    TextView yes,no;
 
 
     public Adapter_PhoneNo(Context context, List<String> list, String district) {
@@ -41,6 +44,8 @@ public class Adapter_PhoneNo extends RecyclerView.Adapter<Adapter_PhoneNo.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_number_data, parent, false);
+
+
         return new ViewHolder(view);
     }
 
@@ -48,25 +53,24 @@ public class Adapter_PhoneNo extends RecyclerView.Adapter<Adapter_PhoneNo.ViewHo
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.name.setText(list.get(position));
 
         reference = FirebaseDatabase.getInstance().getReference().child("Phone numbers").child(district).child(list.get(position));
 
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+        reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                holder.number.setText(snapshot.getValue(String.class));
+                holder.number.setText("+91 " + snapshot.getValue(String.class));
 
-                holder.call_btn.setOnClickListener(v->{
+                holder.call_btn.setOnClickListener(v -> {
                     String phone = "+91" + snapshot.getValue(String.class);
                     Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
                     context.startActivity(intent);
                 });
 
-
-                holder.wp_btn.setOnClickListener(v->{
-                    String url = "https://api.whatsapp.com/send?phone=" +"+91" + snapshot.getValue(String.class);
+                holder.wp_btn.setOnClickListener(v -> {
+                    String url = "https://api.whatsapp.com/send?phone=" + "+91" + snapshot.getValue(String.class);
                     try {
                         PackageManager pm = v.getContext().getPackageManager();
                         pm.getPackageInfo("com.whatsapp", PackageManager.GET_ACTIVITIES);
@@ -78,16 +82,49 @@ public class Adapter_PhoneNo extends RecyclerView.Adapter<Adapter_PhoneNo.ViewHo
                     }
                 });
 
+                holder.share_btn.setOnClickListener(v->{
+                    try {
+                        Intent intent = new Intent(Intent.ACTION_SEND);
+                        intent.setType("text/plain");
+                        intent.putExtra(Intent.EXTRA_SUBJECT, "Download App");
+                        String message = "District - " + district +"\n" + "Police Station - " + list.get(position) +"\n" +
+                                "Phone Number - " + "+91 " + snapshot.getValue(String.class) + "\n\n⭐ CG HIGH COURT ALERT ⭐";
+                        intent.putExtra(Intent.EXTRA_TEXT, message);
+                        context.startActivity(Intent.createChooser(intent, "Share using"));
+                    } catch (Exception e) {
+                        Toast.makeText(context, "Error Occurred", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                holder.delete.setOnClickListener(v -> {
+                    Dialog dialog = new Dialog(context);
+                    dialog.setContentView(R.layout.dialog_delete);
+                    dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                    dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    dialog.show();
+                    dialog.setCancelable(false);
+                    yes = dialog.findViewById(R.id.yes);
+                    no = dialog.findViewById(R.id.no);
+
+                    yes.setOnClickListener(v2->{
+                        reference1 = FirebaseDatabase.getInstance().getReference().child("Phone numbers").child(district);
+                        reference1.child(list.get(position)).removeValue();
+                        dialog.dismiss();
+                    });
+
+                    no.setOnClickListener(v1->{
+                        dialog.dismiss();
+                    });
+                });
+
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
-        
-        holder.delete.setOnClickListener(v->{
-            reference.removeValue();
-        });
+
     }
 
     @Override
@@ -99,7 +136,7 @@ public class Adapter_PhoneNo extends RecyclerView.Adapter<Adapter_PhoneNo.ViewHo
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView name;
         TextView number;
-        ImageView call_btn, wp_btn, delete;
+        ImageView call_btn, wp_btn, delete, share_btn;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -109,6 +146,8 @@ public class Adapter_PhoneNo extends RecyclerView.Adapter<Adapter_PhoneNo.ViewHo
             call_btn = itemView.findViewById(R.id.call);
             wp_btn = itemView.findViewById(R.id.wp);
             delete = itemView.findViewById(R.id.delete);
+            share_btn = itemView.findViewById(R.id.share);
         }
     }
+
 }

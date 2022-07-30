@@ -41,12 +41,9 @@
             android:exported="false" />
         <activity
             android:name=".Splash"
-            android:exported="false"
-            android:theme="@style/SplashTheme"/>
+            android:exported="true"
+            android:theme="@style/SplashTheme">
 
-        <activity
-            android:name=".Data_show"
-            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -64,6 +61,7 @@
                 <action android:name="com.getset.getset.c2dm.intent.REGISTRATION" />
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
+
         </service>
     </application>
 
