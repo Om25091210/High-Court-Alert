@@ -59,6 +59,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+import in.aryomtech.cgalert.DB.TinyDB;
 import in.aryomtech.cgalert.Fragments.Adapter.Excel_Adapter;
 import in.aryomtech.cgalert.Fragments.model.Excel_data;
 import in.aryomtech.cgalert.R;
@@ -104,6 +105,7 @@ public class showing_similar_return extends Fragment {
     private in.aryomtech.cgalert.Fragments.Interface.onClickInterface onClickInterface;
     private in.aryomtech.cgalert.Fragments.Interface.onAgainClickInterface onAgainClickInterface;
     String data_case_type,data_case_number,data_station_name,data_district_name,data_year;
+    TinyDB tinyDB;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -219,8 +221,16 @@ public class showing_similar_return extends Fragment {
         //Initialize Database
         sp_of=getContextNullSafety().getSharedPreferences("Is_SP",MODE_PRIVATE)
                 .getString("Yes_of","none");
-        if(sp_of.equals("none"))
-            getdata();
+        tinyDB=new TinyDB(getContextNullSafety());
+        if(sp_of.equals("none")) {
+            if (tinyDB.getInt("num_station") == 0) {
+                getDataForIG();
+            } else if (tinyDB.getInt("num_station") == 10) {
+                getDataForSDOP();
+            } else {
+                getdata();
+            }
+        }
         else
             getdata_for_sp();
         //Set listener to SwipeRefreshLayout for refresh action
@@ -396,6 +406,47 @@ public class showing_similar_return extends Fragment {
         for(int i=0;i<excel_data.size();i++){
             if(excel_data.get(i).getH().trim().equals(data_case_number)){
                 if(excel_data.get(i).getC().equals(sp_of)) {
+                    filter_excel_data.add(excel_data.get(i));
+                }
+            }
+        }
+        excel_adapter=new Excel_Adapter(getContextNullSafety(),filter_excel_data,onClickInterface,onAgainClickInterface);
+        excel_adapter.notifyDataSetChanged();
+        if(mRecyclerView!=null)
+            mRecyclerView.setAdapter(excel_adapter);
+    }
+    private void getDataForIG() {
+        search.setText("");
+        select_all.setChecked(false);
+        added_list.clear();
+        String txt="Send "+"("+added_list.size()+")";
+        join.setText(txt);
+        filter_excel_data.clear();
+        for(int i=0;i<excel_data.size();i++){
+            if(excel_data.get(i).getH().trim().equals(data_case_number)){
+                if(tinyDB.getListString("districts_list").contains(excel_data.get(i).getC())){
+                    filter_excel_data.add(excel_data.get(i));
+                }
+            }
+        }
+        excel_adapter=new Excel_Adapter(getContextNullSafety(),filter_excel_data,onClickInterface,onAgainClickInterface);
+        excel_adapter.notifyDataSetChanged();
+        if(mRecyclerView!=null)
+            mRecyclerView.setAdapter(excel_adapter);
+    }
+
+    private void getDataForSDOP() {
+        search.setText("");
+        select_all.setChecked(false);
+        added_list.clear();
+        String txt="Send "+"("+added_list.size()+")";
+        join.setText(txt);
+        filter_excel_data.clear();
+        for(int i=0;i<excel_data.size();i++){
+            if(excel_data.get(i).getH().trim().equals(data_case_number)){
+                if(tinyDB.getListString("districts_list")
+                        .contains(excel_data.get(i).getC())
+                        && tinyDB.getListString("stations_list").contains("PS "+excel_data.get(i).getB())){
                     filter_excel_data.add(excel_data.get(i));
                 }
             }

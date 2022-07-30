@@ -44,11 +44,12 @@ class FirebaseService : FirebaseMessagingService(){
 
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
-        val pendingIntent: PendingIntent? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getActivity(this, notificationID, intent, PendingIntent.FLAG_MUTABLE)
-        } else {
-            PendingIntent.getActivity(this, notificationID, intent, PendingIntent.FLAG_ONE_SHOT)
-        }
+        val pendingIntent = PendingIntent.getActivity(
+            applicationContext,
+            notificationID,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE
+        )
 
         val contentView = RemoteViews(this.packageName, R.layout.notification_layout)
         contentView.setImageViewResource(R.id.image, R.mipmap.ic_launcher)

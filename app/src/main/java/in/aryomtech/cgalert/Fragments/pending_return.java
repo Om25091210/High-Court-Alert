@@ -63,6 +63,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+import in.aryomtech.cgalert.DB.TinyDB;
 import in.aryomtech.cgalert.Fragments.Adapter.Excel_Adapter;
 import in.aryomtech.cgalert.Fragments.model.Excel_data;
 import in.aryomtech.cgalert.R;
@@ -107,6 +108,7 @@ public class pending_return extends Fragment {
     List<String> district_name_list=new ArrayList<>();
     private in.aryomtech.cgalert.Fragments.Interface.onClickInterface onClickInterface;
     private in.aryomtech.cgalert.Fragments.Interface.onAgainClickInterface onAgainClickInterface;
+    TinyDB tinyDB;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -220,8 +222,15 @@ public class pending_return extends Fragment {
         });
         //Set listener to SwipeRefreshLayout for refresh action
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
-            if(sp_of.equals("none"))
-                get_pending();
+            if(sp_of.equals("none")) {
+                if (tinyDB.getInt("num_station") == 0) {
+                    getDataForIG();
+                } else if (tinyDB.getInt("num_station") == 10) {
+                    getDataForSDOP();
+                } else {
+                    get_pending();
+                }
+            }
             else
                 getdata_for_sp();
         });
@@ -373,8 +382,18 @@ public class pending_return extends Fragment {
 
         sp_of=getContextNullSafety().getSharedPreferences("Is_SP",MODE_PRIVATE)
                 .getString("Yes_of","none");
-        if(sp_of.equals("none"))
-            get_pending();
+        tinyDB=new TinyDB(getContextNullSafety());
+        if(sp_of.equals("none")) {
+            if(tinyDB.getInt("num_station")==0){
+                getDataForIG();
+            }
+            else if(tinyDB.getInt("num_station")==10){
+                getDataForSDOP();
+            }
+            else{
+                get_pending();
+            }
+        }
         else
             getdata_for_sp();
 
@@ -434,7 +453,88 @@ public class pending_return extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
+    private void getDataForIG() {
+        search.setText("");
+        select_all.setChecked(false);
+        added_list.clear();
+        String txt="Send "+"("+added_list.size()+")";
+        join.setText(txt);
+        cg_logo.setVisibility(View.VISIBLE);
+        no_data.setVisibility(View.VISIBLE);
+        mSwipeRefreshLayout.setRefreshing(true);
+        query_return.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                excel_data.clear();
+                for(DataSnapshot ds:snapshot.getChildren()){
+                    if(snapshot.child(ds.getKey()).child("J").getValue(String.class).equals("None")){
+                        if(tinyDB.getListString("districts_list").contains(snapshot.child(Objects.requireNonNull(ds.getKey())).child("C").getValue(String.class))){
+                            excel_data.add(snapshot.child(ds.getKey()).getValue(Excel_data.class));
+                        }
+                    }
+                }
+                if(excel_data.size()!=0){
+                    cg_logo.setVisibility(View.GONE);
+                    no_data.setVisibility(View.GONE);
+                }
+                added_list.clear();
+                String txt="Send "+"("+added_list.size()+")";
+                join.setText(txt);
+                excel_adapter.unselectall();
+                mSwipeRefreshLayout.setRefreshing(false);
+                Collections.reverse(excel_data);
+                excel_adapter=new Excel_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface);
+                excel_adapter.notifyDataSetChanged();
+                if(mRecyclerView!=null)
+                    mRecyclerView.setAdapter(excel_adapter);
 
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
+    }
+    private void getDataForSDOP() {
+        search.setText("");
+        select_all.setChecked(false);
+        added_list.clear();
+        String txt="Send "+"("+added_list.size()+")";
+        join.setText(txt);
+        cg_logo.setVisibility(View.VISIBLE);
+        no_data.setVisibility(View.VISIBLE);
+        mSwipeRefreshLayout.setRefreshing(true);
+        query_return.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                excel_data.clear();
+                for(DataSnapshot ds:snapshot.getChildren()){
+                    if(snapshot.child(ds.getKey()).child("J").getValue(String.class).equals("None")){
+                        if(tinyDB.getListString("districts_list")
+                                .contains(snapshot.child(Objects.requireNonNull(ds.getKey())).child("C").getValue(String.class))
+                                && tinyDB.getListString("stations_list").contains("PS "+snapshot.child(Objects.requireNonNull(ds.getKey())).child("B").getValue(String.class))){
+                            excel_data.add(snapshot.child(ds.getKey()).getValue(Excel_data.class));
+                        }
+                    }
+                }
+                if(excel_data.size()!=0){
+                    cg_logo.setVisibility(View.GONE);
+                    no_data.setVisibility(View.GONE);
+                }
+                added_list.clear();
+                String txt="Send "+"("+added_list.size()+")";
+                join.setText(txt);
+                excel_adapter.unselectall();
+                mSwipeRefreshLayout.setRefreshing(false);
+                Collections.reverse(excel_data);
+                excel_adapter=new Excel_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface);
+                excel_adapter.notifyDataSetChanged();
+                if(mRecyclerView!=null)
+                    mRecyclerView.setAdapter(excel_adapter);
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
+    }
     public void gather_number(String type) {
         dialog1 = new Dialog(getContextNullSafety());
         dialog1.setCancelable(true);
