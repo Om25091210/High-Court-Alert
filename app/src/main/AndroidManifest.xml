@@ -19,9 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Design.Light.NoActionBar">
 
-        <activity
-            android:name=".Data_show"
-            android:exported="false" />
+
 
         <activity
             android:name=".fcm.temp_notification"
@@ -37,8 +35,12 @@
             android:exported="true" />
         <activity
             android:name=".Splash"
-            android:exported="true"
-            android:theme="@style/SplashTheme">
+            android:exported="false"
+            android:theme="@style/SplashTheme"/>
+
+        <activity
+            android:name=".Data_show"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

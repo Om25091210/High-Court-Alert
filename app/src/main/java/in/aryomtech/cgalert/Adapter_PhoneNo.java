@@ -63,15 +63,11 @@ public class Adapter_PhoneNo extends RecyclerView.Adapter<Adapter_PhoneNo.ViewHo
                     context.startActivity(intent);
                 });
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
-
-
-
     }
 
     @Override
