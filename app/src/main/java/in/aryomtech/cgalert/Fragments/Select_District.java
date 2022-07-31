@@ -26,6 +26,7 @@ import java.util.List;
 import in.aryomtech.cgalert.DB.TinyDB;
 import in.aryomtech.cgalert.Fragments.Adapter.SelectDistrictAdapter;
 import in.aryomtech.cgalert.Home;
+import in.aryomtech.cgalert.Login;
 import in.aryomtech.cgalert.R;
 import in.aryomtech.cgalert.databinding.ActivitySelectDistrictBinding;
 
@@ -61,6 +62,12 @@ public class Select_District extends AppCompatActivity {
         binding.rec.setDrawingCacheEnabled(true);
         binding.rec.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         binding.rec.setLayoutManager(gridLayoutManager);
+        //This part of code will fix the clear cache problem after every login.
+        if(num_of_districts==0){
+            Intent intent = new Intent(Select_District.this, Login.class);
+            startActivity(intent);
+            finish();
+        }
         get_districts();
 
         binding.next.setOnClickListener(v->{

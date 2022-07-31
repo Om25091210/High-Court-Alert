@@ -150,13 +150,14 @@ public class Login extends AppCompatActivity {
                 }
             }
             else{
-                MotionToast.Companion.darkColorToast(Login.this,
-                        "Failed ☹️",
-                        "Phone No. Is Not In Our Database",
-                        MotionToastStyle.ERROR,
-                        MotionToast.GRAVITY_BOTTOM,
-                        MotionToast.LONG_DURATION,
-                        ResourcesCompat.getFont(Login.this, R.font.helvetica_regular));
+                if(pinView.getText().toString().trim().length()==6){
+                    String otp_text= Objects.requireNonNull(pinView.getText()).toString().trim();
+                    Log.e("pinView","==========");
+                    verifyCode(otp_text);
+                }
+                else{
+                    Toast.makeText(this, "Please enter a valid OTP.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -320,16 +321,9 @@ public class Login extends AppCompatActivity {
                         if (edtEmail.getGetTextValue().trim().equals(ds_1.getValue(String.class))){
                             count=1;
                             station_name=ds_1.getKey();
+                            Log.e("Entered count","Count = 1");
                             if(Objects.requireNonNull(station_name).startsWith("SP")){
                                 getSharedPreferences("Is_SP",MODE_PRIVATE).edit()
-                                        .putString("Yes_of",ds.getKey()).apply();
-                            }
-                            else if(Objects.requireNonNull(station_name).startsWith("SDOP")){
-                                getSharedPreferences("Is_SDOP",MODE_PRIVATE).edit()
-                                        .putString("Yes_of",ds.getKey()).apply();
-                            }
-                            else if(Objects.requireNonNull(station_name).startsWith("IG")){
-                                getSharedPreferences("Is_IG",MODE_PRIVATE).edit()
                                         .putString("Yes_of",ds.getKey()).apply();
                             }
                             getSharedPreferences("station_name_K",MODE_PRIVATE).edit()
@@ -337,8 +331,10 @@ public class Login extends AppCompatActivity {
                             break;
                         }
                     }
-                    if(count==1)
+                    if(count==1) {
+                        Log.e("Entered count","break from all loop");
                         break;
+                    }
                 }
                 if(count==1 && station_name.startsWith("PS")){
                     Log.e("police station if","entered");
@@ -428,6 +424,7 @@ public class Login extends AppCompatActivity {
                         finish();
                     }
                     else if(Objects.requireNonNull(station_name).startsWith("CSP")){
+                        Log.e("Entered count","He's a CSP");
                         tinyDB.putInt("num_districts",1);
                         tinyDB.putInt("num_station",10);
                         Intent i = new Intent(Login.this, Select_District.class);
@@ -464,6 +461,7 @@ public class Login extends AppCompatActivity {
     }
 
     private void check_for_admin() {
+        Log.e("Entered count","Admin body");
         String pkey=user_reference.push().getKey();
         user=mAuth.getCurrentUser();
         DatabaseReference admin_ref=FirebaseDatabase.getInstance().getReference().child("admin");
