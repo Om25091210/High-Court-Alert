@@ -336,7 +336,7 @@ public class Home extends AppCompatActivity implements DuoMenuView.OnMenuClickLi
             mViewHolder.mDuoDrawerLayout.closeDrawer();
         }
         else if(position==2) {
-            String title ="*High Court Alert*"+"\n\n"+"*उच्च न्यायालय की केस डायरी को जामा और वपास लेजाने के लिए सतार्क और समय बतने वाले ऐप को डाउनलोड करे नीचे दीये गए लिंक से।*\n\nDownload this app to stay alerted and notified for the case diaries both for submission and return.Link below"; //Text to be shared
+            String title ="*CG High Court Alert*"+"\n\n"+"*उच्च न्यायालय की केश डायरी मंगाने और जमा करने संबंधित सूचना तथा डायरी की स्थिति पता करने के लिए नीचे दिए गए लिंक से Android App download करें।*\n\nDownload this app to stay alerted and notified for the case diaries for both submission and return. Tap on the below link to download"; //Text to be shared
             Intent sharingIntent = new Intent(Intent.ACTION_SEND);
             sharingIntent.setType("text/plain");
             sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, title+"\n\n"+"This is a playstore link to download.. " + "https://play.google.com/store/apps/details?id=" + getPackageName());
