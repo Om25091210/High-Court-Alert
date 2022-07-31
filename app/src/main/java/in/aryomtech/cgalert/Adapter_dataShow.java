@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import in.aryomtech.cgalert.Fragments.Adapter.Return_Adapter;
+import in.aryomtech.cgalert.Fragments.model.stationData;
 
 public class Adapter_dataShow extends RecyclerView.Adapter<Adapter_dataShow.ViewHolder> {
 
@@ -26,6 +27,7 @@ public class Adapter_dataShow extends RecyclerView.Adapter<Adapter_dataShow.View
         this.context = context;
         this.list = list;
     }
+
 
     @NonNull
     @Override

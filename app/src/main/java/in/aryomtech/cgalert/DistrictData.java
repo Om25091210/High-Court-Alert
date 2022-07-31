@@ -85,9 +85,6 @@ public class DistrictData extends Fragment {
                 for(DataSnapshot ds : snapshot.getChildren()){
                     list.add(ds.getKey());
                 }
-                for (int i = 0; i < list.size(); i++) {
-                    Log.e("nikhil", list.get(i) + "\n");
-                }
                 Adapter_dataShow adapter = new Adapter_dataShow(getContextNullSafety(),list);
                 adapter.notifyDataSetChanged();
                 recyclerView.setAdapter(adapter);

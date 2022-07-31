@@ -10,10 +10,13 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,6 +28,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import in.aryomtech.cgalert.Fragments.model.stationData;
 
 
 public class Phone_numberData extends Fragment {
@@ -32,8 +38,9 @@ public class Phone_numberData extends Fragment {
     View view;
     TextView text;
     String district;
+    EditText inputSearch;
     DatabaseReference reference;
-    List<String> list;
+    List<stationData> list;
     Context contextNullSafe;
     RecyclerView recyclerView;
     ImageView back_btn;
@@ -42,9 +49,12 @@ public class Phone_numberData extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view =  inflater.inflate(R.layout.fragment_phone_number_data, container, false);
+        view = inflater.inflate(R.layout.fragment_phone_number_data, container, false);
         list = new ArrayList<>();
         text = view.findViewById(R.id.text);
+        inputSearch = view.findViewById(R.id.search);
+
+        Adapter_PhoneNo adapter = new Adapter_PhoneNo(getContextNullSafety(), list, district);
 
         try {
             assert getArguments() != null;
@@ -65,40 +75,62 @@ public class Phone_numberData extends Fragment {
         back_btn = view.findViewById(R.id.back);
 
 
-        OnBackPressedCallback callback=new OnBackPressedCallback(true) {
+        inputSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                adapter.cancelTimer();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                if (inputSearch.getText().toString().equals("")) {
+                    adapter.setTasks(list);
+                }
+                else if(list.size() != 0){
+                    adapter.searchNotes(s.toString());
+                }
+            }
+        });
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
                 assert getFragmentManager() != null;
                 getFragmentManager().beginTransaction().remove(Phone_numberData.this).commit();
             }
         };
-        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),callback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
-        back_btn.setOnClickListener(v->{
+        back_btn.setOnClickListener(v -> {
             assert getFragmentManager() != null;
             getFragmentManager().beginTransaction().remove(Phone_numberData.this).commit();
         });
 
-        get_PhoneNo();
-
-        return view;
-    }
-
-    public void get_PhoneNo(){
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+        reference.addValueEventListener(new ValueEventListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot ds : snapshot.getChildren()){
-                    list.add(ds.getKey());
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    stationData stationData = new stationData(ds.getKey(), snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(String.class));
+                    list.add(stationData);
                 }
-                Adapter_PhoneNo adapter =new Adapter_PhoneNo(getContextNullSafety(),list, text.getText().toString());
+
                 adapter.notifyDataSetChanged();
                 recyclerView.setAdapter(adapter);
             }
+
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
         });
+
+        return view;
     }
 
     public Context getContextNullSafety() {
