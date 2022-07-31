@@ -30,7 +30,6 @@ public class Adapter_PhoneNo extends RecyclerView.Adapter<Adapter_PhoneNo.ViewHo
     Context context;
     String district;
     DatabaseReference reference, reference1;
-    String num;
     TextView yes,no;
 
 
@@ -44,8 +43,6 @@ public class Adapter_PhoneNo extends RecyclerView.Adapter<Adapter_PhoneNo.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_number_data, parent, false);
-
-
         return new ViewHolder(view);
     }
 
