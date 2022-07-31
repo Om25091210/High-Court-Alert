@@ -54,8 +54,6 @@ public class Phone_numberData extends Fragment {
         text = view.findViewById(R.id.text);
         inputSearch = view.findViewById(R.id.search);
 
-        Adapter_PhoneNo adapter = new Adapter_PhoneNo(getContextNullSafety(), list, district);
-
         try {
             assert getArguments() != null;
             district = getArguments().getString("DistrictName");
@@ -63,6 +61,7 @@ public class Phone_numberData extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        Adapter_PhoneNo adapter = new Adapter_PhoneNo(getContextNullSafety(), list, district);
         text.setText(district);
 
         recyclerView = view.findViewById(R.id.rv2);
