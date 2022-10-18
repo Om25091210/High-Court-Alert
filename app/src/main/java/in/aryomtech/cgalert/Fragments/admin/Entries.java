@@ -47,7 +47,7 @@ public class Entries extends Fragment {
     EditText name_edt,num;
     ImageView back;
     String prefix;
-    TextView ps,csp,sdop,asp,sp,dgp,adg,sdg,dsp,ig;
+    TextView ps,csp,sdop,asp,sp,dsp,ig,aig,dig;
     TextView submit_txt,sub_txt,district_txt,pr_roll,admin_num;
     LinearLayout add_admin,add_station,linearLayout17;
     AutoCompleteTextView ac_district,policeStation;
@@ -68,16 +68,15 @@ public class Entries extends Fragment {
         sub_txt=view.findViewById(R.id.sub_txt);
         linearLayout17=view.findViewById(R.id.linearLayout17);
 
-        ps=view.findViewById(R.id.ps);
-        csp=view.findViewById(R.id.csp);
-        sdop=view.findViewById(R.id.sdop);
-        asp=view.findViewById(R.id.asp);
-        sp=view.findViewById(R.id.sp);
-        dgp=view.findViewById(R.id.dgp);
-        adg=view.findViewById(R.id.adg);
-        sdg=view.findViewById(R.id.sdg);
-        dsp=view.findViewById(R.id.dsp);
-        ig=view.findViewById(R.id.ig);
+        ps=view.findViewById(R.id.ps);//
+        csp=view.findViewById(R.id.csp);//
+        sdop=view.findViewById(R.id.sdop);//
+        asp=view.findViewById(R.id.asp);//
+        sp=view.findViewById(R.id.sp);//
+        aig=view.findViewById(R.id.aig);//
+        dig=view.findViewById(R.id.dig);//
+        dsp=view.findViewById(R.id.dsp);//
+        ig=view.findViewById(R.id.ig);//
 
         name_edt=view.findViewById(R.id.name_edt);
         district_txt=view.findViewById(R.id.textView11);
@@ -172,11 +171,10 @@ public class Entries extends Fragment {
             sdop.setBackgroundResource(R.drawable.border_amount_bg);
             asp.setBackgroundResource(R.drawable.border_amount_bg);
             sp.setBackgroundResource(R.drawable.border_amount_bg);
-            dgp.setBackgroundResource(R.drawable.border_amount_bg);
-            adg.setBackgroundResource(R.drawable.border_amount_bg);
-            sdg.setBackgroundResource(R.drawable.border_amount_bg);
             dsp.setBackgroundResource(R.drawable.border_amount_bg);
             ig.setBackgroundResource(R.drawable.border_amount_bg);
+            aig.setBackgroundResource(R.drawable.border_amount_bg);
+            dig.setBackgroundResource(R.drawable.border_amount_bg);
         });
 
         csp.setOnClickListener(v->{
@@ -186,11 +184,10 @@ public class Entries extends Fragment {
             sdop.setBackgroundResource(R.drawable.border_amount_bg);
             asp.setBackgroundResource(R.drawable.border_amount_bg);
             sp.setBackgroundResource(R.drawable.border_amount_bg);
-            dgp.setBackgroundResource(R.drawable.border_amount_bg);
-            adg.setBackgroundResource(R.drawable.border_amount_bg);
-            sdg.setBackgroundResource(R.drawable.border_amount_bg);
             dsp.setBackgroundResource(R.drawable.border_amount_bg);
             ig.setBackgroundResource(R.drawable.border_amount_bg);
+            aig.setBackgroundResource(R.drawable.border_amount_bg);
+            dig.setBackgroundResource(R.drawable.border_amount_bg);
         });
 
         sdop.setOnClickListener(v->{
@@ -200,11 +197,10 @@ public class Entries extends Fragment {
             sdop.setBackgroundResource(R.drawable.bg_active);
             asp.setBackgroundResource(R.drawable.border_amount_bg);
             sp.setBackgroundResource(R.drawable.border_amount_bg);
-            dgp.setBackgroundResource(R.drawable.border_amount_bg);
-            adg.setBackgroundResource(R.drawable.border_amount_bg);
-            sdg.setBackgroundResource(R.drawable.border_amount_bg);
             dsp.setBackgroundResource(R.drawable.border_amount_bg);
             ig.setBackgroundResource(R.drawable.border_amount_bg);
+            aig.setBackgroundResource(R.drawable.border_amount_bg);
+            dig.setBackgroundResource(R.drawable.border_amount_bg);
         });
 
         asp.setOnClickListener(v->{
@@ -214,11 +210,10 @@ public class Entries extends Fragment {
             sdop.setBackgroundResource(R.drawable.border_amount_bg);
             asp.setBackgroundResource(R.drawable.bg_active);
             sp.setBackgroundResource(R.drawable.border_amount_bg);
-            dgp.setBackgroundResource(R.drawable.border_amount_bg);
-            adg.setBackgroundResource(R.drawable.border_amount_bg);
-            sdg.setBackgroundResource(R.drawable.border_amount_bg);
             dsp.setBackgroundResource(R.drawable.border_amount_bg);
             ig.setBackgroundResource(R.drawable.border_amount_bg);
+            aig.setBackgroundResource(R.drawable.border_amount_bg);
+            dig.setBackgroundResource(R.drawable.border_amount_bg);
         });
 
         sp.setOnClickListener(v->{
@@ -228,53 +223,10 @@ public class Entries extends Fragment {
             sdop.setBackgroundResource(R.drawable.border_amount_bg);
             asp.setBackgroundResource(R.drawable.border_amount_bg);
             sp.setBackgroundResource(R.drawable.bg_active);
-            dgp.setBackgroundResource(R.drawable.border_amount_bg);
-            adg.setBackgroundResource(R.drawable.border_amount_bg);
-            sdg.setBackgroundResource(R.drawable.border_amount_bg);
             dsp.setBackgroundResource(R.drawable.border_amount_bg);
             ig.setBackgroundResource(R.drawable.border_amount_bg);
-        });
-
-        dgp.setOnClickListener(v->{
-            prefix="DGP";
-            ps.setBackgroundResource(R.drawable.border_amount_bg);
-            csp.setBackgroundResource(R.drawable.border_amount_bg);
-            sdop.setBackgroundResource(R.drawable.border_amount_bg);
-            asp.setBackgroundResource(R.drawable.border_amount_bg);
-            sp.setBackgroundResource(R.drawable.border_amount_bg);
-            dgp.setBackgroundResource(R.drawable.bg_active);
-            adg.setBackgroundResource(R.drawable.border_amount_bg);
-            sdg.setBackgroundResource(R.drawable.border_amount_bg);
-            dsp.setBackgroundResource(R.drawable.border_amount_bg);
-            ig.setBackgroundResource(R.drawable.border_amount_bg);
-        });
-
-        adg.setOnClickListener(v->{
-            prefix="ADG";
-            ps.setBackgroundResource(R.drawable.border_amount_bg);
-            csp.setBackgroundResource(R.drawable.border_amount_bg);
-            sdop.setBackgroundResource(R.drawable.border_amount_bg);
-            asp.setBackgroundResource(R.drawable.border_amount_bg);
-            sp.setBackgroundResource(R.drawable.border_amount_bg);
-            dgp.setBackgroundResource(R.drawable.border_amount_bg);
-            adg.setBackgroundResource(R.drawable.bg_active);
-            sdg.setBackgroundResource(R.drawable.border_amount_bg);
-            dsp.setBackgroundResource(R.drawable.border_amount_bg);
-            ig.setBackgroundResource(R.drawable.border_amount_bg);
-        });
-
-        sdg.setOnClickListener(v->{
-            prefix="SDG";
-            ps.setBackgroundResource(R.drawable.border_amount_bg);
-            csp.setBackgroundResource(R.drawable.border_amount_bg);
-            sdop.setBackgroundResource(R.drawable.border_amount_bg);
-            asp.setBackgroundResource(R.drawable.border_amount_bg);
-            sp.setBackgroundResource(R.drawable.border_amount_bg);
-            dgp.setBackgroundResource(R.drawable.border_amount_bg);
-            adg.setBackgroundResource(R.drawable.border_amount_bg);
-            sdg.setBackgroundResource(R.drawable.bg_active);
-            dsp.setBackgroundResource(R.drawable.border_amount_bg);
-            ig.setBackgroundResource(R.drawable.border_amount_bg);
+            aig.setBackgroundResource(R.drawable.border_amount_bg);
+            dig.setBackgroundResource(R.drawable.border_amount_bg);
         });
 
         dsp.setOnClickListener(v->{
@@ -284,11 +236,10 @@ public class Entries extends Fragment {
             sdop.setBackgroundResource(R.drawable.border_amount_bg);
             asp.setBackgroundResource(R.drawable.border_amount_bg);
             sp.setBackgroundResource(R.drawable.border_amount_bg);
-            dgp.setBackgroundResource(R.drawable.border_amount_bg);
-            adg.setBackgroundResource(R.drawable.border_amount_bg);
-            sdg.setBackgroundResource(R.drawable.border_amount_bg);
             dsp.setBackgroundResource(R.drawable.bg_active);
             ig.setBackgroundResource(R.drawable.border_amount_bg);
+            aig.setBackgroundResource(R.drawable.border_amount_bg);
+            dig.setBackgroundResource(R.drawable.border_amount_bg);
         });
         ig.setOnClickListener(v->{
             prefix="IG";
@@ -297,11 +248,34 @@ public class Entries extends Fragment {
             sdop.setBackgroundResource(R.drawable.border_amount_bg);
             asp.setBackgroundResource(R.drawable.border_amount_bg);
             sp.setBackgroundResource(R.drawable.border_amount_bg);
-            dgp.setBackgroundResource(R.drawable.border_amount_bg);
-            adg.setBackgroundResource(R.drawable.border_amount_bg);
-            sdg.setBackgroundResource(R.drawable.border_amount_bg);
             dsp.setBackgroundResource(R.drawable.border_amount_bg);
+            aig.setBackgroundResource(R.drawable.border_amount_bg);
+            dig.setBackgroundResource(R.drawable.border_amount_bg);
             ig.setBackgroundResource(R.drawable.bg_active);
+        });
+        aig.setOnClickListener(v->{
+            prefix="AIG";
+            ps.setBackgroundResource(R.drawable.border_amount_bg);
+            csp.setBackgroundResource(R.drawable.border_amount_bg);
+            sdop.setBackgroundResource(R.drawable.border_amount_bg);
+            asp.setBackgroundResource(R.drawable.border_amount_bg);
+            sp.setBackgroundResource(R.drawable.border_amount_bg);
+            dsp.setBackgroundResource(R.drawable.border_amount_bg);
+            ig.setBackgroundResource(R.drawable.border_amount_bg);
+            dig.setBackgroundResource(R.drawable.border_amount_bg);
+            aig.setBackgroundResource(R.drawable.bg_active);
+        });
+        dig.setOnClickListener(v->{
+            prefix="DIG";
+            ps.setBackgroundResource(R.drawable.border_amount_bg);
+            csp.setBackgroundResource(R.drawable.border_amount_bg);
+            sdop.setBackgroundResource(R.drawable.border_amount_bg);
+            asp.setBackgroundResource(R.drawable.border_amount_bg);
+            sp.setBackgroundResource(R.drawable.border_amount_bg);
+            dsp.setBackgroundResource(R.drawable.border_amount_bg);
+            ig.setBackgroundResource(R.drawable.border_amount_bg);
+            aig.setBackgroundResource(R.drawable.border_amount_bg);
+            dig.setBackgroundResource(R.drawable.bg_active);
         });
 
         OnBackPressedCallback callback=new OnBackPressedCallback(true) {

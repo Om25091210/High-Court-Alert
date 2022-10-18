@@ -7,6 +7,9 @@ import android.os.Bundle;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -57,7 +60,6 @@ public class Phone_numberData extends Fragment {
         try {
             assert getArguments() != null;
             district = getArguments().getString("DistrictName");
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -97,18 +99,13 @@ public class Phone_numberData extends Fragment {
             }
         });
 
-        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                assert getFragmentManager() != null;
-                getFragmentManager().beginTransaction().remove(Phone_numberData.this).commit();
-            }
-        };
-        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
-
         back_btn.setOnClickListener(v -> {
-            assert getFragmentManager() != null;
-            getFragmentManager().beginTransaction().remove(Phone_numberData.this).commit();
+            FragmentManager fm=((FragmentActivity) getContextNullSafety()).getSupportFragmentManager();
+            FragmentTransaction ft=fm.beginTransaction();
+            if(fm.getBackStackEntryCount()>0) {
+                fm.popBackStack();
+            }
+            ft.commit();
         });
 
         reference.addValueEventListener(new ValueEventListener() {
@@ -128,7 +125,18 @@ public class Phone_numberData extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
-
+        OnBackPressedCallback callback=new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                FragmentManager fm=((FragmentActivity) getContextNullSafety()).getSupportFragmentManager();
+                FragmentTransaction ft=fm.beginTransaction();
+                if(fm.getBackStackEntryCount()>0) {
+                    fm.popBackStack();
+                }
+                ft.commit();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),callback);
         return view;
     }
 

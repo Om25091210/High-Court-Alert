@@ -29,8 +29,7 @@ public class about_dev extends Fragment {
     private Context contextNullSafe;
     NeumorphCardView card_fb_n,card_twitter_n,card_linkedin_n,card_whatsapp,card_insta_n
                     ,card_fb2,card_twitter2,card_linkedin2,card_whatsapp2,card_insta2
-                    ,card_fb1,card_linkedin1,card_whatsapp1,card_insta1
-                    ,card_fb0,card_linkedin0,card_whatsapp0,card_insta0;
+                    ,card_fb1,card_linkedin1,card_whatsapp1,card_insta1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -192,42 +191,6 @@ public class about_dev extends Fragment {
             startActivity(insta_in);
         });
 
-        card_fb0=view.findViewById(R.id.card_fb0);
-        card_fb0.setOnClickListener(v->{
-            String facebookUrl ="https://www.facebook.com/abhinaw.verma.9";
-            Intent facebookAppIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(facebookUrl));
-            facebookAppIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-            startActivity(facebookAppIntent);
-        });
-
-        card_whatsapp0=view.findViewById(R.id.card_whatsapp0);
-        card_whatsapp0.setOnClickListener(v->{
-            String url = "https://api.whatsapp.com/send?phone=" +"+918269737971";
-            try {
-                PackageManager pm = v.getContext().getPackageManager();
-                pm.getPackageInfo("com.whatsapp", PackageManager.GET_ACTIVITIES);
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(url));
-                v.getContext().startActivity(i);
-            } catch (PackageManager.NameNotFoundException e) {
-                v.getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-            }
-        });
-
-        card_insta0=view.findViewById(R.id.card_insta0);
-        card_insta0.setOnClickListener(v->{
-            Intent insta_in;
-            String scheme = "http://instagram.com/_u/"+"abhinawverma";
-            String path = "https://instagram.com/"+"abhinawverma";
-            String nomPackageInfo ="com.instagram.android";
-            try {
-                requireContext().getPackageManager().getPackageInfo(nomPackageInfo, 0);
-                insta_in = new Intent(Intent.ACTION_VIEW, Uri.parse(scheme));
-            } catch (Exception e) {
-                insta_in = new Intent(Intent.ACTION_VIEW, Uri.parse(path));
-            }
-            startActivity(insta_in);
-        });
 
         back.setOnClickListener(v-> back());
         OnBackPressedCallback callback=new OnBackPressedCallback(true) {

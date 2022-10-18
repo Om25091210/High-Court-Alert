@@ -52,7 +52,7 @@ class FirebaseService : FirebaseMessagingService(){
         )
 
         val contentView = RemoteViews(this.packageName, R.layout.notification_layout)
-        contentView.setImageViewResource(R.id.image, R.mipmap.ic_launcher)
+        contentView.setImageViewResource(R.id.image, R.mipmap.ic_launcher_foreground)
         contentView.setOnClickPendingIntent(R.id.flashButton, pendingIntent)
         contentView.setTextViewText(R.id.message, message.data["title"])
         contentView.setTextViewText(R.id.date, message.data["message"])

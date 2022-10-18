@@ -17,6 +17,7 @@ import java.util.List;
 
 import in.aryomtech.cgalert.Fragments.Adapter.Return_Adapter;
 import in.aryomtech.cgalert.Fragments.model.stationData;
+import in.aryomtech.cgalert.Fragments.pending_coll;
 
 public class Adapter_dataShow extends RecyclerView.Adapter<Adapter_dataShow.ViewHolder> {
 
@@ -48,7 +49,9 @@ public class Adapter_dataShow extends RecyclerView.Adapter<Adapter_dataShow.View
 
             phone_numberData.setArguments(bundle);
             ((FragmentActivity) context).getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.data_show, phone_numberData)
+                    .setCustomAnimations( R.anim.enter_from_right, R.anim.exit_to_left,R.anim.enter_from_left, R.anim.exit_to_right)
+                    .add(R.id.data_show,phone_numberData)
+                    .addToBackStack(null)
                     .commit();
         });
     }

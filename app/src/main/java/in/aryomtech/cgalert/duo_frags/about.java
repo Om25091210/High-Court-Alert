@@ -60,10 +60,11 @@ public class about extends Fragment {
         // fill list screen
         final List<ScreenItem> mList = new ArrayList<>();
         mList.add(new ScreenItem("","माननीय महाधिवक्ता सतिशचंद्र वर्मा तथा श्रीमान पुलिस महानिदेशक अशोक जुनेजा के सानिध्य में " +
-                "स्थापित पुलिस लीगल सेक्शन,कैंप बिलासपुर के द्वारा कार्यालय को पेपरलेस बनाए जाने के प्रयास में इस एंड्रायड एप C.G HighCourt Alert के " +
+                "स्थापित पुलिस लीगल सेक्शन,कैंप बिलासपुर के द्वारा कार्यालय को पेपरलेस बनाए जाने के प्रयास में इस एंड्रायड एप CG CASE DIARY ALERT के " +
                 "माध्यम से पुलिस थानों को तत्काल सूचना संप्रेषित करने  के उद्देश्य से बनाया गया है, ताकि केश- डायरियों को सही समय पर माननीय न्यायालय के समक्ष" +
                 " प्रस्तुत किया जा सके।",R.drawable.adikari_photos));
         mList.add(new ScreenItem("Operations and Managed By:-\nPolice Legal Cell, Camp Bilaspur Advocate General Office, High Court Chhattisgarh","Incharge: DSP PANKAJ AWASTHI\nWorking Staff:-\n1) SI SHWETA MISHRA GOURAHA\n2) SI(T/C) ABHINAW VERMA\n3) CONS.496 RAKESH BHARDWAJ",R.drawable.cg_logo));
+        mList.add(new ScreenItem("Man Behind The Idea\nSI(T/C) ABHINAW VERMA","Man Who guided the project from scratch to the final stage. His guidance overall made the project very efficient and easy to use.\n\nHelp & FAQ\nContact:- 8269737971\nEmail:-abhinawtheverma@gmail.com",R.drawable.cg_logo));
         mList.add(new ScreenItem("Submission Alert","The High Court needs case diaries to be submitted on time for case hearings and this app will help the court via alerting the Police Stations.",R.drawable.ic_onboarding_one));
         mList.add(new ScreenItem("How it works?","The color red indicates that the case diary is supposed to be submitted or withdrawn whereas the clock shows the number of days left for the same.",R.drawable.ic_onboarding_two));
         mList.add(new ScreenItem("Finally","Once the diary is submitted, it will be inspected by the respective judges of the court.",R.drawable.ic_onboarding_three));

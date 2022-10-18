@@ -93,6 +93,7 @@ public class showing_similar_coll extends Fragment {
     List<String> keys_copy_selected_phone=new ArrayList<>();
     CheckBox select_all;
     Excel_Adapter excel_adapter;
+    List<String> list=new ArrayList<>();
     NeumorphButton join;
     ImageView bulk_delete,j_column;
     EditText search;
@@ -396,7 +397,7 @@ public class showing_similar_coll extends Fragment {
 
         return view;
     }
-    private void search(String str) {
+    /*private void search(String str) {
         filter_excel_data_mylist.clear();
         for(Excel_data object:filter_excel_data) {
             if (object.getB().toLowerCase().contains(str.toLowerCase().trim())) {
@@ -422,6 +423,80 @@ public class showing_similar_coll extends Fragment {
         excel_adapter.notifyDataSetChanged();
         if(mRecyclerView!=null)
             mRecyclerView.setAdapter(excel_adapter);
+    }*/
+    private void search(String str) {
+        if(str.equals("")){
+            excel_adapter=new Excel_Adapter(getContextNullSafety(),filter_excel_data,onClickInterface,onAgainClickInterface);
+            excel_adapter.notifyDataSetChanged();
+            if(mRecyclerView!=null)
+                mRecyclerView.setAdapter(excel_adapter);
+        }
+        else {
+            String[] str_Args = str.toLowerCase().split(" ");
+            filter_excel_data_mylist.clear();
+            int count = 0;
+            boolean not_once = true;
+            List<Integer> c_list = new ArrayList<>();
+            for (Excel_data object : filter_excel_data) {
+                convert_to_list(object);
+                for (String s : list) {
+                    for (String str_arg : str_Args) {
+                        if (str_arg.contains("/") && not_once) {
+                            String sub1 = str_arg.substring(0, str_arg.indexOf("/"));
+                            String sub2 = str_arg.substring(str_arg.indexOf("/") + 1);
+                            if (list.get(4).contains(sub1) && list.get(6).contains(sub2)) {
+                                count++;
+                                not_once = false;
+                            } else if (list.get(7).contains(sub1) && list.get(8).contains(sub2)) {
+                                count++;
+                                not_once = false;
+                            }
+                        } else if (s.contains(str_arg)) {
+                            count++;
+                        }
+                    }
+                }
+                c_list.add(count);
+                System.out.println(c_list + "");
+                if (count == str_Args.length)
+                    filter_excel_data_mylist.add(object);
+                count = 0;
+            }
+            excel_adapter = new Excel_Adapter(getContextNullSafety(), filter_excel_data_mylist, onClickInterface, onAgainClickInterface);
+            excel_adapter.notifyDataSetChanged();
+            if (mRecyclerView != null)
+                mRecyclerView.setAdapter(excel_adapter);
+        }
+    }
+    private void convert_to_list(Excel_data object) {
+        list.clear();
+        try{
+            list.add(object.getA().toLowerCase());
+            list.add(object.getB().toLowerCase());
+            list.add(object.getC().toLowerCase());
+            list.add(object.getD().toLowerCase());
+            list.add(object.getE().toLowerCase());
+            list.add(object.getF().toLowerCase());
+            list.add(object.getG().toLowerCase());
+            list.add(object.getH().toLowerCase());
+            list.add(object.getI().toLowerCase());
+            list.add(object.getJ().toLowerCase());
+            list.add(object.getK().toLowerCase());
+            list.add(object.getL().toLowerCase());
+            list.add(object.getM().toLowerCase());
+            list.add(object.getN().toLowerCase());
+            list.add(object.getDate().toLowerCase());
+            list.add(object.getType().toLowerCase());
+            list.add(object.getPushkey().toLowerCase());
+            list.add(object.getReminded().toLowerCase());
+            list.add(object.getSeen().toLowerCase());
+            list.add(object.getDate_of_alert().toLowerCase());
+            list.add(object.getSent().toLowerCase());
+            list.add(object.getNumber().toLowerCase());
+        }
+        catch (NullPointerException e){
+            System.out.println("Error");
+        }
     }
     public void gather_number(String type) {
         dialog1 = new Dialog(getContextNullSafety());

@@ -1,5 +1,7 @@
 package in.aryomtech.cgalert;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
@@ -38,6 +40,7 @@ public class Adapter_PhoneNo extends RecyclerView.Adapter<Adapter_PhoneNo.ViewHo
     Context context;
     String district;
     TextView yes,no;
+    boolean isadmin;
     private Timer timer;
 
 
@@ -45,6 +48,8 @@ public class Adapter_PhoneNo extends RecyclerView.Adapter<Adapter_PhoneNo.ViewHo
         this.context = context;
         this.list = list;
         this.district = district;
+        isadmin=context.getSharedPreferences("isAdmin_or_not", MODE_PRIVATE)
+                .getBoolean("authorizing_admin",false);
     }
 
     public void setTasks(List<stationData> todoList) {
@@ -124,6 +129,10 @@ public class Adapter_PhoneNo extends RecyclerView.Adapter<Adapter_PhoneNo.ViewHo
                 dialog.dismiss();
             });
         });
+        if(isadmin)
+            holder.delete.setVisibility(View.VISIBLE);
+        else
+            holder.delete.setVisibility(View.GONE);
 
     }
 

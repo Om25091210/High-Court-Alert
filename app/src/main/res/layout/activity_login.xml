@@ -12,18 +12,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toTopOf="@+id/edtEmail"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <com.airbnb.lottie.LottieAnimationView
+        <ImageView
             android:id="@+id/animation_view"
-            android:layout_width="@dimen/_80sdp"
-            android:layout_height="@dimen/_80sdp"
+            android:layout_width="@dimen/_120sdp"
+            android:layout_height="@dimen/_120sdp"
             android:layout_gravity="center"
-            app:lottie_autoPlay="true"
-            app:lottie_fileName="anim_batch.json"
-            app:lottie_loop="true" />
+            android:contentDescription="@string/image"
+            android:src="@drawable/cg_logo" />
 
         <TextView
             android:id="@+id/textView2"

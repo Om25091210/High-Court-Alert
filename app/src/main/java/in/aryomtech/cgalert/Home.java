@@ -22,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -60,7 +61,7 @@ public class Home extends AppCompatActivity implements DuoMenuView.OnMenuClickLi
     String DeviceToken;
 
     //admin
-    ImageView admin,entry;
+    ImageView admin,entry,phone_num;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +82,7 @@ public class Home extends AppCompatActivity implements DuoMenuView.OnMenuClickLi
         user=auth.getCurrentUser();
         admin=findViewById(R.id.admin);
         entry=findViewById(R.id.entry);
+        phone_num=findViewById(R.id.entry2);
 
         mTitles = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.menuOptions)));
 
@@ -111,6 +113,14 @@ public class Home extends AppCompatActivity implements DuoMenuView.OnMenuClickLi
                     .beginTransaction()
                     .setCustomAnimations( R.anim.enter_from_right, R.anim.exit_to_left,R.anim.enter_from_left, R.anim.exit_to_right)
                     .add(R.id.drawer,new form())
+                    .addToBackStack(null)
+                    .commit();
+        });
+        phone_num.setOnClickListener(v->{
+            Home.this.getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations( R.anim.enter_from_right, R.anim.exit_to_left,R.anim.enter_from_left, R.anim.exit_to_right)
+                    .add(R.id.drawer,new DistrictData())
                     .addToBackStack(null)
                     .commit();
         });

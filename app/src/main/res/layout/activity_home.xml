@@ -54,18 +54,36 @@
                 android:layout_weight="1">
 
                 <ImageView
+                    android:id="@+id/entry2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="20dp"
+                    android:contentDescription="@string/image"
+                    android:paddingStart="20dp"
+                    android:paddingTop="10dp"
+                    android:paddingEnd="20dp"
+                    android:paddingBottom="8dp"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_call_btn"
+                    app:tint="@color/green_500"/>
+
+                <ImageView
                     android:id="@+id/admin"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:contentDescription="@string/image"
                     android:paddingStart="20dp"
-                    android:visibility="gone"
                     android:paddingTop="12dp"
                     android:paddingEnd="20dp"
                     android:paddingBottom="10dp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/entry"
+                    app:layout_constraintEnd_toStartOf="@+id/entry2"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_admin_cont" />
 
@@ -74,15 +92,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="end"
-                    android:layout_marginEnd="20dp"
                     android:contentDescription="@string/image"
                     android:paddingStart="20dp"
                     android:paddingTop="12dp"
-                    android:visibility="gone"
                     android:paddingEnd="20dp"
                     android:paddingBottom="10dp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/admin"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_excel_admin" />
             </androidx.constraintlayout.widget.ConstraintLayout>

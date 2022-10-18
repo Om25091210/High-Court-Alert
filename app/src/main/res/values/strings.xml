@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">High Court Alert</string>
+    <string name="app_name">Case Diary Alert</string>
     <string name="image">image</string>
     <string name="sms_sent">Sms sent</string>
     <string name="welcome">Welcome</string>
@@ -46,7 +46,7 @@
     <string name="sampleText">By providing my phone number. I hereby agree and accept the <![CDATA[<a href="https://pages.flycricket.io/high-court-alert/terms.html">Terms of Service</a>]]> and <![CDATA[<a href="https://pages.flycricket.io/high-court-alert/privacy.html">Privacy Policy</a>]]> .</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="title_activity_nav">nav</string>
-    <string name="welcome_to_high_court_alert">Welcome to High Court Alert</string>
+    <string name="welcome_to_high_court_alert">Welcome to CG CASE DIARY ALERT</string>
     <string name="next">Next</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="yes">Yes</string>

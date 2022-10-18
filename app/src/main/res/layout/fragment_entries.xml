@@ -236,42 +236,11 @@
                     tools:ignore="SpeakableTextPresentCheck,TextContrastCheck" />
 
                 <TextView
-                    android:id="@+id/csp"
+                    android:id="@+id/sdop"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="15dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/border_amount_bg"
-                    android:drawablePadding="10dp"
-                    android:fontFamily="@font/quicksand_medium"
-                    android:gravity="center"
-                    android:padding="15dp"
-                    android:text="CSP"
-                    android:textColor="@color/use_orange"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    app:drawableStartCompat="@drawable/ic_csp"
-                    app:layout_constraintEnd_toEndOf="@+id/editTextTextMultiLine"
-                    app:layout_constraintStart_toStartOf="@+id/editTextTextMultiLine"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout14"
-                    tools:ignore="SpeakableTextPresentCheck,TextContrastCheck" />
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/sdop"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginEnd="10dp"
                     android:layout_weight="1"
                     android:background="@drawable/border_amount_bg"
                     android:drawablePadding="10dp"
@@ -288,12 +257,72 @@
                     app:layout_constraintTop_toBottomOf="@+id/linearLayout14"
                     tools:ignore="SpeakableTextPresentCheck,TextContrastCheck" />
 
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
                 <TextView
-                    android:id="@+id/asp"
+                    android:id="@+id/csp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/border_amount_bg"
+                    android:drawablePadding="10dp"
+                    android:fontFamily="@font/quicksand_medium"
+                    android:gravity="center"
+                    android:padding="15dp"
+                    android:text="CSP"
+                    android:textColor="@color/use_orange"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:drawableStartCompat="@drawable/ic_csp"
+                    app:layout_constraintEnd_toEndOf="@+id/editTextTextMultiLine"
+                    app:layout_constraintStart_toStartOf="@+id/editTextTextMultiLine"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout14"
+                    tools:ignore="SpeakableTextPresentCheck,TextContrastCheck" />
+
+                <TextView
+                    android:id="@+id/dsp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="15dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/border_amount_bg"
+                    android:fontFamily="@font/quicksand_medium"
+                    android:gravity="center"
+                    android:padding="15dp"
+                    android:text="DSP"
+                    android:textColor="@color/use_orange"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:drawableStartCompat="@drawable/ic_sdg"
+                    app:layout_constraintEnd_toEndOf="@+id/editTextTextMultiLine"
+                    app:layout_constraintStart_toStartOf="@+id/editTextTextMultiLine"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout14"
+                    tools:ignore="SpeakableTextPresentCheck,TextContrastCheck" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/asp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="10dp"
                     android:layout_weight="1"
                     android:background="@drawable/border_amount_bg"
                     android:drawablePadding="10dp"
@@ -310,38 +339,8 @@
                     app:layout_constraintTop_toBottomOf="@+id/linearLayout14"
                     tools:ignore="SpeakableTextPresentCheck,TextContrastCheck" />
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
                 <TextView
                     android:id="@+id/sp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/border_amount_bg"
-                    android:drawablePadding="10dp"
-                    android:fontFamily="@font/quicksand_medium"
-                    android:gravity="center"
-                    android:padding="15dp"
-                    android:text="SP"
-                    android:textColor="@color/use_orange"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    app:drawableStartCompat="@drawable/ic_sp"
-                    app:layout_constraintEnd_toEndOf="@+id/editTextTextMultiLine"
-                    app:layout_constraintStart_toStartOf="@+id/editTextTextMultiLine"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout14"
-                    tools:ignore="SpeakableTextPresentCheck,TextContrastCheck" />
-
-                <TextView
-                    android:id="@+id/dgp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
@@ -352,7 +351,7 @@
                     android:fontFamily="@font/quicksand_medium"
                     android:gravity="center"
                     android:padding="15dp"
-                    android:text="DGP"
+                    android:text="SP"
                     android:textColor="@color/use_orange"
                     android:textSize="16sp"
                     android:textStyle="bold"
@@ -371,7 +370,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/adg"
+                    android:id="@+id/aig"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
@@ -382,18 +381,18 @@
                     android:fontFamily="@font/quicksand_medium"
                     android:gravity="center"
                     android:padding="15dp"
-                    android:text="ADG"
+                    android:text="AIG"
                     android:textColor="@color/use_orange"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    app:drawableStartCompat="@drawable/ic_adg"
+                    app:drawableStartCompat="@drawable/ic_asp"
                     app:layout_constraintEnd_toEndOf="@+id/editTextTextMultiLine"
                     app:layout_constraintStart_toStartOf="@+id/editTextTextMultiLine"
                     app:layout_constraintTop_toBottomOf="@+id/linearLayout14"
                     tools:ignore="SpeakableTextPresentCheck,TextContrastCheck" />
 
                 <TextView
-                    android:id="@+id/sdg"
+                    android:id="@+id/dig"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
@@ -404,11 +403,11 @@
                     android:fontFamily="@font/quicksand_medium"
                     android:gravity="center"
                     android:padding="15dp"
-                    android:text="SDG"
+                    android:text="DIG"
                     android:textColor="@color/use_orange"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    app:drawableStartCompat="@drawable/ic_sdg"
+                    app:drawableStartCompat="@drawable/ic_dgp"
                     app:layout_constraintEnd_toEndOf="@+id/editTextTextMultiLine"
                     app:layout_constraintStart_toStartOf="@+id/editTextTextMultiLine"
                     app:layout_constraintTop_toBottomOf="@+id/linearLayout14"
@@ -423,34 +422,13 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/dsp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/border_amount_bg"
-                    android:fontFamily="@font/quicksand_medium"
-                    android:gravity="center"
-                    android:padding="15dp"
-                    android:text="DSP"
-                    android:textColor="@color/use_orange"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    app:drawableStartCompat="@drawable/ic_sdg"
-                    app:layout_constraintEnd_toEndOf="@+id/editTextTextMultiLine"
-                    app:layout_constraintStart_toStartOf="@+id/editTextTextMultiLine"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout14"
-                    tools:ignore="SpeakableTextPresentCheck,TextContrastCheck" />
-
-                <TextView
                     android:id="@+id/ig"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
                     android:layout_marginTop="15dp"
                     android:layout_weight="1"
                     android:background="@drawable/border_amount_bg"
+                    android:drawablePadding="10dp"
                     android:fontFamily="@font/quicksand_medium"
                     android:gravity="center"
                     android:padding="15dp"
@@ -458,13 +436,14 @@
                     android:textColor="@color/use_orange"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    app:drawableStartCompat="@drawable/ic_sdg"
+                    app:drawableStartCompat="@drawable/ic_adg"
                     app:layout_constraintEnd_toEndOf="@+id/editTextTextMultiLine"
                     app:layout_constraintStart_toStartOf="@+id/editTextTextMultiLine"
                     app:layout_constraintTop_toBottomOf="@+id/linearLayout14"
                     tools:ignore="SpeakableTextPresentCheck,TextContrastCheck" />
 
             </LinearLayout>
+
         </LinearLayout>
 
         <TextView

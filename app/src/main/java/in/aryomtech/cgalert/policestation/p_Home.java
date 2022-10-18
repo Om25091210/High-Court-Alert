@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
+import in.aryomtech.cgalert.DistrictData;
 import in.aryomtech.cgalert.Home;
 import in.aryomtech.cgalert.Login;
 import in.aryomtech.cgalert.R;
@@ -63,7 +64,7 @@ public class p_Home extends AppCompatActivity implements DuoMenuView.OnMenuClick
     private ViewHolder mViewHolder;
     int upspeed;
     String DeviceToken;
-
+    ImageView phone_num;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,7 +82,7 @@ public class p_Home extends AppCompatActivity implements DuoMenuView.OnMenuClick
                 .putBoolean("entry_done",true).apply();
 
         station_name_txt=findViewById(R.id.textView4);
-
+        phone_num=findViewById(R.id.entry2);
         stat_name= getSharedPreferences("station_name_K",MODE_PRIVATE)
                 .getString("the_station_name2003","");
 
@@ -143,7 +144,14 @@ public class p_Home extends AppCompatActivity implements DuoMenuView.OnMenuClick
             }
             startActivity(insta_in);
         });
-
+        phone_num.setOnClickListener(v->{
+            p_Home.this.getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations( R.anim.enter_from_right, R.anim.exit_to_left,R.anim.enter_from_left, R.anim.exit_to_right)
+                    .add(R.id.drawer,new DistrictData())
+                    .addToBackStack(null)
+                    .commit();
+        });
     }
 
     private void check_if_token() {

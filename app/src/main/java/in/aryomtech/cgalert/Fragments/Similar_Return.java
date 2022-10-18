@@ -50,6 +50,7 @@ public class Similar_Return extends Fragment {
     SwipeRefreshLayout mSwipeRefreshLayout;
     RecyclerView mRecyclerView;
     Query query;
+    List<String> list=new ArrayList<>();
     String sp_of;
     List<Excel_data> excel_data=new ArrayList<>();
     List<Excel_data> excel_data_duplicates=new ArrayList<>();
@@ -183,7 +184,7 @@ public class Similar_Return extends Fragment {
         });
     }
 
-    private void search(String str) {
+    /*private void search(String str) {
         filtered_mylist.clear();
         for(filterdata object:save_locally_list){
             if (object.getCn().toLowerCase().contains(str.toLowerCase().trim())) {
@@ -205,6 +206,63 @@ public class Similar_Return extends Fragment {
         if(mRecyclerView!=null)
             mRecyclerView.setAdapter(similarAdapter2);
         //adapter
+    }*/
+    private void search(String str) {
+        if(str.equals("")){
+            similarAdapter similarAdapter=new similarAdapter(getContextNullSafety(),save_locally_list,excel_data_duplicates);
+            similarAdapter.notifyDataSetChanged();
+            if(mRecyclerView!=null)
+                mRecyclerView.setAdapter(similarAdapter);
+        }
+        else {
+            String[] str_Args = str.toLowerCase().split(" ");
+            filtered_mylist.clear();
+            int count = 0;
+            boolean not_once = true;
+            List<Integer> c_list = new ArrayList<>();
+            for (filterdata object : save_locally_list) {
+                convert_to_list(object);
+                for (String s : list) {
+                    for (String str_arg : str_Args) {
+                        if (str_arg.contains("/") && not_once) {
+                            String sub1 = str_arg.substring(0, str_arg.indexOf("/"));
+                            String sub2 = str_arg.substring(str_arg.indexOf("/") + 1);
+                            if (list.get(4).contains(sub1) && list.get(6).contains(sub2)) {
+                                count++;
+                                not_once = false;
+                            } else if (list.get(7).contains(sub1) && list.get(8).contains(sub2)) {
+                                count++;
+                                not_once = false;
+                            }
+                        } else if (s.contains(str_arg)) {
+                            count++;
+                        }
+                    }
+                }
+                c_list.add(count);
+                System.out.println(c_list + "");
+                if (count == str_Args.length)
+                    filtered_mylist.add(object);
+                count = 0;
+            }
+            similarAdapter similarAdapter=new similarAdapter(getContextNullSafety(),filtered_mylist,excel_data_duplicates);
+            similarAdapter.notifyDataSetChanged();
+            if(mRecyclerView!=null)
+                mRecyclerView.setAdapter(similarAdapter);
+        }
+    }
+    private void convert_to_list(filterdata object) {
+        list.clear();
+        try{
+            list.add(object.getCn().toLowerCase());
+            list.add(object.getCt().toLowerCase());
+            list.add(object.getYear().toLowerCase());
+            list.add(object.getStn().toLowerCase());
+            list.add(object.getDis_n().toLowerCase());
+        }
+        catch (NullPointerException e){
+            System.out.println("Error");
+        }
     }
     private void getdata() {
         cg_logo.setVisibility(View.VISIBLE);

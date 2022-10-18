@@ -25,12 +25,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/duo_view_header_text_title"
         android:layout_marginStart="32dp"
-        android:text="@string/making_a_peacefull_place"
-        android:textSize="@dimen/_13sdp"
         android:fontFamily="@font/quicksand_bold"
+        android:text="@string/making_a_peacefull_place"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/use_blue"
-        android:textStyle="normal"/>
+        android:textSize="@dimen/_13sdp"
+        android:textStyle="normal" />
 
     <LinearLayout
         android:id="@+id/linearLayout4"

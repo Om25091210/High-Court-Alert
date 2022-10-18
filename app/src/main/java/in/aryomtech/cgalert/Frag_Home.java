@@ -112,8 +112,8 @@ public class Frag_Home extends Fragment {
                 ((FragmentActivity)getContextNullSafety()).getSupportFragmentManager(), FragmentPagerItems.with(getContextNullSafety())
                 .add("Urgent diary", urgent_data.class)
                 .add("Today", today.class)
-                .add("RM CALL", Mcrc_Rm_Coll.class)
-                .add("RM RETURN", Mcrc_Rm_Return.class)
+                .add("DIARY CALL", Mcrc_Rm_Coll.class)
+                .add("DIARY Return", Mcrc_Rm_Return.class)
                 .add("Similar CALL", Similar_Collection.class)
                 .add("Similar Return", Similar_Return.class)
                 .create());

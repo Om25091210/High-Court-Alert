@@ -46,6 +46,24 @@
                 app:lottie_fileName="menu.json"
                 app:lottie_loop="false" />
 
+            <ImageView
+                android:id="@+id/entry2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginTop="5dp"
+                android:contentDescription="@string/image"
+                android:paddingStart="20dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="8dp"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_call_btn"
+                app:tint="@color/green_500"/>
+
             <View
                 android:id="@+id/view"
                 android:layout_width="0dp"
