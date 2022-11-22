@@ -102,6 +102,18 @@
     <string name="select_district">Select District (चयनित जिला)</string>
     <string name="select_stations">Select Stations (चयनित थाना)</string>
     <string name="are_you_sure_to_delete_this_number_permanently">Are you sure to delete this number permanently?</string>
+    <string name="cases_against_police">Cases Against Police</string>
+    <string name="date_of_filing">Date Of Filing</string>
+    <string name="create_a_new_task">Task</string>
+    <string name="add">ADD</string>
+    <string name="cancel">Cancel</string>
+    <string name="nature_of_the_case">Nature of the case</string>
+    <string name="appellant">Appellant</string>
+    <string name="respondents">Respondents</string>
+    <string name="task">Task</string>
+    <string name="add_task">Add task</string>
+    <string name="adapter_dp_transition">adapter dp transition</string>
+    <string name="add_respondent">Add respondent</string>
 
 
     <array name="menuOptions">

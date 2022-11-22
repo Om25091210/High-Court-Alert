@@ -9,6 +9,9 @@
     <color name="white">#FFFFFFFF</color>
     <color name="curd_white">#F2F3F5</color>
     <color name="use_orange">#FF7F5C</color>
+    <color name="colorTextHint">#7B7B7B</color>
+    <color name="colorDefaultNoteColor">#333333</color>
+    <color name="colorIcons">#A4A4A4</color>
     <color name="colorQuickActionsBackground">#2F2D2E</color>
     <color name="use_red">#FAD8D9</color>
     <color name="use_bg">#F6F7F7</color>

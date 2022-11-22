@@ -24,6 +24,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    useLibrary 'org.apache.http.legacy'
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -42,16 +43,16 @@ dependencies {
     implementation 'org.jetbrains:annotations:15.0'
     implementation platform('com.google.firebase:firebase-bom:29.0.0')
     implementation 'com.google.firebase:firebase-analytics'
-    implementation 'com.google.firebase:firebase-database:20.0.5'
-    implementation 'com.google.firebase:firebase-messaging:23.0.6'
-    implementation 'com.google.firebase:firebase-auth:21.0.6'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0'
+    implementation 'com.google.firebase:firebase-database:20.1.0'
+    implementation 'com.google.firebase:firebase-messaging:23.1.0'
+    implementation 'com.google.firebase:firebase-auth:21.1.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
     implementation 'androidx.navigation:navigation-fragment:2.5.0'
     implementation 'androidx.navigation:navigation-ui:2.5.0'
-    implementation 'com.google.firebase:firebase-storage:20.0.1'
-    implementation 'com.google.firebase:firebase-crashlytics:18.2.11'
-    //implementation files('libs/apache-httpcomponents-httpclient.jar')
+    implementation 'com.google.firebase:firebase-storage:20.1.0'
+    implementation 'com.google.firebase:firebase-crashlytics:18.3.2'
+   // implementation files('libs/apache-httpcomponents-httpclient.jar')//
     implementation files('libs/commons-codec-1.9.jar')
     implementation files('libs/commons-httpclient-3.1.jar')
     implementation files('libs/commons-logging-1.2.jar')
@@ -82,8 +83,6 @@ dependencies {
 
     //Firebase-UI Library
     implementation 'com.firebaseui:firebase-ui-database:7.1.1'
-    //Statistics
-    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     //tablayout
     implementation 'com.ogaclejapan.smarttablayout:library:2.0.0@aar'
     //edittext

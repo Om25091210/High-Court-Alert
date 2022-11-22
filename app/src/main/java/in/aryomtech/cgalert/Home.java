@@ -4,11 +4,15 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.StrictMode;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -25,6 +29,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.airbnb.lottie.LottieAnimationView;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -37,12 +49,20 @@ import com.mosio.myapplication2.views.DuoDrawerLayout;
 import com.mosio.myapplication2.views.DuoMenuView;
 import com.mosio.myapplication2.widgets.DuoDrawerToggle;
 
+import org.json.JSONObject;
+
+import java.security.KeyStoreException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
+import in.aryomtech.cgalert.CasesAgainstPolice.CasesAgainPolice;
 import in.aryomtech.cgalert.Fragments.admin.admin_room;
 import in.aryomtech.cgalert.Fragments.admin.form;
+import in.aryomtech.cgalert.SMS_service.SMSServices;
 import in.aryomtech.cgalert.duo_frags.about;
 
 public class Home extends AppCompatActivity implements DuoMenuView.OnMenuClickListener{
@@ -61,7 +81,7 @@ public class Home extends AppCompatActivity implements DuoMenuView.OnMenuClickLi
     String DeviceToken;
 
     //admin
-    ImageView admin,entry,phone_num;
+    ImageView admin,entry,phone_num,cases_against_police;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +101,7 @@ public class Home extends AppCompatActivity implements DuoMenuView.OnMenuClickLi
         auth=FirebaseAuth.getInstance();
         user=auth.getCurrentUser();
         admin=findViewById(R.id.admin);
+        cases_against_police=findViewById(R.id.cases_against_police);
         entry=findViewById(R.id.entry);
         phone_num=findViewById(R.id.entry2);
 
@@ -99,6 +120,22 @@ public class Home extends AppCompatActivity implements DuoMenuView.OnMenuClickLi
         goToFragment(new Frag_Home());
         mMenuAdapter.setViewSelected(0);
         setTitle(mTitles.get(0));
+
+        String msg="दिनांक:-18/01/2002" + "\n"+
+        "MCRCA No.:-133" + "\n"+
+        "Crime No.:-102" + "\n"+
+        "Police station:-Sirgitti"+"\n"+
+        "मूल केस डायरी तथा पूर्व अपराधिक रिकार्ड, दिनाँक 18/07/2002 तक बेल/अपराधिक शाखा में अनिवार्यतः जमा करें। -CG POLICE";
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+
+        StrictMode.setThreadPolicy(policy);
+
+        SMSServices services=new SMSServices();
+        try {
+            services.sendSingleSMS(getBaseContext(),"cgcctns-SPANDAN","Password@123",msg,"DRGPOL","9301982112","236c24ae-d29a-4c63-8858-f5557b541735","1107166842005504102");
+        } catch (UnrecoverableKeyException | KeyStoreException e) {
+            Log.e("ERROR","ERROR");
+        }
 
         admin.setOnClickListener(v->{
             Home.this.getSupportFragmentManager()
@@ -121,6 +158,14 @@ public class Home extends AppCompatActivity implements DuoMenuView.OnMenuClickLi
                     .beginTransaction()
                     .setCustomAnimations( R.anim.enter_from_right, R.anim.exit_to_left,R.anim.enter_from_left, R.anim.exit_to_right)
                     .add(R.id.drawer,new DistrictData())
+                    .addToBackStack(null)
+                    .commit();
+        });
+        cases_against_police.setOnClickListener(v->{
+            Home.this.getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations( R.anim.enter_from_right, R.anim.exit_to_left,R.anim.enter_from_left, R.anim.exit_to_right)
+                    .add(R.id.drawer,new CasesAgainPolice())
                     .addToBackStack(null)
                     .commit();
         });
@@ -167,6 +212,31 @@ public class Home extends AppCompatActivity implements DuoMenuView.OnMenuClickLi
             startActivity(insta_in);
         });
 
+    }
+
+    protected String hashGenerator(String userName, String senderId, String content, String secureKey) {
+        // TODO Auto-generated method stub
+        StringBuffer finalString=new StringBuffer();
+        finalString.append(userName.trim()).append(senderId.trim()).append(content.trim()).append(secureKey.trim());
+        //		logger.info("Parameters for SHA-512 : "+finalString);
+        String hashGen=finalString.toString();
+        StringBuffer sb = null;
+        MessageDigest md;
+        try {
+            md = MessageDigest.getInstance("SHA-512");
+            md.update(hashGen.getBytes());
+            byte byteData[] = md.digest();
+            //convert the byte to hex format method 1
+            sb = new StringBuffer();
+            for (int i = 0; i < byteData.length; i++) {
+                sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+            }
+
+        } catch (NoSuchAlgorithmException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return sb.toString();
     }
 
     private void check_if_token() {

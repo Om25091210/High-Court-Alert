@@ -1,15 +1,26 @@
 package in.aryomtech.cgalert.SMS_service;
 
 
+import android.app.Activity;
+import android.content.Context;
+import android.util.Log;
+
+import com.google.android.datatransport.cct.internal.LogEvent;
+
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.security.KeyManagementException;
+import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -24,8 +35,11 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.scheme.Scheme;
 
+import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+
+import in.aryomtech.cgalert.R;
 
 
 public class SMSServices {
@@ -44,7 +58,7 @@ public class SMSServices {
      *
      */
 
-    public String sendSingleSMS(String username, String password , String message , String senderId, String mobileNumber,String secureKey, String templateid) throws UnrecoverableKeyException, KeyStoreException {
+    public String sendSingleSMS(Context con, String username, String password , String message , String senderId, String mobileNumber, String secureKey, String templateid) throws UnrecoverableKeyException, KeyStoreException {
 
 
         String responseString = "";
@@ -55,9 +69,14 @@ public class SMSServices {
             //context=SSLContext.getInstance("TLSv1.1"); // Use this line for Java version 6
             context=SSLContext.getInstance("TLSv1.2"); // Use this line for Java version 7 and above
             context.init(null, null, null);
-            sf=new SSLSocketFactory(context, SSLSocketFactory.STRICT_HOSTNAME_VERIFIER);
+            // build key store with ca certificate
+            try {
+                KeyStore keyStore = buildKeyStore(con, R.raw.mgov);
+                sf=new SSLSocketFactory(keyStore);
+            } catch (CertificateException e) {
+                e.printStackTrace();
+            }
             Scheme scheme=new Scheme("https", sf, 443);
-
             HttpClient client=new DefaultHttpClient();
             client.getConnectionManager().getSchemeRegistry().register(scheme);
             HttpPost post=new HttpPost("https://msdgweb.mgov.gov.in/esms/sendsmsrequestDLT");
@@ -78,8 +97,8 @@ public class SMSServices {
             String line="";
             while((line=bf.readLine())!=null){
                 responseString = responseString+line;
-
             }
+            Log.e("Resp",response+"");
             System.out.println(responseString);
         } catch (NoSuchAlgorithmException e) {
             // TODO Auto-generated catch block
@@ -97,7 +116,37 @@ public class SMSServices {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        Log.e("Response string",responseString);
         return responseString;
+    }
+
+    private static KeyStore buildKeyStore(Context context, int certRawResId) throws KeyStoreException, CertificateException, NoSuchAlgorithmException, IOException {
+        // init a default key store
+        String keyStoreType = KeyStore.getDefaultType();
+        KeyStore keyStore = KeyStore.getInstance(keyStoreType);
+        keyStore.load(null, null);
+
+        // read and add certificate authority
+        Certificate cert = readCert(context, certRawResId);
+        keyStore.setCertificateEntry("ca", cert);
+
+        return keyStore;
+    }
+    private static Certificate readCert(Context context, int certResourceId) throws CertificateException, IOException {
+
+        // read certificate resource
+        InputStream caInput = context.getResources().openRawResource(certResourceId);
+
+        Certificate ca;
+        try {
+            // generate a certificate
+            CertificateFactory cf = CertificateFactory.getInstance("X.509");
+            ca = cf.generateCertificate(caInput);
+        } finally {
+            caInput.close();
+        }
+
+        return ca;
     }
 
     /**
@@ -113,7 +162,7 @@ public class SMSServices {
      * @see <a href="https://mgov.gov.in/msdp_sms_push.jsp">Return types code details</a>
      *
      */
-    public String sendBulkSMS(String username, String password , String message , String senderId, String mobileNumber, String secureKey, String templateid) throws UnrecoverableKeyException, KeyStoreException {
+    /*public String sendBulkSMS(String username, String password , String message , String senderId, String mobileNumber, String secureKey, String templateid) throws UnrecoverableKeyException, KeyStoreException {
 
         String responseString = "";
         SSLSocketFactory sf=null;
@@ -166,7 +215,7 @@ public class SMSServices {
         }
         return responseString;
     }
-    /**
+    *//**
      * Send Unicode text SMS
      * @param username : Department Login User Name
      * @param password : Department Login Password
@@ -178,7 +227,7 @@ public class SMSServices {
      * @return {@link String} response from Mobile Seva Gateway e.g. '402,MsgID = 150620161466003974245msdgsms'
      * @see <a href="https://mgov.gov.in/msdp_sms_push.jsp">Return types code details</a>
      *
-     */
+     *//*
     public String sendUnicodeSMS(String username, String password , String message , String senderId, String mobileNumber,String secureKey, String templateid){
 
 
@@ -245,7 +294,7 @@ public class SMSServices {
         return responseString;
     }
 
-    /**
+    *//**
      * Send Single OTP text SMS
      *</p><p> Use only in case of OTP related message</p><p>
      * Messages other than OTP will not be delivered to the users
@@ -259,7 +308,7 @@ public class SMSServices {
      * @return {@link String} response from Mobile Seva Gateway e.g. '402,MsgID = 150620161466003974245msdgsms'
      * @see <a href="https://mgov.gov.in/msdp_sms_push.jsp">Return types code details</a>
      *
-     */
+     *//*
 
     public String sendOtpSMS(String username, String password , String message , String senderId, String mobileNumber,String secureKey, String templateid){
 
@@ -316,7 +365,7 @@ public class SMSServices {
 
     }
 
-    /**
+    *//**
      * Send Single Unicode OTP text SMS
      * @param username : Department Login User Name
      * @param password : Department Login Password
@@ -328,7 +377,7 @@ public class SMSServices {
      * @return {@link String} response from Mobile Seva Gateway e.g. '402,MsgID = 150620161466003974245msdgsms'
      * @see <a href="https://mgov.gov.in/msdp_sms_push.jsp">Return types code details</a>
      *
-     */
+     *//*
     public String sendUnicodeOtpSMS(String username, String password , String message , String senderId, String mobileNumber,String secureKey, String templateid){
 
 
@@ -396,7 +445,7 @@ public class SMSServices {
         }
         return responseString;
     }
-
+*/
     protected String hashGenerator(String userName, String senderId, String content, String secureKey) {
         // TODO Auto-generated method stub
         StringBuffer finalString=new StringBuffer();
