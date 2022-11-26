@@ -72,7 +72,7 @@ public class SMSServices {
             // build key store with ca certificate
             try {
                 KeyStore keyStore = buildKeyStore(con, R.raw.mgov);
-                sf=new SSLSocketFactory(keyStore);
+                sf=new SSLSocketFactory(keyStore,"changeit");
             } catch (CertificateException e) {
                 e.printStackTrace();
             }

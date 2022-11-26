@@ -512,7 +512,7 @@ public class form extends Fragment {
             }
 
             RequestQueue requestQueue = Volley.newRequestQueue(getContextNullSafety());
-            String URL = "https://high-court-alertsystem.herokuapp.com/total_data_push";
+            String URL = "https://sangyan.co.in/total_data_push";
 
             JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, URL,jsonBody,
                     new com.android.volley.Response.Listener<JSONObject>() {
@@ -600,7 +600,7 @@ public class form extends Fragment {
         }
 
         RequestQueue requestQueue = Volley.newRequestQueue(getContextNullSafety());
-        String URL = "https://high-court-alertsystem.herokuapp.com/j_column";
+        String URL = "https://sangyan.co.in/j_column";
 
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, URL,jsonBody,
                 new com.android.volley.Response.Listener<JSONObject>() {

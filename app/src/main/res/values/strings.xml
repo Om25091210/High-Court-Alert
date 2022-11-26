@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Case Diary Alert</string>
+    <string name="app_name">Sangyan</string>
     <string name="image">image</string>
     <string name="sms_sent">Sms sent</string>
     <string name="welcome">Welcome</string>
@@ -114,6 +114,14 @@
     <string name="add_task">Add task</string>
     <string name="adapter_dp_transition">adapter dp transition</string>
     <string name="add_respondent">Add respondent</string>
+    <string name="date_of_reply">Date of reply</string>
+    <string name="date_of_submission_of_reply">Date of submission of reply</string>
+    <string name="phone_number_of_oic">Phone number of OIC</string>
+    <string name="oic_of_the_case">OIC of the case</string>
+    <string name="legal_section_2">Legal Section 2</string>
+    <string name="legal_section_1">Legal Section 1</string>
+    <string name="judgement_date">Judgement Date</string>
+    <string name="date_of_judgement">Date of judgement</string>
 
 
     <array name="menuOptions">

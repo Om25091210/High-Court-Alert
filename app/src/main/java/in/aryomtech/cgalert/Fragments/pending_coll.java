@@ -986,7 +986,7 @@ public class pending_coll extends Fragment {
         }
 
         RequestQueue requestQueue = Volley.newRequestQueue(getContextNullSafety());
-        String URL = "https://high-court-alertsystem.herokuapp.com/j_column";
+        String URL = "https://sangyan.co.in/j_column";
 
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, URL,jsonBody,
                 new com.android.volley.Response.Listener<JSONObject>() {
