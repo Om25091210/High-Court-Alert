@@ -122,6 +122,20 @@
     <string name="legal_section_1">Legal Section 1</string>
     <string name="judgement_date">Judgement Date</string>
     <string name="date_of_judgement">Date of judgement</string>
+    <string name="cg_police_contacts">CG Police Contacts</string>
+    <string name="notice_to_victim">Notice to Victim</string>
+    <string name="writ_cases_alert">Writ Cases Alert</string>
+    <string name="case_diary_alert">Case Diary Alert</string>
+    <string name="sangyan">SANGYAN</string>
+    <string name="mcrc">MCRC</string>
+    <string name="cra">CRA</string>
+    <string name="notice_date">Notice Date</string>
+    <string name="next_hearing_date">Next Hearing Date</string>
+    <string name="name_of_the_govt_advocate">Name of the Govt. Advocate</string>
+    <string name="police_station_1">Police Station</string>
+    <string name="crr">CRR</string>
+    <string name="advocate_name">Advocate Name</string>
+    <string name="submit_amp_send_alert"><![CDATA[Submit & Send Alert]]></string>
 
 
     <array name="menuOptions">
