@@ -619,34 +619,6 @@ public class Mcrc_Rm_Coll extends Fragment {
         });
     }
 
-    public void httpCall(String url) {
-        RequestQueue queue = Volley.newRequestQueue(getContextNullSafety());
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        // enjoy your response
-                        Snackbar.make(mRecyclerView,"SMS sent successfully...",Snackbar.LENGTH_LONG)
-                                .setActionTextColor(Color.parseColor("#ea4a1f"))
-                                .setTextColor(Color.parseColor("#000000"))
-                                .setBackgroundTint(Color.parseColor("#D9F5F8"))
-                                .show();
-                        dialog1.dismiss();
-                        Log.e("Status of code = ","Success");
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                // enjoy your error status
-                Log.e("Status of code = ","Wrong");
-            }
-        });
-
-        queue.add(stringRequest);
-    }
-
-
     private String extract_data(int index) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy",Locale.getDefault());
         Date date = new Date();
@@ -711,33 +683,7 @@ public class Mcrc_Rm_Coll extends Fragment {
                     +"उपरोक्त मूल केश डायरी तथा पूर्व अपराधिक रिकॉर्ड, दिनाँक "+K+" तक बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय छतीसगढ़ में  अनिवार्यतः जमा करें।";
         }
     }
-    /*private void search(String str) {
-        mylist.clear();
-        for(Excel_data object:excel_data) {
-            if (object.getB().toLowerCase().contains(str.toLowerCase().trim())) {
-                mylist.add(object);
-            } else if (object.getC().toLowerCase().contains(str.toLowerCase().trim())) {
-                mylist.add(object);
-            } else if (object.getE().toLowerCase().contains(str.toLowerCase().trim())) {//TODO : tolowercase error
-                mylist.add(object);
-            } else if (object.getH().toLowerCase().contains(str.toLowerCase().trim())) {
-                mylist.add(object);
-            }
-            else if(object.getK().toLowerCase().contains(str.toLowerCase().trim())){
-                mylist.add(object);
-            }
-            else if(object.getJ().toLowerCase().contains(str.toLowerCase().trim())){
-                mylist.add(object);
-            }
-            else if(object.getDate().toLowerCase().contains(str.toLowerCase().trim())){
-                mylist.add(object);
-            }
-        }
-        excel_adapter=new Excel_Adapter(getContextNullSafety(),mylist,onClickInterface,onAgainClickInterface);
-        excel_adapter.notifyDataSetChanged();
-        if(mRecyclerView!=null)
-            mRecyclerView.setAdapter(excel_adapter);
-    }*/
+
     private void search(String str) {
         if(str.equals("")){
             excel_adapter=new Excel_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface);

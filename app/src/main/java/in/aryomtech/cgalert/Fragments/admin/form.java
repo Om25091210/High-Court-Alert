@@ -41,12 +41,15 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -81,6 +84,7 @@ public class form extends Fragment {
     AutoCompleteTextView ac_district,policeStation,ac_caseType;
     DatabaseReference reference,reference_phone;
     String pushkey;
+    FirebaseFirestore db;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -93,6 +97,7 @@ public class form extends Fragment {
         if(getArguments()!=null){
             excel_data= (Excel_data) getArguments().getSerializable("excel_data_sending");
         }
+        db = FirebaseFirestore.getInstance();
 
         ac_district = view.findViewById(R.id.ac_district);
         put_number = view.findViewById(R.id.put_number);

@@ -4,14 +4,11 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.os.StrictMode;
 import android.text.TextUtils;
 import android.util.Log;
@@ -26,17 +23,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.airbnb.lottie.LottieAnimationView;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.RetryPolicy;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-import com.google.android.material.snackbar.Snackbar;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -44,12 +34,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.mosio.myapplication2.views.DuoDrawerLayout;
 import com.mosio.myapplication2.views.DuoMenuView;
 import com.mosio.myapplication2.widgets.DuoDrawerToggle;
-
-import org.json.JSONObject;
 
 import java.security.KeyStoreException;
 import java.security.MessageDigest;
@@ -57,6 +48,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import in.aryomtech.cgalert.CasesAgainstPolice.CasesAgainPolice;
@@ -79,7 +72,7 @@ public class Home extends AppCompatActivity implements DuoMenuView.OnMenuClickLi
     int downspeed;
     int upspeed;
     String DeviceToken;
-
+    FirebaseFirestore db;
     //admin
     ImageView admin,entry,phone_num,cases_against_police;
 
@@ -109,6 +102,20 @@ public class Home extends AppCompatActivity implements DuoMenuView.OnMenuClickLi
 
         // Initialize the views
         mViewHolder = new ViewHolder();
+
+        db = FirebaseFirestore.getInstance();
+        Map<String,String> data_packet=new HashMap<>();
+        data_packet.put("ASP DANTEWADA","9479194302");
+        data_packet.put("CONTROL ROOM DANTEWADA","9479191320");
+
+        db.collection("Phone numbers").document("DANTEWADA").set(data_packet, SetOptions.merge());
+        /*db.collection("data").whereEqualTo("type","rm call").limit(1).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                QuerySnapshot document=task.getResult();
+                Log.d("docs","Size : "+document.getDocuments().get(0).getData().get("B"));
+            }
+        });*/
 
         // Handle menu actions
         handleMenu();
@@ -502,5 +509,51 @@ public class Home extends AppCompatActivity implements DuoMenuView.OnMenuClickLi
             startActivity(i);
             finish();
         }
+    }
+    public static java.util.Map<String, Object> jsonString2Map( String jsonString ) throws org.json.JSONException {
+        Map<String, Object> keys = new HashMap<String, Object>();
+
+        org.json.JSONObject jsonObject = new org.json.JSONObject( jsonString ); // HashMap
+        java.util.Iterator<?> keyset = jsonObject.keys(); // HM
+
+        while (keyset.hasNext()) {
+            String key =  (String) keyset.next();
+            Object value = jsonObject.get(key);
+            System.out.print("\n Key : "+key);
+            if ( value instanceof org.json.JSONObject ) {
+                System.out.println("Incomin value is of JSONObject : ");
+                keys.put( key, jsonString2Map( value.toString() ));
+            } else if ( value instanceof org.json.JSONArray) {
+                org.json.JSONArray jsonArray = jsonObject.getJSONArray(key);
+                //JSONArray jsonArray = new JSONArray(value.toString());
+                keys.put( key, jsonArray2List( jsonArray ));
+            } else {
+                keyNode( value);
+                keys.put( key, value );
+            }
+        }
+        return keys;
+    }
+    public static java.util.List<Object> jsonArray2List( org.json.JSONArray arrayOFKeys ) throws org.json.JSONException {
+        System.out.println("Incoming value is of JSONArray : =========");
+        java.util.List<Object> array2List = new java.util.ArrayList<Object>();
+        for ( int i = 0; i < arrayOFKeys.length(); i++ )  {
+            if ( arrayOFKeys.opt(i) instanceof org.json.JSONObject ) {
+                Map<String, Object> subObj2Map = jsonString2Map(arrayOFKeys.opt(i).toString());
+                array2List.add(subObj2Map);
+            } else if ( arrayOFKeys.opt(i) instanceof org.json.JSONArray ) {
+                java.util.List<Object> subarray2List = jsonArray2List((org.json.JSONArray) arrayOFKeys.opt(i));
+                array2List.add(subarray2List);
+            } else {
+                keyNode( arrayOFKeys.opt(i) );
+                array2List.add( arrayOFKeys.opt(i) );
+            }
+        }
+        return array2List;
+    }
+    public static Object keyNode(Object o) {
+        if (o instanceof String || o instanceof Character) return (String) o;
+        else if (o instanceof Number) return (Number) o;
+        else return o;
     }
 }

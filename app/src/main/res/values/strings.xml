@@ -24,7 +24,7 @@
 
     <string name="edt_title_email">Phone no.</string>//
     <string name="edt_hint_email">Enter your Govt number</string>
-    <string name="chhattisgarh_police">Chhattisgarh Police</string>
+    <string name="chhattisgarh_police">SANGYAN</string>
     <string name="send_otp">Send OTP</string>
     <string name="notification">Notification</string>
     <string name="message">Message</string>
