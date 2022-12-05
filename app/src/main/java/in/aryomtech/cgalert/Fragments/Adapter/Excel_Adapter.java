@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,21 +15,40 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.airbnb.lottie.LottieAnimationView;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.Gson;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import in.aryomtech.cgalert.Fragments.Mcrc_Rm_Coll;
 import in.aryomtech.cgalert.Fragments.admin.form;
 import in.aryomtech.cgalert.Fragments.model.Excel_data;
 import in.aryomtech.cgalert.Fragments.Interface.onAgainClickInterface;
@@ -39,13 +60,16 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
     Context context;
     DatabaseReference reference;
     List<Excel_data> list;
+    Dialog dialog;
+    String gsID="";
     boolean is_selected=false;
     boolean isadmin=false;
     onClickInterface onClickInterface;
     onAgainClickInterface onAgainClickInterface;
 
-    public Excel_Adapter(Context context, List<Excel_data> list,onClickInterface onClickInterface,onAgainClickInterface onAgainClickInterface) {
+    public Excel_Adapter(Context context, List<Excel_data> list,onClickInterface onClickInterface,onAgainClickInterface onAgainClickInterface,String gsID) {
         this.context = context;
+        this.gsID=gsID;
         this.list = list;
         this.onClickInterface=onClickInterface;
         this.onAgainClickInterface=onAgainClickInterface;
@@ -201,7 +225,7 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
             }
         });
         holder.imageRemovedata.setOnClickListener(v->{
-            Dialog dialog = new Dialog(context);
+            dialog = new Dialog(context);
             dialog.setCancelable(true);
             dialog.setContentView(R.layout.dialog_for_sure);
             dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
@@ -211,12 +235,7 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
             dialog.show();
             cancel.setOnClickListener(vi-> dialog.dismiss());
             yes.setOnClickListener(vi-> {
-                reference.child(list.get(position).getPushkey()).removeValue();
-                int actualPosition = holder.getAdapterPosition();
-                list.remove(actualPosition);
-                notifyItemRemoved(actualPosition);
-                notifyItemRangeChanged(actualPosition, list.size());
-                dialog.dismiss();
+                RecyclerView_delete(Collections.singletonList(list.get(position)));
             });
         });
         holder.view.setOnClickListener(v->{
@@ -306,6 +325,97 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
         list.remove(actualPosition);
         notifyItemRemoved(actualPosition);
         notifyItemRangeChanged(actualPosition, list.size());
+    }
+    public void RecyclerView_delete(List<Excel_data> delete_list) {
+        Toast.makeText(context, "Deleting selected data...", Toast.LENGTH_SHORT).show();
+        dialog.dismiss();
+
+        Dialog dialog1 = new Dialog(context);
+        dialog1.setCancelable(false);
+        dialog1.setContentView(R.layout.loading_dialog);
+        dialog1.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        LottieAnimationView lottieAnimationView = dialog1.findViewById(R.id.animate);
+        lottieAnimationView.setAnimation("done.json");
+        dialog1.show();
+        // create a new Gson instance
+        Gson gson = new Gson();
+        // convert your list to json
+        String jsonExcelList = gson.toJson(delete_list);
+        // print your generated json
+        Log.e("jsonCartList: " , jsonExcelList);
+
+        String prev_keygen=delete_list.get(0).getB()+"-"+delete_list.get(0).getE();
+
+        String URL = "https://script.google.com/macros/s/"
+                + gsID+"/exec?"
+                +"data="+jsonExcelList
+                +"&keygen="+hashGenerator(prev_keygen)
+                +"&action=deleteData";
+
+        RequestQueue queue = Volley.newRequestQueue(context);
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        String code="";
+                        try {
+                            JSONObject jsonObj = new JSONObject(response);
+                            code=jsonObj.get("code")+"";
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        if(code.equals("202")){
+                            reference.child(delete_list.get(0).getPushkey()).removeValue();
+                            int actualPosition=list.indexOf(delete_list.get(0));
+                            list.remove(actualPosition);
+                            notifyItemRemoved(actualPosition);
+                            notifyItemRangeChanged(actualPosition, list.size());
+                            dialog1.dismiss();
+                            Toast.makeText(context, "Data deleted.", Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            dialog1.dismiss();
+                            Toast.makeText(context, "Failed to delete. Try again!", Toast.LENGTH_SHORT).show();
+                        }
+                        Log.e("BULK code", response +"");
+                        Log.e("BULK response",response.toString());
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // enjoy your error status
+                Log.e("Status of code = ","Wrong");
+                dialog1.dismiss();
+                Toast.makeText(context, "Failed to delete. Try again!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        queue.add(stringRequest);
+    }
+    protected String hashGenerator(String str_hash) {
+        // TODO Auto-generated method stub
+        StringBuffer finalString=new StringBuffer();
+        finalString.append(str_hash);
+        //		logger.info("Parameters for SHA-512 : "+finalString);
+        String hashGen=finalString.toString();
+        StringBuffer sb = null;
+        MessageDigest md;
+        try {
+            md = MessageDigest.getInstance("SHA-512");
+            md.update(hashGen.getBytes());
+            byte byteData[] = md.digest();
+            //convert the byte to hex format method 1
+            sb = new StringBuffer();
+            for (int i = 0; i < byteData.length; i++) {
+                sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+            }
+
+        } catch (NoSuchAlgorithmException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return sb.toString();
     }
     @Override
     public int getItemCount() {

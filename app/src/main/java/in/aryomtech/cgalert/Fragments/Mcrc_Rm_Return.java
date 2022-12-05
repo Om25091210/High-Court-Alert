@@ -47,9 +47,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -81,14 +85,13 @@ public class Mcrc_Rm_Return extends Fragment {
     List<String> phone_numbers=new ArrayList<>();
     List<String> station_name_list=new ArrayList<>();
     List<Excel_data> excel_data=new ArrayList<>();
-    int c=0;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     List<Excel_data> j_data_list=new ArrayList<>();
     List<String> not_sent_sms_list=new ArrayList<>();
     List<String> keys_selected=new ArrayList<>();
     List<String> keys_copy_selected_phone=new ArrayList<>();
     List<String> noti_keys_copy_selected_phone=new ArrayList<>();
-    String sp_of;
+    String sp_of,gsID="";
     DatabaseReference phone_numbers_ref;
     List<Excel_data> mylist=new ArrayList<>();
     EditText search;
@@ -97,9 +100,9 @@ public class Mcrc_Rm_Return extends Fragment {
     boolean isadmin=false;
     List<String> list=new ArrayList<>();
     DatabaseReference user_ref;
-    Dialog dialog,dialog1,j_dialog;
+    Dialog dialog,dialog1,j_dialog,dialogD;
     int onback=0;
-    DatabaseReference reference;
+    DatabaseReference reference,gs_ref;
     Return_Adapter excel_adapter;
     List<String> district_name_list=new ArrayList<>();
     NeumorphButton join;
@@ -134,13 +137,14 @@ public class Mcrc_Rm_Return extends Fragment {
         mRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         mRecyclerView.setLayoutManager(mManager);
         join=view.findViewById(R.id.join);
-        excel_adapter= new Return_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface);
+        excel_adapter= new Return_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface,gsID);
         if(mRecyclerView!=null)
             mRecyclerView.setAdapter(excel_adapter);
         excel_adapter.notifyDataSetChanged();
         //Initialize Database
         reference = FirebaseDatabase.getInstance().getReference().child("data");
         user_ref=FirebaseDatabase.getInstance().getReference().child("users");
+        gs_ref = FirebaseDatabase.getInstance().getReference().child("gskey");
         query = FirebaseDatabase.getInstance().getReference().child("data").orderByChild("type").equalTo("RM RETURN");
         phone_numbers_ref=FirebaseDatabase.getInstance().getReference().child("Phone numbers");
         sp_of=getContextNullSafety().getSharedPreferences("Is_SP",MODE_PRIVATE)
@@ -265,29 +269,56 @@ public class Mcrc_Rm_Return extends Fragment {
             }
         });
 
+        gs_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                gsID=snapshot.getValue(String.class);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
         bulk_delete.setOnClickListener(v->{
-            Dialog dialog = new Dialog(getContextNullSafety());
-            dialog.setCancelable(true);
-            dialog.setContentView(R.layout.dialog_for_sure);
-            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-            TextView cancel=dialog.findViewById(R.id.textView96);
-            TextView text=dialog.findViewById(R.id.textView94);
+            dialogD= new Dialog(getContextNullSafety());
+            dialogD.setCancelable(true);
+            dialogD.setContentView(R.layout.dialog_for_sure);
+            dialogD.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            TextView cancel=dialogD.findViewById(R.id.textView96);
+            TextView text=dialogD.findViewById(R.id.textView94);
             text.setText("Delete All?");
-            TextView yes=dialog.findViewById(R.id.textView95);
-            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-            dialog.show();
-            cancel.setOnClickListener(vi-> dialog.dismiss());
+            TextView yes=dialogD.findViewById(R.id.textView95);
+            dialogD.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+            dialogD.show();
+            cancel.setOnClickListener(vi-> dialogD.dismiss());
             yes.setOnClickListener(vi-> {
+                List<Excel_data> delete_list=new ArrayList<>();
                 if(added_list!=null){
-                    for(int i=0;i<added_list.size();i++){
-                        reference.child(added_list.get(i)).removeValue();
-                        for(int j=0;j<excel_data.size();j++){
-                            if(excel_data.get(j).getPushkey().equals(added_list.get(i)))
-                                excel_adapter.remove(excel_data.get(j));
+                    if(added_list.size()!=0) {
+                        for (int i = 0; i < added_list.size(); i++) {
+                            for (int j = 0; j < excel_data.size(); j++) {
+                                if (excel_data.get(j).getPushkey().equals(added_list.get(i))) {
+                                    delete_list.add(excel_data.get(j));
+                                }
+                            }
                         }
+                        Log.e("delete_list", delete_list.size() + "");
+                        dialog1 = new Dialog(getContextNullSafety());
+                        dialog1.setCancelable(false);
+                        dialog1.setContentView(R.layout.loading_dialog);
+                        dialog1.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                        LottieAnimationView lottieAnimationView = dialog1.findViewById(R.id.animate);
+                        lottieAnimationView.setAnimation("done.json");
+                        dialog1.show();
+                        delete_data(delete_list);
+                    }
+                    else{
+                        Snackbar.make(mRecyclerView,"Please add data to delete.",Snackbar.LENGTH_LONG)
+                                .setActionTextColor(Color.parseColor("#ea4a1f"))
+                                .setTextColor(Color.parseColor("#000000"))
+                                .setBackgroundTint(Color.parseColor("#D9F5F8"))
+                                .show();
+                        dialogD.dismiss();
                     }
                 }
-                dialog.dismiss();
             });
 
         });
@@ -319,57 +350,56 @@ public class Mcrc_Rm_Return extends Fragment {
         });
 
         j_column.setOnClickListener(v->{
-            reference.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
+            if(added_list!=null){
+                if(added_list.size()!=0) {
+                    j_dialog = new Dialog(getContextNullSafety());
+                    j_dialog.setCancelable(true);
+                    j_dialog.setContentView(R.layout.j_column_dialog);
+                    TextView dates=j_dialog.findViewById(R.id.diary);
+                    j_dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                    j_dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+                    j_dialog.show();
+                    dates.setOnClickListener(view -> {
+                        Calendar cal = Calendar.getInstance();
+                        int year = cal.get(Calendar.YEAR);
+                        int month = cal.get(Calendar.MONTH);
+                        int day = cal.get(Calendar.DAY_OF_MONTH);
 
-                    if(added_list!=null){
-                        if(added_list.size()!=0) {
-                            j_dialog = new Dialog(getContextNullSafety());
-                            j_dialog.setCancelable(true);
-                            j_dialog.setContentView(R.layout.j_column_dialog);
-                            TextView dates=j_dialog.findViewById(R.id.diary);
-                            j_dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-                            j_dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-                            j_dialog.show();
-                            dates.setOnClickListener(view -> {
-                                Calendar cal = Calendar.getInstance();
-                                int year = cal.get(Calendar.YEAR);
-                                int month = cal.get(Calendar.MONTH);
-                                int day = cal.get(Calendar.DAY_OF_MONTH);
+                        DatePickerDialog dialog = new DatePickerDialog(
+                                getActivity(),
+                                mDateSetListener,
+                                year,month,day);
 
-                                DatePickerDialog dialog = new DatePickerDialog(
-                                        getActivity(),
-                                        mDateSetListener,
-                                        year,month,day);
+                        dialog.show();
+                    });
 
-                                dialog.show();
-                            });
+                    mDateSetListener = (datePicker, year, month, day) -> {
 
-                            mDateSetListener = (datePicker, year, month, day) -> {
+                        String d=String.valueOf(day);
+                        String m=String.valueOf(month+1);
+                        Log.e("month",m+"");
+                        month = month + 1;
+                        Log.e("month",month+"");
+                        if(String.valueOf(day).length()==1)
+                            d="0"+ day;
+                        if(String.valueOf(month).length()==1)
+                            m="0"+ month;
+                        String date = d + "." + m + "." + year;
+                        dates.setText(date);
+                    };
 
-                                String d=String.valueOf(day);
-                                String m=String.valueOf(month+1);
-                                Log.e("month",m+"");
-                                month = month + 1;
-                                Log.e("month",month+"");
-                                if(String.valueOf(day).length()==1)
-                                    d="0"+ day;
-                                if(String.valueOf(month).length()==1)
-                                    m="0"+ month;
-                                String date = d + "." + m + "." + year;
-                                dates.setText(date);
-                            };
-
-                            TextView cancel=j_dialog.findViewById(R.id.textView96);
-                            TextView yes=j_dialog.findViewById(R.id.textView95);
-                            cancel.setOnClickListener(vi-> j_dialog.dismiss());
-                            yes.setOnClickListener(vi-> {
-                                Snackbar.make(mRecyclerView,"Gathering data...",Snackbar.LENGTH_LONG)
-                                        .setActionTextColor(Color.parseColor("#ea4a1f"))
-                                        .setTextColor(Color.parseColor("#000000"))
-                                        .setBackgroundTint(Color.parseColor("#D9F5F8"))
-                                        .show();
+                    TextView cancel=j_dialog.findViewById(R.id.textView96);
+                    TextView yes=j_dialog.findViewById(R.id.textView95);
+                    cancel.setOnClickListener(vi-> j_dialog.dismiss());
+                    yes.setOnClickListener(vi-> {
+                        Snackbar.make(mRecyclerView,"Gathering data...",Snackbar.LENGTH_LONG)
+                                .setActionTextColor(Color.parseColor("#ea4a1f"))
+                                .setTextColor(Color.parseColor("#000000"))
+                                .setBackgroundTint(Color.parseColor("#D9F5F8"))
+                                .show();
+                        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 for (int i = 0; i < added_list.size(); i++) {
                                     j_data_list.add(snapshot.child(added_list.get(i)).getValue(Excel_data.class));
                                 }
@@ -381,18 +411,16 @@ public class Mcrc_Rm_Return extends Fragment {
                                 LottieAnimationView lottieAnimationView=dialog1.findViewById(R.id.animate);
                                 lottieAnimationView.setAnimation("done.json");
                                 dialog1.show();
-
                                 update_J_Excel(j_data_list,dates.getText().toString());
 
                                 Log.e("dates",j_data_list.size()+"");
-                            });
-                        }
-                    }
-                    //TODO: dialog k andar date and ok mai send all
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {}
+                        });
+                    });
                 }
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {}
-            });
+            }
         });
 
         OnBackPressedCallback callback=new OnBackPressedCallback(true) {
@@ -442,7 +470,7 @@ public class Mcrc_Rm_Return extends Fragment {
                 join.setText(txt);
                 excel_adapter.unselect_all();
                 Collections.reverse(excel_data);
-                excel_adapter=new Return_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface);
+                excel_adapter=new Return_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface,gsID);
                 excel_adapter.notifyDataSetChanged();
                 if(mRecyclerView!=null)
                     mRecyclerView.setAdapter(excel_adapter);
@@ -480,7 +508,7 @@ public class Mcrc_Rm_Return extends Fragment {
     }*/
     private void search(String str) {
         if(str.equals("")){
-            excel_adapter=new Return_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface);
+            excel_adapter=new Return_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface,gsID);
             excel_adapter.notifyDataSetChanged();
             if(mRecyclerView!=null)
                 mRecyclerView.setAdapter(excel_adapter);
@@ -516,7 +544,7 @@ public class Mcrc_Rm_Return extends Fragment {
                     mylist.add(object);
                 count = 0;
             }
-            excel_adapter = new Return_Adapter(getContextNullSafety(), mylist, onClickInterface, onAgainClickInterface);
+            excel_adapter = new Return_Adapter(getContextNullSafety(), mylist, onClickInterface, onAgainClickInterface,gsID);
             excel_adapter.notifyDataSetChanged();
             if (mRecyclerView != null)
                 mRecyclerView.setAdapter(excel_adapter);
@@ -580,7 +608,7 @@ public class Mcrc_Rm_Return extends Fragment {
                 join.setText(txt);
                 excel_adapter.unselect_all();
                 Collections.reverse(excel_data);
-                excel_adapter=new Return_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface);
+                excel_adapter=new Return_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface,gsID);
                 excel_adapter.notifyDataSetChanged();
                 if(mRecyclerView!=null)
                     mRecyclerView.setAdapter(excel_adapter);
@@ -618,7 +646,7 @@ public class Mcrc_Rm_Return extends Fragment {
                 join.setText(txt);
                 excel_adapter.unselect_all();
                 Collections.reverse(excel_data);
-                excel_adapter=new Return_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface);
+                excel_adapter=new Return_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface,gsID);
                 excel_adapter.notifyDataSetChanged();
                 if(mRecyclerView!=null)
                     mRecyclerView.setAdapter(excel_adapter);
@@ -658,7 +686,7 @@ public class Mcrc_Rm_Return extends Fragment {
                 join.setText(txt);
                 excel_adapter.unselect_all();
                 Collections.reverse(excel_data);
-                excel_adapter=new Return_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface);
+                excel_adapter=new Return_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface,gsID);
                 excel_adapter.notifyDataSetChanged();
                 if(mRecyclerView!=null)
                     mRecyclerView.setAdapter(excel_adapter);
@@ -861,33 +889,6 @@ public class Mcrc_Rm_Return extends Fragment {
         });
     }
 
-    public void httpCall(String url) {
-
-        RequestQueue queue = Volley.newRequestQueue(getContextNullSafety());
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        // enjoy your response
-                        Snackbar.make(mRecyclerView,"SMS sent successfully...",Snackbar.LENGTH_LONG)
-                                .setActionTextColor(Color.parseColor("#ea4a1f"))
-                                .setTextColor(Color.parseColor("#000000"))
-                                .setBackgroundTint(Color.parseColor("#D9F5F8"))
-                                .show();
-                        dialog1.dismiss();
-                        Log.e("Status of code = ","Success");
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                // enjoy your error status
-                Log.e("Status of code = ","Wrong");
-            }
-        });
-
-        queue.add(stringRequest);
-    }
     private String extract_data(int index) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy",Locale.getDefault());
         Date date = new Date();
@@ -960,53 +961,49 @@ public class Mcrc_Rm_Return extends Fragment {
                 .setBackgroundTint(Color.parseColor("#D9F5F8"))
                 .show();
         j_dialog.dismiss();
-        Log.e("Sheet",j_date+"");
-        JSONObject jsonBody = new JSONObject();
-        try
-        {
-            jsonBody.put("cno", Integer.parseInt(j_dates_list.get(c).getE()));
-            jsonBody.put("crno", Integer.parseInt(j_dates_list.get(c).getH()));
-            jsonBody.put("ps", j_dates_list.get(c).getB());
-            jsonBody.put("nod", j_dates_list.get(c).getC());
-            jsonBody.put("subject", j_dates_list.get(c).getType());
-            jsonBody.put("j_column", j_date);
-            Log.d("body", "httpCall_collect: "+jsonBody);
-        }
-        catch (Exception e)
-        {
-            Log.e("Error","JSON ERROR");
-        }
+        // create a new Gson instance
+        Gson gson = new Gson();
+        // convert your list to json
+        String jsonExcelList = gson.toJson(j_dates_list);
+        // print your generated json
+        Log.e("jsonCartList: " , jsonExcelList);
+        Log.e("ps case",j_dates_list.get(0).getB());
+        String prev_keygen=j_dates_list.get(0).getB()+"-"+j_dates_list.get(0).getE();
+        Log.e("GS",gsID);
 
-        RequestQueue requestQueue = Volley.newRequestQueue(getContextNullSafety());
-        String URL = "https://sangyan.co.in/j_column";
+        String URL = "https://script.google.com/macros/s/"
+                + gsID +"/exec?"
+                +"data="+jsonExcelList
+                +"&j_column="+j_date
+                +"&keygen="+hashGenerator(prev_keygen)
+                +"&action=bulkjColumn";
 
-        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, URL,jsonBody,
-                new com.android.volley.Response.Listener<JSONObject>() {
+        RequestQueue queue = Volley.newRequestQueue(getContextNullSafety());
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
+                new Response.Listener<String>() {
                     @Override
-                    public void onResponse(JSONObject response) {
-                        // enjoy your response
-                        String code=response.optString("code")+"";
+                    public void onResponse(String response) {
+                        String code="";
+                        try {
+                            JSONObject jsonObj = new JSONObject(response);
+                            code=jsonObj.get("code")+"";
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                         if(code.equals("202")){
-                            reference.child(added_list.get(c)).child("J").setValue(j_date);
-                            Snackbar.make(join,"Data Uploaded to Excel.",Snackbar.LENGTH_LONG)
+                            for(int i=0;i<added_list.size();i++){
+                                reference.child(added_list.get(i)).child("J").setValue(j_date);
+                            }
+                            Snackbar.make(join,"Data Uploaded.",Snackbar.LENGTH_LONG)
                                     .setActionTextColor(Color.parseColor("#171746"))
                                     .setTextColor(Color.parseColor("#FF7F5C"))
                                     .setBackgroundTint(Color.parseColor("#171746"))
                                     .show();
-                            new Handler(Looper.myLooper()).postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    dialog1.dismiss();
-                                    c++;
-                                    if(c!=j_dates_list.size())
-                                        update_J_Excel(j_dates_list, j_date);
-                                    else
-                                        c=0;
-                                }
-                            },2000);
+                            dialog1.dismiss();
                         }
                         else{
-                            Snackbar.make(join,"Failed to Upload in Excel.",Snackbar.LENGTH_LONG)
+                            Snackbar.make(join,"Failed to Upload.",Snackbar.LENGTH_LONG)
                                     .setActionTextColor(Color.parseColor("#000000"))
                                     .setTextColor(Color.parseColor("#000000"))
                                     .setBackgroundTint(Color.parseColor("#FF5252"))
@@ -1018,44 +1015,151 @@ public class Mcrc_Rm_Return extends Fragment {
                                 @Override
                                 public void run() {
                                     dialog1.dismiss();
-                                    c++;
-                                    if(c!=j_dates_list.size())
-                                        update_J_Excel(j_dates_list, j_date);
-                                    else
-                                        c=0;
                                 }
                             },2000);
                         }
-                        Log.e("BULK code",code+"");
-                        Log.e("response",response.toString());
+                        Log.e("BULK code", response +"");
+                        Log.e("BULK response",response.toString());
                     }
-                }, new com.android.volley.Response.ErrorListener() {
+                }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 // enjoy your error status
                 Log.e("Status of code = ","Wrong");
+                Snackbar.make(join,"Failed to Upload.",Snackbar.LENGTH_LONG)
+                        .setActionTextColor(Color.parseColor("#000000"))
+                        .setTextColor(Color.parseColor("#000000"))
+                        .setBackgroundTint(Color.parseColor("#FF5252"))
+                        .show();
+                LottieAnimationView lottieAnimationView=dialog1.findViewById(R.id.animate);
+                lottieAnimationView.setAnimation("error.json");
+                dialog1.show();
+                new Handler(Looper.myLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        dialog1.dismiss();
+                    }
+                },2000);
             }
         });
-        stringRequest.setRetryPolicy(new RetryPolicy() {
-            @Override
-            public int getCurrentTimeout() {
-                return 15000;
-            }
 
-            @Override
-            public int getCurrentRetryCount() {
-                return 15000;
-            }
+        queue.add(stringRequest);
+    }
+    private void delete_data(List<Excel_data> delete_list) {
+        dialogD.dismiss();
+        // create a new Gson instance
+        Gson gson = new Gson();
+        // convert your list to json
+        String jsonExcelList = gson.toJson(delete_list);
+        // print your generated json
+        Log.e("jsonCartList: " , jsonExcelList);
 
+        String prev_keygen=delete_list.get(0).getB()+"-"+delete_list.get(0).getE();
+
+        String URL = "https://script.google.com/macros/s/"
+                + gsID+"/exec?"
+                +"data="+jsonExcelList
+                +"&keygen="+hashGenerator(prev_keygen)
+                +"&action=deleteData";
+
+        RequestQueue queue = Volley.newRequestQueue(getContextNullSafety());
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        String code="";
+                        try {
+                            JSONObject jsonObj = new JSONObject(response);
+                            code=jsonObj.get("code")+"";
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        if(code.equals("202")){
+                            for(int i=0;i<added_list.size();i++){
+                                reference.child(added_list.get(i)).removeValue();
+                                for(int j=0;j<excel_data.size();j++){
+                                    if(excel_data.get(j).getPushkey().equals(added_list.get(i))) {
+                                        excel_adapter.remove(excel_data.get(j));
+                                    }
+                                }
+                            }
+                            Snackbar.make(join,"Data Deleted.",Snackbar.LENGTH_LONG)
+                                    .setActionTextColor(Color.parseColor("#171746"))
+                                    .setTextColor(Color.parseColor("#FF7F5C"))
+                                    .setBackgroundTint(Color.parseColor("#171746"))
+                                    .show();
+                            dialog1.dismiss();
+                        }
+                        else{
+                            Snackbar.make(join,"Failed to Delete.",Snackbar.LENGTH_LONG)
+                                    .setActionTextColor(Color.parseColor("#000000"))
+                                    .setTextColor(Color.parseColor("#000000"))
+                                    .setBackgroundTint(Color.parseColor("#FF5252"))
+                                    .show();
+                            LottieAnimationView lottieAnimationView=dialog1.findViewById(R.id.animate);
+                            lottieAnimationView.setAnimation("error.json");
+                            dialog1.show();
+                            new Handler(Looper.myLooper()).postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    dialog1.dismiss();
+                                }
+                            },2000);
+                        }
+                        Log.e("BULK code", response +"");
+                        Log.e("BULK response",response.toString());
+                    }
+                }, new Response.ErrorListener() {
             @Override
-            public void retry(VolleyError error) throws VolleyError {
+            public void onErrorResponse(VolleyError error) {
+                // enjoy your error status
+                Log.e("Status of code = ","Wrong");
+                Snackbar.make(join,"Failed to Delete.",Snackbar.LENGTH_LONG)
+                        .setActionTextColor(Color.parseColor("#000000"))
+                        .setTextColor(Color.parseColor("#000000"))
+                        .setBackgroundTint(Color.parseColor("#FF5252"))
+                        .show();
+                LottieAnimationView lottieAnimationView=dialog1.findViewById(R.id.animate);
+                lottieAnimationView.setAnimation("error.json");
+                dialog1.show();
+                new Handler(Looper.myLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        dialog1.dismiss();
+                    }
+                },2000);
             }
         });
-        Log.d("string", stringRequest.toString());
-        requestQueue.add(stringRequest);
+
+        queue.add(stringRequest);
 
     }
 
+    protected String hashGenerator(String str_hash) {
+        // TODO Auto-generated method stub
+        StringBuffer finalString=new StringBuffer();
+        finalString.append(str_hash);
+        //		logger.info("Parameters for SHA-512 : "+finalString);
+        String hashGen=finalString.toString();
+        StringBuffer sb = null;
+        MessageDigest md;
+        try {
+            md = MessageDigest.getInstance("SHA-512");
+            md.update(hashGen.getBytes());
+            byte byteData[] = md.digest();
+            //convert the byte to hex format method 1
+            sb = new StringBuffer();
+            for (int i = 0; i < byteData.length; i++) {
+                sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+            }
+
+        } catch (NoSuchAlgorithmException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return sb.toString();
+    }
     /**CALL THIS IF YOU NEED CONTEXT*/
     public Context getContextNullSafety() {
         if (getContext() != null) return getContext();

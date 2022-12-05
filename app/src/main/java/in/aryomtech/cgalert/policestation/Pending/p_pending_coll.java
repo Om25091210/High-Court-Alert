@@ -95,7 +95,7 @@ public class p_pending_coll extends Fragment {
         mRecyclerView.setDrawingCacheEnabled(true);
         mRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         mRecyclerView.setLayoutManager(mManager);
-        excel_adapter= new Excel_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface);
+        excel_adapter= new Excel_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface,"");
 
         stat_name= getContextNullSafety().getSharedPreferences("station_name_K",Context.MODE_PRIVATE)
                 .getString("the_station_name2003","");
@@ -272,7 +272,7 @@ public class p_pending_coll extends Fragment {
                 mylist.add(object);
             }
         }
-        excel_adapter=new Excel_Adapter(getContextNullSafety(),mylist,onClickInterface,onAgainClickInterface);
+        excel_adapter=new Excel_Adapter(getContextNullSafety(),mylist,onClickInterface,onAgainClickInterface,"");
         excel_adapter.notifyDataSetChanged();
         if(mRecyclerView!=null)
             mRecyclerView.setAdapter(excel_adapter);
@@ -297,7 +297,7 @@ public class p_pending_coll extends Fragment {
                 excel_adapter.unselectall();
                 mSwipeRefreshLayout.setRefreshing(false);
                 Collections.reverse(excel_data);
-                excel_adapter=new Excel_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface);
+                excel_adapter=new Excel_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface,"");
                 excel_adapter.notifyDataSetChanged();
                 if(mRecyclerView!=null)
                     mRecyclerView.setAdapter(excel_adapter);

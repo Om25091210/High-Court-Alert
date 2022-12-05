@@ -100,7 +100,7 @@ public class p_mcrc_rm_return extends Fragment {
         mRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         mRecyclerView.setLayoutManager(mManager);
         join=view.findViewById(R.id.join);
-        excel_adapter= new Return_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface);
+        excel_adapter= new Return_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface,"");
         if(mRecyclerView!=null)
             mRecyclerView.setAdapter(excel_adapter);
         excel_adapter.notifyDataSetChanged();
@@ -196,7 +196,7 @@ public class p_mcrc_rm_return extends Fragment {
                 mylist.add(object);
             }
         }
-        excel_adapter=new Return_Adapter(getContextNullSafety(),mylist,onClickInterface,onAgainClickInterface);
+        excel_adapter=new Return_Adapter(getContextNullSafety(),mylist,onClickInterface,onAgainClickInterface,"");
         excel_adapter.notifyDataSetChanged();
         if(mRecyclerView!=null)
             mRecyclerView.setAdapter(excel_adapter);
@@ -226,7 +226,7 @@ public class p_mcrc_rm_return extends Fragment {
                 join.setText(txt);
                 excel_adapter.unselect_all();
                 Collections.reverse(excel_data);
-                excel_adapter=new Return_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface);
+                excel_adapter=new Return_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface,"");
                 excel_adapter.notifyDataSetChanged();
                 if(mRecyclerView!=null)
                     mRecyclerView.setAdapter(excel_adapter);
@@ -296,27 +296,7 @@ public class p_mcrc_rm_return extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
-    public void httpCall(String url) {
 
-        RequestQueue queue = Volley.newRequestQueue(getContextNullSafety());
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        // enjoy your response
-                        Log.e("Status of code = ","Success");
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                // enjoy your error status
-                Log.e("Status of code = ","Wrong");
-            }
-        });
-
-        queue.add(stringRequest);
-    }
     /**CALL THIS IF YOU NEED CONTEXT*/
     public Context getContextNullSafety() {
         if (getContext() != null) return getContext();

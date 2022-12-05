@@ -347,13 +347,18 @@ public class admin_room extends Fragment {
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Log.e("list size 0:", keys_list.size() + "");
                 for(int i=0;i<keys_list.size();i++){
                     imageView.setVisibility(View.GONE);
-                    list.add(snapshot.child(keys_list.get(i)).getValue(Excel_data.class));
+                    if(snapshot.child(keys_list.get(i)).exists())
+                        list.add(snapshot.child(keys_list.get(i)).getValue(Excel_data.class));
+                    else
+                        keys_list.remove(i);
                 }
-                Log.e("asdasd",list+"");
-                admin_room_Adapter admin_room_adapter=new admin_room_Adapter(getContextNullSafety(),error,list);
-                if(recyclerView!=null)
+                Log.e("list size 1:", keys_list.size() + "");
+                Log.e("asdasd", list + "");
+                admin_room_Adapter admin_room_adapter = new admin_room_Adapter(getContextNullSafety(), error, list);
+                if (recyclerView != null)
                     recyclerView.setAdapter(admin_room_adapter);
                 admin_room_adapter.notifyDataSetChanged();
             }

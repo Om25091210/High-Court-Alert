@@ -37,12 +37,10 @@ import androidx.fragment.app.FragmentTransaction;
 import com.airbnb.lottie.LottieAnimationView;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.RetryPolicy;
+import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -52,10 +50,16 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
+import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
+import java.io.StringReader;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -82,8 +86,8 @@ public class form extends Fragment {
     Dialog dialog1;
     Excel_data excel_data;
     AutoCompleteTextView ac_district,policeStation,ac_caseType;
-    DatabaseReference reference,reference_phone;
-    String pushkey;
+    DatabaseReference reference,reference_phone,gs_ref;
+    String pushkey,gsID="";
     FirebaseFirestore db;
 
     @Override
@@ -116,7 +120,7 @@ public class form extends Fragment {
         back=view.findViewById(R.id.imageView4);
         back.setOnClickListener(v-> back());
 
-        String[] caseType = {"MCRC", "MCRCA"};
+        String[] caseType = {"CRA","CRR","MCRC", "MCRCA"};
         //Creating the instance of ArrayAdapter containing list of language names
         ArrayAdapter<String> adapter1 = new ArrayAdapter<String>
                 (getContextNullSafety(), android.R.layout.select_dialog_item, caseType);
@@ -126,6 +130,7 @@ public class form extends Fragment {
         ac_caseType.setTextColor(Color.RED);
 
         reference = FirebaseDatabase.getInstance().getReference().child("data");
+        gs_ref = FirebaseDatabase.getInstance().getReference().child("gskey");
         reference_phone = FirebaseDatabase.getInstance().getReference().child("Phone numbers");
         get_districts_phone();
         rm=view.findViewById(R.id.rm_date);
@@ -217,6 +222,14 @@ public class form extends Fragment {
         });
         checkBox_RM_return.setOnClickListener(v->{
             checkBox_RM_call.setChecked(false);
+        });
+        gs_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                gsID=snapshot.getValue(String.class);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
         });
         submit_txt.setOnClickListener(v->{
             if(!ac_district.getText().toString().trim().equals("")){
@@ -452,12 +465,13 @@ public class form extends Fragment {
                     data_packet.put("pushkey",pushkey);
                     data_packet.put("type",sheet);
                     Log.e("Success","Called "+pushkey);
-                    reference.child(pushkey).setValue(data_packet);
-                    if(excel_data==null)
-                        update_bulk_excel(sheet);
+                    if(excel_data==null) {
+                        update_bulk_excel(sheet, data_packet);
+                        clear_field();
+                    }
                     else
-                        update_J_Excel(sheet);
-                    Snackbar.make(lay,"Data Uploaded to database.",Snackbar.LENGTH_LONG)
+                        update_J_Excel(sheet,data_packet);
+                    Snackbar.make(lay,"Initiating data upload to Excel...",Snackbar.LENGTH_LONG)
                             .setActionTextColor(Color.parseColor("#171746"))
                             .setTextColor(Color.parseColor("#FF7F5C"))
                             .setBackgroundTint(Color.parseColor("#171746"))
@@ -465,13 +479,13 @@ public class form extends Fragment {
 
                 }
                 else{
-                    Dialog dialog1 = new Dialog(getContextNullSafety());
-                    dialog1.setCancelable(true);
-                    dialog1.setContentView(R.layout.number_exist_dialog);
-                    dialog1.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-                    TextView text=dialog1.findViewById(R.id.textView15);
+                    Dialog dialog11 = new Dialog(getContextNullSafety());
+                    dialog11.setCancelable(true);
+                    dialog11.setContentView(R.layout.number_exist_dialog);
+                    dialog11.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                    TextView text=dialog11.findViewById(R.id.textView15);
                     text.setText("The number for Distict - "+dis+" and Station "+ps+" does not exist, Please add it first then add the data.");
-                    TextView button=dialog1.findViewById(R.id.but);
+                    TextView button=dialog11.findViewById(R.id.but);
                     button.setOnClickListener(v->{
                         ((FragmentActivity) getContextNullSafety()).getSupportFragmentManager()
                                 .beginTransaction()
@@ -479,20 +493,21 @@ public class form extends Fragment {
                                 .add(R.id.drawer,new Entries())
                                 .addToBackStack(null)
                                 .commit();
-                        dialog1.dismiss();
+                        dialog11.dismiss();
                     });
-                    dialog1.show();
+                    dialog1.dismiss();
+                    dialog11.show();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Toast.makeText(contextNullSafe, "Database Error...", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void update_bulk_excel(String sheet) {
+    /*private void update_bulk_excel(String sheet, Map<String, String> data_packet) {
 
             JSONObject jsonBody = new JSONObject();
             try
@@ -508,6 +523,7 @@ public class form extends Fragment {
                 jsonBody.put("rmd", rm.getText().toString().trim());
                 jsonBody.put("b", before.getText().toString().trim());
                 jsonBody.put("subject", sheet);
+                jsonBody.put("keygen",hashGenerator(policeStation.getText().toString().trim()+"-"+name_edt.getText().toString().trim()+"-"+case_no_edt.getText().toString().trim()+"-"+crime_no_edt.getText().toString().trim()));
 
                 Log.d("body", "httpCall_collect: "+jsonBody);
             }
@@ -526,6 +542,7 @@ public class form extends Fragment {
                             // enjoy your response
                             String code=response.optString("code")+"";
                             if(code.equals("202")){
+                                reference.child(pushkey).setValue(data_packet);
                                 Snackbar.make(lay,"Data Uploaded to Excel.",Snackbar.LENGTH_LONG)
                                         .setActionTextColor(Color.parseColor("#171746"))
                                         .setTextColor(Color.parseColor("#FF7F5C"))
@@ -563,6 +580,20 @@ public class form extends Fragment {
                 public void onErrorResponse(VolleyError error) {
                     // enjoy your error status
                     Log.e("Status of code = ","Wrong");
+                    Snackbar.make(lay,"Failed to Upload in Excel.",Snackbar.LENGTH_LONG)
+                            .setActionTextColor(Color.parseColor("#000000"))
+                            .setTextColor(Color.parseColor("#000000"))
+                            .setBackgroundTint(Color.parseColor("#FF5252"))
+                            .show();
+                    LottieAnimationView lottieAnimationView=dialog1.findViewById(R.id.animate);
+                    lottieAnimationView.setAnimation("error.json");
+                    dialog1.show();
+                    new Handler(Looper.myLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            dialog1.dismiss();
+                        }
+                    },2000);
                 }
             });
             stringRequest.setRetryPolicy(new RetryPolicy() {
@@ -584,9 +615,106 @@ public class form extends Fragment {
             requestQueue.add(stringRequest);
 
 
+    }*/
+    private void update_bulk_excel(String sheet, Map<String, String> data_packet) {
+
+        String URL = "https://script.google.com/macros/s/"
+                + gsID+"/exec?ps="+policeStation.getText().toString().toLowerCase().trim()+"&nod="
+                +ac_district.getText().toString().toLowerCase().trim()+"&ct="+ac_caseType.getText().toString().toLowerCase().trim()+"&cno="+case_no_edt.getText().toString().toLowerCase().trim()
+                +"&n="+name_edt.getText().toString().toLowerCase().trim()+"&yoc="+case_year_edt.getText().toString().toLowerCase().trim()+"&crno="+crime_no_edt.getText().toString().toLowerCase().trim()
+                +"&yocr="+crime_year_edt.getText().toString().toLowerCase().trim()+"&rmd="+rm.getText().toString().toLowerCase().trim()+"&b="+before.getText().toString().toLowerCase().trim()
+                +"&subject="+sheet+"&keygen="+hashGenerator(policeStation.getText().toString().toLowerCase().trim()+"-"+name_edt.getText().toString().toLowerCase().trim()+"-"+case_no_edt.getText().toString().toLowerCase().trim()+"-"+crime_no_edt.getText().toString().toLowerCase().trim())
+                +"&action=addData";
+
+        RequestQueue queue = Volley.newRequestQueue(getContextNullSafety());
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        String code="";
+                        try {
+                            JSONObject jsonObj = new JSONObject(response);
+                            code=jsonObj.get("code")+"";
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        if(code.equals("202")){
+                            reference.child(pushkey).setValue(data_packet);
+                            Snackbar.make(lay,"Data Uploaded to Excel.",Snackbar.LENGTH_LONG)
+                                    .setActionTextColor(Color.parseColor("#171746"))
+                                    .setTextColor(Color.parseColor("#FF7F5C"))
+                                    .setBackgroundTint(Color.parseColor("#171746"))
+                                    .show();
+                            new Handler(Looper.myLooper()).postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    dialog1.dismiss();
+                                }
+                            },2000);
+                            clear_field();
+                        }
+                        else if(code.equals("205")){
+                            Snackbar.make(lay,"Duplicate data exist please enter different data.",Snackbar.LENGTH_LONG)
+                                    .setActionTextColor(Color.parseColor("#000000"))
+                                    .setTextColor(Color.parseColor("#000000"))
+                                    .setBackgroundTint(Color.parseColor("#FF5252"))
+                                    .show();
+                            LottieAnimationView lottieAnimationView=dialog1.findViewById(R.id.animate);
+                            lottieAnimationView.setAnimation("copy.json");
+                            dialog1.show();
+                            new Handler(Looper.myLooper()).postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    dialog1.dismiss();
+                                }
+                            },1500);
+                        }
+                        else{
+                            Snackbar.make(lay,"Failed to Upload in Excel.",Snackbar.LENGTH_LONG)
+                                    .setActionTextColor(Color.parseColor("#000000"))
+                                    .setTextColor(Color.parseColor("#000000"))
+                                    .setBackgroundTint(Color.parseColor("#FF5252"))
+                                    .show();
+                            LottieAnimationView lottieAnimationView=dialog1.findViewById(R.id.animate);
+                            lottieAnimationView.setAnimation("error.json");
+                            dialog1.show();
+                            new Handler(Looper.myLooper()).postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    dialog1.dismiss();
+                                }
+                            },2000);
+                        }
+                        Log.e("BULK code", response +"");
+                        Log.e("BULK response",response.toString());
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // enjoy your error status
+                Log.e("Status of code = ","Wrong");
+                Snackbar.make(lay,"Failed to Upload in Excel.",Snackbar.LENGTH_LONG)
+                        .setActionTextColor(Color.parseColor("#000000"))
+                        .setTextColor(Color.parseColor("#000000"))
+                        .setBackgroundTint(Color.parseColor("#FF5252"))
+                        .show();
+                LottieAnimationView lottieAnimationView=dialog1.findViewById(R.id.animate);
+                lottieAnimationView.setAnimation("error.json");
+                dialog1.show();
+                new Handler(Looper.myLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        dialog1.dismiss();
+                    }
+                },2000);
+            }
+        });
+
+        queue.add(stringRequest);
     }
 
-    private void update_J_Excel(String sheet) {
+    /*private void update_J_Excel(String sheet, Map<String, String> data_packet) {
         Log.e("Sheet",sheet.toUpperCase()+"");
         JSONObject jsonBody = new JSONObject();
         try
@@ -597,6 +725,7 @@ public class form extends Fragment {
             jsonBody.put("nod", ac_district.getText().toString().toLowerCase().trim());
             jsonBody.put("subject", sheet.toUpperCase());
             jsonBody.put("j_column", diary.getText().toString().trim());
+            jsonBody.put("keygen",hashGenerator(policeStation.getText().toString().toLowerCase().trim()+"-"+case_no_edt.getText().toString().trim()));
             Log.d("body", "httpCall_collect: "+jsonBody);
         }
         catch (Exception e)
@@ -614,6 +743,7 @@ public class form extends Fragment {
                         // enjoy your response
                         String code=response.optString("code")+"";
                         if(code.equals("202")){
+                            reference.child(pushkey).setValue(data_packet);
                             Snackbar.make(lay,"Data Uploaded to Excel.",Snackbar.LENGTH_LONG)
                                     .setActionTextColor(Color.parseColor("#171746"))
                                     .setTextColor(Color.parseColor("#FF7F5C"))
@@ -670,6 +800,115 @@ public class form extends Fragment {
         Log.d("string", stringRequest.toString());
         requestQueue.add(stringRequest);
 
+    }*/
+    private void update_J_Excel(String sheet, Map<String, String> data_packet) {
+
+        String URL = "https://script.google.com/macros/s/"
+                +gsID+ "/exec?"
+                +"ps="+policeStation.getText().toString().trim()
+                +"&cno=" +case_no_edt.getText().toString().trim()
+                +"&crno="+crime_no_edt.getText().toString().trim()
+                +"&nod="+ac_district.getText().toString().toLowerCase().trim()
+                +"&j_column="+diary.getText().toString().trim()
+                +"&subject="+sheet
+                +"&keygen="+hashGenerator(policeStation.getText().toString().trim()+"-"+case_no_edt.getText().toString().trim())
+                +"&action=jColumn";
+
+        RequestQueue queue = Volley.newRequestQueue(getContextNullSafety());
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        String code="";
+                        try {
+                            JSONObject jsonObj = new JSONObject(response);
+                            code=jsonObj.get("code")+"";
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        if(code.equals("202")){
+                            reference.child(pushkey).setValue(data_packet);
+                            Snackbar.make(lay,"Data Uploaded to Excel.",Snackbar.LENGTH_LONG)
+                                    .setActionTextColor(Color.parseColor("#171746"))
+                                    .setTextColor(Color.parseColor("#FF7F5C"))
+                                    .setBackgroundTint(Color.parseColor("#171746"))
+                                    .show();
+                            new Handler(Looper.myLooper()).postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    dialog1.dismiss();
+                                }
+                            },2000);
+                        }
+                        else{
+                            Snackbar.make(lay,"Failed to Upload in Excel.",Snackbar.LENGTH_LONG)
+                                    .setActionTextColor(Color.parseColor("#000000"))
+                                    .setTextColor(Color.parseColor("#000000"))
+                                    .setBackgroundTint(Color.parseColor("#FF5252"))
+                                    .show();
+                            LottieAnimationView lottieAnimationView=dialog1.findViewById(R.id.animate);
+                            lottieAnimationView.setAnimation("error.json");
+                            dialog1.show();
+                            new Handler(Looper.myLooper()).postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    dialog1.dismiss();
+                                }
+                            },2000);
+                        }
+                        Log.e("BULK code", response +"");
+                        Log.e("BULK response",response.toString());
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // enjoy your error status
+                Log.e("Status of code = ","Wrong");
+                Snackbar.make(lay,"Failed to Upload in Excel.",Snackbar.LENGTH_LONG)
+                        .setActionTextColor(Color.parseColor("#000000"))
+                        .setTextColor(Color.parseColor("#000000"))
+                        .setBackgroundTint(Color.parseColor("#FF5252"))
+                        .show();
+                LottieAnimationView lottieAnimationView=dialog1.findViewById(R.id.animate);
+                lottieAnimationView.setAnimation("error.json");
+                dialog1.show();
+                new Handler(Looper.myLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        dialog1.dismiss();
+                    }
+                },2000);
+            }
+        });
+
+        queue.add(stringRequest);
+
+    }
+
+    protected String hashGenerator(String str_hash) {
+        // TODO Auto-generated method stub
+        StringBuffer finalString=new StringBuffer();
+        finalString.append(str_hash);
+        //		logger.info("Parameters for SHA-512 : "+finalString);
+        String hashGen=finalString.toString();
+        StringBuffer sb = null;
+        MessageDigest md;
+        try {
+            md = MessageDigest.getInstance("SHA-512");
+            md.update(hashGen.getBytes());
+            byte byteData[] = md.digest();
+            //convert the byte to hex format method 1
+            sb = new StringBuffer();
+            for (int i = 0; i < byteData.length; i++) {
+                sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+            }
+
+        } catch (NoSuchAlgorithmException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return sb.toString();
     }
 
     private void clear_field() {

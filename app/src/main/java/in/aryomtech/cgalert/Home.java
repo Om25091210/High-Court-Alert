@@ -103,20 +103,6 @@ public class Home extends AppCompatActivity implements DuoMenuView.OnMenuClickLi
         // Initialize the views
         mViewHolder = new ViewHolder();
 
-        db = FirebaseFirestore.getInstance();
-        Map<String,String> data_packet=new HashMap<>();
-        data_packet.put("ASP DANTEWADA","9479194302");
-        data_packet.put("CONTROL ROOM DANTEWADA","9479191320");
-
-        db.collection("Phone numbers").document("DANTEWADA").set(data_packet, SetOptions.merge());
-        /*db.collection("data").whereEqualTo("type","rm call").limit(1).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                QuerySnapshot document=task.getResult();
-                Log.d("docs","Size : "+document.getDocuments().get(0).getData().get("B"));
-            }
-        });*/
-
         // Handle menu actions
         handleMenu();
 
@@ -128,7 +114,7 @@ public class Home extends AppCompatActivity implements DuoMenuView.OnMenuClickLi
         mMenuAdapter.setViewSelected(0);
         setTitle(mTitles.get(0));
 
-        String msg="दिनांक:-18/01/2002" + "\n"+
+        /*String msg="दिनांक:-18/01/2002" + "\n"+
         "MCRCA No.:-133" + "\n"+
         "Crime No.:-102" + "\n"+
         "Police station:-Sirgitti"+"\n"+
@@ -144,6 +130,7 @@ public class Home extends AppCompatActivity implements DuoMenuView.OnMenuClickLi
             Log.e("ERROR","ERROR");
         }
 
+        */
         admin.setOnClickListener(v->{
             Home.this.getSupportFragmentManager()
                     .beginTransaction()
