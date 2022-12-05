@@ -101,7 +101,7 @@ public class Adapter_PhoneNo extends RecyclerView.Adapter<Adapter_PhoneNo.ViewHo
                 intent.setType("text/plain");
                 intent.putExtra(Intent.EXTRA_SUBJECT, "Download App");
                 String message = "District - " + district +"\n" + "Police Station - " + ps_name +"\n" +
-                        "Phone Number - " + "+91 " + ps_number + "\n\n⭐ CG HIGH COURT ALERT ⭐";
+                        "Phone Number - " + "+91 " + ps_number + "\n\n⭐ SANGYAN ⭐";
                 intent.putExtra(Intent.EXTRA_TEXT, message);
                 context.startActivity(Intent.createChooser(intent, "Share using"));
             } catch (Exception e) {
@@ -134,6 +134,14 @@ public class Adapter_PhoneNo extends RecyclerView.Adapter<Adapter_PhoneNo.ViewHo
         else
             holder.delete.setVisibility(View.GONE);
 
+        holder.sms_btn.setOnClickListener(v->{
+            Uri sms_uri = Uri.parse("smsto:+" + ps_number);
+            Intent sms_intent = new Intent(Intent.ACTION_SENDTO, sms_uri);
+            sms_intent.putExtra("sms_body", "To : " + ps_name);
+            context.startActivity(sms_intent);
+        });
+
+
     }
 
 
@@ -145,7 +153,7 @@ public class Adapter_PhoneNo extends RecyclerView.Adapter<Adapter_PhoneNo.ViewHo
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView name;
         TextView number;
-        ImageView call_btn, wp_btn, delete, share_btn;
+        ImageView call_btn, wp_btn, delete, share_btn, sms_btn;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -156,7 +164,7 @@ public class Adapter_PhoneNo extends RecyclerView.Adapter<Adapter_PhoneNo.ViewHo
             wp_btn = itemView.findViewById(R.id.wp);
             delete = itemView.findViewById(R.id.delete);
             share_btn = itemView.findViewById(R.id.share);
-
+            sms_btn = itemView.findViewById(R.id.sms);
         }
     }
 

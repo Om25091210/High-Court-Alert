@@ -60,7 +60,7 @@ public class about extends Fragment {
         // fill list screen
         final List<ScreenItem> mList = new ArrayList<>();
         mList.add(new ScreenItem("","माननीय महाधिवक्ता सतिशचंद्र वर्मा तथा श्रीमान पुलिस महानिदेशक अशोक जुनेजा के सानिध्य में " +
-                "स्थापित पुलिस लीगल सेक्शन,कैंप बिलासपुर के द्वारा कार्यालय को पेपरलेस बनाए जाने के प्रयास में इस एंड्रायड एप CG CASE DIARY ALERT के " +
+                "स्थापित पुलिस लीगल सेक्शन,कैंप बिलासपुर के द्वारा कार्यालय को पेपरलेस बनाए जाने के प्रयास में इस एंड्रायड एप SANGYAN के " +
                 "माध्यम से पुलिस थानों को तत्काल सूचना संप्रेषित करने  के उद्देश्य से बनाया गया है, ताकि केश- डायरियों को सही समय पर माननीय न्यायालय के समक्ष" +
                 " प्रस्तुत किया जा सके।",R.drawable.adikari_photos));
         mList.add(new ScreenItem("Operations and Managed By:-\nPolice Legal Cell, Camp Bilaspur Advocate General Office, High Court Chhattisgarh","Incharge: DSP PANKAJ AWASTHI\nWorking Staff:-\n1) SI SHWETA MISHRA GOURAHA\n2) SI(T/C) ABHINAW VERMA\n3) CONS.496 RAKESH BHARDWAJ",R.drawable.cg_logo));

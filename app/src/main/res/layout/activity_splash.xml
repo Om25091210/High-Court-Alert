@@ -35,7 +35,7 @@
         android:id="@+id/imageView7"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_200sdp"
-        android:src="@drawable/ps_logo"
+        android:src="@drawable/cg_logo"
         android:contentDescription="@string/image"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
