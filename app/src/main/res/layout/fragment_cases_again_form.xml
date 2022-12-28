@@ -96,7 +96,7 @@
                 android:textSize="16sp" />
 
             <AutoCompleteTextView
-                android:id="@+id/policeStation"
+                android:id="@+id/nature"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -120,8 +120,8 @@
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
-            <EditText
-                android:id="@+id/crime_no_edt"
+            <AutoCompleteTextView
+                android:id="@+id/district"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -130,7 +130,7 @@
                 android:ems="10"
                 android:gravity="start|top"
                 android:hint="@string/district"
-                android:inputType="number"
+                android:inputType="textNoSuggestions"
                 android:padding="15dp"
                 android:textSize="16sp"
                 tools:ignore="SpeakableTextPresentCheck" />
@@ -279,7 +279,6 @@
                     android:id="@+id/time_limit_edt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
                     android:importantForAutofill="no"
                     android:ems="10"
                     android:layout_weight="1"
@@ -288,17 +287,6 @@
                     android:textSize="16sp"
                     tools:ignore="SpeakableTextPresentCheck" />
 
-                <TextView
-                    android:id="@+id/days"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:importantForAutofill="no"
-                    android:textColor="@color/red_500"
-                    android:ems="10"
-                    android:layout_weight="2"
-                    android:padding="15dp"
-                    android:textSize="17sp"
-                    tools:ignore="SpeakableTextPresentCheck" />
 
             </LinearLayout>
 
@@ -333,6 +321,7 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:layout_marginTop="10dp">
 
                 <CheckBox
@@ -342,6 +331,7 @@
                     android:layout_marginStart="40dp"
                     android:layout_weight="1"
                     android:layout_margin="10dp"
+                    android:visibility="gone"
                     android:buttonTint="@color/use_orange"
                     android:text="@string/legal_section_1"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -355,6 +345,7 @@
                     android:layout_weight="1"
                     android:layout_margin="10dp"
                     android:layout_marginEnd="40dp"
+                    android:visibility="gone"
                     android:buttonTint="@color/use_orange"
                     android:text="@string/legal_section_2"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -369,6 +360,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10sp"
+                android:visibility="gone"
                 android:fontFamily="@font/quicksand_bold"
                 android:text="@string/oic_of_the_case"
                 android:textColor="@color/black"
@@ -382,6 +374,7 @@
                 android:importantForAutofill="no"
                 android:background="@drawable/bg_edt_text"
                 android:ems="10"
+                android:visibility="gone"
                 android:hint="Name of the OIC"
                 android:padding="15dp"
                 android:textSize="16sp"
@@ -392,6 +385,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15sp"
+                android:visibility="gone"
                 android:fontFamily="@font/quicksand_bold"
                 android:text="Number of the OIC"
                 android:textColor="@color/black"
@@ -402,6 +396,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:visibility="gone"
                 android:importantForAutofill="no"
                 android:background="@drawable/bg_edt_text"
                 android:ems="10"
@@ -459,6 +454,81 @@
                 android:textSize="16sp"
                 tools:ignore="SpeakableTextPresentCheck" />
 
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <CheckBox
+                    android:id="@+id/allowed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:layout_weight="1"
+                    android:layout_margin="5dp"
+                    android:buttonTint="@color/use_orange"
+                    android:text="@string/allowed"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <CheckBox
+                    android:id="@+id/disposed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:layout_weight="1"
+                    android:layout_margin="5dp"
+                    android:buttonTint="@color/use_orange"
+                    android:text="@string/disposed"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <CheckBox
+                    android:id="@+id/dismissed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="5dp"
+                    android:layout_marginEnd="40dp"
+                    android:buttonTint="@color/use_orange"
+                    android:text="@string/dismissed"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/disposed_summary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10sp"
+                android:fontFamily="@font/quicksand_bold"
+                android:text="@string/summary"
+                android:visibility="gone"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/disposed_summary_edt"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="10dp"
+                android:importantForAutofill="no"
+                android:background="@drawable/bg_edt_text"
+                android:ems="10"
+                android:visibility="gone"
+                android:inputType="textMultiLine"
+                android:gravity="start"
+                android:hint="Detailed Summary"
+                android:padding="15dp"
+                android:textSize="16sp"
+                tools:ignore="SpeakableTextPresentCheck" />
 
 
             <TextView

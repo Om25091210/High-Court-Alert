@@ -9,7 +9,6 @@ import android.net.NetworkCapabilities;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -25,8 +24,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -35,27 +32,22 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.mosio.myapplication2.views.DuoDrawerLayout;
 import com.mosio.myapplication2.views.DuoMenuView;
 import com.mosio.myapplication2.widgets.DuoDrawerToggle;
 
-import java.security.KeyStoreException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import in.aryomtech.cgalert.CasesAgainstPolice.CasesAgainPolice;
+import in.aryomtech.cgalert.CasesAgainstPolice.CasesAgainPoliceForm;
 import in.aryomtech.cgalert.Fragments.admin.admin_room;
 import in.aryomtech.cgalert.Fragments.admin.form;
-import in.aryomtech.cgalert.SMS_service.SMSServices;
 import in.aryomtech.cgalert.duo_frags.about;
 
 public class Home extends AppCompatActivity implements DuoMenuView.OnMenuClickListener{
@@ -159,7 +151,7 @@ public class Home extends AppCompatActivity implements DuoMenuView.OnMenuClickLi
             Home.this.getSupportFragmentManager()
                     .beginTransaction()
                     .setCustomAnimations( R.anim.enter_from_right, R.anim.exit_to_left,R.anim.enter_from_left, R.anim.exit_to_right)
-                    .add(R.id.drawer,new CasesAgainPolice())
+                    .add(R.id.drawer,new CasesAgainPoliceForm())
                     .addToBackStack(null)
                     .commit();
         });

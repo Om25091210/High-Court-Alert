@@ -8,7 +8,7 @@
     android:clickable="true"
     android:focusable="true"
     android:scrollbars="none"
-    android:id="@+id/lay"
+    android:id="@+id/lay1"
     >
 
     <ScrollView
@@ -192,7 +192,7 @@
                     android:layout_weight="1"
                     android:fontFamily="@font/quicksand_bold"
                     android:gravity="center"
-                    android:layout_margin="15dp"
+                    android:layout_margin="10dp"
                     android:padding="8dp"
                     android:text="@string/crr"
                     android:background="@drawable/bg_button2"
@@ -210,7 +210,7 @@
                     android:gravity="center"
                     android:layout_weight="1"
                     android:padding="8dp"
-                    android:layout_margin="15dp"
+                    android:layout_margin="10dp"
                     android:background="@drawable/bg_button2"
                     android:text="@string/cra"
                     android:textSize="17sp"
@@ -227,7 +227,7 @@
                     android:gravity="center"
                     android:padding="8dp"
                     android:layout_weight="1"
-                    android:layout_margin="15dp"
+                    android:layout_margin="10dp"
                     android:text="@string/mcrc"
                     android:background="@drawable/bg_button2"
                     android:textSize="17sp"
@@ -256,6 +256,7 @@
                 android:background="@drawable/bg_edt_text"
                 android:ems="10"
                 android:gravity="start|top"
+                android:maxLength="4"
                 android:hint="@string/year_of_case"
                 android:inputType="number"
                 android:padding="15dp"

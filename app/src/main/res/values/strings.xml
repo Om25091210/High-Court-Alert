@@ -142,6 +142,16 @@
     <string name="summary">Summary</string>
     <string name="name_of_respondent">Name of respondent</string>
     <string name="name_of_appellant">Name of appellant</string>
+    <string name="districto">District -</string>
+    <string name="crime_yearo">Crime Year -</string>
+    <string name="notice_dateo">Notice Date -</string>
+    <string name="hearing_date">Hearing Date</string>
+    <string name="case_yearo">Case Year -</string>
+    <string name="advocate_nameo">Advocate Name -</string>
+    <string name="next_hearing_dateo">Next Hearing Date -</string>
+    <string name="dismissed">Dismissed</string>
+    <string name="disposed">Disposed</string>
+    <string name="allowed">Allowed</string>
 
 
     <array name="menuOptions">

@@ -60,7 +60,8 @@ public class Splash extends AppCompatActivity {
 
                 boolean auth_entry=  getSharedPreferences("authorized_entry",MODE_PRIVATE)
                         .getBoolean("entry_done",false);
-
+                Log.e("user_is : ",user_is);
+                Log.e("auth_entry : ",auth_entry+"");
                 if(user_is.equals("p_home") && auth_entry){
                     Intent i = new Intent(Splash.this, entry_actiivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

@@ -423,7 +423,7 @@ public class form extends Fragment {
         LottieAnimationView lottieAnimationView=dialog1.findViewById(R.id.animate);
         lottieAnimationView.setAnimation("done.json");
         dialog1.show();
-        fetch_number(ac_district.getText().toString().toUpperCase().trim(),"PS "+policeStation.getText().toString().toUpperCase().trim(),sheet);
+        fetch_number(ac_district.getText().toString().toUpperCase().trim(),"PS "+  policeStation.getText().toString().toUpperCase().trim(),sheet);
         /*String pushkey=rm_Date
                        +policeStation.getText().toString().trim()
                        +ac_district.getText().toString().trim()

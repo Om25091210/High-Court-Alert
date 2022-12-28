@@ -9,6 +9,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.FirebaseDatabase;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -19,9 +22,12 @@ public class taskAdapter extends RecyclerView.Adapter<taskAdapter.ViewHolder> {
 
     Context context;
     ArrayList<String> task_list;
-    public taskAdapter(Context context, ArrayList<String> task_list) {
+    String pushkey;
+    Task<Void> reference;
+    public taskAdapter(Context context, ArrayList<String> task_list,String pushkey) {
         this.context=context;
         this.task_list=task_list;
+        this.pushkey = pushkey;
     }
 
     @NonNull
@@ -36,6 +42,7 @@ public class taskAdapter extends RecyclerView.Adapter<taskAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull @NotNull ViewHolder holder, int position) {
 
         holder.textView.setText(task_list.get(position));
+        reference = FirebaseDatabase.getInstance().getReference().child("writ").child(pushkey).child("respondents").setValue(task_list);
     }
 
     @Override
