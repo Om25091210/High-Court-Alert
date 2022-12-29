@@ -60,9 +60,10 @@ public class Splash extends AppCompatActivity {
 
                 boolean auth_entry=  getSharedPreferences("authorized_entry",MODE_PRIVATE)
                         .getBoolean("entry_done",false);
-
+                Log.e("user_is : ",user_is);
+                Log.e("auth_entry : ",auth_entry+"");
                 if(user_is.equals("p_home") && auth_entry){
-                    Intent i = new Intent(Splash.this, p_Home.class);
+                    Intent i = new Intent(Splash.this, entry_actiivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(i);
                     finish();
@@ -71,7 +72,7 @@ public class Splash extends AppCompatActivity {
                     TinyDB tinyDB=new TinyDB(Splash.this);
                     boolean tiny_sel_dist=tinyDB.getBoolean("entered_select_district");
                     if(tiny_sel_dist) {
-                        Intent i = new Intent(Splash.this, Home.class);
+                        Intent i = new Intent(Splash.this, entry_actiivity.class);
                         i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(i);
                         finish();

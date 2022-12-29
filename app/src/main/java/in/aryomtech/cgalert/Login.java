@@ -372,7 +372,7 @@ public class Login extends AppCompatActivity {
                     user_reference.child(user.getUid()).child("phone").setValue(user.getPhoneNumber());
                     user_reference.child(user.getUid()).child("name").setValue(station_name);
                     user_reference.child(user.getUid()).child(Objects.requireNonNull(user.getPhoneNumber()).substring(3)).setValue(user.getPhoneNumber());
-                    Intent i = new Intent(Login.this, p_Home.class);
+                    Intent i = new Intent(Login.this, entry_actiivity.class);
                     i.putExtra("station_name",station_name);
                     startActivity(i);
                     finish();
@@ -444,7 +444,7 @@ public class Login extends AppCompatActivity {
                     }
                     else {
                         tinyDB.putBoolean("entered_select_district",true);
-                        Intent i = new Intent(Login.this, Home.class);
+                        Intent i = new Intent(Login.this, entry_actiivity.class);
                         startActivity(i);
                         finish();
                     }
@@ -513,7 +513,7 @@ public class Login extends AppCompatActivity {
                     user_reference.child(user.getUid()).child("phone").setValue(user.getPhoneNumber());
                     user_reference.child(user.getUid()).child("name").setValue("admin");
                     user_reference.child(user.getUid()).child(Objects.requireNonNull(user.getPhoneNumber()).substring(3)).setValue(user.getPhoneNumber());
-                    Intent i = new Intent(Login.this, Home.class);
+                    Intent i = new Intent(Login.this, entry_actiivity.class);
                     startActivity(i);
                     finish();
                 }

@@ -83,6 +83,14 @@
                 android:src="@drawable/ic_call_btn"
                 />
 
+            <ImageView
+                android:id="@+id/sms"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginStart="11dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_sms1"
+                app:tint="@color/use_orange" />
 
             <ImageView
                 android:id="@+id/delete"
