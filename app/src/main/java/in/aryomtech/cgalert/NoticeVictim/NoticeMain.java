@@ -73,7 +73,6 @@ public class NoticeMain extends Fragment {
         recyclerView = view.findViewById(R.id.rv);
         list = new ArrayList<>();
         mSwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
-        NoticeAdapter adapter = new NoticeAdapter(getContextNullSafety(), list);
         LinearLayoutManager mManager = new LinearLayoutManager(getContextNullSafety());
         recyclerView.setItemViewCacheSize(500);
         recyclerView.setDrawingCacheEnabled(true);

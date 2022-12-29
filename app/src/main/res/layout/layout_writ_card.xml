@@ -3,12 +3,11 @@
     android:layout_width="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/bg_data_card"
-    android:backgroundTint="@color/gray"
+    android:background="@drawable/bg_card_red"
     android:layout_marginTop="10dp"
     android:layout_marginEnd="10dp"
     android:layout_marginBottom="10dp"
-    android:id="@+id/notice_layout"
+    android:id="@+id/writ_layout"
     android:layout_marginStart="10dp"
     android:padding="10dp"
     android:layout_height="wrap_content">
@@ -202,6 +201,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:visibility="gone"
             android:orientation="horizontal">
 
             <TextView
@@ -239,6 +239,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -340,7 +341,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/notice_dt_ed"
+                android:id="@+id/summarytxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
@@ -458,7 +459,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/disposed_type"
+                android:id="@+id/judgementType"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
@@ -478,9 +479,11 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/layout_judge"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:visibility="gone"
             android:orientation="horizontal">
 
             <TextView
@@ -490,7 +493,6 @@
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/quicksand_bold"
                 android:text="Judgement Summary - "
-                android:visibility="gone"
                 android:textColor="@color/use_light_blue"
                 android:textSize="@dimen/_11sdp"
                 android:textStyle="bold"
@@ -507,7 +509,6 @@
                 android:fontFamily="@font/quicksand_bold"
                 android:maxLines="1"
                 android:paddingStart="1dp"
-                android:visibility="gone"
                 android:paddingEnd="15dp"
                 android:textColor="@color/use_light_blue"
                 android:textSize="@dimen/_10sdp"
@@ -519,9 +520,11 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/layout_due"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:visibility="gone"
             android:orientation="horizontal">
 
             <TextView
@@ -531,7 +534,6 @@
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/quicksand_bold"
                 android:text="@string/due_dateo"
-                android:visibility="gone"
                 android:textColor="@color/use_light_blue"
                 android:textSize="@dimen/_11sdp"
                 android:textStyle="bold"
@@ -548,7 +550,6 @@
                 android:fontFamily="@font/quicksand_bold"
                 android:maxLines="1"
                 android:paddingStart="1dp"
-                android:visibility="gone"
                 android:paddingEnd="15dp"
                 android:textColor="@color/use_light_blue"
                 android:textSize="@dimen/_10sdp"

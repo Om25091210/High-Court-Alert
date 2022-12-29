@@ -127,7 +127,7 @@ public class NoticemainAdmin extends Fragment {
         form.setOnClickListener(v -> {
             Fragment fragment = new NoticeForm();
             FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.layout, fragment);
+            ft.replace(R.id.swipe_refresh_layout, fragment);
             ft.addToBackStack(null);
             ft.commit();
         });

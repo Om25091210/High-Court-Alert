@@ -162,6 +162,8 @@
     <string name="name_of_the_appellant">Name of the Appellant</string>
     <string name="enter_case_number">Enter Case Number</string>
     <string name="case_number">Case Number</string>
+    <string name="respondentsO">RESPONDENTS</string>
+    <string name="appellantsO">APPELLANTS</string>
 
 
     <array name="menuOptions">

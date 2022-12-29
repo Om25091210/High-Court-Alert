@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import in.aryomtech.cgalert.CasesAgainstPolice.CasesAgainPolice;
 import in.aryomtech.cgalert.CasesAgainstPolice.CasesAgainPoliceForm;
 import in.aryomtech.cgalert.NoticeVictim.NoticeMain;
 import in.aryomtech.cgalert.NoticeVictim.NoticemainAdmin;
@@ -73,7 +74,7 @@ public class entry_actiivity extends AppCompatActivity {
         writ_police.setOnClickListener(v -> entry_actiivity.this.getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
-                .add(R.id.drawer, new CasesAgainPoliceForm())
+                .add(R.id.drawer, new CasesAgainPolice())
                 .addToBackStack(null)
                 .commit());
 
