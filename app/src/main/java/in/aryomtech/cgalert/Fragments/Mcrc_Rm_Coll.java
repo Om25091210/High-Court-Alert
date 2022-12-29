@@ -13,7 +13,6 @@ import android.telephony.SmsManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,13 +61,12 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Objects;
 
 import in.aryomtech.cgalert.DB.TinyDB;
 import in.aryomtech.cgalert.Fragments.Adapter.Excel_Adapter;
 import in.aryomtech.cgalert.Fragments.model.Excel_data;
-import in.aryomtech.cgalert.Home;
+import in.aryomtech.cgalert.Fragments.model.smsData;
 import in.aryomtech.cgalert.R;
 import in.aryomtech.cgalert.fcm.Specific;
 import soup.neumorphism.NeumorphButton;
@@ -113,6 +111,7 @@ public class Mcrc_Rm_Coll extends Fragment {
     private in.aryomtech.cgalert.Fragments.Interface.onClickInterface onClickInterface;
     private in.aryomtech.cgalert.Fragments.Interface.onAgainClickInterface onAgainClickInterface;
     TinyDB tinyDB;
+    List<smsData> smsDataList;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -124,6 +123,7 @@ public class Mcrc_Rm_Coll extends Fragment {
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
         );
         added_list=new ArrayList<>();
+        smsDataList=new ArrayList<>();
         mSwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         search=view.findViewById(R.id.search);
         bulk_delete=view.findViewById(R.id.imageRemoveImage);
@@ -463,7 +463,7 @@ public class Mcrc_Rm_Coll extends Fragment {
                         String station_name = "PS " + snapshot.child(added_list.get(h)).child("B").getValue(String.class).toUpperCase().trim();
                         String district_name = snapshot.child(added_list.get(h)).child("C").getValue(String.class).toUpperCase().trim();
 
-                        String K = snapshot.child(added_list.get(h)).child("K").getValue(String.class).trim();
+                        String L = snapshot.child(added_list.get(h)).child("L").getValue(String.class).trim();
                         String C = snapshot.child(added_list.get(h)).child("C").getValue(String.class).trim();
                         String D = snapshot.child(added_list.get(h)).child("D").getValue(String.class).trim();
                         String E = snapshot.child(added_list.get(h)).child("E").getValue(String.class).trim();
@@ -473,7 +473,7 @@ public class Mcrc_Rm_Coll extends Fragment {
                         String B = snapshot.child(added_list.get(h)).child("B").getValue(String.class).trim();
                         String type = snapshot.child(added_list.get(h)).child("type").getValue(String.class).trim();
 
-                        case_data_list.add(type+"~"+K+"~"+C+"~"+D+"~"+E+"~"+G+"~"+H+"~"+I+"~"+B+"~");
+                        case_data_list.add(type+"~"+L+"~"+C+"~"+D+"~"+E+"~"+G+"~"+H+"~"+I+"~"+B+"~");
                         district_name_list.add(district_name);
                         station_name_list.add(station_name);
                         keys_selected.add(added_list.get(h));
@@ -555,10 +555,11 @@ public class Mcrc_Rm_Coll extends Fragment {
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         if (snapshot.child(ds.getKey()).child(phone_numbers.get(i)).exists()) {
                             check=1;
-                            reference.child(keys_copy_selected_phone.get(i)).child("reminded").setValue("once");
-                            String body = extract_data(i);
-                            ArrayList<String> list = sms.divideMessage(body);
-                            sms.sendMultipartTextMessage(phone_numbers.get(i), null, list, null, null);
+                            //reference.child(keys_copy_selected_phone.get(i)).child("reminded").setValue("once");
+                            extract_data(i,keys_copy_selected_phone.get(i),phone_numbers.get(i));
+                            //String body = extract_data(i,phone_numbers.get(i));
+                            //ArrayList<String> list = sms.divideMessage(body);
+                            //sms.sendMultipartTextMessage(phone_numbers.get(i), null, list, null, null);
                         }
                     }
                     if(check==0)
@@ -569,16 +570,101 @@ public class Mcrc_Rm_Coll extends Fragment {
                 getContextNullSafety().getSharedPreferences("saving_RM_Call_not_sms", MODE_PRIVATE).edit()
                         .putString("RM_CALL_list",not_sent_sms_list+"").apply();
 
-                Snackbar.make(mRecyclerView,"Notified successfully...",Snackbar.LENGTH_LONG)
+                Snackbar.make(mRecyclerView,"Sending sms...",Snackbar.LENGTH_LONG)
                         .setActionTextColor(Color.parseColor("#ea4a1f"))
                         .setTextColor(Color.parseColor("#000000"))
                         .setBackgroundTint(Color.parseColor("#D9F5F8"))
                         .show();
+
+                send_sms_api();
+
                 dialog1.dismiss();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {}
         });
+    }
+
+    private void send_sms_api() {
+        // create a new Gson instance
+        Gson gson = new Gson();
+        // convert your list to json
+        String jsonExcelList = gson.toJson(smsDataList);
+        // print your generated json
+        Log.e("jsonCartList: " , jsonExcelList);
+        String prev_keygen=smsDataList.get(0).getTid()+"-"+smsDataList.get(0).getMob_no()+"-"+smsDataList.get(0).getCrime_no();
+        JSONObject jsonBody = new JSONObject();
+        try
+        {
+            jsonBody.put("data", jsonExcelList);
+            jsonBody.put("keygen",hashGenerator(prev_keygen));
+            Log.e("body", "httpCall_collect: "+hashGenerator(prev_keygen));
+        }
+        catch (Exception e)
+        {
+            Log.e("Error","JSON ERROR");
+        }
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getContextNullSafety());
+        String URL = "https://sangyan.co.in/sendmsg";
+
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, URL,jsonBody,
+                new com.android.volley.Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // enjoy your response
+                        String code=response.optString("code")+"";
+                        if(code.equals("202")){
+                            for(int i=0;i<smsDataList.size();i++){
+                                reference.child(smsDataList.get(i).getPushkey()).child("reminded").setValue("once");
+                            }
+                            smsDataList.clear();
+                            Snackbar.make(join,"SMS sent Successfully.",Snackbar.LENGTH_LONG)
+                                    .setActionTextColor(Color.parseColor("#171746"))
+                                    .setTextColor(Color.parseColor("#FF7F5C"))
+                                    .setBackgroundTint(Color.parseColor("#171746"))
+                                    .show();
+                            dialog1.dismiss();
+                        }
+                        else{
+                            Snackbar.make(join,"Failed to send sms",Snackbar.LENGTH_LONG)
+                                    .setActionTextColor(Color.parseColor("#000000"))
+                                    .setTextColor(Color.parseColor("#000000"))
+                                    .setBackgroundTint(Color.parseColor("#FF5252"))
+                                    .show();
+                        }
+                        Log.e("BULK code",code+"");
+                        Log.e("response",response.toString());
+                    }
+                }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // enjoy your error status
+                Log.e("Status of code = ","Wrong "+error);
+                Snackbar.make(join,"Failed to send sms.",Snackbar.LENGTH_LONG)
+                        .setActionTextColor(Color.parseColor("#000000"))
+                        .setTextColor(Color.parseColor("#000000"))
+                        .setBackgroundTint(Color.parseColor("#FF5252"))
+                        .show();
+            }
+        });
+        stringRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 15000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 15000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+            }
+        });
+        Log.d("string", stringRequest.toString());
+        requestQueue.add(stringRequest);
     }
 
     private void send_notification(List<String> phone_numbers) {
@@ -591,7 +677,7 @@ public class Mcrc_Rm_Coll extends Fragment {
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         if (snapshot.child(ds.getKey()).child(phone_numbers.get(i)).exists()) {
                             check=1;
-                            String body=extract_data(i);
+                            String body=extract_data(i, phone_numbers.get(i), phone_numbers.get(i));
                             if(snapshot.child(ds.getKey()).child("token").exists()) {
                                 reference.child(keys_copy_selected_phone.get(i)).child("reminded").setValue("once");
                                 for (DataSnapshot dd : snapshot.child(ds.getKey()).child("token").getChildren()) {
@@ -633,12 +719,13 @@ public class Mcrc_Rm_Coll extends Fragment {
         });
     }
 
-    private String extract_data(int index) {
+    private String extract_data(int index, String pushkey, String ph_number) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy",Locale.getDefault());
         Date date = new Date();
         String format=case_data_list_filter.get(index);
-        String C=null,B=null,K=null,D=null,E=null,G=null,H=null,I=null,type=null;
+        String C=null,B=null,K=null,D=null,E=null,G=null,H=null,I=null,type=null,L=null;
         int temp=0;
+        Log.e("Format",format);
         for(int i=0;i<format.length();i++){
             if(format.charAt(i)=='~'){
                 if(type==null){
@@ -681,6 +768,8 @@ public class Mcrc_Rm_Coll extends Fragment {
         }
         if(type.equals("RM RETURN")){
             String current=formatter.format(date);
+            smsData smsData=new smsData(current,E+"/"+G,H+"/"+I,B,K,"1107166841984501076",ph_number,D+" No.",pushkey);
+            smsDataList.add(smsData);
             return "हाईकोर्ट अलर्ट:-डायरी वापसी"+"\nदिनाँक:- "+current+" \n"
                     +"\n"+C+"\n"+D+" No. "+E+"/"+G+"\n"
                     +"Crime No. "+H+"/"+I+"\n"
@@ -690,6 +779,8 @@ public class Mcrc_Rm_Coll extends Fragment {
         }
         else{
             String current=formatter.format(date);
+            smsData smsData=new smsData(current,E+"/"+G,H+"/"+I,B,K,"1107166842005504102",ph_number,D+" No.",pushkey);
+            smsDataList.add(smsData);
             return "हाईकोर्ट अलर्ट:-डायरी माँग"+"\nदिनाँक:- "+current+" \n"
                     +"\n"+C+"\n"+D+" No. "+E+"/"+G+"\n"
                     +"Crime No. "+H+"/"+I+"\n"

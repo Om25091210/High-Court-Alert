@@ -67,6 +67,7 @@ import in.aryomtech.cgalert.DB.TinyDB;
 import in.aryomtech.cgalert.Fragments.Adapter.Excel_Adapter;
 import in.aryomtech.cgalert.Fragments.Adapter.Return_Adapter;
 import in.aryomtech.cgalert.Fragments.model.Excel_data;
+import in.aryomtech.cgalert.Fragments.model.smsData;
 import in.aryomtech.cgalert.R;
 import in.aryomtech.cgalert.fcm.Specific;
 import soup.neumorphism.NeumorphButton;
@@ -108,6 +109,7 @@ public class Mcrc_Rm_Return extends Fragment {
     NeumorphButton join;
     ImageView bulk_delete,cg_logo,j_column;
     TinyDB tinyDB;
+    List<smsData> smsDataList;
     private in.aryomtech.cgalert.Fragments.Interface.onClickInterface onClickInterface;
     private in.aryomtech.cgalert.Fragments.Interface.onAgainClickInterface onAgainClickInterface;
     @Override
@@ -121,6 +123,7 @@ public class Mcrc_Rm_Return extends Fragment {
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
         );
         added_list=new ArrayList<>();
+        smsDataList=new ArrayList<>();
         mSwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         search=view.findViewById(R.id.search);
         bulk_delete=view.findViewById(R.id.imageRemoveImage);
@@ -479,33 +482,7 @@ public class Mcrc_Rm_Return extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
-    /*private void search(String str) {
-        mylist.clear();
-        for(Excel_data object:excel_data) {
-            if (object.getB().toLowerCase().contains(str.toLowerCase().trim())) {
-                mylist.add(object);
-            } else if (object.getC().toLowerCase().contains(str.toLowerCase().trim())) {
-                mylist.add(object);
-            } else if (object.getE().toLowerCase().contains(str.toLowerCase().trim())) {
-                mylist.add(object);
-            } else if (object.getH().toLowerCase().contains(str.toLowerCase().trim())) {
-                mylist.add(object);
-            }
-            else if(object.getK().toLowerCase().contains(str.toLowerCase().trim())){
-                mylist.add(object);
-            }
-            else if(object.getJ().toLowerCase().contains(str.toLowerCase().trim())){
-                mylist.add(object);
-            }
-            else if(object.getDate().toLowerCase().contains(str.toLowerCase().trim())){
-                mylist.add(object);
-            }
-        }
-        excel_adapter=new Return_Adapter(getContextNullSafety(),mylist,onClickInterface,onAgainClickInterface);
-        excel_adapter.notifyDataSetChanged();
-        if(mRecyclerView!=null)
-            mRecyclerView.setAdapter(excel_adapter);
-    }*/
+
     private void search(String str) {
         if(str.equals("")){
             excel_adapter=new Return_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface,gsID);
@@ -812,10 +789,11 @@ public class Mcrc_Rm_Return extends Fragment {
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         if (snapshot.child(ds.getKey()).child(phone_numbers.get(i)).exists()) {
                             check=1;
-                            reference.child(keys_copy_selected_phone.get(i)).child("reminded").setValue("once");
-                            String body = extract_data(i);
-                            ArrayList<String> list = sms.divideMessage(body);
-                            sms.sendMultipartTextMessage(phone_numbers.get(i), null, list, null, null);
+                            //reference.child(keys_copy_selected_phone.get(i)).child("reminded").setValue("once");
+                            extract_data(i,keys_copy_selected_phone.get(i),phone_numbers.get(i));
+                            //String body = extract_data(i);
+                            //ArrayList<String> list = sms.divideMessage(body);
+                            //sms.sendMultipartTextMessage(phone_numbers.get(i), null, list, null, null);
                         }
                     }
                     if(check==0)
@@ -831,6 +809,9 @@ public class Mcrc_Rm_Return extends Fragment {
                         .setTextColor(Color.parseColor("#000000"))
                         .setBackgroundTint(Color.parseColor("#D9F5F8"))
                         .show();
+
+                send_sms_api();
+
                 dialog1.dismiss();
             }
             @Override
@@ -848,7 +829,7 @@ public class Mcrc_Rm_Return extends Fragment {
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         if (snapshot.child(ds.getKey()).child(phone_numbers.get(i)).exists()) {
                             check=1;
-                            String body=extract_data(i);
+                            String body=extract_data(i, phone_numbers.get(i), phone_numbers.get(i));
                             if(snapshot.child(ds.getKey()).child("token").exists()) {
                                 reference.child(keys_copy_selected_phone.get(i)).child("reminded").setValue("once");
                                 for (DataSnapshot dd : snapshot.child(ds.getKey()).child("token").getChildren()) {
@@ -889,7 +870,7 @@ public class Mcrc_Rm_Return extends Fragment {
         });
     }
 
-    private String extract_data(int index) {
+    private String extract_data(int index, String pushkey, String ph_number) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy",Locale.getDefault());
         Date date = new Date();
         String format=case_data_list_filter.get(index);
@@ -937,6 +918,8 @@ public class Mcrc_Rm_Return extends Fragment {
         }
         if(type.equals("RM RETURN")){
             String current=formatter.format(date);
+            smsData smsData=new smsData(current,E+"/"+G,H+"/"+I,B,K,"1107166841984501076",ph_number,D+" No.",pushkey);
+            smsDataList.add(smsData);
             return "हाईकोर्ट अलर्ट:-डायरी वापसी"+"\nदिनाँक:- "+current+" \n"
                     +"\n"+C+"\n"+D+" No. "+E+"/"+G+"\n"
                     +"Crime No. "+H+"/"+I+"\n"
@@ -946,12 +929,96 @@ public class Mcrc_Rm_Return extends Fragment {
         }
         else{
             String current=formatter.format(date);
+            smsData smsData=new smsData(current,E+"/"+G,H+"/"+I,B,K,"1107166842005504102",ph_number,D+" No.",pushkey);
+            smsDataList.add(smsData);
             return "हाईकोर्ट अलर्ट:-डायरी माँग"+"\nदिनाँक:- "+current+" \n"
                     +"\n"+C+"\n"+D+" No. "+E+"/"+G+"\n"
                     +"Crime No. "+H+"/"+I+"\n"
                     +"Police station: "+B+"\n"
                     +"उपरोक्त मूल केश डायरी तथा पूर्व अपराधिक रिकॉर्ड, दिनाँक "+K+" तक बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय छतीसगढ़ में  अनिवार्यतः जमा करें।";
         }
+    }
+
+    private void send_sms_api() {
+        // create a new Gson instance
+        Gson gson = new Gson();
+        // convert your list to json
+        String jsonExcelList = gson.toJson(smsDataList);
+        // print your generated json
+        Log.e("jsonCartList: " , jsonExcelList);
+        String prev_keygen=smsDataList.get(0).getTid()+"-"+smsDataList.get(0).getMob_no()+"-"+smsDataList.get(0).getCrime_no();
+        JSONObject jsonBody = new JSONObject();
+        try
+        {
+            jsonBody.put("data", jsonExcelList);
+            jsonBody.put("keygen",hashGenerator(prev_keygen));
+            Log.e("body", "httpCall_collect: "+hashGenerator(prev_keygen));
+        }
+        catch (Exception e)
+        {
+            Log.e("Error","JSON ERROR");
+        }
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getContextNullSafety());
+        String URL = "https://sangyan.co.in/sendmsg";
+
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, URL,jsonBody,
+                new com.android.volley.Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // enjoy your response
+                        String code=response.optString("code")+"";
+                        if(code.equals("202")){
+                            for(int i=0;i<smsDataList.size();i++){
+                                reference.child(smsDataList.get(i).getPushkey()).child("reminded").setValue("once");
+                            }
+                            smsDataList.clear();
+                            Snackbar.make(join,"SMS sent Successfully.",Snackbar.LENGTH_LONG)
+                                    .setActionTextColor(Color.parseColor("#171746"))
+                                    .setTextColor(Color.parseColor("#FF7F5C"))
+                                    .setBackgroundTint(Color.parseColor("#171746"))
+                                    .show();
+                            dialog1.dismiss();
+                        }
+                        else{
+                            Snackbar.make(join,"Failed to send sms",Snackbar.LENGTH_LONG)
+                                    .setActionTextColor(Color.parseColor("#000000"))
+                                    .setTextColor(Color.parseColor("#000000"))
+                                    .setBackgroundTint(Color.parseColor("#FF5252"))
+                                    .show();
+                        }
+                        Log.e("BULK code",code+"");
+                        Log.e("response",response.toString());
+                    }
+                }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // enjoy your error status
+                Log.e("Status of code = ","Wrong "+error);
+                Snackbar.make(join,"Failed to send sms.",Snackbar.LENGTH_LONG)
+                        .setActionTextColor(Color.parseColor("#000000"))
+                        .setTextColor(Color.parseColor("#000000"))
+                        .setBackgroundTint(Color.parseColor("#FF5252"))
+                        .show();
+            }
+        });
+        stringRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 15000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 15000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+            }
+        });
+        Log.d("string", stringRequest.toString());
+        requestQueue.add(stringRequest);
     }
 
     private void update_J_Excel(List<Excel_data> j_dates_list,String j_date) {
