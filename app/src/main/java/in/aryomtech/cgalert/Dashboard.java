@@ -22,27 +22,31 @@ import com.google.firebase.database.ValueEventListener;
 import in.aryomtech.cgalert.CasesAgainstPolice.CasesAgainPoliceForm;
 import in.aryomtech.cgalert.NoticeVictim.NoticeMain;
 import in.aryomtech.cgalert.NoticeVictim.NoticemainAdmin;
+import in.aryomtech.cgalert.policestation.p_Home;
 
-public class entry_actiivity extends AppCompatActivity {
+public class Dashboard extends AppCompatActivity {
 
     LinearLayout case_diary, police_contacts, notice_victim, writ_police;
     LottieAnimationView toolbar;
     FirebaseAuth auth;
     FirebaseUser user;
     boolean isadmin=false;
+    String redirect_to="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_entry_actiivity);
 
-        Window window = entry_actiivity.this.getWindow();
+        Window window = Dashboard.this.getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(ContextCompat.getColor(entry_actiivity.this, R.color.use_bg));
+        window.setStatusBarColor(ContextCompat.getColor(Dashboard.this, R.color.use_bg));
 
         getSharedPreferences("authorized_entry",MODE_PRIVATE).edit()
                 .putBoolean("entry_done",true).apply();
 
+        redirect_to=getSharedPreferences("useris?",MODE_PRIVATE)
+                .getString("the_user_is?","");
         auth= FirebaseAuth.getInstance();
         user=auth.getCurrentUser();
 
@@ -63,21 +67,21 @@ public class entry_actiivity extends AppCompatActivity {
 
         });
 
-        notice_victim.setOnClickListener(v -> entry_actiivity.this.getSupportFragmentManager()
+        notice_victim.setOnClickListener(v -> Dashboard.this.getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
                 .add(R.id.drawer, new NoticeMain())
                 .addToBackStack(null)
                 .commit());
 
-        writ_police.setOnClickListener(v -> entry_actiivity.this.getSupportFragmentManager()
+        writ_police.setOnClickListener(v -> Dashboard.this.getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
                 .add(R.id.drawer, new CasesAgainPoliceForm())
                 .addToBackStack(null)
                 .commit());
 
-        police_contacts.setOnClickListener(v -> entry_actiivity.this.getSupportFragmentManager()
+        police_contacts.setOnClickListener(v -> Dashboard.this.getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
                 .add(R.id.drawer, new DistrictData())
@@ -87,8 +91,14 @@ public class entry_actiivity extends AppCompatActivity {
 
 
         case_diary.setOnClickListener(v -> {
-            Intent intent = new Intent(entry_actiivity.this, Home.class);
-            startActivity(intent);
+            if(redirect_to.equals("home")) {
+                Intent intent = new Intent(Dashboard.this, Home.class);
+                startActivity(intent);
+            }
+            else if(redirect_to.equals("p_home")){
+                Intent intent = new Intent(Dashboard.this, p_Home.class);
+                startActivity(intent);
+            }
         });
     }
 
@@ -99,7 +109,7 @@ public class entry_actiivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 isadmin=snapshot.child(user.getPhoneNumber().substring(3)+"").exists();
                 if(isadmin){
-                    notice_victim.setOnClickListener(v -> entry_actiivity.this.getSupportFragmentManager()
+                    notice_victim.setOnClickListener(v -> Dashboard.this.getSupportFragmentManager()
                             .beginTransaction()
                             .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
                             .add(R.id.drawer, new NoticemainAdmin())
@@ -110,7 +120,7 @@ public class entry_actiivity extends AppCompatActivity {
                     getSharedPreferences("isAdmin_or_not",MODE_PRIVATE).edit()
                             .putBoolean("authorizing_admin",false).apply();
 
-                    notice_victim.setOnClickListener(v -> entry_actiivity.this.getSupportFragmentManager()
+                    notice_victim.setOnClickListener(v -> Dashboard.this.getSupportFragmentManager()
                             .beginTransaction()
                             .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
                             .add(R.id.drawer, new NoticeMain())
@@ -129,7 +139,7 @@ public class entry_actiivity extends AppCompatActivity {
         auth= FirebaseAuth.getInstance();
         user=auth.getCurrentUser();
         if(user==null){
-            Intent i = new Intent(entry_actiivity.this, Login.class);
+            Intent i = new Intent(Dashboard.this, Login.class);
             startActivity(i);
             finish();
         }

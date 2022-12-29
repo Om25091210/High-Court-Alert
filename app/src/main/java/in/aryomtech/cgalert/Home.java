@@ -106,23 +106,6 @@ public class Home extends AppCompatActivity implements DuoMenuView.OnMenuClickLi
         mMenuAdapter.setViewSelected(0);
         setTitle(mTitles.get(0));
 
-        /*String msg="दिनांक:-18/01/2002" + "\n"+
-        "MCRCA No.:-133" + "\n"+
-        "Crime No.:-102" + "\n"+
-        "Police station:-Sirgitti"+"\n"+
-        "मूल केस डायरी तथा पूर्व अपराधिक रिकार्ड, दिनाँक 18/07/2002 तक बेल/अपराधिक शाखा में अनिवार्यतः जमा करें। -CG POLICE";
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-
-        StrictMode.setThreadPolicy(policy);
-
-        SMSServices services=new SMSServices();
-        try {
-            services.sendSingleSMS(getBaseContext(),"cgcctns-SPANDAN","Password@123",msg,"DRGPOL","9301982112","236c24ae-d29a-4c63-8858-f5557b541735","1107166842005504102");
-        } catch (UnrecoverableKeyException | KeyStoreException e) {
-            Log.e("ERROR","ERROR");
-        }
-
-        */
         admin.setOnClickListener(v->{
             Home.this.getSupportFragmentManager()
                     .beginTransaction()

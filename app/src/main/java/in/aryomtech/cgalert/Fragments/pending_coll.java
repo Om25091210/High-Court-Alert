@@ -148,11 +148,13 @@ public class pending_coll extends Fragment {
             join.setVisibility(View.VISIBLE);
             bulk_delete.setVisibility(View.VISIBLE);
             select_all.setVisibility(View.VISIBLE);
+            j_column.setVisibility(View.VISIBLE);
         }
         else {
             join.setVisibility(View.GONE);
             bulk_delete.setVisibility(View.GONE);
             select_all.setVisibility(View.GONE);
+            j_column.setVisibility(View.GONE);
         }
 
         //Initialize Database

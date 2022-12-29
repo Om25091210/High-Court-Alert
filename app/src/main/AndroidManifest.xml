@@ -18,7 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Design.Light.NoActionBar" >
         <activity
-            android:name=".entry_actiivity"
+            android:name=".Dashboard"
             android:exported="false" />
         <activity
             android:name=".Fragments.Select_stations"

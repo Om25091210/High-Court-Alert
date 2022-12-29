@@ -6,9 +6,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.View;
 
 import com.google.firebase.database.DataSnapshot;
@@ -16,18 +14,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 import in.aryomtech.cgalert.DB.TinyDB;
-import in.aryomtech.cgalert.Fragments.Adapter.SelectDistrictAdapter;
 import in.aryomtech.cgalert.Fragments.Adapter.SelectStationAdapter;
-import in.aryomtech.cgalert.Home;
 import in.aryomtech.cgalert.databinding.ActivitySelectStationsBinding;
+import in.aryomtech.cgalert.Dashboard;
 
 public class Select_stations extends AppCompatActivity {
 
@@ -56,7 +50,7 @@ public class Select_stations extends AppCompatActivity {
         TinyDB tinydb=new TinyDB(Select_stations.this);
         binding.next.setOnClickListener(v->{
             tinydb.putBoolean("entered_select_district",true);
-            Intent intent=new Intent(Select_stations.this, Home.class);
+            Intent intent=new Intent(Select_stations.this, Dashboard.class);
             startActivity(intent);
             finish();
         });

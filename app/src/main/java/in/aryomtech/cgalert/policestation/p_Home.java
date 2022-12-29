@@ -144,14 +144,7 @@ public class p_Home extends AppCompatActivity implements DuoMenuView.OnMenuClick
             }
             startActivity(insta_in);
         });
-        phone_num.setOnClickListener(v->{
-            p_Home.this.getSupportFragmentManager()
-                    .beginTransaction()
-                    .setCustomAnimations( R.anim.enter_from_right, R.anim.exit_to_left,R.anim.enter_from_left, R.anim.exit_to_right)
-                    .add(R.id.drawer,new DistrictData())
-                    .addToBackStack(null)
-                    .commit();
-        });
+
     }
 
     private void check_if_token() {
@@ -182,7 +175,7 @@ public class p_Home extends AppCompatActivity implements DuoMenuView.OnMenuClick
             });
         }
     }
- private void getting_device_token() {
+    private void getting_device_token() {
         ConnectivityManager connectivityManager = (ConnectivityManager)this.getSystemService(CONNECTIVITY_SERVICE);
         NetworkCapabilities nc = connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork());
         if(nc!=null) {

@@ -6,13 +6,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.GridLayout;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,10 +20,9 @@ import java.util.List;
 
 import in.aryomtech.cgalert.DB.TinyDB;
 import in.aryomtech.cgalert.Fragments.Adapter.SelectDistrictAdapter;
-import in.aryomtech.cgalert.Home;
 import in.aryomtech.cgalert.Login;
-import in.aryomtech.cgalert.R;
 import in.aryomtech.cgalert.databinding.ActivitySelectDistrictBinding;
+import in.aryomtech.cgalert.Dashboard;
 
 public class Select_District extends AppCompatActivity {
 
@@ -87,7 +81,7 @@ public class Select_District extends AppCompatActivity {
                     //User opened the screen or not.
                     tinydb.putBoolean("entered_select_district",true);
                     String district = tinydb.getListString("districts_list").get(0);
-                    Intent intent = new Intent(Select_District.this, Home.class);
+                    Intent intent = new Intent(Select_District.this, Dashboard.class);
                     intent.putExtra("Station_choice_num", 10);
                     intent.putExtra("district", district);
                     startActivity(intent);
