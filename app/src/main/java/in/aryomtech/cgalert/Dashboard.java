@@ -1,26 +1,19 @@
 package in.aryomtech.cgalert;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import in.aryomtech.cgalert.CasesAgainstPolice.CasesAgainPoliceForm;
-import in.aryomtech.cgalert.NoticeVictim.NoticeMain;
 import in.aryomtech.cgalert.NoticeVictim.NoticemainAdmin;
 import in.aryomtech.cgalert.policestation.p_Home;
 
@@ -56,23 +49,10 @@ public class Dashboard extends AppCompatActivity {
         writ_police = findViewById(R.id.linearLayout9);
         toolbar = findViewById(R.id.toolbar);
 
-        get_status_of_admin();
-        toolbar.setOnClickListener(v -> {
-            /*entry_actiivity.this.getSupportFragmentManager()
-                    .beginTransaction()
-                    .setCustomAnimations( R.anim.enter_from_right, R.anim.exit_to_left,R.anim.enter_from_left, R.anim.exit_to_right)
-                    .add(R.id.drawer,new about())
-                    .addToBackStack(null)
-                    .commit();*/
-
+        notice_victim.setOnClickListener(v->{
+            Intent intent = new Intent(Dashboard.this, NoticemainAdmin.class);
+            startActivity(intent);
         });
-
-        notice_victim.setOnClickListener(v -> Dashboard.this.getSupportFragmentManager()
-                .beginTransaction()
-                .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
-                .add(R.id.drawer, new NoticeMain())
-                .addToBackStack(null)
-                .commit());
 
         writ_police.setOnClickListener(v -> Dashboard.this.getSupportFragmentManager()
                 .beginTransaction()
@@ -102,7 +82,7 @@ public class Dashboard extends AppCompatActivity {
         });
     }
 
-    private void get_status_of_admin() {
+    /*private void get_status_of_admin() {
         DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference().child("admin");
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -123,7 +103,7 @@ public class Dashboard extends AppCompatActivity {
                     notice_victim.setOnClickListener(v -> Dashboard.this.getSupportFragmentManager()
                             .beginTransaction()
                             .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
-                            .add(R.id.drawer, new NoticeMain())
+                            .add(R.id.drawer, new UrgentNTV())
                             .addToBackStack(null)
                             .commit());
                 }
@@ -131,7 +111,7 @@ public class Dashboard extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {}
         });
-    }
+    }*/
 
     @Override
     protected void onStart() {

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:id="@+id/layout"
-    tools:context=".NoticeVictim.NoticeMain">
+    tools:context=".NoticeVictim.Fragments.UrgentNTV">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -153,6 +153,17 @@
     <string name="dismissed">Dismissed</string>
     <string name="disposed">Disposed</string>
     <string name="allowed">Allowed</string>
+    <string name="tap_to_select_due_date">Tap to Select Due Date</string>
+    <string name="due_date">Due Date</string>
+    <string name="detailed_summary">Detailed Summary</string>
+    <string name="judgement_summary">Judgement Summary</string>
+    <string name="due_dateo">Due date -</string>
+    <string name="nature_of_the_caseo">Nature of the Case -</string>
+    <string name="add_attachment">Add Attachment</string>
+    <string name="name_of_the_appellant">Name of the Appellant</string>
+    <string name="enter_case_number">Enter Case Number</string>
+    <string name="case_number">Case Number</string>
+    <string name="upload">Upload</string>
 
 
     <array name="menuOptions">

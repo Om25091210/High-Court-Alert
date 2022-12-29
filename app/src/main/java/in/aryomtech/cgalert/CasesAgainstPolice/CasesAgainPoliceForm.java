@@ -1,5 +1,6 @@
 package in.aryomtech.cgalert.CasesAgainstPolice;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -33,14 +34,19 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 import in.aryomtech.cgalert.R;
 import www.sanju.motiontoast.MotionToast;
@@ -61,10 +67,13 @@ public class CasesAgainPoliceForm extends Fragment {
     LinearLayout add_task, add_appellant;
     ImageView back;
     String pushkey;
+    List<String> district_list;
     ConstraintLayout lay;
+    DatabaseReference reference_phone;
+    int x=1;
     private Context contextNullSafe;
     EditText dispose_summary, summary;
-    TextView date_reply, judgement_date, time_limit, days, summ, submit, date_of_filing;
+    TextView date_reply, judgement_date, time_limit, days, summ, submit, date_of_filing, due, due_date;
     CheckBox legal1, legal2, allowed, disposed, dismissed;
     int check_;
     DatePickerDialog.OnDateSetListener mDateSetListener;
@@ -86,9 +95,10 @@ public class CasesAgainPoliceForm extends Fragment {
         summary = view.findViewById(R.id.summary_edt);
         submit = view.findViewById(R.id.submit_txt);
         date_of_filing = view.findViewById(R.id.date_of_filing);
-
-
-
+        district_list =new ArrayList<>();
+        reference_phone = FirebaseDatabase.getInstance().getReference().child("Phone numbers");
+        due = view.findViewById(R.id.due);
+        due_date = view.findViewById(R.id.due_date);
         add_task = view.findViewById(R.id.add_task);
         add_appellant = view.findViewById(R.id.add_appellant);
         recyclerView2 = view.findViewById(R.id.recycler_view);
@@ -100,6 +110,7 @@ public class CasesAgainPoliceForm extends Fragment {
         recyclerView2.setDrawingCacheEnabled(true);
         recyclerView2.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         recyclerView2.setLayoutManager(layoutManager2);
+
 
         allowed = view.findViewById(R.id.allowed);
         disposed = view.findViewById(R.id.disposed);
@@ -130,60 +141,8 @@ public class CasesAgainPoliceForm extends Fragment {
         nature.setAdapter(adapter1);
 
 
-        submit.setOnClickListener(v-> {
-            if(!date_of_filing.getText().toString().trim().equals("")){
-                if(!nature.getText().toString().trim().equals("")){
-                    if(!district.getText().toString().trim().equals("")){
-                        if(!time_limit.getText().toString().trim().equals("")){
-                            if(!date_reply.getText().toString().trim().equals("")){
-                                datasend();
-                            }
-                            else{
-                                date_reply.setError("Empty");
-                                Snackbar.make(lay,"Please Add Case Year.",Snackbar.LENGTH_LONG)
-                                        .setActionTextColor(Color.parseColor("#171746"))
-                                        .setTextColor(Color.parseColor("#FF7F5C"))
-                                        .setBackgroundTint(Color.parseColor("#171746"))
-                                        .show();
-                            }
-                        }
-                        else{
-                            time_limit.setError("Empty");
-                            Snackbar.make(lay,"Please Add Time Limit for Filing of Reply.",Snackbar.LENGTH_LONG)
-                                    .setActionTextColor(Color.parseColor("#171746"))
-                                    .setTextColor(Color.parseColor("#FF7F5C"))
-                                    .setBackgroundTint(Color.parseColor("#171746"))
-                                    .show();
-                        }
-                    }
-                    else{
-                        district.setError("Empty");
-                        Snackbar.make(lay,"Please Add District",Snackbar.LENGTH_LONG)
-                                .setActionTextColor(Color.parseColor("#171746"))
-                                .setTextColor(Color.parseColor("#FF7F5C"))
-                                .setBackgroundTint(Color.parseColor("#171746"))
-                                .show();
-                    }
-                }
-                else{
-                    nature.setError("Empty");
-                    Snackbar.make(lay,"Please Add Nature of the Case.",Snackbar.LENGTH_LONG)
-                            .setActionTextColor(Color.parseColor("#171746"))
-                            .setTextColor(Color.parseColor("#FF7F5C"))
-                            .setBackgroundTint(Color.parseColor("#171746"))
-                            .show();
-                }
-            }
-            else{
-                date_of_filing.setError("Empty");
-                Snackbar.make(lay,"Please Add Date of Filing",Snackbar.LENGTH_LONG)
-                        .setActionTextColor(Color.parseColor("#171746"))
-                        .setTextColor(Color.parseColor("#FF7F5C"))
-                        .setBackgroundTint(Color.parseColor("#171746"))
-                        .show();
-            }
-        });
 
+        get_districts_phone();
 
         add_task.setOnClickListener(v -> addTask());
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT
@@ -325,23 +284,94 @@ public class CasesAgainPoliceForm extends Fragment {
         allowed.setOnClickListener(v -> {
             dismissed.setChecked(false);
             disposed.setChecked(false);
-            summ.setVisibility(View.GONE);
-            dispose_summary.setVisibility(View.GONE);
+            summ.setVisibility(View.VISIBLE);
+            dispose_summary.setVisibility(View.VISIBLE);
+            due.setVisibility(View.VISIBLE);
+            due_date.setVisibility(View.VISIBLE);
             type = "Allowed";
+            x=0;
         });
+
         disposed.setOnClickListener(v -> {
             dismissed.setChecked(false);
             allowed.setChecked(false);
             summ.setVisibility(View.VISIBLE);
             dispose_summary.setVisibility(View.VISIBLE);
+            due.setVisibility(View.VISIBLE);
+            due_date.setVisibility(View.VISIBLE);
             type = "Disposed";
+            x=0;
         });
+
         dismissed.setOnClickListener(v -> {
             allowed.setChecked(false);
             disposed.setChecked(false);
             summ.setVisibility(View.GONE);
             dispose_summary.setVisibility(View.GONE);
+            due.setVisibility(View.GONE);
+            due_date.setVisibility(View.GONE);
             type = "Dismissed";
+        });
+
+        submit.setOnClickListener(v-> {
+            if(!date_of_filing.getText().toString().trim().equals("")){
+                if(!nature.getText().toString().trim().equals("")){
+                    if(!district.getText().toString().trim().equals("")) {
+                        if (!dispose_summary.getText().toString().trim().equals("") && x==0) {
+                            if (!due_date.getText().toString().trim().equals("") && x==0) {
+                                if (!summary.getText().toString().trim().equals("")) {
+                                    datasend();
+                                } else {
+                                    summary.setError("Empty");
+                                    Snackbar.make(lay, "Please Add Synopsis of the Case", Snackbar.LENGTH_LONG)
+                                            .setActionTextColor(Color.parseColor("#171746"))
+                                            .setTextColor(Color.parseColor("#FF7F5C"))
+                                            .setBackgroundTint(Color.parseColor("#171746"))
+                                            .show();
+                                }
+                            } else {
+                                due_date.setError("Empty");
+                                Snackbar.make(lay, "Please Add Due Date.", Snackbar.LENGTH_LONG)
+                                        .setActionTextColor(Color.parseColor("#171746"))
+                                        .setTextColor(Color.parseColor("#FF7F5C"))
+                                        .setBackgroundTint(Color.parseColor("#171746"))
+                                        .show();
+                            }
+                        } else {
+                            dispose_summary.setError("Empty");
+                            Snackbar.make(lay, "Please Add Judgement Summary.", Snackbar.LENGTH_LONG)
+                                    .setActionTextColor(Color.parseColor("#171746"))
+                                    .setTextColor(Color.parseColor("#FF7F5C"))
+                                    .setBackgroundTint(Color.parseColor("#171746"))
+                                    .show();
+                        }
+                    }
+                    else{
+                        district.setError("Empty");
+                        Snackbar.make(lay,"Please Add District",Snackbar.LENGTH_LONG)
+                                .setActionTextColor(Color.parseColor("#171746"))
+                                .setTextColor(Color.parseColor("#FF7F5C"))
+                                .setBackgroundTint(Color.parseColor("#171746"))
+                                .show();
+                    }
+                }
+                else{
+                    nature.setError("Empty");
+                    Snackbar.make(lay,"Please Add Nature of the Case.",Snackbar.LENGTH_LONG)
+                            .setActionTextColor(Color.parseColor("#171746"))
+                            .setTextColor(Color.parseColor("#FF7F5C"))
+                            .setBackgroundTint(Color.parseColor("#171746"))
+                            .show();
+                }
+            }
+            else{
+                date_of_filing.setError("Empty");
+                Snackbar.make(lay,"Please Add Date of Filing",Snackbar.LENGTH_LONG)
+                        .setActionTextColor(Color.parseColor("#171746"))
+                        .setTextColor(Color.parseColor("#FF7F5C"))
+                        .setBackgroundTint(Color.parseColor("#171746"))
+                        .show();
+            }
         });
 
         legal2.setOnClickListener(v -> {
@@ -400,6 +430,19 @@ public class CasesAgainPoliceForm extends Fragment {
             dialog.show();
         });
 
+        due_date.setOnClickListener(v->{
+            Calendar cal = Calendar.getInstance();
+            int year = cal.get(Calendar.YEAR);
+            int month = cal.get(Calendar.MONTH);
+            int day = cal.get(Calendar.DAY_OF_MONTH);
+            DatePickerDialog dialog = new DatePickerDialog(
+                    getActivity(),
+                    mDateSetListener,
+                    year, month, day);
+            check_ = 4;
+            dialog.show();
+        });
+
         mDateSetListener = (datePicker, year, month, day) -> {
 
             String d = String.valueOf(day);
@@ -425,12 +468,14 @@ public class CasesAgainPoliceForm extends Fragment {
             if (check_ == 3) {
                 date_of_filing.setText(date);
             }
+            if (check_ == 4){
+                due_date.setText(date);
+            }
         };
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         ItemTouchHelper itemTouchHelper2 = new ItemTouchHelper(simpleCallback1);
         itemTouchHelper.attachToRecyclerView(recyclerView2);
         itemTouchHelper2.attachToRecyclerView(recyclerView3);
-
 
         back.setOnClickListener(v -> back());
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
@@ -458,6 +503,26 @@ public class CasesAgainPoliceForm extends Fragment {
     }
 
 
+    private void get_districts_phone() {
+        reference_phone.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot ds:snapshot.getChildren()){
+                    district_list.add(ds.getKey());
+                    //Creating the instance of ArrayAdapter containing list of language names
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>
+                            (getContextNullSafety(), android.R.layout.select_dialog_item, district_list);
+                    //Getting the instance of AutoCompleteTextView
+                    district.setThreshold(1);//will start working from first character
+                    district.setAdapter(adapter);//setting the adapter data into the AutoCompleteTextView
+                    district.setTextColor(Color.RED);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
+    }
+
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -465,6 +530,7 @@ public class CasesAgainPoliceForm extends Fragment {
         contextNullSafe = context;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void addTask() {
 
         Dialog dialog = new Dialog(getContext());
@@ -492,27 +558,28 @@ public class CasesAgainPoliceForm extends Fragment {
                 }
                 dialog.dismiss();
             } else
-                MotionToast.Companion.darkColorToast(getActivity(),
+                MotionToast.Companion.darkColorToast(requireActivity(),
                         "Info",
                         "task cannot be empty.",
                         MotionToastStyle.WARNING,
                         MotionToast.GRAVITY_BOTTOM,
                         MotionToast.SHORT_DURATION,
-                        ResourcesCompat.getFont(getActivity(), R.font.helvetica_regular));
+                        ResourcesCompat.getFont(requireActivity(), R.font.helvetica_regular));
         });
     }
 
     private void datasend(){
 
         reference.child(pushkey).child("district").setValue(district.getText().toString());
-        reference.child(pushkey).child("station").setValue(date_of_filing.getText().toString());
-        reference.child(pushkey).child("crimeNo").setValue(nature.getText().toString());
-        reference.child(pushkey).child("crimeYear").setValue(time_limit.getText().toString());
-        reference.child(pushkey).child("caseYear").setValue(summary.getText().toString());
-        reference.child(pushkey).child("noticeDate").setValue(date_reply.getText().toString());
-        reference.child(pushkey).child("hearingDate").setValue(judgement_date.getText().toString());
-        reference.child(pushkey).child("type").setValue(type);
+        reference.child(pushkey).child("dateOfFiling").setValue(date_of_filing.getText().toString());
+        reference.child(pushkey).child("nature").setValue(nature.getText().toString());
+        reference.child(pushkey).child("timeLimit").setValue(time_limit.getText().toString());
+        reference.child(pushkey).child("summary").setValue(summary.getText().toString());
+        reference.child(pushkey).child("dateReply").setValue(date_reply.getText().toString());
+        reference.child(pushkey).child("judgementDate").setValue(judgement_date.getText().toString());
+        reference.child(pushkey).child("Judgement").setValue(type);
         reference.child(pushkey).child("dSummary").setValue(dispose_summary.getText().toString());
+        reference.child(pushkey).child("dueDate").setValue(due_date.getText().toString());
         reference.child(pushkey).child("pushkey").setValue(pushkey);
     }
 
