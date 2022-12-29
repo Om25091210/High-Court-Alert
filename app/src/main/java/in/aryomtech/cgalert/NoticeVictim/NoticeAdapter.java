@@ -46,14 +46,16 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder
         holder.district.setText(list.get(position).getDistrict());
         holder.station.setText(list.get(position).getStation());
         holder.crime_no.setText(list.get(position).getCrimeNo());
-        holder.crime_yr.setText(list.get(position).getCrimeYear());
+        holder.crime_yr.setText(" / " + list.get(position).getCrimeYear());
         holder.case_type.setText(list.get(position).getCaseType());
-        holder.case_yr.setText(list.get(position).getCaseYear());
+        holder.case_yr.setText(" / " + list.get(position).getCaseYear());
         holder.notice_dt.setText(list.get(position).getNoticeDate());
         holder.hearing_dt.setText(list.get(position).getHearingDate());
         holder.advocate_name.setText(list.get(position).getAdvocate());
+        holder.appellant.setText(list.get(position).getAppellant());
+        holder.case_no.setText(list.get(position).getCaseNo());
         date = list.get(position).getHearingDate();
-        holder.message.setText("अतः उक्त अपराध क्रमांक के पीड़ित को स्वयं मय वैध पहचान पत्र के साथ या अपने अधिवक्ता के माध्यम से दिनांक - " + date + " को उच्च न्यायालय, बिलासपुर में   के हेल्प डेस्क या (DLSA) " +
+        holder.message.setText("अतः उक्त अपराध क्रमांक के पीड़ित को स्वयं मय वैध पहचान पत्र के साथ या अपने अधिवक्ता के माध्यम से दिनांक - " + date + " को उच्च न्यायालय, बिलासपुर के हेल्प डेस्क या संबंधित जिले के (DLSA) " +
                 "DISTRICT LEGAL SERVICES AUTHORITY में उपस्थित होकर अपना प्रतिनिधित्व सुनिश्चित करने हेतु सूचित करने का कष्ट करें।");
 
         holder.layout.setOnClickListener(v->{
@@ -74,7 +76,7 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView district,station,crime_no,crime_yr,case_type,case_yr,notice_dt,hearing_dt,advocate_name,message;
+        TextView district,station,crime_no,crime_yr,case_type,case_yr,notice_dt,hearing_dt,advocate_name,message,appellant,case_no;
         ConstraintLayout layout;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -90,6 +92,8 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder
             advocate_name = itemView.findViewById(R.id.advocate_ed);
             message = itemView.findViewById(R.id.message);
             layout = itemView.findViewById(R.id.notice_layout);
+            appellant = itemView.findViewById(R.id.appellant);
+            case_no  = itemView.findViewById(R.id.case_no_ed);
         }
     }
 }

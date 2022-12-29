@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,6 +48,9 @@ public class NoticemainAdmin extends Fragment {
     boolean isadmin = false;
     String stat_name;
     FirebaseAuth auth;
+    ImageView cg_logo;
+    TextView no_data;
+    SwipeRefreshLayout mSwipeRefreshLayout;
     FirebaseUser user;
 
     @Override
@@ -64,6 +68,11 @@ public class NoticemainAdmin extends Fragment {
 
         recyclerView = view.findViewById(R.id.rv);
         list = new ArrayList<>();
+
+        cg_logo=view.findViewById(R.id.imageView3);
+        no_data=view.findViewById(R.id.no_data);
+
+        mSwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         NoticeAdapter adapter = new NoticeAdapter(getContextNullSafety(), list);
         LinearLayoutManager mManager = new LinearLayoutManager(getContextNullSafety());
         recyclerView.setItemViewCacheSize(500);
@@ -77,7 +86,11 @@ public class NoticemainAdmin extends Fragment {
         station.setText("ADMIN");
        // get_status_of_admin();
 
-        reference.addValueEventListener(new ValueEventListener() {
+
+        cg_logo.setVisibility(View.VISIBLE);
+        no_data.setVisibility(View.VISIBLE);
+        mSwipeRefreshLayout.setRefreshing(true);
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -85,9 +98,14 @@ public class NoticemainAdmin extends Fragment {
                 for(DataSnapshot ds:snapshot.getChildren()){
                     list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
                 }
+                if(list.size()!=0){
+                    cg_logo.setVisibility(View.GONE);
+                    no_data.setVisibility(View.GONE);
+                }
                 NoticeAdapter adapter = new NoticeAdapter(getContextNullSafety(), list);
                 adapter.notifyDataSetChanged();
                 recyclerView.setAdapter(adapter);
+                mSwipeRefreshLayout.setRefreshing(false);
             }
 
             @Override

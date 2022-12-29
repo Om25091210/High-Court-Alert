@@ -13,6 +13,8 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -26,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -50,10 +53,11 @@ public class NoticeForm extends Fragment {
     int check_;
     DatabaseReference reference;
     AutoCompleteTextView district,station;
-    EditText crime_no,crime_year,case_year,advocate;
+    EditText crime_no,crime_year,case_year,advocate, appellant, caseNo;
     TextView notice_date, hearing_date, submit , crr,cra,mcrc;
     FirebaseAuth auth;
     FirebaseUser user;
+    LottieAnimationView done;
     ConstraintLayout lay;
     DatabaseReference reference_phone;
     List<String> district_list,ps_list;
@@ -81,9 +85,12 @@ public class NoticeForm extends Fragment {
         district = view.findViewById(R.id.ac_district);
         station = view.findViewById(R.id.policeStation);
         get_districts_phone();
+        caseNo = view.findViewById(R.id.case_no_edt);
+        done = view.findViewById(R.id.animation_view);
         crime_no = view.findViewById(R.id.crime_no_edt);
         crime_year = view.findViewById(R.id.crime_year_edt);
         case_year = view.findViewById(R.id.case_year_edt);
+        appellant = view.findViewById(R.id.appellant_edt);
         notice_date = view.findViewById(R.id.notice_date);
         hearing_date = view.findViewById(R.id.next_hearing_date);
         advocate = view.findViewById(R.id.name_edt);
@@ -106,6 +113,8 @@ public class NoticeForm extends Fragment {
             check_=0;
             dialog.show();
     });
+
+
 
         hearing_date.setOnClickListener(v->{
 
@@ -193,14 +202,37 @@ public class NoticeForm extends Fragment {
                         if(!case_year.getText().toString().trim().equals("")){
                             if(!notice_date.getText().toString().trim().equals("")){
                                 if(!hearing_date.getText().toString().trim().equals("")){
-                                    if(!advocate.getText().toString().trim().equals("")){
-                                       if (val == 0){
-                                           Toast.makeText(getActivity(), "Please select the case type", Toast.LENGTH_SHORT).show();
-                                       }
-                                       else {
-                                           datasend();
-                                       }
-                                    }
+                                    if(!advocate.getText().toString().trim().equals("")) {
+                                        if (!appellant.getText().toString().trim().equals("")) {
+                                            if (!caseNo.getText().toString().trim().equals("")) {
+                                                if (val == 0) {
+                                                    Toast.makeText(getActivity(), "Please select the case type", Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    done.setVisibility(View.VISIBLE);
+                                                    new Handler(Looper.myLooper()).postDelayed(() -> {
+                                                        done.setVisibility(View.GONE);
+                                                    }, 800);
+
+                                                    datasend();
+                                                }
+                                            } else {
+                                                caseNo.setError("Empty");
+                                                Snackbar.make(lay, "Please Add Case Number", Snackbar.LENGTH_LONG)
+                                                        .setActionTextColor(Color.parseColor("#171746"))
+                                                        .setTextColor(Color.parseColor("#FF7F5C"))
+                                                        .setBackgroundTint(Color.parseColor("#171746"))
+                                                        .show();
+                                            }
+                                        }
+                                            else {
+                                                appellant.setError("Empty");
+                                                Snackbar.make(lay, "Please Add Appellant Name", Snackbar.LENGTH_LONG)
+                                                        .setActionTextColor(Color.parseColor("#171746"))
+                                                        .setTextColor(Color.parseColor("#FF7F5C"))
+                                                        .setBackgroundTint(Color.parseColor("#171746"))
+                                                        .show();
+                                            }
+                                        }
                                     else{
                                         advocate.setError("Empty");
                                         Snackbar.make(lay,"Please Add Advocate Name",Snackbar.LENGTH_LONG)
@@ -299,6 +331,9 @@ public class NoticeForm extends Fragment {
         reference.child(pushkey).child("noticeDate").setValue(notice_date.getText().toString());
         reference.child(pushkey).child("hearingDate").setValue(hearing_date.getText().toString());
         reference.child(pushkey).child("advocate").setValue(advocate.getText().toString());
+        reference.child(pushkey).child("appellant").setValue(appellant.getText().toString());
+        reference.child(pushkey).child("notified").setValue("Once");
+        reference.child(pushkey).child("caseNo").setValue(caseNo.getText().toString());
         reference.child(pushkey).child("pushkey").setValue(pushkey);
 
         if (val ==1){
