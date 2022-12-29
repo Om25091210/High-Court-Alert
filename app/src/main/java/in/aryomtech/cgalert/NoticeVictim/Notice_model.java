@@ -12,10 +12,12 @@ public class Notice_model {
     private String hearingDate;
     private String noticeDate;
     private String station;
+    private String appellant;
+    private String caseNo;
 
     public Notice_model(){}
 
-    public Notice_model(String advocate, String caseType, String caseYear, String crimeNo, String crimeYear, String district, String hearingDate, String noticeDate, String station, String pushkey) {
+    public Notice_model(String advocate, String caseType, String caseYear, String crimeNo, String crimeYear, String district, String hearingDate, String noticeDate, String station, String pushkey, String appellant, String caseNo) {
         this.advocate = advocate;
         this.caseType = caseType;
         this.caseYear = caseYear;
@@ -26,6 +28,8 @@ public class Notice_model {
         this.noticeDate = noticeDate;
         this.station = station;
         this.pushkey = pushkey;
+        this.appellant = appellant;
+        this.caseNo = caseNo;
     }
 
     public String getAdvocate() {
@@ -66,5 +70,13 @@ public class Notice_model {
 
     public String getPushkey() {
         return pushkey;
+    }
+
+    public String getCaseNo() {
+        return caseNo;
+    }
+
+    public String getAppellant() {
+        return appellant;
     }
 }

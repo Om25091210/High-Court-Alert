@@ -13,7 +13,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +53,7 @@ public class NoticeMain extends Fragment {
     FirebaseUser user;
     ImageView cg_logo;
     TextView no_data;
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,6 +72,7 @@ public class NoticeMain extends Fragment {
 
         recyclerView = view.findViewById(R.id.rv);
         list = new ArrayList<>();
+        mSwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         NoticeAdapter adapter = new NoticeAdapter(getContextNullSafety(), list);
         LinearLayoutManager mManager = new LinearLayoutManager(getContextNullSafety());
         recyclerView.setItemViewCacheSize(500);
@@ -82,13 +86,16 @@ public class NoticeMain extends Fragment {
 
         cg_logo.setVisibility(View.VISIBLE);
         no_data.setVisibility(View.VISIBLE);
-        reference.addValueEventListener(new ValueEventListener() {
+        mSwipeRefreshLayout.setRefreshing(true);
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for (DataSnapshot ds:snapshot.getChildren()) {
-                    if ((Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("station").getValue(String.class))).toUpperCase().equals(stat_name.substring(3))) {
+                    Log.e("statp",snapshot.child(Objects.requireNonNull(ds.getKey())).child("station").getValue(String.class));
+                    Log.e("statq",stat_name.substring(3));
+                    if ((Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("station").getValue(String.class)).trim()).toUpperCase().equals(stat_name.substring(3).trim())) {
                         list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
                     }
                 }
@@ -98,6 +105,7 @@ public class NoticeMain extends Fragment {
                 }
                 NoticeAdapter adapter = new NoticeAdapter(getContextNullSafety(), list);
                 adapter.notifyDataSetChanged();
+                mSwipeRefreshLayout.setRefreshing(false);
                 recyclerView.setAdapter(adapter);
             }
 
@@ -107,6 +115,7 @@ public class NoticeMain extends Fragment {
             }
         });
 
+        mSwipeRefreshLayout.setRefreshing(false);
         back.setOnClickListener(v -> {
             FragmentManager fm=((FragmentActivity) getContextNullSafety()).getSupportFragmentManager();
             FragmentTransaction ft=fm.beginTransaction();

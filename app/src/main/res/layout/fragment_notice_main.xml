@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    android:id="@+id/layout"
-    tools:context=".NoticeVictim.NoticeMain">
+    android:layout_height="wrap_content"
+    android:background="@color/use_bg"
+    android:clickable="true"
+    android:id="@+id/swipe_refresh_layout"
+    android:focusable="true">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="30dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/linearLayout11"
@@ -38,12 +43,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginStart="20dp"
             android:fontFamily="@font/quicksand_bold"
             android:textColor="@color/use_orange"
-            android:layout_marginStart="20dp"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="@+id/imageView4"
-            app:layout_constraintEnd_toStartOf="@+id/form"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageView4"
             app:layout_constraintTop_toTopOf="@+id/imageView4" />
 
@@ -98,7 +103,7 @@
         android:id="@+id/rv"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="20dp"
+        android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/linearLayout11"
         app:layout_constraintStart_toStartOf="@+id/linearLayout11"
@@ -107,3 +112,4 @@
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
