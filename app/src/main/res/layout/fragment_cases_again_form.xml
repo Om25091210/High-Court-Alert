@@ -316,26 +316,20 @@
                 android:layout_marginTop="20dp"
                 android:orientation="horizontal">
 
-                <TextView
+                <ImageView
                     android:id="@+id/add_attachment"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="50dp"
                     android:layout_gravity="center"
                     android:gravity="center"
+                    android:padding="11dp"
+                    android:layout_weight="1"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
                     android:background="@drawable/bg_card_red"
                     android:backgroundTint="@color/use_orange"
-                    android:fontFamily="@font/quicksand_bold"
-                    android:paddingTop="15dp"
-                    android:paddingBottom="15dp"
-                    android:layout_weight="1"
-                    android:text="@string/add_attachment"
-                    android:textColor="@color/white"
-                    android:textSize="15sp"
-                    tools:ignore="TextContrastCheck"
-                    app:drawableTint="@color/white"
-                    app:drawableStartCompat="@drawable/ic_add" />
+                    android:src="@drawable/link_clip"
+                    app:tint="@color/white" />
                 <TextView
                     android:id="@+id/send"
                     android:layout_width="match_parent"
