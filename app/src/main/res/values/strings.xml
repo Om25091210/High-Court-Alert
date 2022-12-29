@@ -163,6 +163,7 @@
     <string name="name_of_the_appellant">Name of the Appellant</string>
     <string name="enter_case_number">Enter Case Number</string>
     <string name="case_number">Case Number</string>
+    <string name="upload">Upload</string>
 
 
     <array name="menuOptions">

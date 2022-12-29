@@ -1,23 +1,21 @@
 package in.aryomtech.cgalert.NoticeVictim;
 
+import static androidx.core.app.ActivityCompat.startActivityForResult;
+
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import org.w3c.dom.Text;
-
 import java.util.List;
-
-import in.aryomtech.cgalert.Adapter_dataShow;
 import in.aryomtech.cgalert.R;
 
 public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder>{
@@ -25,6 +23,7 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder
 
     List<Notice_model> list;
     Context context;
+    Uri selected_uri_pdf=Uri.parse("");
     String date;
     int x = 0;
 
@@ -54,6 +53,14 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder
         holder.advocate_name.setText(list.get(position).getAdvocate());
         holder.appellant.setText(list.get(position).getAppellant());
         holder.case_no.setText(list.get(position).getCaseNo());
+        holder.download.setOnClickListener(v->{
+            try {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(list.get(position).getDoc_url()));
+                context.startActivity(browserIntent);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
         date = list.get(position).getHearingDate();
         holder.message.setText("अतः उक्त अपराध क्रमांक के पीड़ित को स्वयं मय वैध पहचान पत्र के साथ या अपने अधिवक्ता के माध्यम से दिनांक - " + date + " को उच्च न्यायालय, बिलासपुर के हेल्प डेस्क या संबंधित जिले के (DLSA) " +
                 "DISTRICT LEGAL SERVICES AUTHORITY में उपस्थित होकर अपना प्रतिनिधित्व सुनिश्चित करने हेतु सूचित करने का कष्ट करें।");
@@ -78,9 +85,11 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView district,station,crime_no,crime_yr,case_type,case_yr,notice_dt,hearing_dt,advocate_name,message,appellant,case_no;
         ConstraintLayout layout;
+        TextView download;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            download = itemView.findViewById(R.id.download);
             district = itemView.findViewById(R.id.district_ed);
             station = itemView.findViewById(R.id.station_name);
             crime_no = itemView.findViewById(R.id.crime_no_ed);
