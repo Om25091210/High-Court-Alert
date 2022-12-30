@@ -70,6 +70,7 @@ import java.util.Objects;
 import in.aryomtech.cgalert.DB.TinyDB;
 import in.aryomtech.cgalert.Fragments.Adapter.Excel_Adapter;
 import in.aryomtech.cgalert.Fragments.model.Excel_data;
+import in.aryomtech.cgalert.Fragments.model.smsData;
 import in.aryomtech.cgalert.R;
 import in.aryomtech.cgalert.fcm.Specific;
 import soup.neumorphism.NeumorphButton;
@@ -114,6 +115,7 @@ public class pending_return extends Fragment {
     private in.aryomtech.cgalert.Fragments.Interface.onClickInterface onClickInterface;
     private in.aryomtech.cgalert.Fragments.Interface.onAgainClickInterface onAgainClickInterface;
     TinyDB tinyDB;
+    List<smsData> smsDataList;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -127,6 +129,7 @@ public class pending_return extends Fragment {
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
         );
         added_list=new ArrayList<>();
+        smsDataList=new ArrayList<>();
         mSwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         search=view.findViewById(R.id.search);
         select_all=view.findViewById(R.id.checkBox4);
@@ -150,11 +153,13 @@ public class pending_return extends Fragment {
             join.setVisibility(View.VISIBLE);
             bulk_delete.setVisibility(View.VISIBLE);
             select_all.setVisibility(View.VISIBLE);
+            j_column.setVisibility(View.VISIBLE);
         }
         else {
             join.setVisibility(View.GONE);
             bulk_delete.setVisibility(View.GONE);
             select_all.setVisibility(View.GONE);
+            j_column.setVisibility(View.GONE);
         }
 
         //Initialize Database
@@ -682,10 +687,11 @@ public class pending_return extends Fragment {
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         if (snapshot.child(ds.getKey()).child(phone_numbers.get(i)).exists()) {
                             check=1;
-                            reference.child(keys_copy_selected_phone.get(i)).child("reminded").setValue("once");
+                            extract_data(i,keys_copy_selected_phone.get(i),phone_numbers.get(i));
+                            /*reference.child(keys_copy_selected_phone.get(i)).child("reminded").setValue("once");
                             String body = extract_data(i);
                             ArrayList<String> list = sms.divideMessage(body);
-                            sms.sendMultipartTextMessage(phone_numbers.get(i), null, list, null, null);
+                            sms.sendMultipartTextMessage(phone_numbers.get(i), null, list, null, null);*/
                         }
                     }
                     if(check==0)
@@ -701,6 +707,9 @@ public class pending_return extends Fragment {
                         .setTextColor(Color.parseColor("#000000"))
                         .setBackgroundTint(Color.parseColor("#D9F5F8"))
                         .show();
+
+                send_sms_api();
+
                 dialog1.dismiss();
             }
             @Override
@@ -717,7 +726,7 @@ public class pending_return extends Fragment {
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         if (snapshot.child(ds.getKey()).child(phone_numbers.get(i)).exists()) {
                             check=1;
-                            String body=extract_data(i);
+                            String body=extract_data(i, phone_numbers.get(i), phone_numbers.get(i));
                             if(snapshot.child(ds.getKey()).child("token").exists()) {
                                 reference.child(keys_copy_selected_phone.get(i)).child("reminded").setValue("once");
                                 for (DataSnapshot dd : snapshot.child(ds.getKey()).child("token").getChildren()) {
@@ -759,12 +768,13 @@ public class pending_return extends Fragment {
         });
     }
 
-    private String extract_data(int index) {
+    private String extract_data(int index, String pushkey, String ph_number) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy",Locale.getDefault());
         Date date = new Date();
         String format=case_data_list_filter.get(index);
-        String C=null,B=null,K=null,D=null,E=null,G=null,H=null,I=null,type=null;
+        String C=null,B=null,K=null,D=null,E=null,G=null,H=null,I=null,type=null,L=null;
         int temp=0;
+        Log.e("Format",format);
         for(int i=0;i<format.length();i++){
             if(format.charAt(i)=='~'){
                 if(type==null){
@@ -807,6 +817,8 @@ public class pending_return extends Fragment {
         }
         if(type.equals("RM RETURN")){
             String current=formatter.format(date);
+            smsData smsData=new smsData(current,E+"/"+G,H+"/"+I,B,K,"1107166841984501076",ph_number,D+" No.",pushkey);
+            smsDataList.add(smsData);
             return "हाईकोर्ट अलर्ट:-डायरी वापसी"+"\nदिनाँक:- "+current+" \n"
                     +"\n"+C+"\n"+D+" No. "+E+"/"+G+"\n"
                     +"Crime No. "+H+"/"+I+"\n"
@@ -816,6 +828,8 @@ public class pending_return extends Fragment {
         }
         else{
             String current=formatter.format(date);
+            smsData smsData=new smsData(current,E+"/"+G,H+"/"+I,B,K,"1107166842005504102",ph_number,D+" No.",pushkey);
+            smsDataList.add(smsData);
             return "हाईकोर्ट अलर्ट:-डायरी माँग"+"\nदिनाँक:- "+current+" \n"
                     +"\n"+C+"\n"+D+" No. "+E+"/"+G+"\n"
                     +"Crime No. "+H+"/"+I+"\n"
@@ -937,6 +951,87 @@ public class pending_return extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {}
         });
 
+    }
+    private void send_sms_api() {
+        // create a new Gson instance
+        Gson gson = new Gson();
+        // convert your list to json
+        String jsonExcelList = gson.toJson(smsDataList);
+        // print your generated json
+        Log.e("jsonCartList: " , jsonExcelList);
+        String prev_keygen=smsDataList.get(0).getTid()+"-"+smsDataList.get(0).getMob_no()+"-"+smsDataList.get(0).getCrime_no();
+        JSONObject jsonBody = new JSONObject();
+        try
+        {
+            jsonBody.put("data", jsonExcelList);
+            jsonBody.put("keygen",hashGenerator(prev_keygen));
+            Log.e("body", "httpCall_collect: "+hashGenerator(prev_keygen));
+        }
+        catch (Exception e)
+        {
+            Log.e("Error","JSON ERROR");
+        }
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getContextNullSafety());
+        String URL = "https://sangyan.co.in/sendmsg";
+
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, URL,jsonBody,
+                new com.android.volley.Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // enjoy your response
+                        String code=response.optString("code")+"";
+                        if(code.equals("202")){
+                            for(int i=0;i<smsDataList.size();i++){
+                                reference.child(smsDataList.get(i).getPushkey()).child("reminded").setValue("once");
+                            }
+                            smsDataList.clear();
+                            Snackbar.make(join,"SMS sent Successfully.",Snackbar.LENGTH_LONG)
+                                    .setActionTextColor(Color.parseColor("#171746"))
+                                    .setTextColor(Color.parseColor("#FF7F5C"))
+                                    .setBackgroundTint(Color.parseColor("#171746"))
+                                    .show();
+                            dialog1.dismiss();
+                        }
+                        else{
+                            Snackbar.make(join,"Failed to send sms",Snackbar.LENGTH_LONG)
+                                    .setActionTextColor(Color.parseColor("#000000"))
+                                    .setTextColor(Color.parseColor("#000000"))
+                                    .setBackgroundTint(Color.parseColor("#FF5252"))
+                                    .show();
+                        }
+                        Log.e("BULK code",code+"");
+                        Log.e("response",response.toString());
+                    }
+                }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // enjoy your error status
+                Log.e("Status of code = ","Wrong "+error);
+                Snackbar.make(join,"Failed to send sms.",Snackbar.LENGTH_LONG)
+                        .setActionTextColor(Color.parseColor("#000000"))
+                        .setTextColor(Color.parseColor("#000000"))
+                        .setBackgroundTint(Color.parseColor("#FF5252"))
+                        .show();
+            }
+        });
+        stringRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 15000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 15000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+            }
+        });
+        Log.d("string", stringRequest.toString());
+        requestQueue.add(stringRequest);
     }
 
     private void update_J_Excel(List<Excel_data> j_dates_list,String j_date) {

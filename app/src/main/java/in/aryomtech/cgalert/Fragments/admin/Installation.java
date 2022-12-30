@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -27,6 +28,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import in.aryomtech.cgalert.Fragments.Adapter.installation_Adapter;
 import in.aryomtech.cgalert.Fragments.model.user_data;
@@ -37,6 +39,7 @@ public class Installation extends Fragment {
 
     View view;
     EditText search;
+    ImageView back;
     RecyclerView recyclerView;
     private Context contextNullSafe;
     DatabaseReference reference;
@@ -53,6 +56,7 @@ public class Installation extends Fragment {
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
         );
         recyclerView=view.findViewById(R.id.recycler_view);
+        back=view.findViewById(R.id.imageView4);
         reference= FirebaseDatabase.getInstance().getReference().child("users");
         search=view.findViewById(R.id.search);
 
@@ -83,17 +87,28 @@ public class Installation extends Fragment {
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),callback);
-
+        back.setOnClickListener(v->{
+            back();
+        });
         return view;
     }
 
+    private void back() {
+        FragmentManager fm=((FragmentActivity) getContextNullSafety()).getSupportFragmentManager();
+        FragmentTransaction ft=fm.beginTransaction();
+        if(fm.getBackStackEntryCount()>0) {
+            fm.popBackStack();
+        }
+        ft.commit();
+    }
+    //TODO: Search by number only working will fix in future.
     private void search(CharSequence s) {
         mylist.clear();
         for(user_data object:list){
-            if (object.getName().contains(s.toString().toLowerCase().trim())) {
+            if (object.getPhone().contains(s.toString().toLowerCase().trim())) {
                 mylist.add(object);
             }
-            else if(object.getPhone().contains(s.toString().toLowerCase().trim())){
+            else if(object.getName().contains(s.toString().toLowerCase().trim())){
                 mylist.add(object);
             }
         }
@@ -108,7 +123,7 @@ public class Installation extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot ds:snapshot.getChildren()) {
-                    list.add(snapshot.child(ds.getKey()).getValue(user_data.class));
+                    list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(user_data.class));
                 }
                 installation_Adapter installation_adapter=new installation_Adapter(getContextNullSafety(),list);
                 installation_adapter.notifyDataSetChanged();

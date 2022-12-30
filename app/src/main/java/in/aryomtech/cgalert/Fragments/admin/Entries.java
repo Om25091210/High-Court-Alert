@@ -37,7 +37,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import in.aryomtech.cgalert.R;
-import in.aryomtech.cgalert.databinding.FragmentEntriesBinding;
 
 
 public class Entries extends Fragment {

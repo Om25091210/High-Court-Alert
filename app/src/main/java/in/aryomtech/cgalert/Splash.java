@@ -3,34 +3,21 @@ package in.aryomtech.cgalert;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.net.ConnectivityManager;
-import android.net.NetworkCapabilities;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.messaging.FirebaseMessaging;
-
-import java.util.Locale;
 
 import in.aryomtech.cgalert.DB.TinyDB;
 import in.aryomtech.cgalert.Fragments.Select_District;
-import in.aryomtech.cgalert.policestation.p_Home;
 
 public class Splash extends AppCompatActivity {
 
@@ -63,7 +50,7 @@ public class Splash extends AppCompatActivity {
                 Log.e("user_is : ",user_is);
                 Log.e("auth_entry : ",auth_entry+"");
                 if(user_is.equals("p_home") && auth_entry){
-                    Intent i = new Intent(Splash.this, entry_actiivity.class);
+                    Intent i = new Intent(Splash.this, Dashboard.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(i);
                     finish();
@@ -72,7 +59,7 @@ public class Splash extends AppCompatActivity {
                     TinyDB tinyDB=new TinyDB(Splash.this);
                     boolean tiny_sel_dist=tinyDB.getBoolean("entered_select_district");
                     if(tiny_sel_dist) {
-                        Intent i = new Intent(Splash.this, entry_actiivity.class);
+                        Intent i = new Intent(Splash.this, Dashboard.class);
                         i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(i);
                         finish();

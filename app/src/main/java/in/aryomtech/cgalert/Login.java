@@ -45,7 +45,6 @@ import com.simform.customcomponent.SSCustomEdittextOutlinedBorder;
 
 import java.io.File;
 import java.text.DecimalFormat;
-import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -53,7 +52,6 @@ import java.util.concurrent.TimeUnit;
 
 import in.aryomtech.cgalert.DB.TinyDB;
 import in.aryomtech.cgalert.Fragments.Select_District;
-import in.aryomtech.cgalert.policestation.p_Home;
 import www.sanju.motiontoast.MotionToast;
 import www.sanju.motiontoast.MotionToastStyle;
 
@@ -75,7 +73,7 @@ public class Login extends AppCompatActivity {
     String station_name;
     // string for storing our verification ID
     private String verificationId;
-    DatabaseReference user_reference;
+    DatabaseReference user_reference,reference;
     ArrayList<String> emptylist=new ArrayList<>();
     FirebaseUser user;
 
@@ -111,6 +109,7 @@ public class Login extends AppCompatActivity {
                     Log.d("topic_log", msg);
                 });
         user_reference= FirebaseDatabase.getInstance().getReference().child("users");
+        reference = FirebaseDatabase.getInstance().getReference().child("Phone numbers");
         getting_device_token();
         linearLayout=findViewById(R.id.sign_in);
         logo_layout=findViewById(R.id.logo_layout);
@@ -312,7 +311,7 @@ public class Login extends AppCompatActivity {
         String pkey=user_reference.push().getKey();
 
         //TODO: Check number whether it exists in our database if yes then take it to home otherwise show him the toast.
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Phone numbers");
+
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -372,7 +371,7 @@ public class Login extends AppCompatActivity {
                     user_reference.child(user.getUid()).child("phone").setValue(user.getPhoneNumber());
                     user_reference.child(user.getUid()).child("name").setValue(station_name);
                     user_reference.child(user.getUid()).child(Objects.requireNonNull(user.getPhoneNumber()).substring(3)).setValue(user.getPhoneNumber());
-                    Intent i = new Intent(Login.this, entry_actiivity.class);
+                    Intent i = new Intent(Login.this, Dashboard.class);
                     i.putExtra("station_name",station_name);
                     startActivity(i);
                     finish();
@@ -444,7 +443,7 @@ public class Login extends AppCompatActivity {
                     }
                     else {
                         tinyDB.putBoolean("entered_select_district",true);
-                        Intent i = new Intent(Login.this, entry_actiivity.class);
+                        Intent i = new Intent(Login.this, Dashboard.class);
                         startActivity(i);
                         finish();
                     }
@@ -513,7 +512,7 @@ public class Login extends AppCompatActivity {
                     user_reference.child(user.getUid()).child("phone").setValue(user.getPhoneNumber());
                     user_reference.child(user.getUid()).child("name").setValue("admin");
                     user_reference.child(user.getUid()).child(Objects.requireNonNull(user.getPhoneNumber()).substring(3)).setValue(user.getPhoneNumber());
-                    Intent i = new Intent(Login.this, entry_actiivity.class);
+                    Intent i = new Intent(Login.this, Dashboard.class);
                     startActivity(i);
                     finish();
                 }
