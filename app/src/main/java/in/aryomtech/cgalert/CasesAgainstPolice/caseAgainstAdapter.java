@@ -68,8 +68,6 @@ public class caseAgainstAdapter extends RecyclerView.Adapter<caseAgainstAdapter.
             FragmentTransaction ft = manager.beginTransaction();
             ft.replace(R.id.swipe, fragment);
             ft.commit();
-
-
         });
 
     }

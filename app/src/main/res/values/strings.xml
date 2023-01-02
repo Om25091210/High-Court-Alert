@@ -16,6 +16,8 @@
     <string name="select_all">Select all</string>
     <string name="add__">Add</string>
     <string name="dash">-</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
     <string name="case_no">Case No. -</string>
     <string name="case_type">Case Type -</string>
     <string name="name">Name -</string>
