@@ -1,10 +1,13 @@
 package in.aryomtech.cgalert.NoticeVictim;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -17,6 +20,7 @@ import java.util.List;
 import in.aryomtech.cgalert.NoticeVictim.Fragments.AllNTV;
 import in.aryomtech.cgalert.NoticeVictim.Fragments.TodayNTV;
 import in.aryomtech.cgalert.NoticeVictim.Fragments.UrgentNTV;
+import in.aryomtech.cgalert.NoticeVictim.model.Notice_model;
 import in.aryomtech.cgalert.R;
 import in.aryomtech.myapplication.v4.FragmentPagerItemAdapter;
 import in.aryomtech.myapplication.v4.FragmentPagerItems;
@@ -56,11 +60,19 @@ public class NoticemainAdmin extends AppCompatActivity {
 
         SmartTabLayout viewPagerTab = findViewById(R.id.viewpagertab);
         viewPagerTab.setViewPager(viewPager);
+        boolean isadmin=getSharedPreferences("isAdmin_or_not", Context.MODE_PRIVATE)
+                .getBoolean("authorizing_admin",false);
+        if(isadmin){
+            form.setVisibility(View.VISIBLE);
+        }
+        else{
+            form.setVisibility(View.GONE);
+        }
         form.setOnClickListener(v->{
             NoticemainAdmin.this.getSupportFragmentManager()
                     .beginTransaction()
                     .setCustomAnimations( R.anim.enter_from_right, R.anim.exit_to_left,R.anim.enter_from_left, R.anim.exit_to_right)
-                    .add(R.id.constraint,new NoticeForm())
+                    .add(R.id.constraint,new NoticeForm(),"noticeform")
                     .addToBackStack(null)
                     .commit();
         });
@@ -72,6 +84,12 @@ public class NoticemainAdmin extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        finish();
+        Fragment test = getSupportFragmentManager().findFragmentByTag("noticeform");
+        if (test != null && test.isVisible()) {
+            Log.e("frag","fragment showing");//just for dummy line hehe :)
+        }
+        else {
+            finish();
+        }
     }
 }

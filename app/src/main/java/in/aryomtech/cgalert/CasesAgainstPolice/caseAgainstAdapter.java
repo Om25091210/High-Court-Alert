@@ -1,7 +1,6 @@
 package in.aryomtech.cgalert.CasesAgainstPolice;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,18 +8,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.Arrays;
 import java.util.List;
 
-import in.aryomtech.cgalert.NoticeVictim.NoticeAdapter;
-import in.aryomtech.cgalert.NoticeVictim.Notice_model;
 import in.aryomtech.cgalert.R;
 
 public class caseAgainstAdapter extends RecyclerView.Adapter<caseAgainstAdapter.ViewHolder>{
@@ -59,7 +51,7 @@ public class caseAgainstAdapter extends RecyclerView.Adapter<caseAgainstAdapter.
         }
 
         holder.writLayout.setOnClickListener(v->{
-            Bundle bundle = new Bundle();
+         /*   Bundle bundle = new Bundle();
             bundle.putStringArrayList("respondents", list.get(position).getRespondents());
             bundle.putStringArrayList("appellants", list.get(position).getAppellants());
             Fragment fragment = new AppellantFragment();
@@ -67,7 +59,7 @@ public class caseAgainstAdapter extends RecyclerView.Adapter<caseAgainstAdapter.
             FragmentManager manager = ((AppCompatActivity)context).getSupportFragmentManager();
             FragmentTransaction ft = manager.beginTransaction();
             ft.replace(R.id.swipe, fragment);
-            ft.commit();
+            ft.commit();*/
 
 
         });

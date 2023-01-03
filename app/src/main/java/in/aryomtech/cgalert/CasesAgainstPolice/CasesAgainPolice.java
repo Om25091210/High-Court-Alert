@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,9 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import in.aryomtech.cgalert.NoticeVictim.NoticeAdapter;
-import in.aryomtech.cgalert.NoticeVictim.NoticeForm;
-import in.aryomtech.cgalert.NoticeVictim.Notice_model;
 import in.aryomtech.cgalert.R;
 
 
@@ -101,13 +97,13 @@ public class CasesAgainPolice extends Fragment {
         });
 
         form.setOnClickListener(v->{
-            mSwipeRefreshLayout.setRefreshing(false);
+           /* mSwipeRefreshLayout.setRefreshing(false);
             Fragment fragment = new CasesAgainPoliceForm();
             assert getFragmentManager() != null;
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.replace(R.id.swipe, fragment);
             ft.addToBackStack(null);
-            ft.commit();
+            ft.commit();*/
         });
 
 
