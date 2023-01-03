@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".CasesAgainstPolice.AppellantFragment">
+    tools:context=".Writ.AppellantFragment">
 
     <ImageView
         android:id="@+id/imageView4"
@@ -38,11 +38,11 @@
         android:id="@+id/appellants_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/quicksand_bold"
         android:layout_margin="15dp"
+        android:background="@drawable/border_amount_bg"
+        android:fontFamily="@font/quicksand_bold"
         android:textColor="@color/use_orange"
         android:textSize="17sp"
-        android:background="@drawable/border_amount_bg"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView18" />
@@ -51,11 +51,11 @@
         android:id="@+id/respo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
         android:fontFamily="@font/quicksand_bold"
         android:gravity="center"
         android:text="Respondents List"
         android:textColor="@color/use_blue"
-        android:layout_marginTop="15dp"
         android:textSize="17sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -66,25 +66,86 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
+        android:background="@drawable/border_amount_bg"
         android:fontFamily="@font/quicksand_bold"
         android:textColor="@color/use_orange"
-        android:background="@drawable/border_amount_bg"
         android:textSize="17sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/respo" />
 
-    <LinearLayout
+
+    <TextView
+        android:id="@+id/synopsis"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:fontFamily="@font/quicksand_bold"
+        android:gravity="center"
+        android:text="Synopsis of the Case"
+        android:textColor="@color/use_blue"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/respondents_list" />
+
+    <TextView
+        android:id="@+id/synop_edt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border_amount_bg"
+        android:fontFamily="@font/quicksand_bold"
+        android:layout_margin="15dp"
+        android:padding="10dp"
+        android:textColor="@color/use_orange"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/synopsis" />
+
+
+    <TextView
+        android:id="@+id/judge_summary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:fontFamily="@font/quicksand_bold"
+        android:gravity="center"
+        android:text="Judgement Summary of the Case"
+        android:textColor="@color/use_blue"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/synop_edt"
+         />
+
+    <TextView
+        android:id="@+id/summary_edt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:background="@drawable/border_amount_bg"
+        android:fontFamily="@font/quicksand_bold"
+        android:padding="10dp"
+        android:textColor="@color/use_orange"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/judge_summary" />
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout12"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
         android:background="@drawable/bg_card_red"
         android:backgroundTint="@color/use_orange"
-        android:orientation="horizontal"
-        android:layout_margin="30dp"
         android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/respondents_list"
-        app:layout_constraintStart_toStartOf="@+id/respondents_list"
-        app:layout_constraintTop_toBottomOf="@+id/respondents_list">
+        app:layout_constraintStart_toStartOf="@+id/respondents_list">
 
         <ImageView
             android:id="@+id/add_attachment"

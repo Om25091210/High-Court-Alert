@@ -1,4 +1,4 @@
-package in.aryomtech.cgalert.CasesAgainstPolice;
+package in.aryomtech.cgalert.Writ;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,9 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import in.aryomtech.cgalert.NoticeVictim.NoticeAdapter;
-import in.aryomtech.cgalert.NoticeVictim.NoticeForm;
-import in.aryomtech.cgalert.NoticeVictim.Notice_model;
 import in.aryomtech.cgalert.R;
 
 
@@ -41,7 +37,7 @@ public class CasesAgainPolice extends Fragment {
     View view;
     RecyclerView recyclerView;
     Context contextNullSafe;
-    List<caseAgainstModel> list;
+    List<WritModel> list;
     DatabaseReference reference;
     ImageView back, form;
     TextView station;
@@ -82,14 +78,14 @@ public class CasesAgainPolice extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for (DataSnapshot ds:snapshot.getChildren()) {
-                    list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(caseAgainstModel.class));
+                    list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
                     mSwipeRefreshLayout.setRefreshing(false);
                 }
                 if(list.size()!=0){
                     cg_logo.setVisibility(View.GONE);
                     no_data.setVisibility(View.GONE);
                 }
-                caseAgainstAdapter adapter = new caseAgainstAdapter(list,getContextNullSafety());
+                WritAdapter adapter = new WritAdapter(list,getContextNullSafety());
                 adapter.notifyDataSetChanged();
                 recyclerView.setAdapter(adapter);
             }
@@ -102,7 +98,7 @@ public class CasesAgainPolice extends Fragment {
 
         form.setOnClickListener(v->{
             mSwipeRefreshLayout.setRefreshing(false);
-            Fragment fragment = new CasesAgainPoliceForm();
+            Fragment fragment = new WritForm();
             assert getFragmentManager() != null;
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.replace(R.id.swipe, fragment);

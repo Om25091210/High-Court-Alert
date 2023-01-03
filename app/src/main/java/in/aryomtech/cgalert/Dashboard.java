@@ -1,7 +1,6 @@
 package in.aryomtech.cgalert;
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,14 +14,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -34,8 +31,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Objects;
 
-import in.aryomtech.cgalert.CasesAgainstPolice.CasesAgainPolice;
-import in.aryomtech.cgalert.CasesAgainstPolice.CasesAgainPoliceForm;
+
 import in.aryomtech.cgalert.NoticeVictim.NoticemainAdmin;
 import in.aryomtech.cgalert.duo_frags.about;
 import in.aryomtech.cgalert.policestation.p_Home;
@@ -207,12 +203,10 @@ public class Dashboard extends AppCompatActivity {
             startActivity(intent);
         });
 
-        writ_police.setOnClickListener(v -> Dashboard.this.getSupportFragmentManager()
-                .beginTransaction()
-                .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
-                .add(R.id.drawer, new CasesAgainPolice())
-                .addToBackStack(null)
-                .commit());
+        writ_police.setOnClickListener(v -> {
+            Intent intent = new Intent(Dashboard.this, WritsMain.class);
+            startActivity(intent);
+        });
 
         police_contacts.setOnClickListener(v -> Dashboard.this.getSupportFragmentManager()
                 .beginTransaction()

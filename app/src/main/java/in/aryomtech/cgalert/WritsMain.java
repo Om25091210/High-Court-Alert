@@ -1,14 +1,13 @@
-package in.aryomtech.cgalert.NoticeVictim;
-
-import android.os.Bundle;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.ImageView;
+package in.aryomtech.cgalert;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
+
+import android.os.Bundle;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.ImageView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -17,17 +16,17 @@ import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-import in.aryomtech.cgalert.Home;
-import in.aryomtech.cgalert.NoticeVictim.Fragments.AllNTV;
-import in.aryomtech.cgalert.NoticeVictim.Fragments.TodayNTV;
-import in.aryomtech.cgalert.NoticeVictim.Fragments.UrgentNTV;
-import in.aryomtech.cgalert.R;
+import in.aryomtech.cgalert.Writ.Fragments.AllWrits;
+import in.aryomtech.cgalert.Writ.Fragments.PendingWrits;
+import in.aryomtech.cgalert.Writ.Fragments.TodayWrits;
+import in.aryomtech.cgalert.Writ.Fragments.UrgentWrits;
+import in.aryomtech.cgalert.NoticeVictim.Notice_model;
+import in.aryomtech.cgalert.Writ.WritForm;
 import in.aryomtech.myapplication.v4.FragmentPagerItemAdapter;
 import in.aryomtech.myapplication.v4.FragmentPagerItems;
 
-public class NoticemainAdmin extends AppCompatActivity {
+public class WritsMain extends AppCompatActivity {
 
-    View view;
     List<Notice_model> list;
     ImageView form;
     String stat_name;
@@ -37,26 +36,27 @@ public class NoticemainAdmin extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_noticemain_admin);
+        setContentView(R.layout.activity_writs_main);
 
-        Window window = NoticemainAdmin.this.getWindow();
+        Window window = WritsMain.this.getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(ContextCompat.getColor(NoticemainAdmin.this, R.color.use_bg));
+        window.setStatusBarColor(ContextCompat.getColor(WritsMain.this, R.color.use_bg));
 
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
 
-       /* stat_name = getSharedPreferences("station_name_K", MODE_PRIVATE)
+      /*  stat_name = getSharedPreferences("station_name_K", MODE_PRIVATE)
                 .getString("the_station_name2003", "");*/
         list = new ArrayList<>();
 
         form = findViewById(R.id.form);
 
         FragmentPagerItemAdapter adapter1 = new FragmentPagerItemAdapter(
-                getSupportFragmentManager(), FragmentPagerItems.with(NoticemainAdmin.this)
-                .add("Urgent Notices", UrgentNTV.class)
-                .add("Today Notices", TodayNTV.class)
-                .add("All Notices", AllNTV.class)
+                getSupportFragmentManager(), FragmentPagerItems.with(WritsMain.this)
+                .add("Urgent Writs", UrgentWrits.class)
+                .add("Today's Writs", TodayWrits.class)
+                .add("Pending Writs", PendingWrits.class)
+                .add("All Writs", AllWrits.class)
                 .create());
 
         ViewPager viewPager = findViewById(R.id.viewpager);
@@ -65,10 +65,10 @@ public class NoticemainAdmin extends AppCompatActivity {
         SmartTabLayout viewPagerTab = findViewById(R.id.viewpagertab);
         viewPagerTab.setViewPager(viewPager);
         form.setOnClickListener(v->{
-            NoticemainAdmin.this.getSupportFragmentManager()
+            WritsMain.this.getSupportFragmentManager()
                     .beginTransaction()
                     .setCustomAnimations( R.anim.enter_from_right, R.anim.exit_to_left,R.anim.enter_from_left, R.anim.exit_to_right)
-                    .add(R.id.constraint,new NoticeForm())
+                    .add(R.id.constraint,new WritForm())
                     .addToBackStack(null)
                     .commit();
         });

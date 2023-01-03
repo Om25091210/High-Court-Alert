@@ -23,7 +23,7 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder
 
     List<Notice_model> list;
     Context context;
-    Uri selected_uri_pdf=Uri.parse("");
+    Uri selected_uri_pdf = Uri.parse("");
     String date;
     int x = 0;
 

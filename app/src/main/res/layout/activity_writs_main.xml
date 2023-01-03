@@ -69,7 +69,7 @@
             android:textColor="@color/use_orange"
             android:textSize="20sp"
             android:gravity="center"
-            android:text="Notice To Victim"
+            android:text="Writ Cases Alert"
             app:layout_constraintBottom_toBottomOf="@+id/imageView4"
             app:layout_constraintEnd_toStartOf="@+id/form"
             app:layout_constraintStart_toEndOf="@+id/imageView4"
@@ -94,6 +94,7 @@
             app:srcCompat="@drawable/ic_excel_admin" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <com.ogaclejapan.smarttablayout.SmartTabLayout
         android:id="@+id/viewpagertab"

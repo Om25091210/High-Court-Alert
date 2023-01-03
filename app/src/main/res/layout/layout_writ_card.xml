@@ -184,11 +184,40 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="10dp"
-                android:ellipsize="end"
                 android:fontFamily="@font/quicksand_bold"
                 android:maxLines="1"
                 android:paddingStart="1dp"
-                android:paddingEnd="15dp"
+                android:layout_weight="1"
+                android:textColor="@color/use_light_blue"
+                android:textSize="@dimen/_10sdp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="@tools:sample/us_phones" />
+
+            <TextView
+                android:id="@+id/case_no"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/quicksand_bold"
+                android:maxLines="1"
+                android:layout_weight="1"
+                android:paddingStart="1dp"
+                android:textColor="@color/use_light_blue"
+                android:textSize="@dimen/_10sdp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="@tools:sample/us_phones" />
+
+            <TextView
+                android:id="@+id/case_year"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/quicksand_bold"
+                android:maxLines="1"
+                android:paddingStart="1dp"
                 android:textColor="@color/use_light_blue"
                 android:textSize="@dimen/_10sdp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -324,6 +353,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:visibility="gone"
             android:orientation="horizontal">
 
             <TextView
