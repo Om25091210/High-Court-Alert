@@ -580,25 +580,26 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15sp"
                 android:fontFamily="@font/quicksand_bold"
-                android:text="@string/due_date"
+                android:text="Due Days"
                 android:visibility="gone"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
-            <TextView
+            <EditText
                 android:id="@+id/due_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="number"
                 android:layout_marginTop="10dp"
                 android:importantForAutofill="no"
                 android:background="@drawable/bg_edt_text"
                 android:ems="10"
                 android:visibility="gone"
-                android:hint="@string/tap_to_select_due_date"
+                android:gravity="start"
+                android:hint="@string/detailed_summary"
                 android:padding="15dp"
                 android:textSize="16sp"
                 tools:ignore="SpeakableTextPresentCheck" />
-
 
             <TextView
                 android:id="@+id/submit_txt"

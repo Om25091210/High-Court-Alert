@@ -13,6 +13,7 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import in.aryomtech.cgalert.CasesAgainstPolice.CasesAgainPolice;
 import in.aryomtech.cgalert.CasesAgainstPolice.CasesAgainPoliceForm;
 import in.aryomtech.cgalert.NoticeVictim.NoticemainAdmin;
 import in.aryomtech.cgalert.policestation.p_Home;
@@ -57,7 +58,7 @@ public class Dashboard extends AppCompatActivity {
         writ_police.setOnClickListener(v -> Dashboard.this.getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
-                .add(R.id.drawer, new CasesAgainPoliceForm())
+                .add(R.id.drawer, new CasesAgainPolice())
                 .addToBackStack(null)
                 .commit());
 

@@ -687,7 +687,7 @@ public class Mcrc_Rm_Coll extends Fragment {
                                     if (token != null) {
                                         Specific specific = new Specific();
                                         Log.e("This",keys_copy_selected_phone.get(i));
-                                        specific.noti("High Court Alert", body, token,keys_copy_selected_phone.get(i));
+                                        specific.noti("CG Sangyan", body, token,keys_copy_selected_phone.get(i),"data");
                                     }
                                 }
                             }

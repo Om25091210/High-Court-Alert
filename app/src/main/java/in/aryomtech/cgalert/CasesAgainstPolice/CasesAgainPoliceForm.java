@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import in.aryomtech.cgalert.R;
@@ -72,8 +73,8 @@ public class CasesAgainPoliceForm extends Fragment {
     DatabaseReference reference_phone;
     int x=1;
     private Context contextNullSafe;
-    EditText dispose_summary, summary;
-    TextView date_reply, judgement_date, time_limit, days, summ, submit, date_of_filing, due, due_date;
+    EditText dispose_summary, summary, due_date;
+    TextView date_reply, judgement_date, time_limit, days, summ, submit, date_of_filing, due;
     CheckBox legal1, legal2, allowed, disposed, dismissed;
     int check_;
     DatePickerDialog.OnDateSetListener mDateSetListener;
@@ -570,16 +571,16 @@ public class CasesAgainPoliceForm extends Fragment {
 
     private void datasend(){
 
-        reference.child(pushkey).child("district").setValue(district.getText().toString());
-        reference.child(pushkey).child("dateOfFiling").setValue(date_of_filing.getText().toString());
-        reference.child(pushkey).child("nature").setValue(nature.getText().toString());
-        reference.child(pushkey).child("timeLimit").setValue(time_limit.getText().toString());
-        reference.child(pushkey).child("summary").setValue(summary.getText().toString());
-        reference.child(pushkey).child("dateReply").setValue(date_reply.getText().toString());
-        reference.child(pushkey).child("judgementDate").setValue(judgement_date.getText().toString());
-        reference.child(pushkey).child("Judgement").setValue(type);
-        reference.child(pushkey).child("dSummary").setValue(dispose_summary.getText().toString());
-        reference.child(pushkey).child("dueDate").setValue(due_date.getText().toString());
+        reference.child(pushkey).child("district").setValue(district.getText().toString().toUpperCase(Locale.ROOT));
+        reference.child(pushkey).child("dateOfFiling").setValue(date_of_filing.getText().toString().toUpperCase(Locale.ROOT));
+        reference.child(pushkey).child("nature").setValue(nature.getText().toString().toUpperCase(Locale.ROOT));
+        reference.child(pushkey).child("timeLimit").setValue(time_limit.getText().toString().toUpperCase(Locale.ROOT));
+        reference.child(pushkey).child("summary").setValue(summary.getText().toString().toUpperCase(Locale.ROOT));
+        reference.child(pushkey).child("dateReply").setValue(date_reply.getText().toString().toUpperCase(Locale.ROOT));
+        reference.child(pushkey).child("judgementDate").setValue(judgement_date.getText().toString().toUpperCase(Locale.ROOT));
+        reference.child(pushkey).child("Judgement").setValue(type.toUpperCase(Locale.ROOT));
+        reference.child(pushkey).child("dSummary").setValue(dispose_summary.getText().toString().toUpperCase(Locale.ROOT));
+        reference.child(pushkey).child("dueDate").setValue(due_date.getText().toString().toUpperCase(Locale.ROOT));
         reference.child(pushkey).child("pushkey").setValue(pushkey);
     }
 
