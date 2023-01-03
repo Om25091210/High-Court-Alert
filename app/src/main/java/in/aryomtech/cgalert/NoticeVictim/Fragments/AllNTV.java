@@ -32,10 +32,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.provider.OpenableColumns;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -64,6 +67,8 @@ import java.util.Locale;
 import java.util.Objects;
 
 import in.aryomtech.cgalert.DB.TinyDB;
+import in.aryomtech.cgalert.Fragments.Adapter.Excel_Adapter;
+import in.aryomtech.cgalert.Fragments.model.Excel_data;
 import in.aryomtech.cgalert.NoticeVictim.Adapter.NoticeAdapter;
 import in.aryomtech.cgalert.NoticeVictim.Interface.onUploadInterface;
 import in.aryomtech.cgalert.NoticeVictim.model.Notice_model;
@@ -77,6 +82,7 @@ public class AllNTV extends Fragment {
     RecyclerView recyclerView;
     Context contextNullSafe;
     List<Notice_model> list;
+    List<Notice_model> mylist;
     DatabaseReference reference,user_ref;
     String stat_name;
     FirebaseAuth auth;
@@ -91,8 +97,10 @@ public class AllNTV extends Fragment {
     String card_key;
     private onUploadInterface onUploadInterface;
     SwipeRefreshLayout mSwipeRefreshLayout;
+    EditText search;
+    List<String> list_string=new ArrayList<>();
     String ps_or_admin="";
-    NoticeAdapter noticeAdapter;StorageReference storageReference1;
+    NoticeAdapter adapter;StorageReference storageReference1;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -101,7 +109,7 @@ public class AllNTV extends Fragment {
 
         auth= FirebaseAuth.getInstance();
         user=auth.getCurrentUser();
-
+        search=view.findViewById(R.id.search);
         stat_name= getContextNullSafety().getSharedPreferences("station_name_K",MODE_PRIVATE)
                 .getString("the_station_name2003","");
 
@@ -112,8 +120,9 @@ public class AllNTV extends Fragment {
         no_data=view.findViewById(R.id.no_data);
         recyclerView = view.findViewById(R.id.rv);
         list = new ArrayList<>();
+        mylist = new ArrayList<>();
         tinyDB=new TinyDB(getContextNullSafety());
-        noticeAdapter=new NoticeAdapter(getContextNullSafety(),onUploadInterface,list);
+        adapter=new NoticeAdapter(getContextNullSafety(),onUploadInterface,list);
         mSwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         LinearLayoutManager mManager = new LinearLayoutManager(getContextNullSafety());
         recyclerView.setItemViewCacheSize(500);
@@ -176,6 +185,16 @@ public class AllNTV extends Fragment {
                 select_file();
             }
         };
+        search.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {}
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                search(s+"");
+            }
+        });
         OnBackPressedCallback callback=new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -189,6 +208,76 @@ public class AllNTV extends Fragment {
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),callback);
         return view;
+    }
+
+    private void search(String str) {
+        if(str.equals("")){
+            adapter = new NoticeAdapter(getContextNullSafety(), onUploadInterface, list);
+            recyclerView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        }
+        else {
+            String[] str_Args = str.toLowerCase().split(" ");
+            mylist.clear();
+            int count = 0;
+            boolean not_once = true;
+            List<Integer> c_list = new ArrayList<>();
+            for (Notice_model object : list) {
+                convert_to_list(object);
+                for (String s : list_string) {
+                    for (String str_arg : str_Args) {
+                        if (str_arg.contains("/") && not_once) {
+                            String sub1 = str_arg.substring(0, str_arg.indexOf("/"));
+                            String sub2 = str_arg.substring(str_arg.indexOf("/") + 1);
+                            if (list_string.get(4).contains(sub1) && list_string.get(6).contains(sub2)) {
+                                count++;
+                                not_once = false;
+                            } else if (list_string.get(7).contains(sub1) && list_string.get(8).contains(sub2)) {
+                                count++;
+                                not_once = false;
+                            }
+                        } else if (s.contains(str_arg)) {
+                            count++;
+                        }
+                    }
+                }
+                c_list.add(count);
+                System.out.println(c_list + "");
+                if (count == str_Args.length)
+                    mylist.add(object);
+                count = 0;
+            }
+            adapter = new NoticeAdapter(getContextNullSafety(), onUploadInterface, mylist);
+            recyclerView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        }
+    }
+    private void convert_to_list(Notice_model object) {
+        list_string.clear();
+        try{
+            list_string.add(object.getAdvocate().toLowerCase());
+            list_string.add(object.getCaseType().toLowerCase());
+            list_string.add(object.getCaseYear().toLowerCase());
+            list_string.add(object.getCaseNo().toLowerCase());
+            list_string.add(object.getCrimeYear().toLowerCase());
+            list_string.add(object.getPushkey().toLowerCase());
+            list_string.add(object.getDoc_url().toLowerCase());
+            list_string.add(object.getDistrict().toLowerCase());
+            list_string.add(object.getHearingDate().toLowerCase());
+            list_string.add(object.getNoticeDate().toLowerCase());
+            list_string.add(object.getStation().toLowerCase());
+            list_string.add(object.getAppellant().toLowerCase());
+            list_string.add(object.getCaseNo().toLowerCase());
+            list_string.add(object.getReminded().toLowerCase());
+            list_string.add(object.getSeen().toLowerCase());
+            list_string.add(object.getSent().toLowerCase());
+            list_string.add(object.getNumber().toLowerCase());
+            list_string.add(object.getUploaded_file().toLowerCase());
+            list_string.add(object.getUploaded_date().toLowerCase());
+        }
+        catch (NullPointerException e){
+            System.out.println("Error");
+        }
     }
     private void select_file() {
         Intent intent = new Intent();
@@ -323,7 +412,7 @@ public class AllNTV extends Fragment {
                     no_data.setVisibility(View.GONE);
                 }
                 Collections.reverse(list);
-                NoticeAdapter adapter = new NoticeAdapter(getContextNullSafety(),onUploadInterface, list);
+                adapter = new NoticeAdapter(getContextNullSafety(),onUploadInterface, list);
                 adapter.notifyDataSetChanged();
                 recyclerView.setAdapter(adapter);
                 mSwipeRefreshLayout.setRefreshing(false);
@@ -355,7 +444,7 @@ public class AllNTV extends Fragment {
                     cg_logo.setVisibility(View.GONE);
                     no_data.setVisibility(View.GONE);
                 }
-                NoticeAdapter adapter = new NoticeAdapter(getContextNullSafety(), onUploadInterface, list);
+                adapter = new NoticeAdapter(getContextNullSafety(), onUploadInterface, list);
                 adapter.notifyDataSetChanged();
                 mSwipeRefreshLayout.setRefreshing(false);
                 recyclerView.setAdapter(adapter);
@@ -388,7 +477,7 @@ public class AllNTV extends Fragment {
                     cg_logo.setVisibility(View.GONE);
                     no_data.setVisibility(View.GONE);
                 }
-                NoticeAdapter adapter = new NoticeAdapter(getContextNullSafety(), onUploadInterface, list);
+                adapter = new NoticeAdapter(getContextNullSafety(), onUploadInterface, list);
                 adapter.notifyDataSetChanged();
                 mSwipeRefreshLayout.setRefreshing(false);
                 recyclerView.setAdapter(adapter);
@@ -420,7 +509,7 @@ public class AllNTV extends Fragment {
                     cg_logo.setVisibility(View.GONE);
                     no_data.setVisibility(View.GONE);
                 }
-                NoticeAdapter adapter = new NoticeAdapter(getContextNullSafety(), onUploadInterface, list);
+                adapter = new NoticeAdapter(getContextNullSafety(), onUploadInterface, list);
                 adapter.notifyDataSetChanged();
                 mSwipeRefreshLayout.setRefreshing(false);
                 recyclerView.setAdapter(adapter);
@@ -451,7 +540,7 @@ public class AllNTV extends Fragment {
                     cg_logo.setVisibility(View.GONE);
                     no_data.setVisibility(View.GONE);
                 }
-                NoticeAdapter adapter = new NoticeAdapter(getContextNullSafety(), onUploadInterface, list);
+                adapter = new NoticeAdapter(getContextNullSafety(), onUploadInterface, list);
                 adapter.notifyDataSetChanged();
                 mSwipeRefreshLayout.setRefreshing(false);
                 recyclerView.setAdapter(adapter);
