@@ -1,4 +1,4 @@
-package in.aryomtech.cgalert.CasesAgainstPolice;
+package in.aryomtech.cgalert.Writ;
 
 import android.os.Bundle;
 
@@ -16,8 +16,8 @@ public class AppellantFragment extends Fragment {
 
 
     View view;
-    String respondents, appellants;
-    TextView respo, appella;
+    String respondents, appellants, judge_summary, synopsis;
+    TextView respo, appella, judgement_summary, summary;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -27,9 +27,19 @@ public class AppellantFragment extends Fragment {
         assert getArguments() != null;
         respondents = getArguments().getString("respondents");
         appellants = getArguments().getString("appellants");
+        judge_summary = getArguments().getString("judge_summary");
+        synopsis = getArguments().getString("synopsis");
 
         respo = view.findViewById(R.id.respondents_list);
         appella = view.findViewById(R.id.appellants_list);
+        judgement_summary = view.findViewById(R.id.summary_edt);
+        summary = view.findViewById(R.id.synop_edt);
+
+        respo.setText(respondents);
+        appella.setText(appellants);
+        judgement_summary.setText(judge_summary);
+        summary.setText(synopsis);
+
         return view;
     }
 }

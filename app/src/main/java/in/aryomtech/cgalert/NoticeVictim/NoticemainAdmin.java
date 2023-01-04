@@ -4,10 +4,13 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -16,7 +19,6 @@ import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import in.aryomtech.cgalert.NoticeVictim.Fragments.AllNTV;
 import in.aryomtech.cgalert.NoticeVictim.Fragments.TodayNTV;
 import in.aryomtech.cgalert.NoticeVictim.Fragments.UrgentNTV;
@@ -27,10 +29,8 @@ import in.aryomtech.myapplication.v4.FragmentPagerItems;
 
 public class NoticemainAdmin extends AppCompatActivity {
 
-    View view;
     List<Notice_model> list;
     ImageView form;
-    String stat_name;
     FirebaseAuth auth;
     FirebaseUser user;
 
@@ -39,11 +39,13 @@ public class NoticemainAdmin extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_noticemain_admin);
 
+        Window window = NoticemainAdmin.this.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(ContextCompat.getColor(NoticemainAdmin.this, R.color.use_bg));
+
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
 
-        stat_name = getSharedPreferences("station_name_K", MODE_PRIVATE)
-                .getString("the_station_name2003", "");
         list = new ArrayList<>();
 
         form = findViewById(R.id.form);

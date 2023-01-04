@@ -1,5 +1,4 @@
-package in.aryomtech.cgalert.CasesAgainstPolice;
-
+package in.aryomtech.cgalert.Writ;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -19,15 +18,15 @@ import java.util.ArrayList;
 
 import in.aryomtech.cgalert.R;
 
-public class AppellantAdapter extends RecyclerView.Adapter<AppellantAdapter.ViewHolder> {
+public class RespondentAdapter extends RecyclerView.Adapter<RespondentAdapter.ViewHolder> {
 
     Context context;
-    ArrayList<String> appellant_list;
-    Task<Void> reference;
+    ArrayList<String> task_list;
     String pushkey;
-    public AppellantAdapter(Context context, ArrayList<String> appellant_list,String pushkey) {
+    Task<Void> reference;
+    public RespondentAdapter(Context context, ArrayList<String> task_list, String pushkey) {
         this.context=context;
-        this.appellant_list=appellant_list;
+        this.task_list=task_list;
         this.pushkey = pushkey;
     }
 
@@ -42,14 +41,13 @@ public class AppellantAdapter extends RecyclerView.Adapter<AppellantAdapter.View
     @Override
     public void onBindViewHolder(@NonNull @NotNull ViewHolder holder, int position) {
 
-
-        holder.textView.setText(appellant_list.get(position));
-        reference = FirebaseDatabase.getInstance().getReference().child("writ").child(pushkey).child("appellants").setValue(appellant_list);
+        holder.textView.setText(task_list.get(position));
+        reference = FirebaseDatabase.getInstance().getReference().child("writ").child(pushkey).child("respondents").setValue(task_list);
     }
 
     @Override
     public int getItemCount() {
-        return appellant_list.size();
+        return task_list.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

@@ -1,8 +1,8 @@
-package in.aryomtech.cgalert.CasesAgainstPolice;
+package in.aryomtech.cgalert.Writ;
 
 import java.util.ArrayList;
 
-public class caseAgainstModel {
+public class WritModel {
 
     private String Judgement;
     private String dSummary;
@@ -14,14 +14,17 @@ public class caseAgainstModel {
     private String nature;
     private String pushkey;
     private String summary;
+    private String caseNo;
+    private String caseYear;
     private String timeLimit;
     private ArrayList<String> appellants;
     private ArrayList<String> respondents;
 
-    public caseAgainstModel() {
+    public WritModel() {
     }
 
-    public caseAgainstModel(String judgement, String dSummary, String dateOfFiling, String dateReply, String district, String dueDate, String judgementDate, String nature, String pushkey, String summary, String timeLimit, ArrayList<String> appellants, ArrayList<String> respondents) {
+    public WritModel(String judgement, String dSummary, String dateOfFiling, String dateReply, String district, String dueDate, String judgementDate, String nature, String pushkey, String summary,
+                     String caseYear, String caseNo ,String timeLimit, ArrayList<String> appellants, ArrayList<String> respondents) {
         Judgement = judgement;
         this.dSummary = dSummary;
         this.dateOfFiling = dateOfFiling;
@@ -34,7 +37,16 @@ public class caseAgainstModel {
         this.summary = summary;
         this.timeLimit = timeLimit;
         this.appellants = appellants;
-        this.respondents = respondents;
+        this.caseNo = caseNo;
+        this.caseYear = caseYear;
+    }
+
+    public String getCaseNo() {
+        return caseNo;
+    }
+
+    public String getCaseYear() {
+        return caseYear;
     }
 
     public String getJudgement() {
