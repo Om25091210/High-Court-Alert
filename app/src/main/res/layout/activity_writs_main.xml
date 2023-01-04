@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/use_bg"
     android:clickable="true"
-    android:id="@+id/constraint"
+    android:id="@+id/swipe"
     android:focusable="true">
 
     <ImageView

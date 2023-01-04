@@ -6,6 +6,7 @@
     android:scrollbars="none"
     android:background="@color/white"
     android:focusable="true"
+    android:layout_marginTop="30dp"
     android:clickable="true"
     android:layout_height="match_parent"
     tools:context=".about_dev">
