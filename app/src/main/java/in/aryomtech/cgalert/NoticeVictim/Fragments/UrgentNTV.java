@@ -106,7 +106,7 @@ public class UrgentNTV extends Fragment {
 
         auth= FirebaseAuth.getInstance();
         user=auth.getCurrentUser();
-
+        search=view.findViewById(R.id.search);
         stat_name= getContextNullSafety().getSharedPreferences("station_name_K",MODE_PRIVATE)
                 .getString("the_station_name2003","");
 

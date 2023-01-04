@@ -154,11 +154,13 @@ public class p_similar_return extends Fragment {
                 filtered_data.clear();
                 station_dist.clear();
                 filtered_station_dist.clear();
-                for(DataSnapshot ds:snapshot.getChildren()){
-                    if (snapshot.child(ds.getKey()).child("B").getValue(String.class).toUpperCase().equals(stat_name.substring(3))) {
-                        excel_data.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Excel_data.class));
-                        joined_list.add(excel_data.get(excel_data.size() - 1).getD().toUpperCase().trim() + " " + excel_data.get(excel_data.size() - 1).getH().trim() + " " + excel_data.get(excel_data.size() - 1).getI().trim()+"="+excel_data.get(excel_data.size()-1).getB().toUpperCase().trim()+" "+excel_data.get(excel_data.size()-1).getC().toUpperCase().trim());
-                        station_dist.add(excel_data.get(excel_data.size() - 1).getB().toUpperCase().trim() + " " + excel_data.get(excel_data.size() - 1).getC().toUpperCase().trim());
+                for(DataSnapshot ds:snapshot.getChildren()) {
+                    if (snapshot.child(ds.getKey()).child("B").getValue(String.class) != null) {
+                        if (snapshot.child(ds.getKey()).child("B").getValue(String.class).toUpperCase().equals(stat_name.substring(3))) {
+                            excel_data.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Excel_data.class));
+                            joined_list.add(excel_data.get(excel_data.size() - 1).getD().toUpperCase().trim() + " " + excel_data.get(excel_data.size() - 1).getH().trim() + " " + excel_data.get(excel_data.size() - 1).getI().trim() + "=" + excel_data.get(excel_data.size() - 1).getB().toUpperCase().trim() + " " + excel_data.get(excel_data.size() - 1).getC().toUpperCase().trim());
+                            station_dist.add(excel_data.get(excel_data.size() - 1).getB().toUpperCase().trim() + " " + excel_data.get(excel_data.size() - 1).getC().toUpperCase().trim());
+                        }
                     }
                 }
                 mSwipeRefreshLayout.setRefreshing(false);

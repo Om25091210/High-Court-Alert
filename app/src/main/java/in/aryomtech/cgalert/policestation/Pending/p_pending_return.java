@@ -22,6 +22,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -64,6 +66,8 @@ public class p_pending_return extends Fragment {
     EditText search;
     CheckBox select_all;
     LinkedList<String> phone_numbers=new LinkedList<>();
+    ImageView cg_logo;
+    TextView no_data;
     LinkedList<String> station_name_list=new LinkedList<>();
     Excel_Adapter excel_adapter;
     DatabaseReference phone_numbers_ref;
@@ -87,6 +91,8 @@ public class p_pending_return extends Fragment {
         added_list=new ArrayList<>();
         mSwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         search=view.findViewById(R.id.search);
+        cg_logo=view.findViewById(R.id.imageView3);
+        no_data=view.findViewById(R.id.no_data);
         select_all=view.findViewById(R.id.checkBox4);
         join=view.findViewById(R.id.join);
         //Initialize RecyclerView
@@ -289,11 +295,17 @@ public class p_pending_return extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 excel_data.clear();
                 for(DataSnapshot ds:snapshot.getChildren()){
-                    if(snapshot.child(ds.getKey()).child("B").getValue(String.class).toUpperCase().equals(stat_name.substring(3))) {
-                        if (snapshot.child(ds.getKey()).child("J").getValue(String.class).equals("None")) {
-                            excel_data.add(snapshot.child(ds.getKey()).getValue(Excel_data.class));
+                    if (snapshot.child(ds.getKey()).child("B").getValue(String.class) != null) {
+                        if (snapshot.child(ds.getKey()).child("B").getValue(String.class).toUpperCase().equals(stat_name.substring(3))) {
+                            if (snapshot.child(ds.getKey()).child("J").getValue(String.class).equals("None")) {
+                                excel_data.add(snapshot.child(ds.getKey()).getValue(Excel_data.class));
+                            }
                         }
                     }
+                }
+                if(excel_data.size()!=0){
+                    cg_logo.setVisibility(View.GONE);
+                    no_data.setVisibility(View.GONE);
                 }
                 added_list.clear();
                 String txt="Send "+"("+added_list.size()+")";

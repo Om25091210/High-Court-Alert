@@ -63,7 +63,7 @@ public class temp_notification extends AppCompatActivity {
 
     private void check_key() {
 
-        ref_data.child(key).addListenerForSingleValueEvent(new ValueEventListener() {
+        ref_data.child(key).child("B").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
@@ -75,7 +75,7 @@ public class temp_notification extends AppCompatActivity {
             }@Override public void onCancelled(@NonNull DatabaseError error) {}
         });
 
-        ref_notice.child(key).addListenerForSingleValueEvent(new ValueEventListener() {
+        ref_notice.child(key).child("advocate").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
