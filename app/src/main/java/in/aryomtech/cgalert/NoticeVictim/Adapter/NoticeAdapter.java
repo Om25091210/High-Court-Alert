@@ -70,7 +70,7 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder
         holder.hearing_dt.setText(list.get(position).getHearingDate());
         holder.advocate_name.setText(list.get(position).getAdvocate());
         holder.appellant.setText(list.get(position).getAppellant());
-        holder.case_no.setText(list.get(position).getCaseNo());
+        holder.case_no.setText(" / " +list.get(position).getCaseNo());
 
         if (list.get(position).getUploaded_file()==null) {
             holder.layout.setBackgroundResource(R.drawable.bg_card_red);

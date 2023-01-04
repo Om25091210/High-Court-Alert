@@ -32,6 +32,7 @@ public class WritAdapter extends RecyclerView.Adapter<WritAdapter.ViewHolder> {
     List<WritModel> list;
     Context context;
     private Timer timer;
+    String pushkey;
 
     public WritAdapter(List<WritModel> list, Context context) {
         this.list = list;
@@ -63,6 +64,9 @@ public class WritAdapter extends RecyclerView.Adapter<WritAdapter.ViewHolder> {
         holder.caseYear.setText("/" + list.get(position).getCaseYear());
         holder.caseNo.setText("/" + list.get(position).getCaseNo());
         holder.judgement.setText(list.get(position).getJudgement());
+
+
+
         if (!list.get(position).getJudgement().equals("DISMISSED")) {
             //holder.layoutJudge.setVisibility(View.VISIBLE);
             holder.layoutDue.setVisibility(View.VISIBLE);
@@ -70,12 +74,15 @@ public class WritAdapter extends RecyclerView.Adapter<WritAdapter.ViewHolder> {
             //holder.judgementSummary.setText(list.get(position).getdSummary());
         }
 
+        pushkey = list.get(position).getPushkey();
+
         holder.writLayout.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
             bundle.putStringArrayList("respondents", list.get(position).getRespondents());
             bundle.putStringArrayList("appellants", list.get(position).getAppellants());
             bundle.putString("judge_summary", list.get(position).getdSummary());
             bundle.putString("synopsis", list.get(position).getSummary());
+            bundle.putString("pushkey", pushkey);
             Fragment fragment = new AppellantFragment();
             fragment.setArguments(bundle);
             FragmentManager manager = ((AppCompatActivity) context).getSupportFragmentManager();
@@ -96,6 +103,7 @@ public class WritAdapter extends RecyclerView.Adapter<WritAdapter.ViewHolder> {
         ConstraintLayout writLayout;
         LinearLayout layoutJudge, layoutDue;
 
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -114,54 +122,6 @@ public class WritAdapter extends RecyclerView.Adapter<WritAdapter.ViewHolder> {
             layoutDue = itemView.findViewById(R.id.layout_due);
             caseNo = itemView.findViewById(R.id.case_no);
             caseYear = itemView.findViewById(R.id.case_year);
-        }
-    }
-
-    public void searchNotes(final String searchKeyword) {
-        timer = new Timer();
-
-        timer.schedule(new TimerTask() {
-            @SuppressLint("NotifyDataSetChanged")
-            @Override
-            public void run() {
-
-                if (searchKeyword.trim().isEmpty()) {
-                    ArrayList<WritModel> xyz = new ArrayList<>();
-                    for (WritModel mode : list) {
-                        xyz.add(mode);
-                    }
-                    list = xyz;
-                } else {
-                    ArrayList<WritModel> temp = new ArrayList<>();
-                    for (WritModel note : list) {
-                        if (note.getDistrict().toLowerCase().contains(searchKeyword.toLowerCase())) {
-                            temp.add(note);
-                        } else if (note.getCaseNo().toLowerCase().contains(searchKeyword.toLowerCase())) {
-                            temp.add(note);
-                        }else if (note.getNature().toLowerCase().contains(searchKeyword.toLowerCase())) {
-                            temp.add(note);
-                        }else if (note.getCaseYear().toLowerCase().contains(searchKeyword.toLowerCase())) {
-                            temp.add(note);
-                        }else if (note.getDateOfFiling().toLowerCase().contains(searchKeyword.toLowerCase())) {
-                            temp.add(note);
-                        }else if (note.getJudgementDate().toLowerCase().contains(searchKeyword.toLowerCase())) {
-                            temp.add(note);
-                        }else if (note.getNature().toLowerCase().contains(searchKeyword.toLowerCase())) {
-                            temp.add(note);
-                        }else if (note.getJudgement().toLowerCase().contains(searchKeyword.toLowerCase())) {
-                            temp.add(note);
-                        }
-                    }
-                    list = temp;
-                }
-                new Handler(Looper.getMainLooper()).post(() -> notifyDataSetChanged());
-            }
-        }, 100);
-    }
-
-    public void cancelTimer() {
-        if (timer != null) {
-            timer.cancel();
         }
     }
 }

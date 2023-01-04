@@ -169,6 +169,10 @@
     <string name="appellantsO">Appellants</string>
     <string name="respondentsO">Respondents</string>
     <string name="do_you_want_to_upload_this_file">Do you want to Upload this file?</string>
+    <string name="appellants_list">Appellants List</string>
+    <string name="respondents_list">Respondents List</string>
+    <string name="synopsis_of_the_case">Synopsis of the Case</string>
+    <string name="judgement_summary_of_the_case">Judgement Summary of the Case</string>
 
 
     <array name="menuOptions">

@@ -33,6 +33,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -72,6 +73,7 @@ public class WritForm extends Fragment {
     ImageView back;
     Dialog dialog1;
     String pushkey;
+    TextView send;
     List<String> district_list;
     ConstraintLayout lay;
     DatabaseReference reference_phone;
@@ -118,7 +120,7 @@ public class WritForm extends Fragment {
         recyclerView2.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         recyclerView2.setLayoutManager(layoutManager2);
 
-
+        send = view.findViewById(R.id.send);
         allowed = view.findViewById(R.id.allowed);
         disposed = view.findViewById(R.id.disposed);
         back = view.findViewById(R.id.imageView4);
@@ -148,6 +150,9 @@ public class WritForm extends Fragment {
         nature.setAdapter(adapter1);
 
 
+        send.setOnClickListener(v->{
+            Toast.makeText(contextNullSafe, "Notification to appellants/respondents", Toast.LENGTH_SHORT).show();
+        });
 
         get_districts_phone();
 
