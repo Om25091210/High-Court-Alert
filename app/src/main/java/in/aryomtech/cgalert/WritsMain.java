@@ -24,14 +24,14 @@ import in.aryomtech.cgalert.Writ.Fragments.AllWrits;
 import in.aryomtech.cgalert.Writ.Fragments.PendingWrits;
 import in.aryomtech.cgalert.Writ.Fragments.TodayWrits;
 import in.aryomtech.cgalert.Writ.Fragments.UrgentWrits;
-import in.aryomtech.cgalert.NoticeVictim.Notice_model;
 import in.aryomtech.cgalert.Writ.WritForm;
+import in.aryomtech.cgalert.Writ.WritModel;
 import in.aryomtech.myapplication.v4.FragmentPagerItemAdapter;
 import in.aryomtech.myapplication.v4.FragmentPagerItems;
 
 public class WritsMain extends AppCompatActivity {
 
-    List<Notice_model> list;
+    List<WritModel> list;
     ImageView form;
     String stat_name;
     FirebaseAuth auth;

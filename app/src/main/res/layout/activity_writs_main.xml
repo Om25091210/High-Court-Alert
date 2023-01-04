@@ -64,17 +64,17 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginStart="20dp"
             android:fontFamily="@font/quicksand_bold"
-            android:textColor="@color/use_orange"
-            android:textSize="20sp"
             android:gravity="center"
             android:text="Writ Cases Alert"
+            android:textColor="@color/use_orange"
+            android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="@+id/imageView4"
-            app:layout_constraintEnd_toStartOf="@+id/form"
-            app:layout_constraintStart_toEndOf="@+id/imageView4"
-            app:layout_constraintTop_toTopOf="@+id/imageView4" />
-
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/imageView4"
+            app:layout_constraintVertical_bias="0.6" />
 
         <ImageView
             android:id="@+id/form"

@@ -10,11 +10,11 @@ import kotlinx.coroutines.launch
 class Specific {
     private val TAG="send"
 
-    fun noti(name:String,phone:String,token:String,key:String){
+    fun noti(name:String,phone:String,token:String,key:String,section:String){
 
         if(name.isNotEmpty() && phone.isNotEmpty()){
             PushNotification(
-                NotificationData(name, phone,key),
+                NotificationData(name, phone,key,section),
                 token
             ).also {
                 sendNotification(it)

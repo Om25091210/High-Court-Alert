@@ -1,5 +1,7 @@
 package in.aryomtech.cgalert.NoticeVictim;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -54,9 +56,12 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import in.aryomtech.cgalert.R;
+import in.aryomtech.cgalert.fcm.Specific;
 
 
 public class NoticeForm extends Fragment {
@@ -65,19 +70,20 @@ public class NoticeForm extends Fragment {
     ImageView back;
     Context contextNullSafe;
     int check_;
-    DatabaseReference reference;
+    DatabaseReference reference,user_ref;
     Dialog dialog1;
     AutoCompleteTextView district,station;
     EditText crime_no,crime_year,case_year,advocate, appellant, caseNo;
     TextView notice_date, hearing_date, submit , crr,cra,mcrc;
     FirebaseAuth auth;
     FirebaseUser user;
+    int c=-1;
     LottieAnimationView done;
     ConstraintLayout lay;
     DatabaseReference reference_phone,gs_ref;
     List<String> district_list,ps_list;
     String pushkey,gsID="";
-    int val = 0;
+    String case_type = "";
     String notice;
     DatePickerDialog.OnDateSetListener mDateSetListener;
 
@@ -95,6 +101,7 @@ public class NoticeForm extends Fragment {
         user=auth.getCurrentUser();
 
         reference = FirebaseDatabase.getInstance().getReference().child("notice");
+        user_ref = FirebaseDatabase.getInstance().getReference().child("users");
         gs_ref = FirebaseDatabase.getInstance().getReference().child("gskey");
         pushkey = reference.push().getKey();
         reference_phone = FirebaseDatabase.getInstance().getReference().child("Phone numbers");
@@ -111,9 +118,11 @@ public class NoticeForm extends Fragment {
         hearing_date = view.findViewById(R.id.next_hearing_date);
         advocate = view.findViewById(R.id.name_edt);
         submit = view.findViewById(R.id.submit_txt);
+
         crr = view.findViewById(R.id.crr);
         cra = view.findViewById(R.id.cra);
         mcrc = view.findViewById(R.id.mcrc);
+
         lay = view.findViewById(R.id.lay1);
 
         notice_date.setOnClickListener(v->{
@@ -186,24 +195,24 @@ public class NoticeForm extends Fragment {
         };
 
         crr.setOnClickListener(v->{
-            crr.setBackgroundResource(R.drawable.bg_button_focus);
-            mcrc.setBackgroundResource(R.drawable.bg_button2);
-            cra.setBackgroundResource(R.drawable.bg_button2);
-            val = 1;
+            crr.setBackgroundResource(R.drawable.bg_button2);
+            mcrc.setBackgroundResource(R.drawable.bg_selector);
+            cra.setBackgroundResource(R.drawable.bg_selector);
+            case_type = "CRR";
         });
 
         cra.setOnClickListener(v->{
-            cra.setBackgroundResource(R.drawable.bg_button_focus);
-            mcrc.setBackgroundResource(R.drawable.bg_button2);
-            crr.setBackgroundResource(R.drawable.bg_button2);
-            val = 2;
+            cra.setBackgroundResource(R.drawable.bg_button2);
+            mcrc.setBackgroundResource(R.drawable.bg_selector);
+            crr.setBackgroundResource(R.drawable.bg_selector);
+            case_type = "CRA";
         });
 
         mcrc.setOnClickListener(v->{
-            mcrc.setBackgroundResource(R.drawable.bg_button_focus);
-            cra.setBackgroundResource(R.drawable.bg_button2);
-            crr.setBackgroundResource(R.drawable.bg_button2);
-            val = 3;
+            mcrc.setBackgroundResource(R.drawable.bg_button2);
+            cra.setBackgroundResource(R.drawable.bg_selector);
+            crr.setBackgroundResource(R.drawable.bg_selector);
+            case_type = "MCRC";
         });
 
         gs_ref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -226,16 +235,15 @@ public class NoticeForm extends Fragment {
                                         if(!advocate.getText().toString().trim().equals("")) {
                                             if (!appellant.getText().toString().trim().equals("")) {
                                                 if (!caseNo.getText().toString().trim().equals("")) {
-                                                    if (val == 0) {
+                                                    if (case_type.trim().equals("")) {
                                                         Toast.makeText(getActivity(), "Please select the case type", Toast.LENGTH_SHORT).show();
                                                     } else {
-                                                        Log.e("HEY","HEY");
                                                         dialog1 = new Dialog(getContextNullSafety());
                                                         dialog1.setCancelable(false);
                                                         dialog1.setContentView(R.layout.loading_dialog);
                                                         dialog1.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
                                                         LottieAnimationView lottieAnimationView=dialog1.findViewById(R.id.animate);
-                                                        lottieAnimationView.setAnimation("done.json");
+                                                        lottieAnimationView.setAnimation("loader.json");
                                                         dialog1.show();
                                                         send_data_to_sheets();
                                                     }
@@ -363,16 +371,6 @@ public class NoticeForm extends Fragment {
                 .show();
 
         Log.e("sdf","SDF");
-        String type = "";
-        if (val ==1){
-            type="CRR";
-        }
-        else if (val == 2){
-            type="CRA";
-        }
-        else if(val==3){
-            type="MCRC";
-        }
         String prev_keygen=district.getText().toString().toUpperCase()+"-"
                 +station.getText().toString().toUpperCase()+"-"
                 +caseNo.getText().toString().toUpperCase()+"-"
@@ -384,7 +382,7 @@ public class NoticeForm extends Fragment {
                 +"&policeStation="+station.getText().toString().toUpperCase()
                 +"&district="+district.getText().toString().toUpperCase()
                 +"&caseNo="+caseNo.getText().toString().toUpperCase()
-                +"&caseType="+type
+                +"&caseType="+case_type
                 +"&caseYear="+case_year.getText().toString().toUpperCase()
                 +"&appealant="+appellant.getText().toString().toUpperCase()
                 +"&crimeNo="+crime_no.getText().toString().toUpperCase()
@@ -415,7 +413,7 @@ public class NoticeForm extends Fragment {
                                     .setTextColor(Color.parseColor("#FF7F5C"))
                                     .setBackgroundTint(Color.parseColor("#171746"))
                                     .show();
-                            dialog1.dismiss();
+                            send_notification();
                         }
                         else{
                             Snackbar.make(lay,"Failed to Upload.",Snackbar.LENGTH_LONG)
@@ -476,6 +474,63 @@ public class NoticeForm extends Fragment {
             }
         });
     }
+
+    private void send_notification() {
+        LottieAnimationView lottieAnimationView=dialog1.findViewById(R.id.animate);
+        lottieAnimationView.setAnimation("message_sent.json");
+        dialog1.show();
+        c=-1;
+        String body="अतः उक्त अपराध क्रमांक के पीड़ित को स्वयं मय वैध पहचान पत्र के साथ या अपने अधिवक्ता के माध्यम से दिनांक - " + notice_date.getText().toString().trim() + " को उच्च न्यायालय, बिलासपुर के हेल्प डेस्क या संबंधित जिले के (DLSA) " +
+                "DISTRICT LEGAL SERVICES AUTHORITY में उपस्थित होकर अपना प्रतिनिधित्व सुनिश्चित करने हेतु सूचित करने का कष्ट करें।";
+        user_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    for(DataSnapshot ds:snapshot.getChildren()){
+                        if(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("name").getValue(String.class)).equals("SP "+district.getText().toString().trim().toUpperCase())){
+                            c=0;
+                            for(DataSnapshot ds_token:snapshot.child(ds.getKey()).child("token").getChildren()){
+                                String token=snapshot.child(ds.getKey()).child("token").child(Objects.requireNonNull(ds_token.getKey())).getValue(String.class);
+                                Specific specific=new Specific();
+                                Log.e("logging_info",pushkey+"");
+                                specific.noti("CG Sangyan", body, Objects.requireNonNull(token),pushkey,"notice");
+                                Snackbar.make(lay,"Notification Sent to SP.",Snackbar.LENGTH_LONG)
+                                        .setActionTextColor(Color.parseColor("#171746"))
+                                        .setTextColor(Color.parseColor("#FF7F5C"))
+                                        .setBackgroundTint(Color.parseColor("#171746"))
+                                        .show();
+                            }
+                        }
+                        if(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("name").getValue(String.class)).equals("PS "+station.getText().toString().trim().toUpperCase())){
+                            c=1;
+                            reference.child(pushkey).child("number").setValue(snapshot.child(Objects.requireNonNull(ds.getKey())).child("phone").getValue(String.class));
+                            for(DataSnapshot ds_token:snapshot.child(ds.getKey()).child("token").getChildren()){
+                                String token=snapshot.child(ds.getKey()).child("token").child(Objects.requireNonNull(ds_token.getKey())).getValue(String.class);
+                                Specific specific=new Specific();
+                                specific.noti("CG Sangyan", body, Objects.requireNonNull(token),pushkey,"notice");
+                            }
+                            Snackbar.make(lay,"Notification Sent to Police Station.",Snackbar.LENGTH_LONG)
+                                    .setActionTextColor(Color.parseColor("#171746"))
+                                    .setTextColor(Color.parseColor("#FF7F5C"))
+                                    .setBackgroundTint(Color.parseColor("#171746"))
+                                    .show();
+                        }
+                    }
+                    if(c==-1){
+                        Snackbar.make(lay,"Notification not sent. Check SP and PS numbers",Snackbar.LENGTH_LONG)
+                                .setActionTextColor(Color.parseColor("#171746"))
+                                .setTextColor(Color.parseColor("#FF7F5C"))
+                                .setBackgroundTint(Color.parseColor("#171746"))
+                                .show();
+                    }
+                    dialog1.dismiss();
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
+    }
+
     protected String hashGenerator(String str_hash) {
         // TODO Auto-generated method stub
         StringBuffer finalString=new StringBuffer();
@@ -501,29 +556,20 @@ public class NoticeForm extends Fragment {
         return sb.toString();
     }
     public void datasend(String url){
-        reference.child(pushkey).child("district").setValue(district.getText().toString().toUpperCase());
-        reference.child(pushkey).child("station").setValue(station.getText().toString().toUpperCase());
-        reference.child(pushkey).child("crimeNo").setValue(crime_no.getText().toString().toUpperCase());
-        reference.child(pushkey).child("crimeYear").setValue(crime_year.getText().toString().toUpperCase());
-        reference.child(pushkey).child("caseYear").setValue(case_year.getText().toString().toUpperCase());
-        reference.child(pushkey).child("noticeDate").setValue(notice_date.getText().toString().toUpperCase());
-        reference.child(pushkey).child("hearingDate").setValue(hearing_date.getText().toString().toUpperCase());
-        reference.child(pushkey).child("advocate").setValue(advocate.getText().toString().toUpperCase());
-        reference.child(pushkey).child("appellant").setValue(appellant.getText().toString().toUpperCase());
-        reference.child(pushkey).child("notified").setValue("Once");
-        reference.child(pushkey).child("caseNo").setValue(caseNo.getText().toString().toUpperCase());
+        reference.child(pushkey).child("district").setValue(district.getText().toString().trim().toUpperCase());
+        reference.child(pushkey).child("station").setValue(station.getText().toString().trim().toUpperCase());
+        reference.child(pushkey).child("crimeNo").setValue(crime_no.getText().toString().trim().toUpperCase());
+        reference.child(pushkey).child("crimeYear").setValue(crime_year.getText().toString().trim().toUpperCase());
+        reference.child(pushkey).child("caseYear").setValue(case_year.getText().toString().trim().toUpperCase());
+        reference.child(pushkey).child("noticeDate").setValue(notice_date.getText().toString().trim().toUpperCase());
+        reference.child(pushkey).child("hearingDate").setValue(hearing_date.getText().toString().trim().toUpperCase());
+        reference.child(pushkey).child("advocate").setValue(advocate.getText().toString().trim().toUpperCase());
+        reference.child(pushkey).child("appellant").setValue(appellant.getText().toString().trim().toUpperCase());
+        reference.child(pushkey).child("reminded").setValue("once");
+        reference.child(pushkey).child("caseNo").setValue(caseNo.getText().toString().trim().toUpperCase());
         reference.child(pushkey).child("pushkey").setValue(pushkey);
-        reference.child(pushkey).child("Doc_url").setValue(url);
-
-        if (val ==1){
-            reference.child(pushkey).child("caseType").setValue("CRR");
-        }
-        else if (val == 2){
-            reference.child(pushkey).child("caseType").setValue("CRA");
-        }
-        else if(val==3){
-            reference.child(pushkey).child("caseType").setValue("MCRC");
-        }
+        reference.child(pushkey).child("doc_url").setValue(url.trim());
+        reference.child(pushkey).child("caseType").setValue(case_type);
     }
 
     private void get_districts_phone() {

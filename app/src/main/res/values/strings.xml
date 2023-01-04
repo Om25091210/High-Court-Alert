@@ -166,6 +166,9 @@
     <string name="enter_case_number">Enter Case Number</string>
     <string name="case_number">Case Number</string>
     <string name="upload">Upload</string>
+    <string name="appellantsO">Appellants</string>
+    <string name="respondentsO">Respondents</string>
+    <string name="do_you_want_to_upload_this_file">Do you want to Upload this file?</string>
 
 
     <array name="menuOptions">

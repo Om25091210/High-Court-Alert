@@ -295,7 +295,6 @@
                     android:layout_gravity="start"
                     android:background="@color/veryLightGrey"
                     app:headerLayout="@layout/nav_header_layout"
-                    app:itemBackground="@drawable/item_background_nav_check"
                     app:itemIconPadding="30dp"
                     app:itemIconSize="25dp"
                     app:itemHorizontalPadding="25dp"

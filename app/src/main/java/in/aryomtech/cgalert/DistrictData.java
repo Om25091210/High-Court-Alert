@@ -58,7 +58,6 @@ public class DistrictData extends Fragment {
             assert getFragmentManager() != null;
             getFragmentManager().beginTransaction().remove(DistrictData.this).commit();
         });
-
         OnBackPressedCallback callback=new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -71,7 +70,6 @@ public class DistrictData extends Fragment {
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),callback);
-
         return view;
     }
 

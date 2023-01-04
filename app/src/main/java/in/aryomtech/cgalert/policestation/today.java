@@ -408,7 +408,7 @@ public class today extends Fragment {
                                     String token = snapshot.child(ds.getKey()).child("token").child(Objects.requireNonNull(dd.getKey())).getValue(String.class);
                                     if (token != null) {
                                         Specific specific = new Specific();
-                                        specific.noti("High Court Alert", body, token,keys_copy_selected_phone.get(i));
+                                        specific.noti("High Court Alert", body, token,keys_copy_selected_phone.get(i),"data");
                                     }
                                 }
                             }
@@ -575,9 +575,11 @@ public class today extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 excel_data.clear();
                 for(DataSnapshot ds:snapshot.getChildren()){
-                    if(snapshot.child(ds.getKey()).child("B").getValue(String.class).toUpperCase().equals(stat_name.substring(3))) {
-                        if (cr_dt.equals(snapshot.child(ds.getKey()).child("K").getValue(String.class))) {
-                            excel_data.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Excel_data.class));
+                    if(snapshot.child(ds.getKey()).child("B").getValue(String.class)!=null) {
+                        if (snapshot.child(ds.getKey()).child("B").getValue(String.class).toUpperCase().equals(stat_name.substring(3))) {
+                            if (cr_dt.equals(snapshot.child(ds.getKey()).child("K").getValue(String.class))) {
+                                excel_data.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Excel_data.class));
+                            }
                         }
                     }
                 }

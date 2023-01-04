@@ -311,23 +311,25 @@ public class urgent_data extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 excel_data.clear();
-                for(DataSnapshot ds:snapshot.getChildren()){
-                    if(snapshot.child(ds.getKey()).child("B").getValue(String.class).toUpperCase().equals(stat_name.substring(3))) {
-                        try {
-                            Date dNow = new Date( );
-                            SimpleDateFormat ft =
-                                    new SimpleDateFormat ("dd.MM.yyyy",Locale.getDefault());
+                for(DataSnapshot ds:snapshot.getChildren()) {
+                    if (snapshot.child(Objects.requireNonNull(ds.getKey())).child("B").getValue(String.class) != null) {
+                        if (Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("B").getValue(String.class)).toUpperCase().equals(stat_name.substring(3))) {
+                            try {
+                                Date dNow = new Date();
+                                SimpleDateFormat ft =
+                                        new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
 
-                            Date list = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(snapshot.child(ds.getKey()).child("L").getValue(String.class) + "");
-                            Date current = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(ft.format(dNow));
-                            Log.e("date",list.before(current)+"");
-                            if(list.before(current)){
-                                excel_data.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Excel_data.class));
+                                Date list = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(snapshot.child(ds.getKey()).child("L").getValue(String.class) + "");
+                                Date current = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(ft.format(dNow));
+                                Log.e("date", list.before(current) + "");
+                                if (list.before(current)) {
+                                    excel_data.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Excel_data.class));
+                                }
+                            } catch (ParseException e) {
+                                e.printStackTrace();
                             }
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
 
+                        }
                     }
                 }
                 if(excel_data.size()!=0){

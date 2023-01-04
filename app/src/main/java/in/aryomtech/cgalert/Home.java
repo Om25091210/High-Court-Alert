@@ -64,7 +64,6 @@ public class Home extends AppCompatActivity implements DuoMenuView.OnMenuClickLi
     int downspeed;
     int upspeed;
     String DeviceToken;
-    FirebaseFirestore db;
     //admin
     ImageView admin,entry,phone_num,cases_against_police;
 
@@ -459,7 +458,6 @@ public class Home extends AppCompatActivity implements DuoMenuView.OnMenuClickLi
             mToolbar = findViewById(R.id.toolbar);
         }
     }
-
 
     @Override
     protected void onStart() {
