@@ -633,9 +633,12 @@ public class form extends Fragment {
                     @Override
                     public void onResponse(String response) {
                         String code="";
+                        String url;
                         try {
                             JSONObject jsonObj = new JSONObject(response);
                             code=jsonObj.get("code")+"";
+                            url = jsonObj.get("url") + "";
+                            Log.e("checking url" , "url");
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
