@@ -211,8 +211,10 @@ public class p_mcrc_rm_return extends Fragment {
                 excel_data.clear();
                 for(DataSnapshot ds:snapshot.getChildren()){
                     if(ds.hasChildren()) {
-                        if(snapshot.child(ds.getKey()).child("B").getValue(String.class).toUpperCase().equals(stat_name.substring(3))) {
-                            excel_data.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Excel_data.class));
+                        if (snapshot.child(ds.getKey()).child("B").getValue(String.class) != null) {
+                            if (snapshot.child(ds.getKey()).child("B").getValue(String.class).toUpperCase().equals(stat_name.substring(3))) {
+                                excel_data.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Excel_data.class));
+                            }
                         }
                     }
                 }

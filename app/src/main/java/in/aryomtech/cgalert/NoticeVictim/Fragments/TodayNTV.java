@@ -31,9 +31,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.provider.OpenableColumns;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -85,9 +88,12 @@ public class TodayNTV extends Fragment {
     String sp_of;
     TinyDB tinyDB;
     ImageView cg_logo;
+    List<Notice_model> mylist;
     TextView no_data;
+    List<String> list_string=new ArrayList<>();
+    EditText search;
     SwipeRefreshLayout mSwipeRefreshLayout;
-    NoticeAdapter noticeAdapter;StorageReference storageReference1;
+    NoticeAdapter adapter;StorageReference storageReference1;
     String ps_or_admin="";
     in.aryomtech.cgalert.NoticeVictim.Interface.onUploadInterface onUploadInterface;
     @Override
@@ -104,12 +110,14 @@ public class TodayNTV extends Fragment {
         String pdfpath = "PDF/";
         storageReference1 = FirebaseStorage.getInstance().getReference().child(pdfpath);
 
-        noticeAdapter=new NoticeAdapter(getContextNullSafety(),onUploadInterface,list);
+        adapter=new NoticeAdapter(getContextNullSafety(),onUploadInterface,list);
         user_ref = FirebaseDatabase.getInstance().getReference().child("users");
         cg_logo=view.findViewById(R.id.imageView3);
         no_data=view.findViewById(R.id.no_data);
         recyclerView = view.findViewById(R.id.rv);
         list = new ArrayList<>();
+        search=view.findViewById(R.id.search);
+        mylist = new ArrayList<>();
         tinyDB=new TinyDB(getContextNullSafety());
         mSwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         LinearLayoutManager mManager = new LinearLayoutManager(getContextNullSafety());
@@ -172,6 +180,16 @@ public class TodayNTV extends Fragment {
                 select_file();
             }
         };
+        search.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {}
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                search(s+"");
+            }
+        });
         OnBackPressedCallback callback=new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -185,6 +203,75 @@ public class TodayNTV extends Fragment {
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),callback);
         return view;
+    }
+    private void search(String str) {
+        if(str.equals("")){
+            adapter = new NoticeAdapter(getContextNullSafety(), onUploadInterface, list);
+            recyclerView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        }
+        else {
+            String[] str_Args = str.toLowerCase().split(" ");
+            mylist.clear();
+            int count = 0;
+            boolean not_once = true;
+            List<Integer> c_list = new ArrayList<>();
+            for (Notice_model object : list) {
+                convert_to_list(object);
+                for (String s : list_string) {
+                    for (String str_arg : str_Args) {
+                        if (str_arg.contains("/") && not_once) {
+                            String sub1 = str_arg.substring(0, str_arg.indexOf("/"));
+                            String sub2 = str_arg.substring(str_arg.indexOf("/") + 1);
+                            if (list_string.get(4).contains(sub1) && list_string.get(6).contains(sub2)) {
+                                count++;
+                                not_once = false;
+                            } else if (list_string.get(7).contains(sub1) && list_string.get(8).contains(sub2)) {
+                                count++;
+                                not_once = false;
+                            }
+                        } else if (s.contains(str_arg)) {
+                            count++;
+                        }
+                    }
+                }
+                c_list.add(count);
+                System.out.println(c_list + "");
+                if (count == str_Args.length)
+                    mylist.add(object);
+                count = 0;
+            }
+            adapter = new NoticeAdapter(getContextNullSafety(), onUploadInterface, mylist);
+            recyclerView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        }
+    }
+    private void convert_to_list(Notice_model object) {
+        list_string.clear();
+        try{
+            list_string.add(object.getAdvocate().toLowerCase());
+            list_string.add(object.getCaseType().toLowerCase());
+            list_string.add(object.getCaseYear().toLowerCase());
+            list_string.add(object.getCaseNo().toLowerCase());
+            list_string.add(object.getCrimeYear().toLowerCase());
+            list_string.add(object.getPushkey().toLowerCase());
+            list_string.add(object.getDoc_url().toLowerCase());
+            list_string.add(object.getDistrict().toLowerCase());
+            list_string.add(object.getHearingDate().toLowerCase());
+            list_string.add(object.getNoticeDate().toLowerCase());
+            list_string.add(object.getStation().toLowerCase());
+            list_string.add(object.getAppellant().toLowerCase());
+            list_string.add(object.getCaseNo().toLowerCase());
+            list_string.add(object.getReminded().toLowerCase());
+            list_string.add(object.getSeen().toLowerCase());
+            list_string.add(object.getSent().toLowerCase());
+            list_string.add(object.getNumber().toLowerCase());
+            list_string.add(object.getUploaded_file().toLowerCase());
+            list_string.add(object.getUploaded_date().toLowerCase());
+        }
+        catch (NullPointerException e){
+            System.out.println("Error");
+        }
     }
     private void select_file() {
         Intent intent = new Intent();
@@ -321,7 +408,7 @@ public class TodayNTV extends Fragment {
                     no_data.setVisibility(View.GONE);
                 }
                 Collections.reverse(list);
-                NoticeAdapter adapter = new NoticeAdapter(getContextNullSafety(), onUploadInterface, list);
+                adapter = new NoticeAdapter(getContextNullSafety(), onUploadInterface, list);
                 adapter.notifyDataSetChanged();
                 recyclerView.setAdapter(adapter);
                 mSwipeRefreshLayout.setRefreshing(false);
@@ -355,7 +442,7 @@ public class TodayNTV extends Fragment {
                     cg_logo.setVisibility(View.GONE);
                     no_data.setVisibility(View.GONE);
                 }
-                NoticeAdapter adapter = new NoticeAdapter(getContextNullSafety(), onUploadInterface, list);
+                adapter = new NoticeAdapter(getContextNullSafety(), onUploadInterface, list);
                 adapter.notifyDataSetChanged();
                 mSwipeRefreshLayout.setRefreshing(false);
                 recyclerView.setAdapter(adapter);
@@ -390,7 +477,7 @@ public class TodayNTV extends Fragment {
                     cg_logo.setVisibility(View.GONE);
                     no_data.setVisibility(View.GONE);
                 }
-                NoticeAdapter adapter = new NoticeAdapter(getContextNullSafety(), onUploadInterface, list);
+                adapter = new NoticeAdapter(getContextNullSafety(), onUploadInterface, list);
                 adapter.notifyDataSetChanged();
                 mSwipeRefreshLayout.setRefreshing(false);
                 recyclerView.setAdapter(adapter);
@@ -424,7 +511,7 @@ public class TodayNTV extends Fragment {
                     cg_logo.setVisibility(View.GONE);
                     no_data.setVisibility(View.GONE);
                 }
-                NoticeAdapter adapter = new NoticeAdapter(getContextNullSafety(), onUploadInterface, list);
+                adapter = new NoticeAdapter(getContextNullSafety(), onUploadInterface, list);
                 adapter.notifyDataSetChanged();
                 mSwipeRefreshLayout.setRefreshing(false);
                 recyclerView.setAdapter(adapter);
@@ -457,7 +544,7 @@ public class TodayNTV extends Fragment {
                     cg_logo.setVisibility(View.GONE);
                     no_data.setVisibility(View.GONE);
                 }
-                NoticeAdapter adapter = new NoticeAdapter(getContextNullSafety(), onUploadInterface, list);
+                adapter = new NoticeAdapter(getContextNullSafety(), onUploadInterface, list);
                 adapter.notifyDataSetChanged();
                 mSwipeRefreshLayout.setRefreshing(false);
                 recyclerView.setAdapter(adapter);
