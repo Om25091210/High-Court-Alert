@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -33,6 +34,7 @@ import java.util.Objects;
 
 
 import in.aryomtech.cgalert.NoticeVictim.NoticemainAdmin;
+import in.aryomtech.cgalert.Writ.WritForm;
 import in.aryomtech.cgalert.duo_frags.about;
 import in.aryomtech.cgalert.policestation.p_Home;
 
@@ -208,14 +210,14 @@ public class Dashboard extends AppCompatActivity {
             startActivity(intent);
         });
 
-        police_contacts.setOnClickListener(v -> Dashboard.this.getSupportFragmentManager()
-                .beginTransaction()
-                .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
-                .add(R.id.drawer, new DistrictData())
-                .addToBackStack(null)
-                .commit());
-
-
+        police_contacts.setOnClickListener(v -> {
+            Dashboard.this.getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
+                    .add(R.id.drawer, new DistrictData(), "data")
+                    .addToBackStack(null)
+                    .commit();
+        });
 
         case_diary.setOnClickListener(v -> {
             if(redirect_to.equals("home")) {
@@ -251,15 +253,22 @@ public class Dashboard extends AppCompatActivity {
     //on backpress
     @Override
     public void onBackPressed() {
-        if (onBackpressedListener != null) {
-            getSupportActionBar().setTitle("Home");
-            navView.setCheckedItem(R.id.nav_home);
-            onBackpressedListener.doBack();
-            drawer.closeDrawer(GravityCompat.START);
-        } else if (onBackpressedListener == null) {
-            finish();
-            super.onBackPressed();
+        super.onBackPressed();
+        Fragment test = getSupportFragmentManager().findFragmentByTag("data");
+        if (test != null && test.isVisible()) {
+            Log.e("frag","fragment showing");//just for dummy line hehe :)
         }
+        else {
+            if (onBackpressedListener != null) {
+                navView.setCheckedItem(R.id.nav_home);
+                onBackpressedListener.doBack();
+                drawer.closeDrawer(GravityCompat.START);
+            } else if (onBackpressedListener == null) {
+                finish();
+                super.onBackPressed();
+            }
+        }
+
     }
 
     public interface OnBackPressedListener {

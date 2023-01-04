@@ -2,9 +2,13 @@ package in.aryomtech.cgalert;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -51,6 +55,15 @@ public class WritsMain extends AppCompatActivity {
 
         form = findViewById(R.id.form);
 
+        boolean isadmin=getSharedPreferences("isAdmin_or_not", Context.MODE_PRIVATE)
+                .getBoolean("authorizing_admin",false);
+        if(isadmin){
+            form.setVisibility(View.VISIBLE);
+        }
+        else{
+            form.setVisibility(View.GONE);
+        }
+
         FragmentPagerItemAdapter adapter1 = new FragmentPagerItemAdapter(
                 getSupportFragmentManager(), FragmentPagerItems.with(WritsMain.this)
                 .add("Urgent Writs", UrgentWrits.class)
@@ -68,7 +81,7 @@ public class WritsMain extends AppCompatActivity {
             WritsMain.this.getSupportFragmentManager()
                     .beginTransaction()
                     .setCustomAnimations( R.anim.enter_from_right, R.anim.exit_to_left,R.anim.enter_from_left, R.anim.exit_to_right)
-                    .add(R.id.constraint,new WritForm())
+                    .add(R.id.swipe,new WritForm(),"writform")
                     .addToBackStack(null)
                     .commit();
         });
@@ -80,6 +93,12 @@ public class WritsMain extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        finish();
+        Fragment test = getSupportFragmentManager().findFragmentByTag("writform");
+        if (test != null && test.isVisible()) {
+            Log.e("frag","fragment showing");//just for dummy line hehe :)
+        }
+        else {
+            finish();
+        }
     }
 }
