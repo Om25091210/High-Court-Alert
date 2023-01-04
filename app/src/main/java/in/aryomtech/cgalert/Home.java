@@ -45,7 +45,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import in.aryomtech.cgalert.CasesAgainstPolice.CasesAgainPoliceForm;
+import in.aryomtech.cgalert.Writ.WritForm;
 import in.aryomtech.cgalert.Fragments.admin.admin_room;
 import in.aryomtech.cgalert.Fragments.admin.form;
 import in.aryomtech.cgalert.duo_frags.about;
@@ -64,7 +64,6 @@ public class Home extends AppCompatActivity implements DuoMenuView.OnMenuClickLi
     int downspeed;
     int upspeed;
     String DeviceToken;
-    FirebaseFirestore db;
     //admin
     ImageView admin,entry,phone_num,cases_against_police;
 
@@ -134,7 +133,7 @@ public class Home extends AppCompatActivity implements DuoMenuView.OnMenuClickLi
             Home.this.getSupportFragmentManager()
                     .beginTransaction()
                     .setCustomAnimations( R.anim.enter_from_right, R.anim.exit_to_left,R.anim.enter_from_left, R.anim.exit_to_right)
-                    .add(R.id.drawer,new CasesAgainPoliceForm())
+                    .add(R.id.drawer,new WritForm())
                     .addToBackStack(null)
                     .commit();
         });
@@ -459,7 +458,6 @@ public class Home extends AppCompatActivity implements DuoMenuView.OnMenuClickLi
             mToolbar = findViewById(R.id.toolbar);
         }
     }
-
 
     @Override
     protected void onStart() {

@@ -87,6 +87,10 @@ public class Login extends AppCompatActivity {
 
         getSharedPreferences("isAdmin_or_not",MODE_PRIVATE).edit()
                 .putBoolean("authorizing_admin",false).apply();
+
+        getSharedPreferences("valid_version",MODE_PRIVATE).edit()
+                .putBoolean("valid_ver",false).apply();
+
         TinyDB tinyDB=new TinyDB(Login.this);
         Log.e("this cache1",tinyDB.getInt("num_districts")+"");
         deleteCache(this);
