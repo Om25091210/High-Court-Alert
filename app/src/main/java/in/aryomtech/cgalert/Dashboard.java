@@ -19,7 +19,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -36,7 +35,7 @@ import java.util.Objects;
 
 
 import in.aryomtech.cgalert.NoticeVictim.NoticemainAdmin;
-import in.aryomtech.cgalert.Writ.WritForm;
+import in.aryomtech.cgalert.Writ.WritsMain;
 import in.aryomtech.cgalert.duo_frags.about;
 import in.aryomtech.cgalert.policestation.p_Home;
 
@@ -198,7 +197,7 @@ public class Dashboard extends AppCompatActivity {
         police_contacts.setOnClickListener(v -> Dashboard.this.getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
-                .add(R.id.drawer, new DistrictData())
+                .add(R.id.drawer, new DistrictData(),"dashboard_frag")
                 .addToBackStack(null)
                 .commit());
 

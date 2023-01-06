@@ -82,12 +82,14 @@ public class WritAdapter extends RecyclerView.Adapter<WritAdapter.ViewHolder> {
             bundle.putStringArrayList("appellants", list.get(position).getAppellants());
             bundle.putString("judge_summary", list.get(position).getdSummary());
             bundle.putString("synopsis", list.get(position).getSummary());
-            bundle.putString("pushkey", pushkey);
+            bundle.putString("pushkey", list.get(position).getPushkey());
+            bundle.putString("decision", list.get(position).getDecisionDate());
             Fragment fragment = new AppellantFragment();
             fragment.setArguments(bundle);
             FragmentManager manager = ((AppCompatActivity) context).getSupportFragmentManager();
             FragmentTransaction ft = manager.beginTransaction();
-            ft.replace(R.id.swipe, fragment);
+            ft.add(R.id.swipe, fragment);
+            ft.addToBackStack(null);
             ft.commit();
         });
 

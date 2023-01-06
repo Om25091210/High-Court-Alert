@@ -173,6 +173,7 @@
     <string name="respondents_list">Respondents List</string>
     <string name="synopsis_of_the_case">Synopsis of the Case</string>
     <string name="judgement_summary_of_the_case">Judgement Summary of the Case</string>
+    <string name="deciding_date">Deciding Date</string>
 
 
     <array name="menuOptions">

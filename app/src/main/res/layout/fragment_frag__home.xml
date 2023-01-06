@@ -62,9 +62,9 @@
 
                     <TextView
                         android:id="@+id/textView4"
-                        android:layout_marginTop="2dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
                         android:fontFamily="@font/quicksand_medium"
                         android:text="@string/check_today_s_update"
                         android:textColor="@color/use_light_blue"
@@ -104,9 +104,9 @@
                                 android:layout_height="match_parent"
                                 android:background="@color/use_blue"
                                 android:orientation="vertical"
-                                android:paddingStart="30dp"
+                                android:paddingStart="@dimen/_23sdp"
                                 android:paddingTop="20dp"
-                                android:paddingEnd="30dp"
+                                android:paddingEnd="@dimen/_23sdp"
                                 android:paddingBottom="20dp">
 
                                 <TextView
@@ -152,9 +152,9 @@
                                 android:layout_height="match_parent"
                                 android:background="@color/use_orange"
                                 android:orientation="vertical"
-                                android:paddingStart="30dp"
+                                android:paddingStart="@dimen/_23sdp"
                                 android:paddingTop="20dp"
-                                android:paddingEnd="30dp"
+                                android:paddingEnd="@dimen/_23sdp"
                                 android:paddingBottom="20dp">
 
                                 <TextView

@@ -1,4 +1,4 @@
-package in.aryomtech.cgalert.Writ.Fragments;
+package in.aryomtech.cgalert.Writ;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -18,14 +18,12 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,7 +33,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,13 +41,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-import in.aryomtech.cgalert.Writ.WritAdapter;
-import in.aryomtech.cgalert.Writ.WritModel;
 import in.aryomtech.cgalert.DB.TinyDB;
 import in.aryomtech.cgalert.R;
 
 
-public class UrgentWrits extends Fragment {
+public class WritNeed extends Fragment {
 
     View view;
     RecyclerView recyclerView;
@@ -71,12 +66,10 @@ public class UrgentWrits extends Fragment {
     WritAdapter adapter;
     List<WritModel> mylist;
 
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view =  inflater.inflate(R.layout.fragment_urgent_writs, container, false);
-
+        view = inflater.inflate(R.layout.fragment_writ_need, container, false);
         auth= FirebaseAuth.getInstance();
         user=auth.getCurrentUser();
 
@@ -105,42 +98,43 @@ public class UrgentWrits extends Fragment {
                 .getString("Yes_of","none");
         if(sp_of.equals("none")) {
             if(tinyDB.getInt("num_station")==0){
-                getDataForIG();
+                //getDataForIG();
             }
             else if(tinyDB.getInt("num_station")==10){
-                getDataForSDOP();
+                //getDataForSDOP();
             }
             else{
                 if(ps_or_admin.equals("home")) {
                     get_data();
                 }
                 else if(ps_or_admin.equals("p_home")){
-                    get_ps_data();
+                    //get_ps_data();
                 }
             }
         }
         else
-            getdata_for_sp();
-        mSwipeRefreshLayout.setOnRefreshListener(() -> {
-            if(sp_of.equals("none")) {
-                if(tinyDB.getInt("num_station")==0){
-                    getDataForIG();
-                }
-                else if(tinyDB.getInt("num_station")==10){
-                    getDataForSDOP();
-                }
-                else{
-                    if(ps_or_admin.equals("home")) {
-                        get_data();
+            // getdata_for_sp();
+            mSwipeRefreshLayout.setOnRefreshListener(() -> {
+                if(sp_of.equals("none")) {
+                    if(tinyDB.getInt("num_station")==0){
+                        //getDataForIG();
                     }
-                    else if(ps_or_admin.equals("p_home")){
-                        get_ps_data();
+                    else if(tinyDB.getInt("num_station")==10){
+                        //getDataForSDOP();
+                    }
+                    else{
+                        if(ps_or_admin.equals("home")) {
+                            get_data();
+                        }
+                        else if(ps_or_admin.equals("p_home")){
+                            // get_ps_data();
+                        }
                     }
                 }
-            }
-            else
-                getdata_for_sp();
-        });
+                else {
+                    //getdata_for_sp();
+                }
+            });
 
         search.addTextChangedListener(new TextWatcher() {
 
@@ -153,36 +147,64 @@ public class UrgentWrits extends Fragment {
             }
         });
 
-
         OnBackPressedCallback callback=new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                ((FragmentActivity) getContextNullSafety()).finish();
+                FragmentManager fm = ((FragmentActivity) getContextNullSafety()).getSupportFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                if (fm.getBackStackEntryCount() > 0) {
+                    fm.popBackStack();
+                }
+                ft.commit();
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),callback);
         return view;
     }
 
+    private void getdata_for_sp() {
+        Date dNow = new Date( );
+        SimpleDateFormat ft =
+                new SimpleDateFormat ("dd.MM.yyyy", Locale.getDefault());
+        String cr_dt=ft.format(dNow);
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                list.clear();
+                for (DataSnapshot ds:snapshot.getChildren()) {
+                    if(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class).trim().toUpperCase().equals(sp_of)) {
+                        list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
+                    }
+                }
+                if(list.size()!=0){
+                    cg_logo.setVisibility(View.GONE);
+                    no_data.setVisibility(View.GONE);
+                }
+                WritAdapter adapter = new WritAdapter(list, getContextNullSafety());
+                adapter.notifyDataSetChanged();
+                mSwipeRefreshLayout.setRefreshing(false);
+                recyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
     private void get_data() {
-       /* reference.addListenerForSingleValueEvent(new ValueEventListener() {
+        Date dNow = new Date( );
+        SimpleDateFormat ft =
+                new SimpleDateFormat ("dd.MM.yyyy", Locale.getDefault());
+        String cr_dt=ft.format(dNow);
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for(DataSnapshot ds:snapshot.getChildren()){
-                    try {
-                        Date dNow = new Date();
-                        SimpleDateFormat ft =
-                                new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
-
-                        Date list1 = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(snapshot.child(ds.getKey()).child("hearingDate").getValue(String.class) + "");
-                        Date current = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(ft.format(dNow));
-                        Log.e("date", list1.before(current) + "");
-                        if (list1.before(current)) {
-                            list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
-                        }
-                    } catch (ParseException e) {
-                        e.printStackTrace();
+                    if (!snapshot.child(Objects.requireNonNull(ds.getKey())).child("dueDate").getValue(String.class).trim().equals("")) {
+                        list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
                     }
                 }
                 if(list.size()!=0){
@@ -190,83 +212,34 @@ public class UrgentWrits extends Fragment {
                     no_data.setVisibility(View.GONE);
                 }
                 Collections.reverse(list);
-                WritAdapter adapter = new WritAdapter(list , getContextNullSafety());
-                adapter.notifyDataSetChanged();
-                recyclerView.setAdapter(adapter);
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });*/
-    }
-
-    private void getdata_for_sp() {
-       /* reference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @SuppressLint("NotifyDataSetChanged")
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                list.clear();
-                for (DataSnapshot ds:snapshot.getChildren()) {
-                    try {
-                        Date dNow = new Date();
-                        SimpleDateFormat ft =
-                                new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
-
-                        Date list1 = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(snapshot.child(ds.getKey()).child("hearingDate").getValue(String.class) + "");
-                        Date current = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(ft.format(dNow));
-                        Log.e("date", list1.before(current) + "");
-                        if (list1.before(current)) {
-                            if (Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase().equals(sp_of)) {
-                                list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
-                            }
-                        }
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if(list.size()!=0){
-                    cg_logo.setVisibility(View.GONE);
-                    no_data.setVisibility(View.GONE);
-                }
                 WritAdapter adapter = new WritAdapter(list, getContextNullSafety());
                 adapter.notifyDataSetChanged();
-                mSwipeRefreshLayout.setRefreshing(false);
                 recyclerView.setAdapter(adapter);
+                mSwipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });*/
+        });
     }
+
 
     private void getDataForSDOP() {
-        /*reference.addListenerForSingleValueEvent(new ValueEventListener() {
+        Date dNow = new Date( );
+        SimpleDateFormat ft =
+                new SimpleDateFormat ("dd.MM.yyyy",Locale.getDefault());
+        String cr_dt=ft.format(dNow);
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for (DataSnapshot ds:snapshot.getChildren()) {
-                    try {
-                        Date dNow = new Date();
-                        SimpleDateFormat ft =
-                                new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
-
-                        Date list1 = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(snapshot.child(ds.getKey()).child("hearingDate").getValue(String.class) + "");
-                        Date current = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(ft.format(dNow));
-                        Log.e("date", list1.before(current) + "");
-                        if (list1.before(current)) {
-                            if (tinyDB.getListString("districts_list").contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())
-                                    && tinyDB.getListString("stations_list").contains("PS "+Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("station").getValue(String.class)).trim().toUpperCase())) {
-                                list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
-                            }
-                        }
-                    } catch (ParseException e) {
-                        e.printStackTrace();
+                    if (tinyDB.getListString("districts_list").contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())
+                            && tinyDB.getListString("stations_list").contains("PS "+Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("station").getValue(String.class)).trim().toUpperCase())) {
+                        list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
                     }
                 }
                 if(list.size()!=0){
@@ -283,31 +256,22 @@ public class UrgentWrits extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });*/
+        });
     }
 
     private void getDataForIG() {
-       /* reference.addListenerForSingleValueEvent(new ValueEventListener() {
+        Date dNow = new Date( );
+        SimpleDateFormat ft =
+                new SimpleDateFormat ("dd.MM.yyyy",Locale.getDefault());
+        String cr_dt=ft.format(dNow);
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for (DataSnapshot ds:snapshot.getChildren()) {
-                    try {
-                        Date dNow = new Date();
-                        SimpleDateFormat ft =
-                                new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
-
-                        Date list1 = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(snapshot.child(ds.getKey()).child("hearingDate").getValue(String.class) + "");
-                        Date current = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(ft.format(dNow));
-                        Log.e("date", list1.before(current) + "");
-                        if (list1.before(current)) {
-                            if (tinyDB.getListString("districts_list").contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())) {
-                                list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
-                            }
-                        }
-                    } catch (ParseException e) {
-                        e.printStackTrace();
+                    if (tinyDB.getListString("districts_list").contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())) {
+                        list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
                     }
                 }
                 if(list.size()!=0){
@@ -324,30 +288,21 @@ public class UrgentWrits extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });*/
+        });
     }
     private void get_ps_data() {
-       /* reference.addListenerForSingleValueEvent(new ValueEventListener() {
+        Date dNow = new Date( );
+        SimpleDateFormat ft =
+                new SimpleDateFormat ("dd.MM.yyyy",Locale.getDefault());
+        String cr_dt=ft.format(dNow);
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for (DataSnapshot ds:snapshot.getChildren()) {
-                    try {
-                        Date dNow = new Date();
-                        SimpleDateFormat ft =
-                                new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
-
-                        Date list1 = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(snapshot.child(ds.getKey()).child("hearingDate").getValue(String.class) + "");
-                        Date current = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(ft.format(dNow));
-                        Log.e("date", list1.before(current) + "");
-                        if (list1.before(current)) {
-                            if ((Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("station").getValue(String.class)).trim()).toUpperCase().equals(stat_name.substring(3).trim())) {
-                                list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
-                            }
-                        }
-                    } catch (ParseException e) {
-                        e.printStackTrace();
+                    if ((Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("station").getValue(String.class)).trim()).toUpperCase().equals(stat_name.substring(3).trim())) {
+                        list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
                     }
                 }
                 if(list.size()!=0){
@@ -364,8 +319,9 @@ public class UrgentWrits extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });*/
+        });
     }
+
 
     private void convert_to_list(WritModel object) {
         list_string.clear();
@@ -432,7 +388,6 @@ public class UrgentWrits extends Fragment {
         }
     }
 
-
     public Context getContextNullSafety() {
         if (getContext() != null) return getContext();
         if (getActivity() != null) return getActivity();
@@ -451,4 +406,5 @@ public class UrgentWrits extends Fragment {
         super.onAttach(context);
         contextNullSafe = context;
     }
+
 }

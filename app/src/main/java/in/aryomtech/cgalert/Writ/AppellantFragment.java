@@ -3,6 +3,7 @@ package in.aryomtech.cgalert.Writ;
 import static android.app.Activity.RESULT_OK;
 import static in.aryomtech.cgalert.Home.REQUEST_CODE_STORAGE_PERMISSION;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +22,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.os.Handler;
 import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -57,8 +59,8 @@ public class AppellantFragment extends Fragment {
 
 
     View view;
-    String  judge_summary, synopsis;
-    TextView respo, appella, judgement_summary, summary;
+    String  judge_summary, synopsis, decision;
+    TextView respo, appella, judgement_summary, summary,submit;
     ImageView back;
     ArrayList<String> respondents, appellants;
     Context contextNullSafe;
@@ -66,10 +68,11 @@ public class AppellantFragment extends Fragment {
     public static final int PICK_FILE = 1;
     Uri selected_uri_pdf=Uri.parse("");
     String respondent_list = "";
+    DatePickerDialog.OnDateSetListener mDateSetListener;
     StorageReference storageReference1;
     DatabaseReference reference,user_ref;
     Dialog dialog,dialog1;
-    LinearLayout add;
+    TextView decisionDate;
     String pushkey;
     ConstraintLayout layout;
 
@@ -87,26 +90,45 @@ public class AppellantFragment extends Fragment {
 
         judge_summary = getArguments().getString("judge_summary");
         synopsis = getArguments().getString("synopsis");
+        decision = getArguments().getString("decision");
         back = view.findViewById(R.id.imageView4);
         respo = view.findViewById(R.id.respondents_list);
         appella = view.findViewById(R.id.appellants_list);
         judgement_summary = view.findViewById(R.id.summary_edt);
         summary = view.findViewById(R.id.synop_edt);
-        reference = FirebaseDatabase.getInstance().getReference().child("writ");
-        add = view.findViewById(R.id.linearLayout12);
+        submit = view.findViewById(R.id.submit);
+       // add = view.findViewById(R.id.linearLayout12);
         String pdfpath = "WRIT_PDF/";
         layout = view.findViewById(R.id.cons_lay);
+        reference = FirebaseDatabase.getInstance().getReference().child("writ").child(pushkey);
         storageReference1 = FirebaseStorage.getInstance().getReference().child(pdfpath);
         user_ref = FirebaseDatabase.getInstance().getReference().child("users");
-
-        add.setOnClickListener(view1 ->{
+        decisionDate = view.findViewById(R.id.decision_date);
+        /*add.setOnClickListener(view1 ->{
             select_file();
-        });
+        });*/
+
+        decisionDate.setText(decision);
 
         back.setOnClickListener(v->{
             assert getFragmentManager() != null;
             getFragmentManager().beginTransaction().remove(AppellantFragment.this).commit();
         });
+
+
+
+        decisionDate.setOnClickListener(v->{
+            Calendar cal = Calendar.getInstance();
+            int year = cal.get(Calendar.YEAR);
+            int month = cal.get(Calendar.MONTH);
+            int day = cal.get(Calendar.DAY_OF_MONTH);
+            DatePickerDialog dialog = new DatePickerDialog(
+                    getActivity(),
+                    mDateSetListener,
+                    year, month, day);
+            dialog.show();
+        });
+
 
         OnBackPressedCallback callback=new OnBackPressedCallback(true) {
             @Override
@@ -135,6 +157,46 @@ public class AppellantFragment extends Fragment {
         }
         judgement_summary.setText(judge_summary.toLowerCase(Locale.ROOT));
         summary.setText(synopsis.toLowerCase());
+
+        mDateSetListener = (datePicker, year, month, day) -> {
+
+            String d = String.valueOf(day);
+            String m = String.valueOf(month + 1);
+            Log.e("month", m + "");
+            month = month + 1;
+            Log.e("month", month + "");
+            if (String.valueOf(day).length() == 1)
+                d = "0" + day;
+            if (String.valueOf(month).length() == 1)
+                m = "0" + month;
+            String date = d + "." + m + "." + year;
+            String date2 = d + "," + m + "," + year;
+            decisionDate.setText(date);
+
+        };
+
+        submit.setOnClickListener(v->{
+            if (!decisionDate.getText().toString().equals("")) {
+                dialog1 = new Dialog(getContextNullSafety());
+                dialog1.setCancelable(false);
+                dialog1.setContentView(R.layout.loading_dialog);
+                dialog1.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                LottieAnimationView lottieAnimationView = dialog1.findViewById(R.id.animate);
+                lottieAnimationView.setAnimation("done.json");
+                dialog1.show();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        dialog1.dismiss();
+                    }
+                }, 1000);
+                reference.child("decisionDate").setValue(decisionDate.getText().toString().trim());
+            }
+            else
+                Toast.makeText(contextNullSafe, "Please Select Deciding Date", Toast.LENGTH_SHORT).show();
+
+        });
+
         return view;
     }
 

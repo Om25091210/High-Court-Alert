@@ -73,6 +73,7 @@ public class WritForm extends Fragment {
     ImageView back;
     Dialog dialog1;
     String pushkey;
+
     TextView send;
     List<String> district_list;
     ConstraintLayout lay;
@@ -583,6 +584,7 @@ public class WritForm extends Fragment {
         reference.child(pushkey).child("dueDate").setValue(due_date.getText().toString().toUpperCase(Locale.ROOT));
         reference.child(pushkey).child("caseNo").setValue(case_no.getText().toString().toUpperCase(Locale.ROOT));
         reference.child(pushkey).child("caseYear").setValue(case_year.getText().toString().toUpperCase(Locale.ROOT));
+        reference.child(pushkey).child("decisionDate").setValue("");
         reference.child(pushkey).child("pushkey").setValue(pushkey);
 
     }

@@ -18,7 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Design.Light.NoActionBar">
         <activity
-            android:name=".WritsMain"
+            android:name=".Writ.WritsMain"
             android:exported="false" />
         <activity
             android:name=".Dashboard"
