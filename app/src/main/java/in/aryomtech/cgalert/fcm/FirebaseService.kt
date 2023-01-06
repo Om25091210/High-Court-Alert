@@ -14,14 +14,12 @@ import android.util.Log
 import android.widget.RemoteViews
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import java.util.*
 import kotlin.random.Random
 
 
@@ -55,9 +53,9 @@ class FirebaseService : FirebaseMessagingService(){
             applicationContext,
             notificationID,
             intent,
-            PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_MUTABLE
         )
-
+        //TODO: Change mutable to flag update current
         val contentView = RemoteViews(this.packageName, R.layout.notification_layout)
         contentView.setImageViewResource(R.id.image, R.mipmap.ic_launcher_foreground)
         contentView.setOnClickPendingIntent(R.id.flashButton, pendingIntent)

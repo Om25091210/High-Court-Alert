@@ -1,6 +1,8 @@
 package in.aryomtech.cgalert.NoticeVictim.Adapter;
 
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -9,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -23,8 +26,7 @@ import in.aryomtech.cgalert.NoticeVictim.Interface.onUploadInterface;
 import in.aryomtech.cgalert.NoticeVictim.model.Notice_model;
 import in.aryomtech.cgalert.R;
 
-public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder>{
-
+public class ServedAdapter extends RecyclerView.Adapter<ServedAdapter.ViewHolder>{
 
     List<Notice_model> list;
     Context context;
@@ -32,23 +34,25 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder
     String date;
     Dialog dialog;
     boolean isadmin=false;
-    onUploadInterface onUploadInterface;
+    in.aryomtech.cgalert.NoticeVictim.Interface.onUploadInterface onUploadInterface;
 
-    public NoticeAdapter(Context context, onUploadInterface onUploadInterface, List<Notice_model> list) {
+
+    public ServedAdapter(Context context, onUploadInterface onUploadInterface, List<Notice_model> list) {
         this.context = context;
         this.list = list;
         this.onUploadInterface=onUploadInterface;
         reference= FirebaseDatabase.getInstance().getReference().child("notice");
     }
+
     @NonNull
     @Override
-    public NoticeAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_notice_card,parent,false);
-        return new NoticeAdapter.ViewHolder(view);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_served,parent,false);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull NoticeAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         isadmin=context.getSharedPreferences("isAdmin_or_not",Context.MODE_PRIVATE)
                 .getBoolean("authorizing_admin",false);
@@ -73,7 +77,16 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder
         }
 
         holder.upload.setOnClickListener(v->{
-            onUploadInterface.set_click_position(list.get(position).getPushkey());
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(Uri.parse(list.get(position).getUploaded_file()), "application/pdf");
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            Intent newIntent = Intent.createChooser(intent, "Open File");
+            try {
+                ((Activity)context).startActivity(newIntent);
+            } catch (ActivityNotFoundException e) {
+                // Instruct the user to install a PDF reader here, or something
+                Toast.makeText(context, "Install a PDF Viewer App.", Toast.LENGTH_SHORT).show();
+            }
         });
         if(list.get(position).getReminded()!=null) {
             if(list.get(position).getReminded().equals("once")){
@@ -164,6 +177,7 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder
     public int getItemCount() {
         return list.size();
     }
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView district,station,crime_no,crime_yr,case_type,case_yr,notice_dt,hearing_dt,advocate_name,message,appellant,case_no;

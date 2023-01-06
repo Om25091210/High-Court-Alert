@@ -103,7 +103,7 @@ public class UrgentNTV extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_notice_main, container, false);
-
+        if (contextNullSafe == null) getContextNullSafety();
         auth= FirebaseAuth.getInstance();
         user=auth.getCurrentUser();
         search=view.findViewById(R.id.search);
@@ -337,7 +337,7 @@ public class UrgentNTV extends Fragment {
                                     String pdf_link = Objects.requireNonNull(task1.getResult()).toString();
                                     reference.child(card_key).child("uploaded_file").setValue(pdf_link);
                                     Calendar cal = Calendar.getInstance();
-                                    SimpleDateFormat simpleDateFormat=new SimpleDateFormat("EEEE, dd MMMM yyyy HH:mm a", Locale.getDefault());
+                                    SimpleDateFormat simpleDateFormat=new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
                                     reference.child(card_key).child("uploaded_date").setValue(simpleDateFormat.format(cal.getTime()));
                                     dialog1.dismiss();
                                     Snackbar.make(recyclerView,"Pdf Uploaded Successfully.",Snackbar.LENGTH_LONG)

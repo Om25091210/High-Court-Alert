@@ -169,6 +169,10 @@
     <string name="appellantsO">Appellants</string>
     <string name="respondentsO">Respondents</string>
     <string name="do_you_want_to_upload_this_file">Do you want to Upload this file?</string>
+    <string name="pending_notices">Pending Notices</string>
+    <string name="served_notices">Served Notices</string>
+    <string name="tap_on_marked_date_to_view_event">Tap on the marked date to view data.</string>
+    <string name="show_all">Show All</string>
 
 
     <array name="menuOptions">

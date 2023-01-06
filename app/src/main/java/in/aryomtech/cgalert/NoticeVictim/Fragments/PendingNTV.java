@@ -2,7 +2,6 @@ package in.aryomtech.cgalert.NoticeVictim.Fragments;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.MODE_PRIVATE;
-
 import static in.aryomtech.cgalert.Home.REQUEST_CODE_STORAGE_PERMISSION;
 
 import android.Manifest;
@@ -71,55 +70,54 @@ import in.aryomtech.cgalert.R;
 import in.aryomtech.cgalert.fcm.Specific;
 
 
-public class TodayNTV extends Fragment {
+public class PendingNTV extends Fragment {
 
     View view;
     RecyclerView recyclerView;
     Context contextNullSafe;
     List<Notice_model> list;
+    List<Notice_model> mylist;
     DatabaseReference reference,user_ref;
     String stat_name;
     FirebaseAuth auth;
-    FirebaseUser user;
     Uri selected_uri_pdf=Uri.parse("");
+    FirebaseUser user;
     Dialog dialog,dialog1;
-    public static final int PICK_FILE = 1;
-    String card_key;
     String sp_of;
+    public static final int PICK_FILE = 1;
     TinyDB tinyDB;
     ImageView cg_logo;
-    List<Notice_model> mylist;
     TextView no_data;
-    List<String> list_string=new ArrayList<>();
-    EditText search;
+    String card_key;
+    private in.aryomtech.cgalert.NoticeVictim.Interface.onUploadInterface onUploadInterface;
     SwipeRefreshLayout mSwipeRefreshLayout;
-    NoticeAdapter adapter;StorageReference storageReference1;
+    EditText search;
+    List<String> list_string=new ArrayList<>();
     String ps_or_admin="";
-    in.aryomtech.cgalert.NoticeVictim.Interface.onUploadInterface onUploadInterface;
+    NoticeAdapter adapter;
+    StorageReference storageReference1;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view= inflater.inflate(R.layout.fragment_today3, container, false);
+        view= inflater.inflate(R.layout.fragment_pending_n_t_v, container, false);
         if (contextNullSafe == null) getContextNullSafety();
         auth= FirebaseAuth.getInstance();
         user=auth.getCurrentUser();
-
+        search=view.findViewById(R.id.search);
         stat_name= getContextNullSafety().getSharedPreferences("station_name_K",MODE_PRIVATE)
                 .getString("the_station_name2003","");
 
         String pdfpath = "PDF/";
         storageReference1 = FirebaseStorage.getInstance().getReference().child(pdfpath);
 
-        adapter=new NoticeAdapter(getContextNullSafety(),onUploadInterface,list);
-        user_ref = FirebaseDatabase.getInstance().getReference().child("users");
         cg_logo=view.findViewById(R.id.imageView3);
         no_data=view.findViewById(R.id.no_data);
         recyclerView = view.findViewById(R.id.rv);
         list = new ArrayList<>();
-        search=view.findViewById(R.id.search);
         mylist = new ArrayList<>();
         tinyDB=new TinyDB(getContextNullSafety());
+        adapter=new NoticeAdapter(getContextNullSafety(),onUploadInterface,list);
         mSwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         LinearLayoutManager mManager = new LinearLayoutManager(getContextNullSafety());
         recyclerView.setItemViewCacheSize(500);
@@ -127,6 +125,7 @@ public class TodayNTV extends Fragment {
         recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         recyclerView.setLayoutManager(mManager);
         reference = FirebaseDatabase.getInstance().getReference().child("notice");
+        user_ref = FirebaseDatabase.getInstance().getReference().child("users");
         cg_logo.setVisibility(View.VISIBLE);
         no_data.setVisibility(View.VISIBLE);
         ps_or_admin=getContextNullSafety().getSharedPreferences("useris?",MODE_PRIVATE)
@@ -203,7 +202,19 @@ public class TodayNTV extends Fragment {
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),callback);
+        ImageView back=view.findViewById(R.id.imageView4);
+        back.setOnClickListener(v->{
+            back();
+        });
         return view;
+    }
+    public void back(){
+        FragmentManager fm = ((FragmentActivity) getContextNullSafety()).getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        if (fm.getBackStackEntryCount() > 0) {
+            fm.popBackStack();
+        }
+        ft.commit();
     }
     private void search(String str) {
         if(str.equals("")){
@@ -393,14 +404,14 @@ public class TodayNTV extends Fragment {
     private void get_data() {
         Date dNow = new Date( );
         SimpleDateFormat ft =
-                new SimpleDateFormat ("dd.MM.yyyy",Locale.getDefault());
+                new SimpleDateFormat ("dd.MM.yyyy", Locale.getDefault());
         String cr_dt=ft.format(dNow);
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for(DataSnapshot ds:snapshot.getChildren()){
-                    if (cr_dt.equals(snapshot.child(ds.getKey()).child("noticeDate").getValue(String.class))) {
+                    if (!snapshot.child(Objects.requireNonNull(ds.getKey())).child("uploaded_date").exists()) {
                         list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
                     }
                 }
@@ -409,7 +420,7 @@ public class TodayNTV extends Fragment {
                     no_data.setVisibility(View.GONE);
                 }
                 Collections.reverse(list);
-                adapter = new NoticeAdapter(getContextNullSafety(), onUploadInterface, list);
+                adapter = new NoticeAdapter(getContextNullSafety(),onUploadInterface, list);
                 adapter.notifyDataSetChanged();
                 recyclerView.setAdapter(adapter);
                 mSwipeRefreshLayout.setRefreshing(false);
@@ -433,8 +444,8 @@ public class TodayNTV extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for (DataSnapshot ds:snapshot.getChildren()) {
-                    if (cr_dt.equals(snapshot.child(ds.getKey()).child("noticeDate").getValue(String.class))) {
-                        if(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class).trim().toUpperCase().equals(sp_of)) {
+                    if (!snapshot.child(Objects.requireNonNull(ds.getKey())).child("uploaded_date").exists()) {
+                        if (snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class).trim().toUpperCase().equals(sp_of)) {
                             list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
                         }
                     }
@@ -467,9 +478,9 @@ public class TodayNTV extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for (DataSnapshot ds:snapshot.getChildren()) {
-                    if (cr_dt.equals(snapshot.child(ds.getKey()).child("noticeDate").getValue(String.class))) {
+                    if (!snapshot.child(Objects.requireNonNull(ds.getKey())).child("uploaded_date").exists()) {
                         if (tinyDB.getListString("districts_list").contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())
-                                && tinyDB.getListString("stations_list").contains("PS "+Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("station").getValue(String.class)).trim().toUpperCase())) {
+                                && tinyDB.getListString("stations_list").contains("PS " + Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("station").getValue(String.class)).trim().toUpperCase())) {
                             list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
                         }
                     }
@@ -502,9 +513,9 @@ public class TodayNTV extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for (DataSnapshot ds:snapshot.getChildren()) {
-                    if (cr_dt.equals(snapshot.child(ds.getKey()).child("noticeDate").getValue(String.class))) {
+                    if (!snapshot.child(Objects.requireNonNull(ds.getKey())).child("uploaded_date").exists()) {
                         if (tinyDB.getListString("districts_list").contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())) {
-                                list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
+                            list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
                         }
                     }
                 }
@@ -535,7 +546,7 @@ public class TodayNTV extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for (DataSnapshot ds:snapshot.getChildren()) {
-                    if (cr_dt.equals(snapshot.child(ds.getKey()).child("noticeDate").getValue(String.class))) {
+                    if (!snapshot.child(Objects.requireNonNull(ds.getKey())).child("uploaded_date").exists()) {
                         if ((Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("station").getValue(String.class)).trim()).toUpperCase().equals(stat_name.substring(3).trim())) {
                             list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
                         }

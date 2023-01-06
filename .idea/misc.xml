@@ -169,6 +169,7 @@
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/ic_station_add.xml" value="0.1765" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/ic_submit_type.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/ic_time_exceed.xml" value="0.1995" />
+        <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/ic_uploads.xml" value="0.2055" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/indicator_default.xml" value="0.228125" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/indicator_selected.xml" value="0.121875" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/item_background_nav_check.xml" value="0.2055" />
@@ -213,7 +214,7 @@
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/fragment_not_notified.xml" value="0.19701086956521738" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/fragment_notice_form.xml" value="0.21014492753623187" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/fragment_notice_main.xml" value="0.22" />
-        <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/fragment_noticemain_admin.xml" value="0.21197916666666666" />
+        <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/fragment_noticemain_admin.xml" value="0.33" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/fragment_p_mcrc_rm_coll.xml" value="0.21197916666666666" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/fragment_p_mcrc_rm_return.xml" value="0.21197916666666666" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/fragment_p_pending_return.xml" value="0.1852355072463768" />
@@ -221,10 +222,12 @@
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/fragment_p_similar_return.xml" value="0.21197916666666666" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/fragment_pending_coll.xml" value="0.33" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/fragment_pending_coll2.xml" value="0.21197916666666666" />
+        <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/fragment_pending_n_t_v.xml" value="0.19791666666666666" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/fragment_pending_return.xml" value="0.33" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/fragment_personalized_data.xml" value="0.1947463768115942" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/fragment_phone_number_data.xml" value="0.2" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/fragment_ppending_coll.xml" value="0.1852355072463768" />
+        <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/fragment_served.xml" value="0.21014492753623187" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/fragment_showing_similar_coll.xml" value="0.33" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/fragment_showing_similar_return.xml" value="0.33" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/fragment_similar__collection.xml" value="0.2" />
@@ -232,7 +235,9 @@
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/fragment_today.xml" value="0.33" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/fragment_today2.xml" value="0.21195652173913043" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/fragment_today3.xml" value="0.21014492753623187" />
+        <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/fragment_today_writs.xml" value="0.21014492753623187" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/fragment_total_data.xml" value="0.20018115942028986" />
+        <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/fragment_uploads.xml" value="0.21014492753623187" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/fragment_urgent_data.xml" value="0.20833333333333334" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/fragment_urgent_data2.xml" value="0.33" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/get_task_dialog.xml" value="0.20425724637681159" />
@@ -245,6 +250,7 @@
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/layout_notice_notification.xml" value="0.33" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/layout_number_data.xml" value="0.20697463768115942" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/layout_screen.xml" value="0.19927536231884058" />
+        <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/layout_served.xml" value="0.21014492753623187" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/loading_dialog.xml" value="0.20516304347826086" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/message_dialog.xml" value="0.33" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/nav_header_navigation.xml" value="0.21197916666666666" />
@@ -277,6 +283,16 @@
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/myapplication2/src/main/res/layout/duo_view_header.xml" value="0.1956521739130435" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/myapplication2/src/main/res/layout/duo_view_menu.xml" value="0.1956521739130435" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/myapplication2/src/main/res/layout/duo_view_option.xml" value="0.1956521739130435" />
+        <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/mylibrary/src/main/res/drawable/circle.xml" value="0.2055" />
+        <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/mylibrary/src/main/res/drawable/empty_divider.xml" value="0.2055" />
+        <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/mylibrary/src/main/res/drawable/ic_bg.xml" value="0.2055" />
+        <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/mylibrary/src/main/res/drawable/ic_left.xml" value="0.2055" />
+        <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/mylibrary/src/main/res/drawable/ic_right.xml" value="0.2055" />
+        <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/mylibrary/src/main/res/drawable/ring.xml" value="0.2055" />
+        <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/mylibrary/src/main/res/layout/roboto_calendar_day_of_the_month_layout.xml" value="0.21014492753623187" />
+        <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/mylibrary/src/main/res/layout/roboto_calendar_month_layout.xml" value="0.21014492753623187" />
+        <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/mylibrary/src/main/res/layout/roboto_calendar_view_layout.xml" value="0.21014492753623187" />
+        <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/mylibrary/src/main/res/layout/roboto_calendar_week_layout.xml" value="0.21014492753623187" />
         <entry key="..\:/Users/user/AndroidStudioProjects/HC Alert/app/src/main/res/layout/activity_home.xml" value="0.14130434782608695" />
         <entry key="..\:/Users/user/AndroidStudioProjects/HC Alert/app/src/main/res/layout/layout_screen.xml" value="0.14130434782608695" />
       </map>
