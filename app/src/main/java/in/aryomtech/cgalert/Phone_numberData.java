@@ -107,7 +107,6 @@ public class Phone_numberData extends Fragment {
             }
             ft.commit();
         });
-
         reference.addValueEventListener(new ValueEventListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override

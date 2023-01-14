@@ -1,4 +1,4 @@
-package in.aryomtech.cgalert;
+package in.aryomtech.cgalert.Writ;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -20,14 +20,15 @@ import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import in.aryomtech.cgalert.R;
 import in.aryomtech.cgalert.Writ.Fragments.AllWrits;
+import in.aryomtech.cgalert.Writ.Fragments.DisposedDismissedWrits;
 import in.aryomtech.cgalert.Writ.Fragments.PendingWrits;
 import in.aryomtech.cgalert.Writ.Fragments.TodayWrits;
 import in.aryomtech.cgalert.Writ.Fragments.UrgentWrits;
-import in.aryomtech.cgalert.Writ.WritForm;
-import in.aryomtech.cgalert.Writ.WritModel;
 import in.aryomtech.myapplication.v4.FragmentPagerItemAdapter;
 import in.aryomtech.myapplication.v4.FragmentPagerItems;
+import soup.neumorphism.NeumorphCardView;
 
 public class WritsMain extends AppCompatActivity {
 
@@ -36,6 +37,7 @@ public class WritsMain extends AppCompatActivity {
     String stat_name;
     FirebaseAuth auth;
     FirebaseUser user;
+    NeumorphCardView blue,orange;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +56,26 @@ public class WritsMain extends AppCompatActivity {
         list = new ArrayList<>();
 
         form = findViewById(R.id.form);
+        blue = findViewById(R.id.blue);
+        orange = findViewById(R.id.back);
+
+        blue.setOnClickListener(v->{
+            WritsMain.this.getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations( R.anim.enter_from_right, R.anim.exit_to_left,R.anim.enter_from_left, R.anim.exit_to_right)
+                    .add(R.id.swipe,new WritNeed(),"writform")
+                    .addToBackStack(null)
+                    .commit();
+        });
+
+        orange.setOnClickListener(v->{
+            WritsMain.this.getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations( R.anim.enter_from_right, R.anim.exit_to_left,R.anim.enter_from_left, R.anim.exit_to_right)
+                    .add(R.id.swipe,new WritDecided(),"writform")
+                    .addToBackStack(null)
+                    .commit();
+        });
 
         boolean isadmin=getSharedPreferences("isAdmin_or_not", Context.MODE_PRIVATE)
                 .getBoolean("authorizing_admin",false);
@@ -68,8 +90,9 @@ public class WritsMain extends AppCompatActivity {
                 getSupportFragmentManager(), FragmentPagerItems.with(WritsMain.this)
                 .add("Urgent Writs", UrgentWrits.class)
                 .add("Today's Writs", TodayWrits.class)
-                .add("Pending Writs", PendingWrits.class)
                 .add("All Writs", AllWrits.class)
+                .add("Pending Writs", PendingWrits.class)
+                .add("Disposed & Dismissed", DisposedDismissedWrits.class)
                 .create());
 
         ViewPager viewPager = findViewById(R.id.viewpager);
@@ -93,8 +116,8 @@ public class WritsMain extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Fragment test = getSupportFragmentManager().findFragmentByTag("writform");
-        if (test != null && test.isVisible()) {
+        Fragment test1 = getSupportFragmentManager().findFragmentByTag("writform");
+        if (test1 != null && test1.isVisible()) {
             Log.e("frag","fragment showing");//just for dummy line hehe :)
         }
         else {

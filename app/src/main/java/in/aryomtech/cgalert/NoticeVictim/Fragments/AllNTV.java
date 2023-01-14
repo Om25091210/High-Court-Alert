@@ -359,7 +359,7 @@ public class AllNTV extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
                     for(DataSnapshot ds:snapshot.getChildren()){
-                        if(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("name").getValue(String.class)).equals("admin")){
+                        if(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("name").getValue(String.class)).equals("admin2.0")){
                             for(DataSnapshot ds_token:snapshot.child(ds.getKey()).child("token").getChildren()){
                                 String token=snapshot.child(ds.getKey()).child("token").child(Objects.requireNonNull(ds_token.getKey())).getValue(String.class);
                                 Specific specific=new Specific();
@@ -522,10 +522,6 @@ public class AllNTV extends Fragment {
         });
     }
     private void get_ps_data() {
-        Date dNow = new Date( );
-        SimpleDateFormat ft =
-                new SimpleDateFormat ("dd.MM.yyyy",Locale.getDefault());
-        String cr_dt=ft.format(dNow);
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override

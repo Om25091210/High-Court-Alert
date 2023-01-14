@@ -1,4 +1,4 @@
-package in.aryomtech.cgalert.Writ.Fragments;
+package in.aryomtech.cgalert.Writ;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -43,11 +43,9 @@ import java.util.Objects;
 
 import in.aryomtech.cgalert.DB.TinyDB;
 import in.aryomtech.cgalert.R;
-import in.aryomtech.cgalert.Writ.WritAdapter;
-import in.aryomtech.cgalert.Writ.WritModel;
 
 
-public class PendingWrits extends Fragment {
+public class WritDecided extends Fragment {
 
     View view;
     RecyclerView recyclerView;
@@ -72,8 +70,9 @@ public class PendingWrits extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view =  inflater.inflate(R.layout.fragment_pending_writs, container, false);
+        view = inflater.inflate(R.layout.fragment_writ_decided, container, false);
 
+        view = inflater.inflate(R.layout.fragment_writ_need, container, false);
         auth= FirebaseAuth.getInstance();
         user=auth.getCurrentUser();
 
@@ -117,28 +116,28 @@ public class PendingWrits extends Fragment {
             }
         }
         else
-           // getdata_for_sp();
-        mSwipeRefreshLayout.setOnRefreshListener(() -> {
-            if(sp_of.equals("none")) {
-                if(tinyDB.getInt("num_station")==0){
-                    //getDataForIG();
-                }
-                else if(tinyDB.getInt("num_station")==10){
-                    //getDataForSDOP();
-                }
-                else{
-                    if(ps_or_admin.equals("home")) {
-                        get_data();
+            // getdata_for_sp();
+            mSwipeRefreshLayout.setOnRefreshListener(() -> {
+                if(sp_of.equals("none")) {
+                    if(tinyDB.getInt("num_station")==0){
+                        //getDataForIG();
                     }
-                    else if(ps_or_admin.equals("p_home")){
-                       // get_ps_data();
+                    else if(tinyDB.getInt("num_station")==10){
+                        //getDataForSDOP();
+                    }
+                    else{
+                        if(ps_or_admin.equals("home")) {
+                            get_data();
+                        }
+                        else if(ps_or_admin.equals("p_home")){
+                            // get_ps_data();
+                        }
                     }
                 }
-            }
-            else {
-                //getdata_for_sp();
-            }
-        });
+                else {
+                    //getdata_for_sp();
+                }
+            });
 
         search.addTextChangedListener(new TextWatcher() {
 
@@ -207,7 +206,7 @@ public class PendingWrits extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for(DataSnapshot ds:snapshot.getChildren()){
-                    if (snapshot.child(Objects.requireNonNull(ds.getKey())).child("judgementDate").getValue(String.class).trim().equals("")) {
+                    if (!Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("decisionDate").getValue(String.class)).trim().equals("")) {
                         list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
                     }
                 }
@@ -410,5 +409,4 @@ public class PendingWrits extends Fragment {
         super.onAttach(context);
         contextNullSafe = context;
     }
-
 }

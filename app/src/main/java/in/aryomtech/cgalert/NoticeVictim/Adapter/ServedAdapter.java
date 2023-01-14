@@ -61,7 +61,7 @@ public class ServedAdapter extends RecyclerView.Adapter<ServedAdapter.ViewHolder
         holder.station.setText(list.get(position).getStation());
         holder.crime_no.setText(list.get(position).getCrimeNo());
         holder.crime_yr.setText(" / " + list.get(position).getCrimeYear());
-        holder.case_type.setText(list.get(position).getCaseType());
+        holder.case_type.setText(list.get(position).getCaseType()+" / ");
         holder.case_yr.setText(" / " + list.get(position).getCaseYear());
         holder.notice_dt.setText(list.get(position).getNoticeDate());
         holder.hearing_dt.setText(list.get(position).getHearingDate());

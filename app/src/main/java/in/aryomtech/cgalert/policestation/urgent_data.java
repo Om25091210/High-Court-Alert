@@ -180,13 +180,7 @@ public class urgent_data extends Fragment {
         OnBackPressedCallback callback=new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if(onback==0){
-                    Toast.makeText(contextNullSafe, "Press back again to exit", Toast.LENGTH_SHORT).show();
-                    onback=1;
-                }
-                else{
-                    ((FragmentActivity) getContextNullSafety()).finish();
-                }
+                ((FragmentActivity) getContextNullSafety()).finish();
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),callback);

@@ -1,5 +1,7 @@
 package in.aryomtech.cgalert.NoticeVictim.Fragments;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
@@ -43,11 +45,13 @@ public class Served extends Fragment implements RobotoCalendarView.RobotoCalenda
     RobotoCalendarView robotoCalendarView;
     View view;
     EditText search;
+    String stat_name;
     Context contextNullSafe;
     DatabaseReference reference;
     List<Notice_model> list;
     List<String> list_string=new ArrayList<>();
     List<Notice_model> mylist;
+    String ps_or_admin="";
     ServedAdapter adapter;
     private in.aryomtech.cgalert.NoticeVictim.Interface.onUploadInterface onUploadInterface;
     RecyclerView recyclerView;
@@ -65,6 +69,8 @@ public class Served extends Fragment implements RobotoCalendarView.RobotoCalenda
         recyclerView.setDrawingCacheEnabled(true);
         recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         recyclerView.setLayoutManager(mManager);
+        stat_name= getContextNullSafety().getSharedPreferences("station_name_K",MODE_PRIVATE)
+                .getString("the_station_name2003","");
         reference = FirebaseDatabase.getInstance().getReference().child("notice");
         list = new ArrayList<>();
         mylist = new ArrayList<>();
@@ -76,7 +82,14 @@ public class Served extends Fragment implements RobotoCalendarView.RobotoCalenda
         robotoCalendarView.showDateTitle(true);
 
         robotoCalendarView.setDate(new Date());
-        get_all_data();
+        ps_or_admin=getContextNullSafety().getSharedPreferences("useris?",MODE_PRIVATE)
+                .getString("the_user_is?","");
+        if(ps_or_admin.equals("home")) {
+            get_all_data();
+        }
+        else if(ps_or_admin.equals("p_home")){
+            get_all_data_ps();
+        }
         search.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {}
@@ -88,6 +101,30 @@ public class Served extends Fragment implements RobotoCalendarView.RobotoCalenda
             }
         });
         return view;
+    }
+
+    private void get_all_data_ps() {
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                list.clear();
+                for(DataSnapshot ds:snapshot.getChildren()) {
+                    if ((Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("station").getValue(String.class)).trim()).toUpperCase().equals(stat_name.substring(3).trim())) {
+                        if (snapshot.child(Objects.requireNonNull(ds.getKey())).child("uploaded_date").exists()) {
+                            list.add(snapshot.child(ds.getKey()).getValue(Notice_model.class));
+                        }
+                    }
+                }
+                Collections.reverse(list);
+                adapter = new ServedAdapter(getContextNullSafety(),onUploadInterface, list);
+                adapter.notifyDataSetChanged();
+                recyclerView.setAdapter(adapter);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
     }
 
     private void search(String str) {
@@ -207,7 +244,42 @@ public class Served extends Fragment implements RobotoCalendarView.RobotoCalenda
 
     @Override
     public void onDayClick(Date date) {
-        get_data(date);
+        if(ps_or_admin.equals("home")) {
+            get_data(date);
+        }
+        else if(ps_or_admin.equals("p_home")){
+            get_ps_data(date);
+        }
+    }
+
+    private void get_ps_data(Date date) {
+        SimpleDateFormat ft =
+                new SimpleDateFormat ("dd.MM.yyyy", Locale.getDefault());
+        String cr_dt=ft.format(date);
+        Log.e("date",cr_dt+"");
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                list.clear();
+                for(DataSnapshot ds:snapshot.getChildren()) {
+                    Log.e("logg",ds.getKey()+"");
+                    if ((Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("station").getValue(String.class)).trim()).toUpperCase().equals(stat_name.substring(3).trim())){
+                        if (snapshot.child(Objects.requireNonNull(ds.getKey())).child("uploaded_date").exists()) {
+                            if (Objects.requireNonNull(snapshot.child(ds.getKey()).child("uploaded_date").getValue(String.class)).equals(cr_dt)) {
+                                list.add(snapshot.child(ds.getKey()).getValue(Notice_model.class));
+                            }
+                        }
+                    }
+                }
+                Collections.reverse(list);
+                ServedAdapter adapter = new ServedAdapter(getContextNullSafety(),onUploadInterface, list);
+                adapter.notifyDataSetChanged();
+                recyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
     }
 
     @Override

@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -140,18 +141,15 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
 
         if (list.get(position).getJ().equals("None") || list.get(position).getJ().equals("nan")) {
             holder.layout.setBackgroundResource(R.drawable.bg_card_red);
-            if(list.get(position).getSeen()!=null && isadmin)
-                holder.seen.setVisibility(View.VISIBLE);
-            else
-                holder.seen.setVisibility(View.GONE);
         }
         else {
             holder.layout.setBackgroundResource(R.drawable.bg_card_white);
-            if(list.get(position).getSeen()!=null && isadmin)
-                holder.seen.setVisibility(View.VISIBLE);
-            else
-                holder.seen.setVisibility(View.GONE);
         }
+
+        if(list.get(position).getSeen()!=null)
+            holder.seen.setVisibility(View.VISIBLE);
+        else
+            holder.seen.setVisibility(View.GONE);
 
         if(list.get(position).getSent()!=null)
             holder.notified.setVisibility(View.VISIBLE);
@@ -206,7 +204,7 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
                 "Name - " + list.get(position).getF()+  "\n" +
                 "Crime No. - " + list.get(position).getH() +"/"+ list.get(position).getI()+  "\n" +
                 "Received - " + list.get(position).getJ() + "\n\n"
-                + "उपरोक्त मूल केश डायरी दिनाँक "+list.get(position).getK()+" तक बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय छतीसगढ़ में  अनिवार्यतः जमा करें।";
+                + "उपरोक्त मूल केश डायरी दिनाँक "+list.get(position).getL()+" तक बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय छतीसगढ़ में  अनिवार्यतः जमा करें।";
 
         holder.share.setOnClickListener(v->{
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
@@ -238,6 +236,20 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
                 RecyclerView_delete(Collections.singletonList(list.get(position)));
             });
         });
+        holder.layout.setOnLongClickListener(v->{
+            if(list.get(position).getUrl()!=null) {
+                try {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(list.get(position).getUrl()));
+                    context.startActivity(browserIntent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            else{
+                Toast.makeText(context, "No PDF for this data.", Toast.LENGTH_SHORT).show();
+            }
+            return false;
+        });
         holder.view.setOnClickListener(v->{
             Excel_data excel_data=new Excel_data(
                     list.get(position).getA()
@@ -261,7 +273,7 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
                     ,list.get(position).getDate_of_alert()
                     ,list.get(position).getSeen()
                     ,list.get(position).getSent()
-                    ,list.get(position).getNumber());
+                    ,list.get(position).getNumber(),list.get(position).getUrl(),"");
 
             Bundle bundle=new Bundle();
             bundle.putSerializable("excel_data_sending", excel_data);

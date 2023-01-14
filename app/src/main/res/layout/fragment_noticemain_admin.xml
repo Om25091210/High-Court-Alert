@@ -134,7 +134,7 @@
                                 android:layout_marginBottom="10dp"
                                 android:fontFamily="@font/quicksand_bold"
                                 android:gravity="center"
-                                android:text="@string/pending_notices"
+                                android:text="Pending Notices"
                                 android:textColor="@color/white"
                                 android:textSize="@dimen/_9sdp" />
 
@@ -182,7 +182,7 @@
                                 android:layout_marginBottom="10dp"
                                 android:fontFamily="@font/quicksand_bold"
                                 android:gravity="center"
-                                android:text="@string/served_notices"
+                                android:text="Served Notices"
                                 android:textColor="@color/white"
                                 android:textSize="@dimen/_9sdp" />
 

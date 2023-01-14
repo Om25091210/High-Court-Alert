@@ -249,7 +249,6 @@ public class Similar_Return extends Fragment {
         list.clear();
         try{
             list.add(object.getCn().toLowerCase());
-            list.add(object.getCt().toLowerCase());
             list.add(object.getYear().toLowerCase());
             list.add(object.getStn().toLowerCase());
             list.add(object.getDis_n().toLowerCase());
@@ -274,7 +273,7 @@ public class Similar_Return extends Fragment {
                 filtered_station_dist.clear();
                 for(DataSnapshot ds:snapshot.getChildren()){
                     excel_data.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Excel_data.class));
-                    joined_list.add(excel_data.get(excel_data.size()-1).getD().toUpperCase().trim()+" "+excel_data.get(excel_data.size()-1).getH().trim()+" "+excel_data.get(excel_data.size()-1).getI().trim()+"="+excel_data.get(excel_data.size()-1).getB().toUpperCase().trim()+" "+excel_data.get(excel_data.size()-1).getC().toUpperCase().trim());
+                    joined_list.add(excel_data.get(excel_data.size()-1).getH().trim()+" "+excel_data.get(excel_data.size()-1).getI().trim()+"="+excel_data.get(excel_data.size()-1).getB().toUpperCase().trim()+" "+excel_data.get(excel_data.size()-1).getC().toUpperCase().trim());
                     station_dist.add(excel_data.get(excel_data.size()-1).getB().toUpperCase().trim()+" "+excel_data.get(excel_data.size()-1).getC().toUpperCase().trim());
                 }
                 mSwipeRefreshLayout.setRefreshing(false);
@@ -313,24 +312,15 @@ public class Similar_Return extends Fragment {
     }
 
     private void remove_spaces_and_store(List<String> filtered_data,List<String> filtered_station_dist) {
-        String case_type="",case_no="",year="",station_name="",district="";
+        String case_no="",year="",station_name="",district="";
         for(int i=0;i<filtered_data.size();i++){
             String str=filtered_data.get(i);
             String stat_dist=filtered_station_dist.get(i);
-            int count=0;
             int temp_j=0;
-            int space_pos=0;
             for(int j=0;j<str.length();j++) {
                 if(' '==str.charAt(j)){
-                    if(count==0) {
-                        case_type = str.substring(0,j);
-                        count++;
-                        space_pos=j;
-                    }
-                    else if(count==1){
-                        case_no= str.substring(space_pos+1,j);
-                        temp_j=j;
-                    }
+                    case_no = str.substring(0,j);
+                    temp_j=j;
                 }
                 if('='==str.charAt(j)){
                     year=str.substring(temp_j,j);
@@ -345,7 +335,7 @@ public class Similar_Return extends Fragment {
                 }
             }
         }
-        save_locally_list.add(new filterdata(case_type,case_no,year,station_name,district));
+        save_locally_list.add(new filterdata(case_no,year,station_name,district));
 
     }
 

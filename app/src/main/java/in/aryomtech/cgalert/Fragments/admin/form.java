@@ -1,12 +1,9 @@
 package in.aryomtech.cgalert.Fragments.admin;
 
-import static android.os.Environment.DIRECTORY_PICTURES;
-
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.DownloadManager;
-import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -38,26 +35,23 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.StringReader;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -65,6 +59,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import in.aryomtech.cgalert.Fragments.model.Excel_data;
 import in.aryomtech.cgalert.R;
@@ -77,6 +72,8 @@ public class form extends Fragment {
     TextView rm,before,diary;
     ImageView back,put_number;
     int check_;
+    int c;
+    FirebaseUser user;
     private Context contextNullSafe;
     EditText case_no_edt,name_edt,case_year_edt,crime_no_edt,crime_year_edt;
     CheckBox checkBox_RM_call,checkBox_RM_return;
@@ -86,7 +83,7 @@ public class form extends Fragment {
     Dialog dialog1;
     Excel_data excel_data;
     AutoCompleteTextView ac_district,policeStation,ac_caseType;
-    DatabaseReference reference,reference_phone,gs_ref;
+    DatabaseReference reference,reference_phone,gs_ref,ref_users;
     String pushkey,gsID="";
     FirebaseFirestore db;
 
@@ -98,6 +95,7 @@ public class form extends Fragment {
         if (contextNullSafe == null) getContextNullSafety();
         district =new ArrayList<>();
         ps_list=new ArrayList<>();
+        user=FirebaseAuth.getInstance().getCurrentUser();
         if(getArguments()!=null){
             excel_data= (Excel_data) getArguments().getSerializable("excel_data_sending");
         }
@@ -130,6 +128,7 @@ public class form extends Fragment {
         ac_caseType.setTextColor(Color.RED);
 
         reference = FirebaseDatabase.getInstance().getReference().child("data");
+        ref_users = FirebaseDatabase.getInstance().getReference().child("users");
         gs_ref = FirebaseDatabase.getInstance().getReference().child("gskey");
         reference_phone = FirebaseDatabase.getInstance().getReference().child("Phone numbers");
         get_districts_phone();
@@ -440,43 +439,7 @@ public class form extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.child(dis).child(ps).exists()){
-                    if(excel_data==null)
-                        pushkey=reference.push().getKey();
-                    else
-                        pushkey=excel_data.getPushkey();
-                    Map<String,String> data_packet=new HashMap<>();
-                    data_packet.put("A","");
-                    data_packet.put("B",policeStation.getText().toString().trim().toUpperCase());
-                    data_packet.put("C",ac_district.getText().toString().trim().toUpperCase());
-                    data_packet.put("D",ac_caseType.getText().toString().trim().toUpperCase());
-                    data_packet.put("E",case_no_edt.getText().toString().trim());
-                    data_packet.put("F",name_edt.getText().toString().trim().toUpperCase());
-                    data_packet.put("G",case_year_edt.getText().toString().trim());
-                    data_packet.put("H",crime_no_edt.getText().toString().trim());
-                    data_packet.put("I",crime_year_edt.getText().toString().trim());
-                    data_packet.put("number",snapshot.child(dis).child(ps).getValue(String.class));
-                    if(diary.getText().toString().trim().equals(""))
-                        data_packet.put("J","None");
-                    else
-                        data_packet.put("J",diary.getText().toString().trim()+"");
-                    data_packet.put("K",rm.getText().toString().trim());
-                    data_packet.put("L",before.getText().toString().trim());
-                    data_packet.put("date",fd_dot);
-                    data_packet.put("pushkey",pushkey);
-                    data_packet.put("type",sheet);
-                    Log.e("Success","Called "+pushkey);
-                    if(excel_data==null) {
-                        update_bulk_excel(sheet, data_packet);
-                        clear_field();
-                    }
-                    else
-                        update_J_Excel(sheet,data_packet);
-                    Snackbar.make(lay,"Initiating data upload to Excel...",Snackbar.LENGTH_LONG)
-                            .setActionTextColor(Color.parseColor("#171746"))
-                            .setTextColor(Color.parseColor("#FF7F5C"))
-                            .setBackgroundTint(Color.parseColor("#171746"))
-                            .show();
-
+                    get_uid(snapshot.child(dis).child(ps).getValue(String.class),sheet);
                 }
                 else{
                     Dialog dialog11 = new Dialog(getContextNullSafety());
@@ -505,6 +468,69 @@ public class form extends Fragment {
                 Toast.makeText(contextNullSafe, "Database Error...", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void get_uid(String number,String sheet) {
+        c=0;
+        ref_users.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot ds:snapshot.getChildren()){
+                    if(snapshot.child(Objects.requireNonNull(ds.getKey())).child(number).exists()){
+                        c=1;
+                        bundle_data(number,sheet,ds.getKey());
+                        break;
+                    }
+                }
+                if(c==0){
+                    bundle_data(number,sheet,"");
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
+    }
+
+    private void bundle_data(String number,String sheet,String uid) {
+        if(excel_data==null)
+            pushkey=reference.push().getKey();
+        else
+            pushkey=excel_data.getPushkey();
+        Map<String,String> data_packet=new HashMap<>();
+        data_packet.put("A","");
+        data_packet.put("B",policeStation.getText().toString().trim().toUpperCase());
+        data_packet.put("C",ac_district.getText().toString().trim().toUpperCase());
+        data_packet.put("D",ac_caseType.getText().toString().trim().toUpperCase());
+        data_packet.put("E",case_no_edt.getText().toString().trim());
+        data_packet.put("F",name_edt.getText().toString().trim().toUpperCase());
+        data_packet.put("G",case_year_edt.getText().toString().trim());
+        data_packet.put("H",crime_no_edt.getText().toString().trim());
+        data_packet.put("I",crime_year_edt.getText().toString().trim());
+        data_packet.put("number",number);
+        if(diary.getText().toString().trim().equals(""))
+            data_packet.put("J","None");
+        else
+            data_packet.put("J",diary.getText().toString().trim()+"");
+        data_packet.put("K",rm.getText().toString().trim());
+        data_packet.put("L",before.getText().toString().trim());
+        data_packet.put("date",fd_dot);
+        data_packet.put("pushkey",pushkey);
+        data_packet.put("type",sheet);
+        data_packet.put("uid",uid);
+        Log.e("Success","Called "+pushkey);
+        if(excel_data==null) {
+            update_bulk_excel(sheet, data_packet);
+            clear_field();
+        }
+        else {
+            data_packet.put("url", excel_data.getUrl());
+            update_J_Excel(sheet, data_packet);
+        }
+        Snackbar.make(lay,"Initiating data upload to Excel...",Snackbar.LENGTH_LONG)
+                .setActionTextColor(Color.parseColor("#171746"))
+                .setTextColor(Color.parseColor("#FF7F5C"))
+                .setBackgroundTint(Color.parseColor("#171746"))
+                .show();
     }
 
     /*private void update_bulk_excel(String sheet, Map<String, String> data_packet) {
@@ -633,14 +659,18 @@ public class form extends Fragment {
                     @Override
                     public void onResponse(String response) {
                         String code="";
+                        String url = "";
                         try {
                             JSONObject jsonObj = new JSONObject(response);
                             code=jsonObj.get("code")+"";
+                            url = jsonObj.get("url") + "";
+                            Log.e("checking url" , url);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                         if(code.equals("202")){
                             reference.child(pushkey).setValue(data_packet);
+                            reference.child(pushkey).child("url").setValue(url);
                             Snackbar.make(lay,"Data Uploaded to Excel.",Snackbar.LENGTH_LONG)
                                     .setActionTextColor(Color.parseColor("#171746"))
                                     .setTextColor(Color.parseColor("#FF7F5C"))
@@ -712,6 +742,22 @@ public class form extends Fragment {
         });
 
         queue.add(stringRequest);
+        stringRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
     }
 
     /*private void update_J_Excel(String sheet, Map<String, String> data_packet) {
@@ -922,34 +968,13 @@ public class form extends Fragment {
     }
 
     private void getFileUrl(){
-        ProgressDialog  pd = new ProgressDialog(getContext());
-        pd.setTitle("Downloading File");
-        pd.setMessage("Please Wait...");
-        pd.setIndeterminate(true);
-        pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        pd.show();
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("downloaded.xlsx");
-        storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
-            String url = uri.toString();
-            downloadFile(getContextNullSafety(), "downloaded", ".xlsx", DIRECTORY_PICTURES, url);
-            pd.dismiss();
-        }).addOnFailureListener(e -> {
-            Toast.makeText(getContextNullSafety(), "Something went wrong", Toast.LENGTH_SHORT).show();
-        });
-    }
-
-
-    private void downloadFile(Context context, String fileName, String fileExtension, String destinationDirectory, String url) {
-
-        DownloadManager downloadmanager = (DownloadManager) context.
-                getSystemService(Context.DOWNLOAD_SERVICE);
-        Uri uri = Uri.parse(url);
-        DownloadManager.Request request = new DownloadManager.Request(uri);
-
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-        request.setDestinationInExternalFilesDir(context, destinationDirectory, fileName + fileExtension);
-
-        downloadmanager.enqueue(request);
+        String url="https://docs.google.com/spreadsheets/d/1FCq7LxEFUYtSjrHcRYXFGPdruuGmQur_JHuxrgp2zao/edit?usp=sharing";
+        try {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(browserIntent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void get_districts_phone() {

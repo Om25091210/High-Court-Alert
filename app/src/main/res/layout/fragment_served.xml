@@ -31,7 +31,7 @@
                 app:contentScrim="@color/orange_50"
                 app:expandedTitleTextAppearance="@style/expandedBarTextStyle"
                 app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
-                app:title="@string/served_notices">
+                app:title="Served Notices">
 
 
                 <androidx.appcompat.widget.Toolbar
@@ -70,7 +70,7 @@
                         android:fontFamily="@font/amiko_bold"
                         android:gravity="center"
                         android:layout_marginTop="10dp"
-                        android:text="@string/tap_on_marked_date_to_view_event"
+                        android:text="Tap on marked date to view event"
                         android:textSize="15sp"
                         android:visibility="visible" />
 
