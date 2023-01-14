@@ -570,6 +570,7 @@ public class NoticeForm extends Fragment {
         reference.child(pushkey).child("pushkey").setValue(pushkey);
         reference.child(pushkey).child("doc_url").setValue(url.trim());
         reference.child(pushkey).child("caseType").setValue(case_type);
+        reference.child(pushkey).child("uid").setValue(user.getUid());
     }
 
     private void get_districts_phone() {

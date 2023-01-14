@@ -103,7 +103,7 @@ public class UrgentNTV extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_notice_main, container, false);
-
+        if (contextNullSafe == null) getContextNullSafety();
         auth= FirebaseAuth.getInstance();
         user=auth.getCurrentUser();
         search=view.findViewById(R.id.search);
@@ -337,7 +337,7 @@ public class UrgentNTV extends Fragment {
                                     String pdf_link = Objects.requireNonNull(task1.getResult()).toString();
                                     reference.child(card_key).child("uploaded_file").setValue(pdf_link);
                                     Calendar cal = Calendar.getInstance();
-                                    SimpleDateFormat simpleDateFormat=new SimpleDateFormat("EEEE, dd MMMM yyyy HH:mm a", Locale.getDefault());
+                                    SimpleDateFormat simpleDateFormat=new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
                                     reference.child(card_key).child("uploaded_date").setValue(simpleDateFormat.format(cal.getTime()));
                                     dialog1.dismiss();
                                     Snackbar.make(recyclerView,"Pdf Uploaded Successfully.",Snackbar.LENGTH_LONG)
@@ -355,7 +355,7 @@ public class UrgentNTV extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
                     for(DataSnapshot ds:snapshot.getChildren()){
-                        if(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("name").getValue(String.class)).equals("admin")){
+                        if(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("name").getValue(String.class)).equals("admin2.0")){
                             for(DataSnapshot ds_token:snapshot.child(ds.getKey()).child("token").getChildren()){
                                 String token=snapshot.child(ds.getKey()).child("token").child(Objects.requireNonNull(ds_token.getKey())).getValue(String.class);
                                 Specific specific=new Specific();

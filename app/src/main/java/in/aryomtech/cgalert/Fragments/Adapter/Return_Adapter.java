@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -135,18 +136,15 @@ public class Return_Adapter extends RecyclerView.Adapter<Return_Adapter.ViewHold
 
         if (list.get(position).getJ().equals("None") || list.get(position).getJ().equals("nan")) {
             holder.layout.setBackgroundResource(R.drawable.bg_card_red);
-            if(list.get(position).getSeen()!=null && isadmin)
-                holder.seen.setVisibility(View.VISIBLE);
-            else
-                holder.seen.setVisibility(View.GONE);
         }
         else {
             holder.layout.setBackgroundResource(R.drawable.bg_card_white);
-            if(list.get(position).getSeen()!=null && isadmin)
-                holder.seen.setVisibility(View.VISIBLE);
-            else
-                holder.seen.setVisibility(View.GONE);
         }
+
+        if(list.get(position).getSeen()!=null)
+            holder.seen.setVisibility(View.VISIBLE);
+        else
+            holder.seen.setVisibility(View.GONE);
 
         if(list.get(position).getSent()!=null)
             holder.notified.setVisibility(View.VISIBLE);
@@ -235,6 +233,20 @@ public class Return_Adapter extends RecyclerView.Adapter<Return_Adapter.ViewHold
                 RecyclerView_delete(Collections.singletonList(list.get(position)));
             });
         });
+        holder.layout.setOnLongClickListener(v->{
+            if(list.get(position).getUrl()!=null) {
+                try {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(list.get(position).getUrl()));
+                    context.startActivity(browserIntent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            else{
+                Toast.makeText(context, "No PDF for this data.", Toast.LENGTH_SHORT).show();
+            }
+            return false;
+        });
         holder.view.setOnClickListener(v->{
             Excel_data excel_data=new Excel_data(
                     list.get(position).getA()
@@ -258,7 +270,8 @@ public class Return_Adapter extends RecyclerView.Adapter<Return_Adapter.ViewHold
                     ,list.get(position).getDate_of_alert()
                     ,list.get(position).getSeen()
                     ,list.get(position).getSent()
-                    ,list.get(position).getNumber());
+                    ,list.get(position).getNumber()
+                    ,list.get(position).getUrl(),"");
 
             Bundle bundle=new Bundle();
             bundle.putSerializable("excel_data_sending", excel_data);

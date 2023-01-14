@@ -21,8 +21,13 @@ public class Notice_model {
     private String number;
     private String uploaded_file;
     private String uploaded_date;
+    private String uid;
 
     public Notice_model(){}
+
+    public String getUid() {
+        return uid;
+    }
 
     public String getUploaded_date() {
         return uploaded_date;

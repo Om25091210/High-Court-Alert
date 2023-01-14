@@ -431,13 +431,7 @@ public class Mcrc_Rm_Return extends Fragment {
         OnBackPressedCallback callback=new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if(onback==0){
-                    Toast.makeText(contextNullSafe, "Press back again to exit", Toast.LENGTH_SHORT).show();
-                    onback=1;
-                }
-                else{
-                    ((FragmentActivity) getContextNullSafety()).finish();
-                }
+                ((FragmentActivity) getContextNullSafety()).finish();
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),callback);
@@ -831,7 +825,7 @@ public class Mcrc_Rm_Return extends Fragment {
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         if (snapshot.child(ds.getKey()).child(phone_numbers.get(i)).exists()) {
                             check=1;
-                            String body=extract_data(i, phone_numbers.get(i), phone_numbers.get(i));
+                            String body=extract_data(i, keys_copy_selected_phone.get(i), phone_numbers.get(i));
                             if(snapshot.child(ds.getKey()).child("token").exists()) {
                                 reference.child(keys_copy_selected_phone.get(i)).child("reminded").setValue("once");
                                 for (DataSnapshot dd : snapshot.child(ds.getKey()).child("token").getChildren()) {
@@ -945,82 +939,80 @@ public class Mcrc_Rm_Return extends Fragment {
         // create a new Gson instance
         Gson gson = new Gson();
         // convert your list to json
-        String jsonExcelList = gson.toJson(smsDataList);
-        // print your generated json
-        Log.e("jsonCartList: " , jsonExcelList);
-        String prev_keygen=smsDataList.get(0).getTid()+"-"+smsDataList.get(0).getMob_no()+"-"+smsDataList.get(0).getCrime_no();
-        JSONObject jsonBody = new JSONObject();
-        try
-        {
-            jsonBody.put("data", jsonExcelList);
-            jsonBody.put("keygen",hashGenerator(prev_keygen));
-            Log.e("body", "httpCall_collect: "+hashGenerator(prev_keygen));
-        }
-        catch (Exception e)
-        {
-            Log.e("Error","JSON ERROR");
-        }
+        if (smsDataList.size() != 0) {
+            String jsonExcelList = gson.toJson(smsDataList);
+            // print your generated json
+            Log.e("jsonCartList: ", jsonExcelList);
+            String prev_keygen = smsDataList.get(0).getTid() + "-" + smsDataList.get(0).getMob_no() + "-" + smsDataList.get(0).getCrime_no();
+            JSONObject jsonBody = new JSONObject();
+            try {
+                jsonBody.put("data", jsonExcelList);
+                jsonBody.put("keygen", hashGenerator(prev_keygen));
+                Log.e("body", "httpCall_collect: " + hashGenerator(prev_keygen));
+            } catch (Exception e) {
+                Log.e("Error", "JSON ERROR");
+            }
 
-        RequestQueue requestQueue = Volley.newRequestQueue(getContextNullSafety());
-        String URL = "https://sangyan.co.in/sendmsg";
+            RequestQueue requestQueue = Volley.newRequestQueue(getContextNullSafety());
+            String URL = "https://sangyan.co.in/sendmsg";
 
-        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, URL,jsonBody,
-                new com.android.volley.Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        // enjoy your response
-                        String code=response.optString("code")+"";
-                        if(code.equals("202")){
-                            for(int i=0;i<smsDataList.size();i++){
-                                reference.child(smsDataList.get(i).getPushkey()).child("reminded").setValue("once");
+            JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, URL, jsonBody,
+                    new com.android.volley.Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            // enjoy your response
+                            String code = response.optString("code") + "";
+                            if (code.equals("202")) {
+                                for (int i = 0; i < smsDataList.size(); i++) {
+                                    reference.child(smsDataList.get(i).getPushkey()).child("reminded").setValue("once");
+                                }
+                                smsDataList.clear();
+                                Snackbar.make(join, "SMS sent Successfully.", Snackbar.LENGTH_LONG)
+                                        .setActionTextColor(Color.parseColor("#171746"))
+                                        .setTextColor(Color.parseColor("#FF7F5C"))
+                                        .setBackgroundTint(Color.parseColor("#171746"))
+                                        .show();
+                                dialog1.dismiss();
+                            } else {
+                                Snackbar.make(join, "Failed to send sms", Snackbar.LENGTH_LONG)
+                                        .setActionTextColor(Color.parseColor("#000000"))
+                                        .setTextColor(Color.parseColor("#000000"))
+                                        .setBackgroundTint(Color.parseColor("#FF5252"))
+                                        .show();
                             }
-                            smsDataList.clear();
-                            Snackbar.make(join,"SMS sent Successfully.",Snackbar.LENGTH_LONG)
-                                    .setActionTextColor(Color.parseColor("#171746"))
-                                    .setTextColor(Color.parseColor("#FF7F5C"))
-                                    .setBackgroundTint(Color.parseColor("#171746"))
-                                    .show();
-                            dialog1.dismiss();
+                            Log.e("BULK code", code + "");
+                            Log.e("response", response.toString());
                         }
-                        else{
-                            Snackbar.make(join,"Failed to send sms",Snackbar.LENGTH_LONG)
-                                    .setActionTextColor(Color.parseColor("#000000"))
-                                    .setTextColor(Color.parseColor("#000000"))
-                                    .setBackgroundTint(Color.parseColor("#FF5252"))
-                                    .show();
-                        }
-                        Log.e("BULK code",code+"");
-                        Log.e("response",response.toString());
-                    }
-                }, new com.android.volley.Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                // enjoy your error status
-                Log.e("Status of code = ","Wrong "+error);
-                Snackbar.make(join,"Failed to send sms.",Snackbar.LENGTH_LONG)
-                        .setActionTextColor(Color.parseColor("#000000"))
-                        .setTextColor(Color.parseColor("#000000"))
-                        .setBackgroundTint(Color.parseColor("#FF5252"))
-                        .show();
-            }
-        });
-        stringRequest.setRetryPolicy(new RetryPolicy() {
-            @Override
-            public int getCurrentTimeout() {
-                return 15000;
-            }
+                    }, new com.android.volley.Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    // enjoy your error status
+                    Log.e("Status of code = ", "Wrong " + error);
+                    Snackbar.make(join, "Failed to send sms.", Snackbar.LENGTH_LONG)
+                            .setActionTextColor(Color.parseColor("#000000"))
+                            .setTextColor(Color.parseColor("#000000"))
+                            .setBackgroundTint(Color.parseColor("#FF5252"))
+                            .show();
+                }
+            });
+            stringRequest.setRetryPolicy(new RetryPolicy() {
+                @Override
+                public int getCurrentTimeout() {
+                    return 15000;
+                }
 
-            @Override
-            public int getCurrentRetryCount() {
-                return 15000;
-            }
+                @Override
+                public int getCurrentRetryCount() {
+                    return 15000;
+                }
 
-            @Override
-            public void retry(VolleyError error) throws VolleyError {
-            }
-        });
-        Log.d("string", stringRequest.toString());
-        requestQueue.add(stringRequest);
+                @Override
+                public void retry(VolleyError error) throws VolleyError {
+                }
+            });
+            Log.d("string", stringRequest.toString());
+            requestQueue.add(stringRequest);
+        }
     }
 
     private void update_J_Excel(List<Excel_data> j_dates_list,String j_date) {
