@@ -1,15 +1,23 @@
 package in.aryomtech.cgalert.Writ;
 
+import static android.app.Activity.RESULT_OK;
+import static in.aryomtech.cgalert.Home.REQUEST_CODE_STORAGE_PERMISSION;
+
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.res.ResourcesCompat;
@@ -22,6 +30,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
+import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,18 +51,24 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import in.aryomtech.cgalert.R;
+import in.aryomtech.cgalert.fcm.Specific;
 import www.sanju.motiontoast.MotionToast;
 import www.sanju.motiontoast.MotionToastStyle;
 
@@ -66,11 +81,16 @@ public class WritForm extends Fragment {
     ArrayList<String> appellant_list;
     RespondentAdapter RespondentAdapter;
     AppellantAdapter appellantAdapter;
+    Dialog dialog;
     String deleted_task;
+    StorageReference storageReference1;
+    DatabaseReference user_ref;
     String type;
+    public static final int PICK_FILE = 1;
+    Uri selected_uri_pdf=Uri.parse("");
     AutoCompleteTextView nature, district;
     LinearLayout add_task, add_appellant;
-    ImageView back;
+    ImageView back,add_attachment;
     Dialog dialog1;
     String pushkey;
 
@@ -84,6 +104,7 @@ public class WritForm extends Fragment {
     TextView date_reply, judgement_date, time_limit, days, summ, submit, date_of_filing, due;
     CheckBox legal1, legal2, allowed, disposed, dismissed;
     int check_;
+
     DatePickerDialog.OnDateSetListener mDateSetListener;
     DatabaseReference reference;
 
@@ -98,8 +119,10 @@ public class WritForm extends Fragment {
         task_list = new ArrayList<>();
         appellant_list = new ArrayList<>();
         lay = view.findViewById(R.id.lay);
+        add_attachment = view.findViewById(R.id.add_attachment);
         nature = view.findViewById(R.id.nature);
         district = view.findViewById(R.id.district);
+        user_ref = FirebaseDatabase.getInstance().getReference().child("users");
         summary = view.findViewById(R.id.summary_edt);
         submit = view.findViewById(R.id.submit_txt);
         date_of_filing = view.findViewById(R.id.date_of_filing);
@@ -134,6 +157,7 @@ public class WritForm extends Fragment {
         summ = view.findViewById(R.id.disposed_summary);
         dispose_summary = view.findViewById(R.id.disposed_summary_edt);
         date_reply = view.findViewById(R.id.date_reply);
+        String pdfpath = "WRIT_PDF/";
         legal1 = view.findViewById(R.id.legal1);
         legal2 = view.findViewById(R.id.legal2);
         judgement_date = view.findViewById(R.id.judgement_date_edt);
@@ -149,7 +173,7 @@ public class WritForm extends Fragment {
         //Getting the instance of AutoCompleteTextView
         nature.setThreshold(1);//will start working from first character
         nature.setAdapter(adapter1);
-
+        storageReference1 = FirebaseStorage.getInstance().getReference().child(pdfpath);
 
         send.setOnClickListener(v->{
             Toast.makeText(contextNullSafe, "Notification to appellants/respondents", Toast.LENGTH_SHORT).show();
@@ -289,6 +313,10 @@ public class WritForm extends Fragment {
                 }
             }
         };
+
+        add_attachment.setOnClickListener(v->{
+            select_file();
+        });
 
         legal1.setOnClickListener(v -> {
             legal2.setChecked(false);
@@ -525,11 +553,128 @@ public class WritForm extends Fragment {
         });
     }
 
-
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         contextNullSafe = context;
+    }
+
+    private void select_file() {
+        Intent intent = new Intent();
+        intent.setType("application/pdf");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select File"), PICK_FILE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_FILE && resultCode == RESULT_OK){
+            if (data != null){
+                selected_uri_pdf= data.getData();
+                String uriString = selected_uri_pdf.toString();
+
+                Cursor cursor = getContextNullSafety().getContentResolver()
+                        .query(selected_uri_pdf, null, null, null, null);
+                int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                int sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE);
+                cursor.moveToFirst();
+
+                String name = cursor.getString(nameIndex);
+                String str_txt=name+" ("+readableFileSize(cursor.getLong(sizeIndex))+")";
+                show_file_upload(str_txt);
+            }
+        }
+    }
+
+    private void show_file_upload(String str_txt) {
+        dialog = new Dialog(getContextNullSafety());
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.upload_dialog);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        TextView file_name=dialog.findViewById(R.id.file_name);
+        file_name.setText(str_txt);
+        TextView cancel=dialog.findViewById(R.id.textView96);
+        TextView yes=dialog.findViewById(R.id.textView95);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.show();
+        cancel.setOnClickListener(vi-> dialog.dismiss());
+        yes.setOnClickListener(vi-> {
+            upload_to_database();
+        });
+    }
+
+    private void upload_to_database() {
+        dialog.dismiss();
+        dialog1 = new Dialog(getContextNullSafety());
+        dialog1.setCancelable(false);
+        dialog1.setContentView(R.layout.loading_dialog);
+        dialog1.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        LottieAnimationView lottieAnimationView=dialog1.findViewById(R.id.animate);
+        lottieAnimationView.setAnimation("loader.json");
+        dialog1.show();
+        String pdfstamp = pushkey;
+        final StorageReference filepath = storageReference1.child(pdfstamp + "." + "pdf");
+        filepath.putFile(selected_uri_pdf)
+                .addOnSuccessListener(taskSnapshot1 ->
+                        taskSnapshot1.getStorage().getDownloadUrl().addOnCompleteListener(
+                                task1 -> {
+                                    String pdf_link = Objects.requireNonNull(task1.getResult()).toString();
+                                    reference.child(pushkey).child("uploaded_file").setValue(pdf_link);
+                                    Calendar cal = Calendar.getInstance();
+                                    SimpleDateFormat simpleDateFormat=new SimpleDateFormat("EEEE, dd MMMM yyyy HH:mm a", Locale.getDefault());
+                                    reference.child(pushkey).child("uploaded_date").setValue(simpleDateFormat.format(cal.getTime()));
+                                    dialog1.dismiss();
+                                    Snackbar.make(lay,"Pdf Uploaded Successfully.",Snackbar.LENGTH_LONG)
+                                            .setActionTextColor(Color.parseColor("#171746"))
+                                            .setTextColor(Color.parseColor("#FF7F5C"))
+                                            .setBackgroundTint(Color.parseColor("#171746"))
+                                            .show();
+                                    Notify_admins();
+                                }));
+    }
+
+    private void Notify_admins() {
+        user_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    for(DataSnapshot ds:snapshot.getChildren()){
+                        if(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("name").getValue(String.class)).equals("admin")){
+                            for(DataSnapshot ds_token:snapshot.child(ds.getKey()).child("token").getChildren()){
+                                String token=snapshot.child(ds.getKey()).child("token").child(Objects.requireNonNull(ds_token.getKey())).getValue(String.class);
+                                Specific specific=new Specific();
+                                specific.noti("CG Sangyan","Attachment added. Tap to see", Objects.requireNonNull(token),pushkey,"writ");
+                                //this will enable eye feature from admin side but it will have no effect as user has uploaded the needy document.
+                            }
+                        }
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == REQUEST_CODE_STORAGE_PERMISSION && grantResults.length>0){
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                select_file();
+            }
+            else{
+                Toast.makeText(getContext(), "Permission Denied!", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+    }
+    public static String readableFileSize(long size) {
+        if(size <= 0) return "0";
+        final String[] units = new String[] { "B", "kB", "MB", "GB", "TB" };
+        int digitGroups = (int) (Math.log10(size)/Math.log10(1024));
+        return new DecimalFormat("#,##0.#").format(size/Math.pow(1024, digitGroups)) + " " + units[digitGroups];
     }
 
     @SuppressLint("NotifyDataSetChanged")
