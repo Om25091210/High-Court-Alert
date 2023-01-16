@@ -65,6 +65,7 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
     String gsID="";
     boolean is_selected=false;
     boolean isadmin=false;
+    String message="";
     onClickInterface onClickInterface;
     onAgainClickInterface onAgainClickInterface;
 
@@ -194,17 +195,30 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
                 holder.add_button.setBackgroundResource(R.drawable.add_card);
             }
         });
-
-        String message = "हाईकोर्ट अलर्ट:-डायरी माँग"+"\nदिनाँक:- "+list.get(position).getDate()+"\n\n" + "Last Date - " + list.get(position).getL() + "\n"
-                + "District - " + list.get(position).getC() + "\n" +
-                "Police Station - " + list.get(position).getB() + "\n"+
-                list.get(position).getD() + " No. - " + list.get(position).getE() +"/"+ list.get(position).getG()+"\n" +
-                "RM Date - " + list.get(position).getK()+ "\n" +
-                "Case Type - " + list.get(position).getD() +  "\n" +
-                "Name - " + list.get(position).getF()+  "\n" +
-                "Crime No. - " + list.get(position).getH() +"/"+ list.get(position).getI()+  "\n" +
-                "Received - " + list.get(position).getJ() + "\n\n"
-                + "उपरोक्त मूल केश डायरी दिनाँक "+list.get(position).getL()+" तक बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय छतीसगढ़ में  अनिवार्यतः जमा करें।";
+        if (list.get(position).getType().equals("RM CALL")) {
+            message = "हाईकोर्ट अलर्ट:-डायरी माँग"+"\nदिनाँक:- "+list.get(position).getDate()+"\n\n" + "Last Date - " + list.get(position).getL() + "\n"
+                    + "District - " + list.get(position).getC() + "\n" +
+                    "Police Station - " + list.get(position).getB() + "\n"+
+                    list.get(position).getD() + " No. - " + list.get(position).getE() +"/"+ list.get(position).getG()+"\n" +
+                    "RM Date - " + list.get(position).getK()+ "\n" +
+                    "Case Type - " + list.get(position).getD() +  "\n" +
+                    "Name - " + list.get(position).getF()+  "\n" +
+                    "Crime No. - " + list.get(position).getH() +"/"+ list.get(position).getI()+  "\n" +
+                    "Received - " + list.get(position).getJ() + "\n\n"
+                    + "उपरोक्त मूल केश डायरी दिनाँक "+list.get(position).getL()+" तक बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय छतीसगढ़ में  अनिवार्यतः जमा करें।";
+        }
+        else{
+            message = "हाईकोर्ट अलर्ट:-डायरी वापसी"+"\nदिनाँक:- "+ list.get(position).getDate()  +" \n\n" + "Last Date - " + list.get(position).getL() + "\n"
+                    + "District - " + list.get(position).getC() + "\n" +
+                    "Police Station - " + list.get(position).getB() + "\n"+
+                    list.get(position).getD() + " No. - " + list.get(position).getE() +"/"+ list.get(position).getG()+"\n" +
+                    "RM Date - " + list.get(position).getK()+ "\n" +
+                    "Case Type - " + list.get(position).getD() +  "\n" +
+                    "Name - " + list.get(position).getF()+  "\n" +
+                    "Crime No. - " + list.get(position).getH() +"/"+ list.get(position).getI()+  "\n" +
+                    "Received - " + list.get(position).getJ() + "\n\n" + "1)उपरोक्त मूल केश डायरी  महाधिवक्ता कार्यालय द्वारा दी गयी मूल पावती लाने पर ही दी जाएगी।\n"
+                    +"2) उपरोक्त मूल केश डायरी "+ list.get(position).getK() +" से पांच दिवस के भीतर बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय से वापिस ले जावें।";
+        }
 
         holder.share.setOnClickListener(v->{
             Intent shareIntent = new Intent(Intent.ACTION_SEND);

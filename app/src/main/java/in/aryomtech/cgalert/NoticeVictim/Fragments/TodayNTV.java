@@ -224,10 +224,10 @@ public class TodayNTV extends Fragment {
                         if (str_arg.contains("/") && not_once) {
                             String sub1 = str_arg.substring(0, str_arg.indexOf("/"));
                             String sub2 = str_arg.substring(str_arg.indexOf("/") + 1);
-                            if (list_string.get(4).contains(sub1) && list_string.get(6).contains(sub2)) {
+                            if (list_string.get(3).contains(sub1) && list_string.get(4).contains(sub2)) {
                                 count++;
                                 not_once = false;
-                            } else if (list_string.get(7).contains(sub1) && list_string.get(8).contains(sub2)) {
+                            } else if (list_string.get(12).contains(sub1) && list_string.get(2).contains(sub2)) {
                                 count++;
                                 not_once = false;
                             }
@@ -253,7 +253,7 @@ public class TodayNTV extends Fragment {
             list_string.add(object.getAdvocate().toLowerCase());
             list_string.add(object.getCaseType().toLowerCase());
             list_string.add(object.getCaseYear().toLowerCase());
-            list_string.add(object.getCaseNo().toLowerCase());
+            list_string.add(object.getCrimeNo().toLowerCase());
             list_string.add(object.getCrimeYear().toLowerCase());
             list_string.add(object.getPushkey().toLowerCase());
             list_string.add(object.getDoc_url().toLowerCase());
@@ -400,8 +400,12 @@ public class TodayNTV extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for(DataSnapshot ds:snapshot.getChildren()){
-                    if (cr_dt.equals(snapshot.child(ds.getKey()).child("noticeDate").getValue(String.class))) {
-                        list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
+                    if(snapshot.child(ds.getKey()).child("district").exists()) {
+                        if (snapshot.child(ds.getKey()).child("advocate").exists()) {
+                            if (cr_dt.equals(snapshot.child(ds.getKey()).child("noticeDate").getValue(String.class))) {
+                                list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
+                            }
+                        }
                     }
                 }
                 if(list.size()!=0){
@@ -433,9 +437,13 @@ public class TodayNTV extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for (DataSnapshot ds:snapshot.getChildren()) {
-                    if (cr_dt.equals(snapshot.child(ds.getKey()).child("noticeDate").getValue(String.class))) {
-                        if(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class).trim().toUpperCase().equals(sp_of)) {
-                            list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
+                    if(snapshot.child(ds.getKey()).child("district").exists()) {
+                        if(snapshot.child(ds.getKey()).child("advocate").exists()) {
+                            if (cr_dt.equals(snapshot.child(ds.getKey()).child("noticeDate").getValue(String.class))) {
+                                if (snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class).trim().toUpperCase().equals(sp_of)) {
+                                    list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
+                                }
+                            }
                         }
                     }
                 }
@@ -467,10 +475,14 @@ public class TodayNTV extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for (DataSnapshot ds:snapshot.getChildren()) {
-                    if (cr_dt.equals(snapshot.child(ds.getKey()).child("noticeDate").getValue(String.class))) {
-                        if (tinyDB.getListString("districts_list").contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())
-                                && tinyDB.getListString("stations_list").contains("PS "+Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("station").getValue(String.class)).trim().toUpperCase())) {
-                            list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
+                    if(snapshot.child(ds.getKey()).child("district").exists()) {
+                        if (snapshot.child(ds.getKey()).child("advocate").exists()) {
+                            if (cr_dt.equals(snapshot.child(ds.getKey()).child("noticeDate").getValue(String.class))) {
+                                if (tinyDB.getListString("districts_list").contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())
+                                        && tinyDB.getListString("stations_list").contains("PS " + Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("station").getValue(String.class)).trim().toUpperCase())) {
+                                    list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
+                                }
+                            }
                         }
                     }
                 }
@@ -502,9 +514,13 @@ public class TodayNTV extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for (DataSnapshot ds:snapshot.getChildren()) {
-                    if (cr_dt.equals(snapshot.child(ds.getKey()).child("noticeDate").getValue(String.class))) {
-                        if (tinyDB.getListString("districts_list").contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())) {
-                                list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
+                    if(snapshot.child(ds.getKey()).child("district").exists()) {
+                        if (snapshot.child(ds.getKey()).child("advocate").exists()) {
+                            if (cr_dt.equals(snapshot.child(ds.getKey()).child("noticeDate").getValue(String.class))) {
+                                if (tinyDB.getListString("districts_list").contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())) {
+                                    list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
+                                }
+                            }
                         }
                     }
                 }
@@ -535,9 +551,13 @@ public class TodayNTV extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for (DataSnapshot ds:snapshot.getChildren()) {
-                    if (cr_dt.equals(snapshot.child(ds.getKey()).child("noticeDate").getValue(String.class))) {
-                        if ((Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("station").getValue(String.class)).trim()).toUpperCase().equals(stat_name.substring(3).trim())) {
-                            list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
+                    if(snapshot.child(ds.getKey()).child("district").exists()) {
+                        if (snapshot.child(ds.getKey()).child("advocate").exists()) {
+                            if (cr_dt.equals(snapshot.child(ds.getKey()).child("noticeDate").getValue(String.class))) {
+                                if ((Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("station").getValue(String.class)).trim()).toUpperCase().equals(stat_name.substring(3).trim())) {
+                                    list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
+                                }
+                            }
                         }
                     }
                 }

@@ -186,13 +186,10 @@ public class AllNTV extends Fragment {
             }
         };
         search.addTextChangedListener(new TextWatcher() {
-
             public void afterTextChanged(Editable s) {}
-
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                search(s+"");
+                search(s.toString()+"");
             }
         });
         OnBackPressedCallback callback=new OnBackPressedCallback(true) {
@@ -217,24 +214,26 @@ public class AllNTV extends Fragment {
             adapter.notifyDataSetChanged();
         }
         else {
-            String[] str_Args = str.toLowerCase().split(" ");
+            String[] str_Args=str.toLowerCase().split(" ");
             mylist.clear();
-            int count = 0;
-            boolean not_once = true;
-            List<Integer> c_list = new ArrayList<>();
-            for (Notice_model object : list) {
+            int count=0;
+            boolean not_once=true;
+            List<Integer> c_list=new ArrayList<>();
+            for(Notice_model object:list) {
                 convert_to_list(object);
-                for (String s : list_string) {
-                    for (String str_arg : str_Args) {
+                for (String s : list_string) {//whole list
+                    for (String str_arg : str_Args) {//User input
                         if (str_arg.contains("/") && not_once) {
+                            System.out.println(str_arg+" ====");
                             String sub1 = str_arg.substring(0, str_arg.indexOf("/"));
                             String sub2 = str_arg.substring(str_arg.indexOf("/") + 1);
-                            if (list_string.get(4).contains(sub1) && list_string.get(6).contains(sub2)) {
+                            System.out.println(sub2+" ====");
+                            if (list_string.get(3).contains(sub1) && list_string.get(4).contains(sub2)) {
                                 count++;
-                                not_once = false;
-                            } else if (list_string.get(7).contains(sub1) && list_string.get(8).contains(sub2)) {
+                                not_once=false;
+                            } else if (list_string.get(12).contains(sub1) && list_string.get(2).contains(sub2)) {
                                 count++;
-                                not_once = false;
+                                not_once=false;
                             }
                         } else if (s.contains(str_arg)) {
                             count++;
@@ -242,10 +241,11 @@ public class AllNTV extends Fragment {
                     }
                 }
                 c_list.add(count);
-                System.out.println(c_list + "");
-                if (count == str_Args.length)
+                System.out.println(c_list+"");
+                if(count== str_Args.length)
                     mylist.add(object);
-                count = 0;
+                count=0;
+                System.out.println(mylist.size()+"");
             }
             adapter = new NoticeAdapter(getContextNullSafety(), onUploadInterface, mylist);
             recyclerView.setAdapter(adapter);
@@ -258,7 +258,7 @@ public class AllNTV extends Fragment {
             list_string.add(object.getAdvocate().toLowerCase());
             list_string.add(object.getCaseType().toLowerCase());
             list_string.add(object.getCaseYear().toLowerCase());
-            list_string.add(object.getCaseNo().toLowerCase());
+            list_string.add(object.getCrimeNo().toLowerCase());
             list_string.add(object.getCrimeYear().toLowerCase());
             list_string.add(object.getPushkey().toLowerCase());
             list_string.add(object.getDoc_url().toLowerCase());
@@ -405,7 +405,11 @@ public class AllNTV extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for(DataSnapshot ds:snapshot.getChildren()){
-                    list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
+                    if(snapshot.child(ds.getKey()).child("district").exists()) {
+                        if(snapshot.child(ds.getKey()).child("advocate").exists()) {
+                            list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
+                        }
+                    }
                 }
                 if(list.size()!=0){
                     cg_logo.setVisibility(View.GONE);
@@ -436,8 +440,12 @@ public class AllNTV extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for (DataSnapshot ds:snapshot.getChildren()) {
-                    if(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class).trim().toUpperCase().equals(sp_of)) {
-                            list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
+                    if(snapshot.child(ds.getKey()).child("district").exists()) {
+                        if (snapshot.child(ds.getKey()).child("advocate").exists()) {
+                            if (snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class).trim().toUpperCase().equals(sp_of)) {
+                                list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
+                            }
+                        }
                     }
                 }
                 if(list.size()!=0){
@@ -468,9 +476,13 @@ public class AllNTV extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for (DataSnapshot ds:snapshot.getChildren()) {
-                    if (tinyDB.getListString("districts_list").contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())
-                                && tinyDB.getListString("stations_list").contains("PS "+Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("station").getValue(String.class)).trim().toUpperCase())) {
-                            list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
+                    if(snapshot.child(ds.getKey()).child("district").exists()) {
+                        if (snapshot.child(ds.getKey()).child("advocate").exists()) {
+                            if (tinyDB.getListString("districts_list").contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())
+                                    && tinyDB.getListString("stations_list").contains("PS " + Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("station").getValue(String.class)).trim().toUpperCase())) {
+                                list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
+                            }
+                        }
                     }
                 }
                 if(list.size()!=0){
@@ -501,8 +513,12 @@ public class AllNTV extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for (DataSnapshot ds:snapshot.getChildren()) {
-                    if (tinyDB.getListString("districts_list").contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())) {
-                            list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
+                    if(snapshot.child(ds.getKey()).child("district").exists()) {
+                        if (snapshot.child(ds.getKey()).child("advocate").exists()) {
+                            if (tinyDB.getListString("districts_list").contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())) {
+                                list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
+                            }
+                        }
                     }
                 }
                 if(list.size()!=0){
@@ -528,8 +544,12 @@ public class AllNTV extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for (DataSnapshot ds:snapshot.getChildren()) {
-                    if ((Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("station").getValue(String.class)).trim()).toUpperCase().equals(stat_name.substring(3).trim())) {
-                            list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
+                    if(snapshot.child(ds.getKey()).child("district").exists()) {
+                        if (snapshot.child(ds.getKey()).child("advocate").exists()) {
+                            if ((Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("station").getValue(String.class)).trim()).toUpperCase().equals(stat_name.substring(3).trim())) {
+                                list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
+                            }
+                        }
                     }
                 }
                 if(list.size()!=0){

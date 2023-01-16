@@ -247,18 +247,32 @@ public class temp_notification extends AppCompatActivity {
                 binding.caseDiary.dayLeft.setVisibility(View.GONE);
         } else
             binding.caseDiary.dayLeft.setVisibility(View.GONE);
+        String message;
+        if(excel_data.get(0).getType().equals("RM CALL")) {
+             message= "हाईकोर्ट अलर्ट:-डायरी माँग" + "\nदिनाँक:- " + excel_data.get(0).getDate() + "\n\n" + "Last Date - " + excel_data.get(0).getL() + "\n"
+                    + "District - " + excel_data.get(0).getC() + "\n" +
+                    "Police Station - " + excel_data.get(0).getB() + "\n" +
+                    excel_data.get(0).getD() + " No. - " + excel_data.get(0).getE() + "/" + excel_data.get(0).getG() + "\n" +
+                    "RM Date - " + excel_data.get(0).getK() + "\n" +
+                    "Case Type - " + excel_data.get(0).getD() + "\n" +
+                    "Name - " + excel_data.get(0).getF() + "\n" +
+                    "Crime No. - " + excel_data.get(0).getH() + "/" + excel_data.get(0).getI() + "\n" +
+                    "Received - " + excel_data.get(0).getJ() + "\n\n"
+                    + "उपरोक्त मूल केश डायरी दिनाँक " + excel_data.get(0).getL() + " तक बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय छतीसगढ़ में  अनिवार्यतः जमा करें।";
+        }
+        else{
+            message = "हाईकोर्ट अलर्ट:-डायरी वापसी"+"\nदिनाँक:- "+ excel_data.get(0).getDate()  +" \n\n" + "Last Date - " + excel_data.get(0).getL() + "\n"
+                    + "District - " + excel_data.get(0).getC() + "\n" +
+                    "Police Station - " + excel_data.get(0).getB() + "\n"+
+                    excel_data.get(0).getD() + " No. - " + excel_data.get(0).getE() +"/"+ excel_data.get(0).getG()+"\n" +
+                    "RM Date - " + excel_data.get(0).getK()+ "\n" +
+                    "Case Type - " + excel_data.get(0).getD() +  "\n" +
+                    "Name - " + excel_data.get(0).getF()+  "\n" +
+                    "Crime No. - " + excel_data.get(0).getH() +"/"+ excel_data.get(0).getI()+  "\n" +
+                    "Received - " + excel_data.get(0).getJ() + "\n\n" + "1)उपरोक्त मूल केश डायरी  महाधिवक्ता कार्यालय द्वारा दी गयी मूल पावती लाने पर ही दी जाएगी।\n"
+                    +"2) उपरोक्त मूल केश डायरी "+ excel_data.get(0).getK() +" से पांच दिवस के भीतर बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय से वापिस ले जावें।";
 
-        String message = "हाईकोर्ट अलर्ट:-डायरी माँग" + "\nदिनाँक:- " + excel_data.get(0).getDate() + "\n\n" + "Last Date - " + excel_data.get(0).getL() + "\n"
-                + "District - " + excel_data.get(0).getC() + "\n" +
-                "Police Station - " + excel_data.get(0).getB() + "\n" +
-                excel_data.get(0).getD() + " No. - " + excel_data.get(0).getE() + "/" + excel_data.get(0).getG() + "\n" +
-                "RM Date - " + excel_data.get(0).getK() + "\n" +
-                "Case Type - " + excel_data.get(0).getD() + "\n" +
-                "Name - " + excel_data.get(0).getF() + "\n" +
-                "Crime No. - " + excel_data.get(0).getH() + "/" + excel_data.get(0).getI() + "\n" +
-                "Received - " + excel_data.get(0).getJ() + "\n\n"
-                + "उपरोक्त मूल केश डायरी दिनाँक " + excel_data.get(0).getK() + " तक बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय छतीसगढ़ में  अनिवार्यतः जमा करें।";
-
+        }
         binding.caseDiary.share.setOnClickListener(v -> {
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
             shareIntent.setType("text/plain");
