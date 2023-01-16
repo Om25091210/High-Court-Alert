@@ -221,7 +221,7 @@ public class Similar_Collection extends Fragment {
                         if (str_arg.contains("/") && not_once) {
                             String sub1 = str_arg.substring(0, str_arg.indexOf("/"));
                             String sub2 = str_arg.substring(str_arg.indexOf("/") + 1);
-                            if (list.get(3).contains(sub1) && list.get(2).contains(sub2)) {
+                            if (list.get(0).contains(sub1) && list.get(1).contains(sub2)) {
                                 count++;
                                 not_once = false;
                             }

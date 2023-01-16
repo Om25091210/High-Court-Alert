@@ -167,12 +167,15 @@ public class NoticemainAdmin extends AppCompatActivity {
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot ds:snapshot.getChildren()){
-                    if (!snapshot.child(Objects.requireNonNull(ds.getKey())).child("uploaded_date").exists()) {
-                        total_pending++;
-                    }
-                    else{
-                        total_served++;
+                for(DataSnapshot ds:snapshot.getChildren()) {
+                    if (snapshot.child(ds.getKey()).child("district").exists()) {
+                        if (snapshot.child(ds.getKey()).child("advocate").exists()) {
+                            if (!snapshot.child(Objects.requireNonNull(ds.getKey())).child("uploaded_date").exists()) {
+                                total_pending++;
+                            } else {
+                                total_served++;
+                            }
+                        }
                     }
                 }
                 pending_txt.setText(total_pending+"");
@@ -192,14 +195,17 @@ public class NoticemainAdmin extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot ds:snapshot.getChildren()) {
-                        if (snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class).trim().toUpperCase().equals(sp_of)) {
-                            if (!snapshot.child(Objects.requireNonNull(ds.getKey())).child("uploaded_date").exists()) {
-                                total_pending++;
-                            }
-                            else{
-                                total_served++;
+                    if(snapshot.child(ds.getKey()).child("district").exists()) {
+                        if (snapshot.child(ds.getKey()).child("advocate").exists()) {
+                            if (snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class).trim().toUpperCase().equals(sp_of)) {
+                                if (!snapshot.child(Objects.requireNonNull(ds.getKey())).child("uploaded_date").exists()) {
+                                    total_pending++;
+                                } else {
+                                    total_served++;
+                                }
                             }
                         }
+                    }
                 }
                 pending_txt.setText(total_pending+"");
                 served_txt.setText(total_served+"");
@@ -219,15 +225,18 @@ public class NoticemainAdmin extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot ds:snapshot.getChildren()) {
-                        if (tinyDB.getListString("districts_list").contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())
-                                && tinyDB.getListString("stations_list").contains("PS " + Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("station").getValue(String.class)).trim().toUpperCase())) {
-                            if (!snapshot.child(Objects.requireNonNull(ds.getKey())).child("uploaded_date").exists()) {
-                                total_pending++;
-                            }
-                            else{
-                                total_served++;
+                    if(snapshot.child(ds.getKey()).child("district").exists()) {
+                        if (snapshot.child(ds.getKey()).child("advocate").exists()) {
+                            if (tinyDB.getListString("districts_list").contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())
+                                    && tinyDB.getListString("stations_list").contains("PS " + Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("station").getValue(String.class)).trim().toUpperCase())) {
+                                if (!snapshot.child(Objects.requireNonNull(ds.getKey())).child("uploaded_date").exists()) {
+                                    total_pending++;
+                                } else {
+                                    total_served++;
+                                }
                             }
                         }
+                    }
                 }
                 pending_txt.setText(total_pending+"");
                 served_txt.setText(total_served+"");
@@ -243,14 +252,17 @@ public class NoticemainAdmin extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot ds:snapshot.getChildren()) {
-                        if (tinyDB.getListString("districts_list").contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())) {
-                            if (!snapshot.child(Objects.requireNonNull(ds.getKey())).child("uploaded_date").exists()) {
-                                total_pending++;
-                            }
-                            else{
-                                total_served++;
+                    if(snapshot.child(ds.getKey()).child("district").exists()) {
+                        if (snapshot.child(ds.getKey()).child("advocate").exists()) {
+                            if (tinyDB.getListString("districts_list").contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())) {
+                                if (!snapshot.child(Objects.requireNonNull(ds.getKey())).child("uploaded_date").exists()) {
+                                    total_pending++;
+                                } else {
+                                    total_served++;
+                                }
                             }
                         }
+                    }
                 }
                 pending_txt.setText(total_pending+"");
                 served_txt.setText(total_served+"");
@@ -265,12 +277,15 @@ public class NoticemainAdmin extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot ds:snapshot.getChildren()) {
-                    if ((Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("station").getValue(String.class)).trim()).toUpperCase().equals(stat_name.substring(3).trim())) {
-                        if (!snapshot.child(Objects.requireNonNull(ds.getKey())).child("uploaded_date").exists()) {
-                            total_pending++;
-                        }
-                        else{
-                            total_served++;
+                    if(snapshot.child(ds.getKey()).child("district").exists()) {
+                        if (snapshot.child(ds.getKey()).child("advocate").exists()) {
+                            if ((Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("station").getValue(String.class)).trim()).toUpperCase().equals(stat_name.substring(3).trim())) {
+                                if (!snapshot.child(Objects.requireNonNull(ds.getKey())).child("uploaded_date").exists()) {
+                                    total_pending++;
+                                } else {
+                                    total_served++;
+                                }
+                            }
                         }
                     }
                 }
