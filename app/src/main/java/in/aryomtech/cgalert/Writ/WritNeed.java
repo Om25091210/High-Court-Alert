@@ -203,7 +203,8 @@ public class WritNeed extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for(DataSnapshot ds:snapshot.getChildren()){
-                    if (!snapshot.child(Objects.requireNonNull(ds.getKey())).child("dueDate").getValue(String.class).trim().equals("")) {
+                    if ((!snapshot.child(Objects.requireNonNull(ds.getKey())).child("dueDate").getValue(String.class).trim().equals(""))
+                        && snapshot.child(ds.getKey()).child("decisionDate").getValue(String.class).equals(""))  {
                         list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
                     }
                 }

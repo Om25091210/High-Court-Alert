@@ -2,12 +2,14 @@ package in.aryomtech.cgalert.Writ;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -31,6 +33,8 @@ public class WritAdapter extends RecyclerView.Adapter<WritAdapter.ViewHolder> {
 
     List<WritModel> list;
     Context context;
+    String  appellant_list = "";
+    String  respondent_list = "";
     private Timer timer;
     String pushkey;
 
@@ -92,6 +96,38 @@ public class WritAdapter extends RecyclerView.Adapter<WritAdapter.ViewHolder> {
             ft.addToBackStack(null);
             ft.commit();
         });
+        ArrayList<String> appellants = list.get(position).getAppellants();
+        ArrayList<String> respondents = list.get(position).getRespondents();
+
+        if (appellants != null) {
+            for (int i = 0; i < appellants.size(); i++) {
+                appellant_list = appellant_list +  (i+1) + "\u2022 " + appellants.get(i) + "\n";
+            }
+        }
+        if (respondents != null) {
+            for (int i = 0; i < respondents.size(); i++) {
+                respondent_list = respondent_list + (i+1) + "\u2022 " + respondents.get(i) + "\n";
+            }
+
+        }
+
+        String message = "रिट केस अलर्ट :- "+"\n" +
+                "District - " + list.get(position).getDistrict() + "\n" +
+                "Date of filling - " + list.get(position).getDateOfFiling()+ "\n" +
+                "Nature of the case - " +list.get(position).getNature() + "\nCase Number - " + list.get(position).getCaseNo() +"\nCase Year  - "+ list.get(position).getCaseYear()+"\n" +
+                "Judgement date - " + list.get(position).getJudgementDate() +  "\n" +
+                "Due days - " + list.get(position).getDueDate()+  "\n" +
+                "Appellants list -\n" + appellant_list +"\nRespondents list -\n"+ respondent_list+  "\n" +
+                "Synopsis of the case - " + list.get(position).getSummary() +
+                "\n\nJudgement summary of the case - " + list.get(position).getdSummary() +
+                "\n\nDecided date - " + list.get(position).getDecisionDate();
+
+        holder.share.setOnClickListener(v->{
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("text/plain");
+            shareIntent.putExtra(Intent.EXTRA_TEXT, message );
+            context.startActivity(Intent.createChooser(shareIntent, "Share link using"));
+        });
 
     }
 
@@ -103,6 +139,7 @@ public class WritAdapter extends RecyclerView.Adapter<WritAdapter.ViewHolder> {
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView district, dateOfFiling, nature, appellants, respondents, summary, judgementDate, judgement, judgementSummary, dueDays, caseNo, caseYear;
         ConstraintLayout writLayout;
+        ImageView share;
         LinearLayout layoutJudge, layoutDue;
 
 
@@ -124,6 +161,7 @@ public class WritAdapter extends RecyclerView.Adapter<WritAdapter.ViewHolder> {
             layoutDue = itemView.findViewById(R.id.layout_due);
             caseNo = itemView.findViewById(R.id.case_no);
             caseYear = itemView.findViewById(R.id.case_year);
+            share = itemView.findViewById(R.id.share);
         }
     }
 }

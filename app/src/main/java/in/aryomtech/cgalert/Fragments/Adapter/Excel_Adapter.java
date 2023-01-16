@@ -195,6 +195,7 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
                 holder.add_button.setBackgroundResource(R.drawable.add_card);
             }
         });
+
         if (list.get(position).getType().equals("RM CALL")) {
             message = "हाईकोर्ट अलर्ट:-डायरी माँग"+"\nदिनाँक:- "+list.get(position).getDate()+"\n\n" + "Last Date - " + list.get(position).getL() + "\n"
                     + "District - " + list.get(position).getC() + "\n" +
