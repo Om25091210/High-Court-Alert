@@ -1,10 +1,7 @@
-package in.aryomtech.cgalert.Writ;
+package in.aryomtech.cgalert.Writ.Adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,13 +16,12 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
-import java.util.TimerTask;
 
-import in.aryomtech.cgalert.Fragments.model.stationData;
 import in.aryomtech.cgalert.R;
+import in.aryomtech.cgalert.Writ.AppellantFragment;
+import in.aryomtech.cgalert.Writ.Model.WritModel;
 
 public class WritAdapter extends RecyclerView.Adapter<WritAdapter.ViewHolder> {
 

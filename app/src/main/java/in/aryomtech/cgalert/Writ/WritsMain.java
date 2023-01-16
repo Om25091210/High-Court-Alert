@@ -26,6 +26,7 @@ import in.aryomtech.cgalert.Writ.Fragments.DisposedDismissedWrits;
 import in.aryomtech.cgalert.Writ.Fragments.PendingWrits;
 import in.aryomtech.cgalert.Writ.Fragments.TodayWrits;
 import in.aryomtech.cgalert.Writ.Fragments.UrgentWrits;
+import in.aryomtech.cgalert.Writ.Model.WritModel;
 import in.aryomtech.myapplication.v4.FragmentPagerItemAdapter;
 import in.aryomtech.myapplication.v4.FragmentPagerItems;
 import soup.neumorphism.NeumorphCardView;

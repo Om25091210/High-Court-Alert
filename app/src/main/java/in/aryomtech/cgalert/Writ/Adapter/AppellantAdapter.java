@@ -1,4 +1,4 @@
-package in.aryomtech.cgalert.Writ;
+package in.aryomtech.cgalert.Writ.Adapter;
 
 
 import android.content.Context;

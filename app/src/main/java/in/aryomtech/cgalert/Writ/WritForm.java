@@ -50,10 +50,10 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import in.aryomtech.cgalert.R;
+import in.aryomtech.cgalert.Writ.Adapter.AppellantAdapter;
+import in.aryomtech.cgalert.Writ.Adapter.RespondentAdapter;
 import www.sanju.motiontoast.MotionToast;
 import www.sanju.motiontoast.MotionToastStyle;
 
@@ -64,7 +64,7 @@ public class WritForm extends Fragment {
     RecyclerView recyclerView2, recyclerView3;
     ArrayList<String> task_list;
     ArrayList<String> appellant_list;
-    RespondentAdapter RespondentAdapter;
+    in.aryomtech.cgalert.Writ.Adapter.RespondentAdapter RespondentAdapter;
     AppellantAdapter appellantAdapter;
     String deleted_task;
     String type;

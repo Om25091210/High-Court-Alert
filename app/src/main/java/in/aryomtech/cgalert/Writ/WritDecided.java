@@ -43,6 +43,8 @@ import java.util.Objects;
 
 import in.aryomtech.cgalert.DB.TinyDB;
 import in.aryomtech.cgalert.R;
+import in.aryomtech.cgalert.Writ.Adapter.WritAdapter;
+import in.aryomtech.cgalert.Writ.Model.WritModel;
 
 
 public class WritDecided extends Fragment {

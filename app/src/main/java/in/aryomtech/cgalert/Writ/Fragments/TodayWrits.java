@@ -23,7 +23,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.MediaController;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -44,8 +43,8 @@ import java.util.Objects;
 
 import in.aryomtech.cgalert.DB.TinyDB;
 import in.aryomtech.cgalert.R;
-import in.aryomtech.cgalert.Writ.WritAdapter;
-import in.aryomtech.cgalert.Writ.WritModel;
+import in.aryomtech.cgalert.Writ.Adapter.WritAdapter;
+import in.aryomtech.cgalert.Writ.Model.WritModel;
 
 
 public class TodayWrits extends Fragment {

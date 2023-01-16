@@ -3,7 +3,6 @@ package in.aryomtech.cgalert.Writ.Fragments;
 import static android.content.Context.MODE_PRIVATE;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -43,11 +42,9 @@ import java.util.Locale;
 import java.util.Objects;
 
 import in.aryomtech.cgalert.DB.TinyDB;
-import in.aryomtech.cgalert.NoticeVictim.Adapter.NoticeAdapter;
-import in.aryomtech.cgalert.NoticeVictim.model.Notice_model;
 import in.aryomtech.cgalert.R;
-import in.aryomtech.cgalert.Writ.WritAdapter;
-import in.aryomtech.cgalert.Writ.WritModel;
+import in.aryomtech.cgalert.Writ.Adapter.WritAdapter;
+import in.aryomtech.cgalert.Writ.Model.WritModel;
 
 
 public class AllWrits extends Fragment {
