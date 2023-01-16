@@ -26,8 +26,10 @@ public class Excel_data implements Serializable {
     private String date_of_alert;
     private String sent;
     private String number;
+    private String url;
+    private String uid;
 
-    public Excel_data(String a, String b, String c, String d, String e, String f, String g, String h, String i, String j, String k, String l, String m, String n, String date, String type, String pushkey, String reminded, String seen, String date_of_alert, String sent, String number) {
+    public Excel_data(String a, String b, String c, String d, String e, String f, String g, String h, String i, String j, String k, String l, String m, String n, String date, String type, String pushkey, String reminded, String seen, String date_of_alert, String sent, String number, String url, String uid) {
         A = a;
         B = b;
         C = c;
@@ -50,9 +52,19 @@ public class Excel_data implements Serializable {
         this.date_of_alert = date_of_alert;
         this.sent = sent;
         this.number = number;
+        this.url = url;
+        this.uid = uid;
     }
 
     public Excel_data() {
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public String getUrl() {
+        return url;
     }
 
     public String getSent() {

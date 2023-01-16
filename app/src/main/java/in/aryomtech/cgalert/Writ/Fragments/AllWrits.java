@@ -3,6 +3,7 @@ package in.aryomtech.cgalert.Writ.Fragments;
 import static android.content.Context.MODE_PRIVATE;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -42,6 +43,8 @@ import java.util.Locale;
 import java.util.Objects;
 
 import in.aryomtech.cgalert.DB.TinyDB;
+import in.aryomtech.cgalert.NoticeVictim.Adapter.NoticeAdapter;
+import in.aryomtech.cgalert.NoticeVictim.model.Notice_model;
 import in.aryomtech.cgalert.R;
 import in.aryomtech.cgalert.Writ.WritAdapter;
 import in.aryomtech.cgalert.Writ.WritModel;
@@ -63,7 +66,10 @@ public class AllWrits extends Fragment {
     TextView no_data;
     SwipeRefreshLayout mSwipeRefreshLayout;
     String ps_or_admin="";
-    EditText inputSearch;
+    EditText search;
+    List<String> list_string=new ArrayList<>();
+    WritAdapter adapter;
+    List<WritModel> mylist;
 
 
     @Override
@@ -75,7 +81,7 @@ public class AllWrits extends Fragment {
         auth= FirebaseAuth.getInstance();
         user=auth.getCurrentUser();
 
-
+        search = view.findViewById(R.id.search);
         stat_name= getContextNullSafety().getSharedPreferences("station_name_K",MODE_PRIVATE)
                 .getString("the_station_name2003","");
 
@@ -83,7 +89,7 @@ public class AllWrits extends Fragment {
         no_data=view.findViewById(R.id.no_data);
         recyclerView = view.findViewById(R.id.rv);
         list = new ArrayList<>();
-        WritAdapter adapter = new WritAdapter(list, getContextNullSafety());
+        mylist= new ArrayList<>();
         tinyDB=new TinyDB(getContextNullSafety());
         mSwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         LinearLayoutManager mManager = new LinearLayoutManager(getContextNullSafety());
@@ -94,30 +100,8 @@ public class AllWrits extends Fragment {
         reference = FirebaseDatabase.getInstance().getReference().child("writ");
         cg_logo.setVisibility(View.VISIBLE);
         no_data.setVisibility(View.VISIBLE);
-        inputSearch  = view.findViewById(R.id.search);
 
-        inputSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                adapter.cancelTimer();
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-                if (inputSearch.getText().toString().equals("")) {
-                    adapter.setTasks(list);
-                }
-                else if(list.size() != 0){
-                    adapter.searchNotes(s.toString());
-                }
-            }
-        });
 
         ps_or_admin=getContextNullSafety().getSharedPreferences("useris?",MODE_PRIVATE)
                 .getString("the_user_is?","");
@@ -162,6 +146,18 @@ public class AllWrits extends Fragment {
                 //getdata_for_sp();
             }
         });
+
+        search.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {}
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                search(s+"");
+            }
+        });
+
         OnBackPressedCallback callback=new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -175,6 +171,71 @@ public class AllWrits extends Fragment {
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),callback);
         return view;
+    }
+    private void convert_to_list(WritModel object) {
+        list_string.clear();
+        try{
+            list_string.add(object.getDistrict().toLowerCase());
+            list_string.add(object.getJudgement().toLowerCase());
+            list_string.add(object.getCaseYear().toLowerCase());
+            list_string.add(object.getCaseNo().toLowerCase());
+            list_string.add(object.getNature().toLowerCase());
+            list_string.add(object.getPushkey().toLowerCase());
+            list_string.add(object.getDateOfFiling().toLowerCase());
+            list_string.add(object.getDistrict().toLowerCase());
+            list_string.add(object.getJudgementDate().toLowerCase());
+            list_string.add(object.getDueDate().toLowerCase());
+            list_string.add(String.valueOf(object.getAppellants()));
+            list_string.add(String.valueOf(object.getRespondents()));
+            list_string.add(object.getSummary().toLowerCase());
+            list_string.add(object.getdSummary().toLowerCase());
+        }
+        catch (NullPointerException e){
+            System.out.println("Error");
+        }
+    }
+
+    private void search(String str) {
+        if(str.equals("")){
+            adapter = new WritAdapter(list, getContextNullSafety());
+            recyclerView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        }
+        else {
+            String[] str_Args = str.toLowerCase().split(" ");
+            mylist.clear();
+            int count = 0;
+            boolean not_once = true;
+            List<Integer> c_list = new ArrayList<>();
+            for (WritModel object : list) {
+                convert_to_list(object);
+                for (String s : list_string) {
+                    for (String str_arg : str_Args) {
+                        if (str_arg.contains("/") && not_once) {
+                            String sub1 = str_arg.substring(0, str_arg.indexOf("/"));
+                            String sub2 = str_arg.substring(str_arg.indexOf("/") + 1);
+                            if (list_string.get(4).contains(sub1) && list_string.get(6).contains(sub2)) {
+                                count++;
+                                not_once = false;
+                            } else if (list_string.get(7).contains(sub1) && list_string.get(8).contains(sub2)) {
+                                count++;
+                                not_once = false;
+                            }
+                        } else if (s.contains(str_arg)) {
+                            count++;
+                        }
+                    }
+                }
+                c_list.add(count);
+                System.out.println(c_list + "");
+                if (count == str_Args.length)
+                    mylist.add(object);
+                count = 0;
+            }
+            adapter = new WritAdapter(mylist, getContextNullSafety());
+            recyclerView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        }
     }
 
     private void getdata_for_sp() {

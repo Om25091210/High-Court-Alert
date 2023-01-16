@@ -1,13 +1,8 @@
 package in.aryomtech.cgalert.NoticeVictim.Adapter;
 
-import static in.aryomtech.cgalert.Home.REQUEST_CODE_STORAGE_PERMISSION;
-
-import android.Manifest;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,8 +12,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.DatabaseReference;
@@ -70,7 +63,7 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder
         holder.hearing_dt.setText(list.get(position).getHearingDate());
         holder.advocate_name.setText(list.get(position).getAdvocate());
         holder.appellant.setText(list.get(position).getAppellant());
-        holder.case_no.setText(list.get(position).getCaseNo());
+        holder.case_no.setText(" / " +list.get(position).getCaseNo());
 
         if (list.get(position).getUploaded_file()==null) {
             holder.layout.setBackgroundResource(R.drawable.bg_card_red);

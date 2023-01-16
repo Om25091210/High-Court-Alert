@@ -48,6 +48,7 @@ import java.util.Locale;
 import java.util.Objects;
 
 import in.aryomtech.cgalert.Fragments.Adapter.Excel_Adapter;
+import in.aryomtech.cgalert.Fragments.Adapter.Return_Adapter;
 import in.aryomtech.cgalert.Fragments.model.Excel_data;
 import in.aryomtech.cgalert.R;
 import soup.neumorphism.NeumorphButton;
@@ -69,7 +70,7 @@ public class p_pending_return extends Fragment {
     ImageView cg_logo;
     TextView no_data;
     LinkedList<String> station_name_list=new LinkedList<>();
-    Excel_Adapter excel_adapter;
+    Return_Adapter excel_adapter;
     DatabaseReference phone_numbers_ref;
     ArrayList<String> added_list;
     NeumorphButton join;
@@ -102,7 +103,7 @@ public class p_pending_return extends Fragment {
         mRecyclerView.setDrawingCacheEnabled(true);
         mRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         mRecyclerView.setLayoutManager(mManager);
-        excel_adapter= new Excel_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface,"");
+        excel_adapter= new Return_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface,"");
 
         stat_name= getContextNullSafety().getSharedPreferences("station_name_K",Context.MODE_PRIVATE)
                 .getString("the_station_name2003","");
@@ -133,13 +134,13 @@ public class p_pending_return extends Fragment {
                 }
                 String txt="Send "+"("+added_list.size()+")";
                 join.setText(txt);
-                excel_adapter.selectAll();
+                excel_adapter.selext_all();
             }
             else{
                 added_list.clear();
                 String txt="Send "+"("+added_list.size()+")";
                 join.setText(txt);
-                excel_adapter.unselectall();
+                excel_adapter.selext_all();
             }
             excel_adapter.notifyDataSetChanged();
             Log.e("added_peeps",added_list+"");
@@ -282,7 +283,7 @@ public class p_pending_return extends Fragment {
                 mylist.add(object);
             }
         }
-        excel_adapter=new Excel_Adapter(getContextNullSafety(),mylist,onClickInterface,onAgainClickInterface,"");
+        excel_adapter=new Return_Adapter(getContextNullSafety(),mylist,onClickInterface,onAgainClickInterface,"");
         excel_adapter.notifyDataSetChanged();
         if(mRecyclerView!=null)
             mRecyclerView.setAdapter(excel_adapter);
@@ -310,10 +311,10 @@ public class p_pending_return extends Fragment {
                 added_list.clear();
                 String txt="Send "+"("+added_list.size()+")";
                 join.setText(txt);
-                excel_adapter.unselectall();
+                excel_adapter.unselect_all();
                 mSwipeRefreshLayout.setRefreshing(false);
                 Collections.reverse(excel_data);
-                excel_adapter=new Excel_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface,"");
+                excel_adapter=new Return_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface,"");
                 excel_adapter.notifyDataSetChanged();
                 if(mRecyclerView!=null)
                     mRecyclerView.setAdapter(excel_adapter);

@@ -1,9 +1,16 @@
 package in.aryomtech.cgalert;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
 import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,11 +38,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.Objects;
 
 
 import in.aryomtech.cgalert.NoticeVictim.NoticemainAdmin;
+import in.aryomtech.cgalert.Writ.WritForm;
+import in.aryomtech.cgalert.Writ.WritsMain;
 import in.aryomtech.cgalert.duo_frags.about;
 import in.aryomtech.cgalert.policestation.p_Home;
 
@@ -43,17 +53,21 @@ public class Dashboard extends AppCompatActivity {
 
     LinearLayout case_diary, police_contacts, notice_victim, writ_police;
     //LottieAnimationView toolbar;
-    DatabaseReference reference;
+    DatabaseReference ref_version,reference;
+    DatabaseReference databaseReference;
     FirebaseAuth auth;
     FirebaseUser user;
     String ver="2.0";
     boolean valid_ver=false;
+    boolean isadmin=false;
     String redirect_to="";
     Toolbar toolbar;
     NavigationView navView;
     OnBackPressedListener onBackpressedListener;
     DrawerLayout drawer;
-
+    int downspeed;
+    int upspeed;
+    String DeviceToken;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,8 +90,9 @@ public class Dashboard extends AppCompatActivity {
         auth= FirebaseAuth.getInstance();
         user=auth.getCurrentUser();
 
-
-        reference=FirebaseDatabase.getInstance().getReference().child("version");
+        reference=FirebaseDatabase.getInstance().getReference().child("users");
+        ref_version=FirebaseDatabase.getInstance().getReference().child("version");
+        databaseReference= FirebaseDatabase.getInstance().getReference().child("admin");
         check_version();
         police_contacts = findViewById(R.id.linearLayout);
         case_diary = findViewById(R.id.linearLayout8);
@@ -89,6 +104,9 @@ public class Dashboard extends AppCompatActivity {
         drawer = findViewById(R.id.drawer1);
 
         setSupportActionBar(toolbar);
+
+        getting_device_token();
+        get_status_of_admin();
 
         //set default home fragment and its title
         Objects.requireNonNull(getSupportActionBar()).setTitle("");
@@ -193,11 +211,9 @@ public class Dashboard extends AppCompatActivity {
         police_contacts.setOnClickListener(v -> Dashboard.this.getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
-                .add(R.id.drawer, new DistrictData())
+                .add(R.id.drawer, new DistrictData(),"dashboard_frag")
                 .addToBackStack(null)
                 .commit());
-
-
 
         case_diary.setOnClickListener(v -> {
             if(valid_ver) {
@@ -215,7 +231,7 @@ public class Dashboard extends AppCompatActivity {
     }
 
     private void check_version() {
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+        ref_version.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
@@ -256,14 +272,13 @@ public class Dashboard extends AppCompatActivity {
     public void onBackPressed() {
         Fragment test = getSupportFragmentManager().findFragmentByTag("dashboard_frag");
         if (test != null && test.isVisible()) {
-            FragmentManager fm=getSupportFragmentManager();
-            FragmentTransaction ft=fm.beginTransaction();
-            if(fm.getBackStackEntryCount()>0) {
+            FragmentManager fm = getSupportFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            if (fm.getBackStackEntryCount() > 0) {
                 fm.popBackStack();
             }
             ft.commit();
-        }
-        else {
+        } else {
             finish();
             super.onBackPressed();
         }
@@ -283,36 +298,108 @@ public class Dashboard extends AppCompatActivity {
         super.onDestroy();
     }
 
-    /*private void get_status_of_admin() {
-        DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference().child("admin");
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                isadmin=snapshot.child(user.getPhoneNumber().substring(3)+"").exists();
-                if(isadmin){
-                    notice_victim.setOnClickListener(v -> Dashboard.this.getSupportFragmentManager()
-                            .beginTransaction()
-                            .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
-                            .add(R.id.drawer, new NoticemainAdmin())
-                            .addToBackStack(null)
-                            .commit());
+    private void check_if_token(String DeviceToken) {
+        String pkey=reference.push().getKey();
+        if(DeviceToken!=null){
+            reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {//
+                    int c=0;
+                    if(snapshot.child(user.getUid()).child("token").exists()) {
+                        for (DataSnapshot ds : snapshot.child(user.getUid()).child("token").getChildren()) {
+                            Log.e("token check", "YES");
+                            if (snapshot.child(user.getUid()).child("token").child(ds.getKey()).getValue(String.class).equals(DeviceToken)) {
+                                c = 1;
+                                Log.e("device token exists", "YES");
+                            }
+                        }
+                        if (c == 0) {
+                            Log.e("setting deivce token","Discarding");
+                            reference.child(user.getUid()).child("token").child(pkey).setValue(DeviceToken);
+                        }
+                    }
+                    else{
+                        Log.e("setting deivce token","Creating");
+                        reference.child(user.getUid()).child("token").child(pkey).setValue(DeviceToken);
+                    }
                 }
-                else{
-                    getSharedPreferences("isAdmin_or_not",MODE_PRIVATE).edit()
-                            .putBoolean("authorizing_admin",false).apply();
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {}
+            });
+        }
+    }
 
-                    notice_victim.setOnClickListener(v -> Dashboard.this.getSupportFragmentManager()
-                            .beginTransaction()
-                            .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
-                            .add(R.id.drawer, new UrgentNTV())
-                            .addToBackStack(null)
-                            .commit());
+    private void getting_device_token() {
+        ConnectivityManager connectivityManager = (ConnectivityManager)this.getSystemService(CONNECTIVITY_SERVICE);
+        NetworkCapabilities nc = connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork());
+        if(nc!=null) {
+            downspeed = nc.getLinkDownstreamBandwidthKbps()/1000;
+            upspeed = nc.getLinkUpstreamBandwidthKbps()/1000;
+        }else{
+            downspeed=0;
+            upspeed=0;
+        }
+
+        if((upspeed!=0 && downspeed!=0) || getWifiLevel()!=0) {
+            FirebaseMessaging.getInstance().getToken().addOnSuccessListener(token -> {
+                if (!TextUtils.isEmpty(token)) {
+                    Log.d("token", "retrieve token successful : " + token);
+                } else {
+                    Log.w("token121", "token should not be null...");
                 }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
-        });
-    }*/
+            }).addOnFailureListener(e -> {
+                //handle e
+            }).addOnCanceledListener(() -> {
+                //handle cancel
+            }).addOnCompleteListener(task ->
+            {
+                try {
+                    DeviceToken = task.getResult();
+                    new Handler(Looper.myLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            check_if_token(DeviceToken);
+                        }
+                    },1500);
+                    Log.e("token",DeviceToken+"");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+    }
+    public int getWifiLevel()
+    {
+        try {
+            WifiManager wifiManager = (WifiManager) this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            int linkSpeed = wifiManager.getConnectionInfo().getRssi();
+            return WifiManager.calculateSignalLevel(linkSpeed, 5);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+    private void get_status_of_admin() {
+        if (!redirect_to.equals("p_home")) {
+            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    isadmin = snapshot.child(user.getPhoneNumber().substring(3) + "").exists();
+                    if (isadmin) {
+                        getSharedPreferences("isAdmin_or_not", MODE_PRIVATE).edit()
+                                .putBoolean("authorizing_admin", true).apply();
+                    } else {
+                        getSharedPreferences("isAdmin_or_not", MODE_PRIVATE).edit()
+                                .putBoolean("authorizing_admin", false).apply();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
+        }
+    }
 
     @Override
     protected void onStart() {

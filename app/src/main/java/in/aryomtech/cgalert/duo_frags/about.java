@@ -62,18 +62,15 @@ public class about extends Fragment {
         mList.add(new ScreenItem("","माननीय महाधिवक्ता जी तथा श्रीमान पुलिस महानिदेशक जी के सानिध्य में स्थापित पुलिस लीगल सेक्शन,कैंप बिलासपुर के द्वारा     उच्च न्यायालय से संबंधित विधिक प्रक्रियाओं को पेपरलेस तथा रियल टाइम मॉनिटरिंग करने के प्रयास में इस एंड्रायड एप \"SANGYAN\" को निर्मित किया गया है।\n" +
                 "\n" +
                 "जोकि निम्नलिखित उद्देश्यों की पूर्ति करता है → ",R.drawable.cg_logo));
-        mList.add(new ScreenItem("","1) माननीय न्यायालय द्वारा आपराधिक मामलों में मांग किए जाने वाले केश डायरियों की सूचना उचित समय पर थानों तक संप्रेषित कर निर्धारित समयावधि में न्यायालय को उपलब्ध करवाना।\n" +
-                "\n" +
-                " 2) ' संज्ञान' एप के माध्यम से पुलिस विभाग से संबंधित रिट याचिकाओं की सूचना पुलिस मुख्यालय तथा संबंधित जिले के वरिष्ठ अधिकारियो तक संप्रेषित करना।\n" +
-                "\n" +
-                "3) एसटी/एससी तथा पॉक्सो से संबंधित याचिकाओं में पीड़िता/सूचनाकर्ता को आरोपी के जमानत विरोध करने के संबंध में सूचनाओं की निर्धारित समयावधि में तामिली करवाना।\n" +
-                "\n" +
-                "4) विधिक प्रक्रिया से संबंधित विभाग के दूरस्थ अधिकारियों के मध्य ' संचार एवम समन्वय' को सरल और सुगम बनाने हेतु टेलीफोन निर्देशिका का डिजिटलाइजेशन।",R.drawable.cg_logo));
-        mList.add(new ScreenItem("Operations and Managed By:-\nPolice Legal Cell, Camp Bilaspur Advocate General Office, High Court Chhattisgarh","Incharge: DSP PANKAJ AWASTHI\nWorking Staff:-\n1) SI SHWETA MISHRA GOURAHA\n2) SI(T/C) ABHINAW VERMA\n3) CONS.496 RAKESH BHARDWAJ",R.drawable.cg_logo));
-        mList.add(new ScreenItem("Man Behind The Idea\nSI(T/C) ABHINAW VERMA","Man Who guided the project from scratch to the final stage. His guidance overall made the project very efficient and easy to use.\n\nHelp & FAQ\nContact:- 8269737971\nEmail:-abhinawtheverma@gmail.com",R.drawable.cg_logo));
-        mList.add(new ScreenItem("Submission Alert","The High Court needs case diaries to be submitted on time for case hearings and this app will help the court via alerting the Police Stations.",R.drawable.ic_onboarding_one));
+        mList.add(new ScreenItem("केस डायरी अलर्ट","माननीय न्यायालय द्वारा आपराधिक मामलों में मांग किए जाने वाले केश डायरियों की सूचना उचित समय पर थानों तक संप्रेषित कर निर्धारित समयावधि में न्यायालय को उपलब्ध करवाना।",R.drawable.case_diary));
+        mList.add(new ScreenItem("रिट केस अलर्ट","'संज्ञान' एप के माध्यम से पुलिस विभाग से संबंधित रिट याचिकाओं की सूचना पुलिस मुख्यालय तथा संबंधित जिले के वरिष्ठ अधिकारियो तक संप्रेषित करना।",R.drawable.writ));
+        mList.add(new ScreenItem("पीड़ित को नोटिस","एसटी/एससी तथा पॉक्सो से संबंधित याचिकाओं में पीड़िता/सूचनाकर्ता को आरोपी के जमानत विरोध करने के संबंध में सूचनाओं की निर्धारित समयावधि में तामिली करवाना।",R.drawable.notice_to_victim));
+        mList.add(new ScreenItem("छत्तीसगढ़ पुलिस संपर्क","विधिक प्रक्रिया से संबंधित विभाग के दूरस्थ अधिकारियों के मध्य 'संचार एवम समन्वय' को सरल और सुगम बनाने हेतु टेलीफोन निर्देशिका का डिजिटलाइजेशन।",R.drawable.police_contacts));
+        mList.add(new ScreenItem("Operations and Managed By:-\nPolice Legal Cell, Camp Bilaspur Advocate General Office, High Court Chhattisgarh","Incharge: DSP PANKAJ AWASTHI\nWorking Staff:-\n1) TI SHWETA MISHRA GOURAHA\n2) SI(T/C) ABHINAW VERMA\n3) CONS.496 RAKESH BHARDWAJ",R.drawable.cg_logo));
+        mList.add(new ScreenItem("Man Behind The Idea\nSI(T/C) ABHINAW VERMA","Man who guided the project from scratch to the final stage. His guidance overall made the project very efficient and easy to use.\n\nHelp & FAQ\nContact :- 8269737971\nEmail :- abhinawtheverma@gmail.com",R.drawable.cg_logo));
+       /* mList.add(new ScreenItem("Submission Alert","The High Court needs case diaries to be submitted on time for case hearings and this app will help the court via alerting the Police Stations.",R.drawable.ic_onboarding_one));
         mList.add(new ScreenItem("How it works?","The color red indicates that the case diary is supposed to be submitted or withdrawn whereas the clock shows the number of days left for the same.",R.drawable.ic_onboarding_two));
-        mList.add(new ScreenItem("Finally","Once the diary is submitted, it will be inspected by the respective judges of the court.",R.drawable.ic_onboarding_three));
+        mList.add(new ScreenItem("Finally","Once the diary is submitted, it will be inspected by the respective judges of the court.",R.drawable.ic_onboarding_three));*/
         // setup viewpager
         screenPager =view.findViewById(R.id.screen_viewpager);
         introViewPagerAdapter = new IntroViewPagerAdapter(getContextNullSafety(),mList);

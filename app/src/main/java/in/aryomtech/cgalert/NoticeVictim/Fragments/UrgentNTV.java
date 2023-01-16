@@ -103,7 +103,7 @@ public class UrgentNTV extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_notice_main, container, false);
-
+        if (contextNullSafe == null) getContextNullSafety();
         auth= FirebaseAuth.getInstance();
         user=auth.getCurrentUser();
         search=view.findViewById(R.id.search);
@@ -225,10 +225,10 @@ public class UrgentNTV extends Fragment {
                         if (str_arg.contains("/") && not_once) {
                             String sub1 = str_arg.substring(0, str_arg.indexOf("/"));
                             String sub2 = str_arg.substring(str_arg.indexOf("/") + 1);
-                            if (list_string.get(4).contains(sub1) && list_string.get(6).contains(sub2)) {
+                            if (list_string.get(3).contains(sub1) && list_string.get(4).contains(sub2)) {
                                 count++;
                                 not_once = false;
-                            } else if (list_string.get(7).contains(sub1) && list_string.get(8).contains(sub2)) {
+                            } else if (list_string.get(12).contains(sub1) && list_string.get(2).contains(sub2)) {
                                 count++;
                                 not_once = false;
                             }
@@ -254,7 +254,7 @@ public class UrgentNTV extends Fragment {
             list_string.add(object.getAdvocate().toLowerCase());
             list_string.add(object.getCaseType().toLowerCase());
             list_string.add(object.getCaseYear().toLowerCase());
-            list_string.add(object.getCaseNo().toLowerCase());
+            list_string.add(object.getCrimeNo().toLowerCase());
             list_string.add(object.getCrimeYear().toLowerCase());
             list_string.add(object.getPushkey().toLowerCase());
             list_string.add(object.getDoc_url().toLowerCase());
@@ -337,7 +337,7 @@ public class UrgentNTV extends Fragment {
                                     String pdf_link = Objects.requireNonNull(task1.getResult()).toString();
                                     reference.child(card_key).child("uploaded_file").setValue(pdf_link);
                                     Calendar cal = Calendar.getInstance();
-                                    SimpleDateFormat simpleDateFormat=new SimpleDateFormat("EEEE, dd MMMM yyyy HH:mm a", Locale.getDefault());
+                                    SimpleDateFormat simpleDateFormat=new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
                                     reference.child(card_key).child("uploaded_date").setValue(simpleDateFormat.format(cal.getTime()));
                                     dialog1.dismiss();
                                     Snackbar.make(recyclerView,"Pdf Uploaded Successfully.",Snackbar.LENGTH_LONG)
@@ -355,7 +355,7 @@ public class UrgentNTV extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
                     for(DataSnapshot ds:snapshot.getChildren()){
-                        if(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("name").getValue(String.class)).equals("admin")){
+                        if(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("name").getValue(String.class)).equals("admin2.0")){
                             for(DataSnapshot ds_token:snapshot.child(ds.getKey()).child("token").getChildren()){
                                 String token=snapshot.child(ds.getKey()).child("token").child(Objects.requireNonNull(ds_token.getKey())).getValue(String.class);
                                 Specific specific=new Specific();
@@ -397,19 +397,23 @@ public class UrgentNTV extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for(DataSnapshot ds:snapshot.getChildren()){
-                    try {
-                        Date dNow = new Date();
-                        SimpleDateFormat ft =
-                                new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
+                    if(snapshot.child(ds.getKey()).child("district").exists()) {
+                        if (snapshot.child(ds.getKey()).child("advocate").exists()) {
+                            try {
+                                Date dNow = new Date();
+                                SimpleDateFormat ft =
+                                        new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
 
-                        Date list1 = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(snapshot.child(ds.getKey()).child("hearingDate").getValue(String.class) + "");
-                        Date current = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(ft.format(dNow));
-                        Log.e("date", list1.before(current) + "");
-                        if (list1.before(current)) {
-                            list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
+                                Date list1 = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(snapshot.child(ds.getKey()).child("hearingDate").getValue(String.class) + "");
+                                Date current = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(ft.format(dNow));
+                                Log.e("date", list1.before(current) + "");
+                                if (list1.before(current)) {
+                                    list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
+                                }
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    } catch (ParseException e) {
-                        e.printStackTrace();
                     }
                 }
                 if(list.size()!=0){
@@ -437,21 +441,25 @@ public class UrgentNTV extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for (DataSnapshot ds:snapshot.getChildren()) {
-                    try {
-                        Date dNow = new Date();
-                        SimpleDateFormat ft =
-                                new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
+                    if(snapshot.child(ds.getKey()).child("district").exists()) {
+                        if (snapshot.child(ds.getKey()).child("advocate").exists()) {
+                            try {
+                                Date dNow = new Date();
+                                SimpleDateFormat ft =
+                                        new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
 
-                        Date list1 = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(snapshot.child(ds.getKey()).child("hearingDate").getValue(String.class) + "");
-                        Date current = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(ft.format(dNow));
-                        Log.e("date", list1.before(current) + "");
-                        if (list1.before(current)) {
-                            if (Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase().equals(sp_of)) {
-                                list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
+                                Date list1 = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(snapshot.child(ds.getKey()).child("hearingDate").getValue(String.class) + "");
+                                Date current = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(ft.format(dNow));
+                                Log.e("date", list1.before(current) + "");
+                                if (list1.before(current)) {
+                                    if (Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase().equals(sp_of)) {
+                                        list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
+                                    }
+                                }
+                            } catch (ParseException e) {
+                                e.printStackTrace();
                             }
                         }
-                    } catch (ParseException e) {
-                        e.printStackTrace();
                     }
                 }
                 if(list.size()!=0){
@@ -478,22 +486,26 @@ public class UrgentNTV extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for (DataSnapshot ds:snapshot.getChildren()) {
-                    try {
-                        Date dNow = new Date();
-                        SimpleDateFormat ft =
-                                new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
+                    if(snapshot.child(ds.getKey()).child("district").exists()) {
+                        if (snapshot.child(ds.getKey()).child("advocate").exists()) {
+                            try {
+                                Date dNow = new Date();
+                                SimpleDateFormat ft =
+                                        new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
 
-                        Date list1 = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(snapshot.child(ds.getKey()).child("hearingDate").getValue(String.class) + "");
-                        Date current = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(ft.format(dNow));
-                        Log.e("date", list1.before(current) + "");
-                        if (list1.before(current)) {
-                            if (tinyDB.getListString("districts_list").contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())
-                                    && tinyDB.getListString("stations_list").contains("PS "+Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("station").getValue(String.class)).trim().toUpperCase())) {
-                                list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
+                                Date list1 = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(snapshot.child(ds.getKey()).child("hearingDate").getValue(String.class) + "");
+                                Date current = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(ft.format(dNow));
+                                Log.e("date", list1.before(current) + "");
+                                if (list1.before(current)) {
+                                    if (tinyDB.getListString("districts_list").contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())
+                                            && tinyDB.getListString("stations_list").contains("PS " + Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("station").getValue(String.class)).trim().toUpperCase())) {
+                                        list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
+                                    }
+                                }
+                            } catch (ParseException e) {
+                                e.printStackTrace();
                             }
                         }
-                    } catch (ParseException e) {
-                        e.printStackTrace();
                     }
                 }
                 if(list.size()!=0){
@@ -520,21 +532,25 @@ public class UrgentNTV extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for (DataSnapshot ds:snapshot.getChildren()) {
-                    try {
-                        Date dNow = new Date();
-                        SimpleDateFormat ft =
-                                new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
+                    if(snapshot.child(ds.getKey()).child("district").exists()) {
+                        if (snapshot.child(ds.getKey()).child("advocate").exists()) {
+                            try {
+                                Date dNow = new Date();
+                                SimpleDateFormat ft =
+                                        new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
 
-                        Date list1 = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(snapshot.child(ds.getKey()).child("hearingDate").getValue(String.class) + "");
-                        Date current = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(ft.format(dNow));
-                        Log.e("date", list1.before(current) + "");
-                        if (list1.before(current)) {
-                            if (tinyDB.getListString("districts_list").contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())) {
-                                list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
+                                Date list1 = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(snapshot.child(ds.getKey()).child("hearingDate").getValue(String.class) + "");
+                                Date current = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(ft.format(dNow));
+                                Log.e("date", list1.before(current) + "");
+                                if (list1.before(current)) {
+                                    if (tinyDB.getListString("districts_list").contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())) {
+                                        list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
+                                    }
+                                }
+                            } catch (ParseException e) {
+                                e.printStackTrace();
                             }
                         }
-                    } catch (ParseException e) {
-                        e.printStackTrace();
                     }
                 }
                 if(list.size()!=0){
@@ -560,21 +576,25 @@ public class UrgentNTV extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for (DataSnapshot ds:snapshot.getChildren()) {
-                    try {
-                        Date dNow = new Date();
-                        SimpleDateFormat ft =
-                                new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
+                    if(snapshot.child(ds.getKey()).child("district").exists()) {
+                        if (snapshot.child(ds.getKey()).child("advocate").exists()) {
+                            try {
+                                Date dNow = new Date();
+                                SimpleDateFormat ft =
+                                        new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
 
-                        Date list1 = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(snapshot.child(ds.getKey()).child("hearingDate").getValue(String.class) + "");
-                        Date current = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(ft.format(dNow));
-                        Log.e("date", list1.before(current) + "");
-                        if (list1.before(current)) {
-                            if ((Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("station").getValue(String.class)).trim()).toUpperCase().equals(stat_name.substring(3).trim())) {
-                                list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
+                                Date list1 = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(snapshot.child(ds.getKey()).child("hearingDate").getValue(String.class) + "");
+                                Date current = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(ft.format(dNow));
+                                Log.e("date", list1.before(current) + "");
+                                if (list1.before(current)) {
+                                    if ((Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("station").getValue(String.class)).trim()).toUpperCase().equals(stat_name.substring(3).trim())) {
+                                        list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
+                                    }
+                                }
+                            } catch (ParseException e) {
+                                e.printStackTrace();
                             }
                         }
-                    } catch (ParseException e) {
-                        e.printStackTrace();
                     }
                 }
                 if(list.size()!=0){

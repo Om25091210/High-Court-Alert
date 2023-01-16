@@ -14,14 +14,12 @@ import android.util.Log
 import android.widget.RemoteViews
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import java.util.*
 import kotlin.random.Random
 
 
@@ -55,19 +53,19 @@ class FirebaseService : FirebaseMessagingService(){
             applicationContext,
             notificationID,
             intent,
-            PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_MUTABLE
         )
-
+        //TODO: Change mutable to flag update current
         val contentView = RemoteViews(this.packageName, R.layout.notification_layout)
         contentView.setImageViewResource(R.id.image, R.mipmap.ic_launcher_foreground)
         contentView.setOnClickPendingIntent(R.id.flashButton, pendingIntent)
         contentView.setTextViewText(R.id.message, message.data["title"])
-        contentView.setTextViewText(R.id.date, message.data["message"])
+        contentView.setTextViewText(R.id.date, message.data["body"])
 
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle(message.data["title"])
-            .setContentText(message.data["message"])
-            .setStyle(NotificationCompat.BigTextStyle().bigText(message.data["message"]))
+            .setContentText(message.data["body"])
+            .setStyle(NotificationCompat.BigTextStyle().bigText(message.data["body"]))
             .setSmallIcon(R.drawable.ic_cap)
             .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.ic_cap))
             .setAutoCancel(true)

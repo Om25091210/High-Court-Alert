@@ -344,32 +344,7 @@ public class Login extends AppCompatActivity {
                     getSharedPreferences("useris?",MODE_PRIVATE).edit()
                             .putString("the_user_is?","p_home").apply();
 
-                    if(DeviceToken!=null){
-                        user_reference.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {//.child(user.getUid()).child("token")
-                                int c=0;
-                                if(snapshot.child(user.getUid()).child("token").exists()) {
-                                    for (DataSnapshot ds : snapshot.child(user.getUid()).child("token").getChildren()) {
-                                        Log.e("forloop", "YES");
-                                        if (Objects.requireNonNull(snapshot.child(user.getUid()).child("token").child(Objects.requireNonNull(ds.getKey())).getValue(String.class)).equals(DeviceToken)) {
-                                            c = 1;
-                                            Log.e("loop if", "YES");
-                                        }
-                                    }
-                                    if (c == 0) {
-                                        user_reference.child(user.getUid()).child("token").child(pkey).setValue(DeviceToken);
-                                    }
-                                }
-                                else{
-                                    user_reference.child(user.getUid()).child("token").child(pkey).setValue(DeviceToken);
-                                }
-                            }
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {}
-                        });
-                    }
-
+                    check_device_token(pkey);
                     user=mAuth.getCurrentUser();
                     countDownTimer.cancel();
                     user_reference.child(user.getUid()).child("phone").setValue(user.getPhoneNumber());
@@ -385,31 +360,7 @@ public class Login extends AppCompatActivity {
                     getSharedPreferences("useris?",MODE_PRIVATE).edit()
                             .putString("the_user_is?","home").apply();
 
-                    if(DeviceToken!=null){
-                        user_reference.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {//.child(user.getUid()).child("token")
-                                int c=0;
-                                if(snapshot.child(user.getUid()).child("token").exists()) {
-                                    for (DataSnapshot ds : snapshot.child(user.getUid()).child("token").getChildren()) {
-                                        Log.e("forloop", "YES");
-                                        if (Objects.requireNonNull(snapshot.child(user.getUid()).child("token").child(Objects.requireNonNull(ds.getKey())).getValue(String.class)).equals(DeviceToken)) {
-                                            c = 1;
-                                            Log.e("loop if", "YES");
-                                        }
-                                    }
-                                    if (c == 0) {
-                                        user_reference.child(user.getUid()).child("token").child(pkey).setValue(DeviceToken);
-                                    }
-                                }
-                                else{
-                                    user_reference.child(user.getUid()).child("token").child(pkey).setValue(DeviceToken);
-                                }
-                            }
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {}
-                        });
-                    }
+                    check_device_token(pkey);
 
                     user = mAuth.getCurrentUser();
                     countDownTimer.cancel();
@@ -463,6 +414,35 @@ public class Login extends AppCompatActivity {
         });
     }
 
+    private void check_device_token(String pkey) {
+        if(DeviceToken!=null){
+            user_reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {//.child(user.getUid()).child("token")
+                    int c=0;
+                    if(snapshot.child(user.getUid()).child("token").exists()) {
+                        for (DataSnapshot ds : snapshot.child(user.getUid()).child("token").getChildren()) {
+                            Log.e("forloop", "YES");
+                            if (Objects.requireNonNull(snapshot.child(user.getUid()).child("token").child(Objects.requireNonNull(ds.getKey())).getValue(String.class)).equals(DeviceToken)) {
+                                c = 1;
+                                Log.e("loop if", "YES");
+                            }
+                        }
+                        if (c == 0) {
+                            user_reference.child(user.getUid()).child("token").child(pkey).setValue(DeviceToken);
+                        }
+                    }
+                    else{
+                        user_reference.child(user.getUid()).child("token").child(pkey).setValue(DeviceToken);
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {}
+            });
+        }
+
+    }
+
     private void check_for_admin() {
         Log.e("Entered count","Admin body");
         String pkey=user_reference.push().getKey();
@@ -482,39 +462,14 @@ public class Login extends AppCompatActivity {
                     getSharedPreferences("useris?",MODE_PRIVATE).edit()
                             .putString("the_user_is?","home").apply();
 
-                    if(DeviceToken!=null){
+                    check_device_token(pkey);
 
-                        user_reference.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {//.child(user.getUid()).child("token")
-                                int c=0;
-                                if(snapshot.child(user.getUid()).child("token").exists()) {
-                                    for (DataSnapshot ds : snapshot.child(user.getUid()).child("token").getChildren()) {
-                                        Log.e("forloop", "YES");
-                                        if (Objects.requireNonNull(snapshot.child(user.getUid()).child("token").child(Objects.requireNonNull(ds.getKey())).getValue(String.class)).equals(DeviceToken)) {
-                                            c = 1;
-                                            Log.e("loop if", "YES");
-                                        }
-                                    }
-                                    if (c == 0) {
-                                        user_reference.child(user.getUid()).child("token").child(pkey).setValue(DeviceToken);
-                                    }
-                                }
-                                else{
-                                    Log.e("tokn",pkey+"");
-                                    user_reference.child(user.getUid()).child("token").child(pkey).setValue(DeviceToken);
-                                }
-                            }
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {}
-                        });
-                    }
                     TinyDB tinyDB=new TinyDB(Login.this);
                     tinyDB.putBoolean("entered_select_district",true);
                     user=mAuth.getCurrentUser();
                     countDownTimer.cancel();
                     user_reference.child(user.getUid()).child("phone").setValue(user.getPhoneNumber());
-                    user_reference.child(user.getUid()).child("name").setValue("admin");
+                    user_reference.child(user.getUid()).child("name").setValue("admin2.0");
                     user_reference.child(user.getUid()).child(Objects.requireNonNull(user.getPhoneNumber()).substring(3)).setValue(user.getPhoneNumber());
                     Intent i = new Intent(Login.this, Dashboard.class);
                     startActivity(i);

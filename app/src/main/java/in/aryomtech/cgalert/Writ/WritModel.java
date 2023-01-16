@@ -17,6 +17,7 @@ public class WritModel {
     private String caseNo;
     private String caseYear;
     private String timeLimit;
+    private String decisionDate;
     private ArrayList<String> appellants;
     private ArrayList<String> respondents;
 
@@ -24,7 +25,7 @@ public class WritModel {
     }
 
     public WritModel(String judgement, String dSummary, String dateOfFiling, String dateReply, String district, String dueDate, String judgementDate, String nature, String pushkey, String summary,
-                     String caseYear, String caseNo ,String timeLimit, ArrayList<String> appellants, ArrayList<String> respondents) {
+                     String caseYear, String caseNo ,String timeLimit, ArrayList<String> appellants, ArrayList<String> respondents,String decisionDate) {
         Judgement = judgement;
         this.dSummary = dSummary;
         this.dateOfFiling = dateOfFiling;
@@ -39,6 +40,7 @@ public class WritModel {
         this.appellants = appellants;
         this.caseNo = caseNo;
         this.caseYear = caseYear;
+        this.decisionDate = decisionDate;
     }
 
     public String getCaseNo() {
@@ -101,5 +103,7 @@ public class WritModel {
         return timeLimit;
     }
 
-
+    public String getDecisionDate() {
+        return decisionDate;
+    }
 }

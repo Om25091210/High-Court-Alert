@@ -16,12 +16,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -62,6 +66,10 @@ public class UrgentWrits extends Fragment {
     TextView no_data;
     SwipeRefreshLayout mSwipeRefreshLayout;
     String ps_or_admin="";
+    EditText search;
+    List<String> list_string=new ArrayList<>();
+    WritAdapter adapter;
+    List<WritModel> mylist;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -79,6 +87,8 @@ public class UrgentWrits extends Fragment {
         no_data=view.findViewById(R.id.no_data);
         recyclerView = view.findViewById(R.id.rv);
         list = new ArrayList<>();
+        search = view.findViewById(R.id.search);
+        mylist= new ArrayList<>();
         tinyDB=new TinyDB(getContextNullSafety());
         mSwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         LinearLayoutManager mManager = new LinearLayoutManager(getContextNullSafety());
@@ -131,15 +141,23 @@ public class UrgentWrits extends Fragment {
             else
                 getdata_for_sp();
         });
+
+        search.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {}
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                search(s+"");
+            }
+        });
+
+
         OnBackPressedCallback callback=new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                FragmentManager fm = ((FragmentActivity) getContextNullSafety()).getSupportFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                if (fm.getBackStackEntryCount() > 0) {
-                    fm.popBackStack();
-                }
-                ft.commit();
+                ((FragmentActivity) getContextNullSafety()).finish();
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),callback);
@@ -347,6 +365,71 @@ public class UrgentWrits extends Fragment {
 
             }
         });*/
+    }
+
+    private void convert_to_list(WritModel object) {
+        list_string.clear();
+        try{
+            list_string.add(object.getDistrict().toLowerCase());
+            list_string.add(object.getJudgement().toLowerCase());
+            list_string.add(object.getCaseYear().toLowerCase());
+            list_string.add(object.getCaseNo().toLowerCase());
+            list_string.add(object.getNature().toLowerCase());
+            list_string.add(object.getPushkey().toLowerCase());
+            list_string.add(object.getDateOfFiling().toLowerCase());
+            list_string.add(object.getDistrict().toLowerCase());
+            list_string.add(object.getJudgementDate().toLowerCase());
+            list_string.add(object.getDueDate().toLowerCase());
+            list_string.add(String.valueOf(object.getAppellants()));
+            list_string.add(String.valueOf(object.getRespondents()));
+            list_string.add(object.getSummary().toLowerCase());
+            list_string.add(object.getdSummary().toLowerCase());
+        }
+        catch (NullPointerException e){
+            System.out.println("Error");
+        }
+    }
+
+    private void search(String str) {
+        if (str.equals("")) {
+            adapter = new WritAdapter(list, getContextNullSafety());
+            recyclerView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        } else {
+            String[] str_Args = str.toLowerCase().split(" ");
+            mylist.clear();
+            int count = 0;
+            boolean not_once = true;
+            List<Integer> c_list = new ArrayList<>();
+            for (WritModel object : list) {
+                convert_to_list(object);
+                for (String s : list_string) {
+                    for (String str_arg : str_Args) {
+                        if (str_arg.contains("/") && not_once) {
+                            String sub1 = str_arg.substring(0, str_arg.indexOf("/"));
+                            String sub2 = str_arg.substring(str_arg.indexOf("/") + 1);
+                            if (list_string.get(4).contains(sub1) && list_string.get(6).contains(sub2)) {
+                                count++;
+                                not_once = false;
+                            } else if (list_string.get(7).contains(sub1) && list_string.get(8).contains(sub2)) {
+                                count++;
+                                not_once = false;
+                            }
+                        } else if (s.contains(str_arg)) {
+                            count++;
+                        }
+                    }
+                }
+                c_list.add(count);
+                System.out.println(c_list + "");
+                if (count == str_Args.length)
+                    mylist.add(object);
+                count = 0;
+            }
+            adapter = new WritAdapter(mylist, getContextNullSafety());
+            recyclerView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        }
     }
 
 

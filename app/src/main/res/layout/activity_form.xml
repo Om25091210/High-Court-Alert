@@ -423,7 +423,7 @@
                 android:paddingTop="15dp"
                 android:paddingBottom="15dp"
                 android:layout_marginBottom="30dp"
-                android:text="@string/download"
+                android:text="@string/view"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 tools:ignore="TextContrastCheck"

@@ -5,12 +5,12 @@ plugins {
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-android'
 android {
-    compileSdk 31
+    compileSdk 32
 
     defaultConfig {
         applicationId "in.aryomtech.cgalert"
         minSdk 23
-        targetSdk 31
+        targetSdk 32
         versionCode 1
         versionName "1.0"
 
@@ -119,4 +119,6 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.9'
     //Firestore
     implementation 'com.google.firebase:firebase-firestore'
+    //library
+    implementation project(':mylibrary')
 }
