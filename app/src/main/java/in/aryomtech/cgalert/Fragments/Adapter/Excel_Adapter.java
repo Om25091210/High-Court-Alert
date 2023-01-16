@@ -204,7 +204,7 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
                 "Name - " + list.get(position).getF()+  "\n" +
                 "Crime No. - " + list.get(position).getH() +"/"+ list.get(position).getI()+  "\n" +
                 "Received - " + list.get(position).getJ() + "\n\n"
-                + "उपरोक्त मूल केश डायरी दिनाँक "+list.get(position).getL()+" तक बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय छतीसगढ़ में  अनिवार्यतः जमा करें।";
+                + "उपरोक्त मूल केस डायरी दिनाँक "+list.get(position).getL()+" तक बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय छतीसगढ़ में अनिवार्यतः जमा करें।";
 
         holder.share.setOnClickListener(v->{
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
