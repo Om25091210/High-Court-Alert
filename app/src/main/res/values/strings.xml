@@ -159,7 +159,7 @@
     <string name="due_date">Due Date</string>
     <string name="detailed_summary">Detailed Summary</string>
     <string name="judgement_summary">Judgement Summary</string>
-    <string name="due_dateo">Due date -</string>
+    <string name="due_dateo">Due days -</string>
     <string name="nature_of_the_caseo">Nature of the Case -</string>
     <string name="add_attachment">Add Attachment</string>
     <string name="name_of_the_appellant">Name of the Appellant</string>
@@ -174,6 +174,7 @@
     <string name="synopsis_of_the_case">Synopsis of the Case</string>
     <string name="judgement_summary_of_the_case">Judgement Summary of the Case</string>
     <string name="deciding_date">Deciding Date</string>
+    <string name="judgement_summary_">Judgement Summary -</string>
 
 
     <array name="menuOptions">

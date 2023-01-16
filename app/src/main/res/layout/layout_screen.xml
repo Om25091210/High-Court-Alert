@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="340dp" />
+        app:layout_constraintGuide_percent="0.5" />
 
     <TextView
         android:id="@+id/intro_title"
@@ -25,7 +25,7 @@
         android:layout_marginBottom="8dp"
         android:text=""
         android:textColor="@color/intro_title_color"
-        android:textSize="17sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         android:fontFamily="@font/quicksand_bold"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
@@ -45,11 +45,11 @@
         android:layout_marginRight="32dp"
         android:layout_marginBottom="8dp"
         android:text=""
-        android:textSize="13sp"
+        android:textSize="15sp"
         android:textStyle="bold"
         android:textColor="@color/use_blue"
         android:fontFamily="@font/quicksand_medium"
-        android:textAlignment="center"
+        android:textAlignment="textStart"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

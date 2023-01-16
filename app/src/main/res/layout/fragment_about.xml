@@ -11,7 +11,7 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="45dp"
         android:fontFamily="@font/quicksand_medium"
         android:text="@string/welcome_to_high_court_alert"
         android:textColor="@color/use_orange"
