@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
-import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -84,44 +83,6 @@ public class p_Home extends AppCompatActivity{
 
         getting_device_token();
         check_if_token();
-        findViewById(R.id.card_fb).setOnClickListener(s-> {
-            String facebookUrl ="https://www.facebook.com/chhattisgarh.police";
-            Intent facebookAppIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(facebookUrl));
-            facebookAppIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-            startActivity(facebookAppIntent);
-        });
-        findViewById(R.id.card_twitter).setOnClickListener(s->{
-            String url = "https://twitter.com/CG_Police";
-            Intent twitterAppIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-            twitterAppIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-            startActivity(twitterAppIntent);
-        });
-
-        findViewById(R.id.card_whatsapp).setOnClickListener(s->{
-            String url = "https://api.whatsapp.com/send?phone=" +"+91"+ "8269737971";
-            try {
-                PackageManager pm = getPackageManager();
-                pm.getPackageInfo("com.whatsapp", PackageManager.GET_ACTIVITIES);
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(url));
-                startActivity(i);
-            } catch (PackageManager.NameNotFoundException e) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-            }
-        });
-        findViewById(R.id.card_insta).setOnClickListener(s->{
-            Intent insta_in;
-            String scheme = "http://instagram.com/_u/"+"chhattisgarhpolice_";
-            String path = "https://instagram.com/"+"chhattisgarhpolice_";
-            String nomPackageInfo ="com.instagram.android";
-            try {
-                getPackageManager().getPackageInfo(nomPackageInfo, 0);
-                insta_in = new Intent(Intent.ACTION_VIEW, Uri.parse(scheme));
-            } catch (Exception e) {
-                insta_in = new Intent(Intent.ACTION_VIEW, Uri.parse(path));
-            }
-            startActivity(insta_in);
-        });
 
     }
 
