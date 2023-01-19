@@ -100,6 +100,18 @@ class FirebaseService : FirebaseMessagingService(){
                 override fun onCancelled(error: DatabaseError) {}
             })
         }
+        else if(message.data["section"].equals("writ")){
+            val reference = FirebaseDatabase.getInstance().reference.child("writ")
+            reference.child(message.data["key"]+"").addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        reference.child("" + message.data["key"]).child("sent").setValue("1")
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {}
+            })
+        }
 
 
     }

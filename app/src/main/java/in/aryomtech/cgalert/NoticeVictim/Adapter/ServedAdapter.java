@@ -1,5 +1,7 @@
 package in.aryomtech.cgalert.NoticeVictim.Adapter;
 
+import static android.provider.Settings.System.getString;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
@@ -131,8 +133,13 @@ public class ServedAdapter extends RecyclerView.Adapter<ServedAdapter.ViewHolder
         });
         holder.download.setOnClickListener(v->{
             try {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(list.get(position).getDoc_url()));
-                context.startActivity(browserIntent);
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW);
+                browserIntent.setDataAndType(Uri.parse(list.get(position).getDoc_url()), "application/pdf");
+
+                Intent chooser = Intent.createChooser(browserIntent, "View PDF");
+                chooser.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // optional
+
+                context.startActivity(chooser);
             } catch (Exception e) {
                 e.printStackTrace();
             }

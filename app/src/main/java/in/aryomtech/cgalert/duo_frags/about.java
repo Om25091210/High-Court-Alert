@@ -41,8 +41,6 @@ public class about extends Fragment {
     Button btnNext;
     int position = 0 ;
     private Context contextNullSafe;
-    FirebaseAuth auth;
-    FirebaseUser user;
     Animation btnAnim ;
     View view;
 

@@ -1,16 +1,15 @@
 package in.aryomtech.cgalert.Writ.Adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.FirebaseDatabase;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -22,12 +21,11 @@ public class RespondentAdapter extends RecyclerView.Adapter<RespondentAdapter.Vi
 
     Context context;
     ArrayList<String> task_list;
-    String pushkey;
-    Task<Void> reference;
-    public RespondentAdapter(Context context, ArrayList<String> task_list, String pushkey) {
+    int flag;
+    public RespondentAdapter(Context context, ArrayList<String> task_list, int i) {
         this.context=context;
         this.task_list=task_list;
-        this.pushkey = pushkey;
+        this.flag=i;
     }
 
     @NonNull
@@ -40,9 +38,13 @@ public class RespondentAdapter extends RecyclerView.Adapter<RespondentAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull ViewHolder holder, int position) {
-
+        if(flag==1){
+            holder.tick.setVisibility(View.VISIBLE);
+        }
+        else{
+            holder.tick.setVisibility(View.GONE);
+        }
         holder.textView.setText(task_list.get(position));
-        reference = FirebaseDatabase.getInstance().getReference().child("writ").child(pushkey).child("respondents").setValue(task_list);
     }
 
     @Override
@@ -52,10 +54,11 @@ public class RespondentAdapter extends RecyclerView.Adapter<RespondentAdapter.Vi
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView textView;
-
+        ImageView tick;
         public ViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
             textView=itemView.findViewById(R.id.text_View);
+            tick=itemView.findViewById(R.id.tick);
         }
     }
 }

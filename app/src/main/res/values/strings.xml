@@ -175,6 +175,9 @@
     <string name="judgement_summary_of_the_case">Judgement Summary of the Case</string>
     <string name="deciding_date">Deciding Date</string>
     <string name="judgement_summary_">Judgement Summary -</string>
+    <string name="enter_district">Enter District</string>
+    <string name="officer">Officer</string>
+    <string name="fetching_data">Fetching data . . .</string>
 
 
     <array name="menuOptions">

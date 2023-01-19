@@ -180,7 +180,7 @@
                 android:background="@drawable/bg_edt_text"
                 android:ems="10"
                 android:gravity="start|top"
-                android:hint="Enter District"
+                android:hint="@string/enter_district"
                 android:inputType="textNoSuggestions"
                 android:padding="15dp"
                 android:textSize="16sp"
@@ -374,6 +374,7 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:padding="13dp"
+                    android:contentDescription="@string/image"
                     android:layout_weight="1"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
@@ -381,6 +382,23 @@
                     android:backgroundTint="@color/use_orange"
                     android:src="@drawable/link_clip"
                     app:tint="@color/white" />
+
+                <ImageView
+                    android:id="@+id/voice_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:padding="13dp"
+                    android:contentDescription="@string/image"
+                    android:layout_weight="1"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/bg_card_red"
+                    android:backgroundTint="@color/use_orange"
+                    android:src="@drawable/ic_voice"
+                    app:tint="@color/white" />
+
                 <TextView
                     android:id="@+id/send"
                     android:layout_width="match_parent"

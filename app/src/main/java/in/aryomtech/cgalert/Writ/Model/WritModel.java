@@ -11,21 +11,25 @@ public class WritModel {
     private String district;
     private String dueDate;
     private String judgementDate;
-    private String nature;
+    private String case_nature;
     private String pushkey;
     private String summary;
     private String caseNo;
     private String caseYear;
     private String timeLimit;
     private String decisionDate;
-    private ArrayList<String> appellants;
+    private String uploaded_date;
+    private String uploaded_file;
+    private ArrayList<String> appellant;
     private ArrayList<String> respondents;
+    private String reminded;
+    private String seen;
+    private String sent;
 
     public WritModel() {
     }
 
-    public WritModel(String judgement, String dSummary, String dateOfFiling, String dateReply, String district, String dueDate, String judgementDate, String nature, String pushkey, String summary,
-                     String caseYear, String caseNo ,String timeLimit, ArrayList<String> appellants, ArrayList<String> respondents,String decisionDate) {
+    public WritModel(String judgement, String dSummary, String dateOfFiling, String dateReply, String district, String dueDate, String judgementDate, String case_nature, String pushkey, String summary, String caseNo, String caseYear, String timeLimit, String decisionDate, String uploaded_date, String uploaded_file, ArrayList<String> appellant, ArrayList<String> respondents, String reminded) {
         Judgement = judgement;
         this.dSummary = dSummary;
         this.dateOfFiling = dateOfFiling;
@@ -33,14 +37,42 @@ public class WritModel {
         this.district = district;
         this.dueDate = dueDate;
         this.judgementDate = judgementDate;
-        this.nature = nature;
+        this.case_nature = case_nature;
         this.pushkey = pushkey;
         this.summary = summary;
-        this.timeLimit = timeLimit;
-        this.appellants = appellants;
         this.caseNo = caseNo;
         this.caseYear = caseYear;
+        this.timeLimit = timeLimit;
         this.decisionDate = decisionDate;
+        this.uploaded_date = uploaded_date;
+        this.uploaded_file = uploaded_file;
+        this.appellant = appellant;
+        this.respondents = respondents;
+        this.reminded = reminded;
+    }
+
+    public String getSeen() {
+        return seen;
+    }
+
+    public String getSent() {
+        return sent;
+    }
+
+    public ArrayList<String> getAppellant() {
+        return appellant;
+    }
+
+    public String getReminded() {
+        return reminded;
+    }
+
+    public String getUploaded_date() {
+        return uploaded_date;
+    }
+
+    public String getUploaded_file() {
+        return uploaded_file;
     }
 
     public String getCaseNo() {
@@ -79,12 +111,8 @@ public class WritModel {
         return judgementDate;
     }
 
-    public String getNature() {
-        return nature;
-    }
-
-    public ArrayList<String> getAppellants() {
-        return appellants;
+    public String getCase_nature() {
+        return case_nature;
     }
 
     public ArrayList<String> getRespondents() {

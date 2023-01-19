@@ -63,10 +63,6 @@ dependencies {
 
     //httpclient
     implementation 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
-
-    //Library
-    implementation project(':myapplication2')
-
     //Lottie
     implementation "com.airbnb.android:lottie:3.7.0"
     //motion toast

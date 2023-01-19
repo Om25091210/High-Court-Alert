@@ -1,58 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/bg_card_red"
-    android:layout_marginTop="20dp"
-    android:layout_marginEnd="20dp"
-    android:id="@+id/writ_layout"
-    android:layout_marginHorizontal="20dp"
-    android:layout_marginStart="20dp"
-    android:padding="10dp"
-    android:layout_height="wrap_content">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ProgressBar
+        android:id="@+id/progressBar2"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:theme="@style/CircularProgress"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/seen"
-        android:layout_width="@dimen/_20sdp"
-        android:layout_height="@dimen/_20sdp"
-        android:layout_marginTop="10dp"
-        android:padding="2dp"
+        android:id="@+id/imageView4"
+        android:layout_width="@dimen/_30sdp"
+        android:layout_height="@dimen/_30sdp"
+        android:padding="@dimen/_10sdp"
         android:layout_marginStart="20dp"
-        android:contentDescription="@string/app_name"
-        android:src="@drawable/ic_seen"
-        android:visibility="gone"
+        android:background="@drawable/bg_back_view"
+        android:backgroundTint="@color/use_neumorph_orange"
+        android:contentDescription="@string/image"
+        android:src="@drawable/ic_back"
+        app:layout_constraintBottom_toBottomOf="@+id/tit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tit"
+        tools:ignore="ImageContrastCheck" />
+
+    <soup.neumorphism.NeumorphCardView
+        android:id="@+id/tit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/use_light_blue" />
+        app:neumorph_lightSource="leftTop"
+        app:neumorph_shadowColorDark="@color/veryLightGrey"
+        app:neumorph_shadowColorLight="@color/off_white"
+        app:neumorph_shadowElevation="7dp"
+        app:neumorph_shapeType="flat"
+        tools:ignore="MissingConstraints">
 
-    <ImageView
-        android:id="@+id/notified"
-        android:layout_width="@dimen/_22sdp"
-        android:layout_height="@dimen/_22sdp"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="20dp"
-        android:padding="2dp"
-        android:contentDescription="@string/app_name"
-        android:src="@drawable/ic_bell"
-        android:visibility="gone"
-        app:layout_constraintStart_toEndOf="@+id/seen"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/use_light_blue" />
+        <TextView
+            android:id="@+id/textView47"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/quicksand_bold"
+            android:gravity="center"
+            android:paddingStart="20dp"
+            android:paddingTop="5dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="5dp"
+            android:text="@string/notification"
+            android:textColor="@color/use_orange"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
-    <ImageView
-        android:id="@+id/share"
-        android:layout_width="@dimen/_20sdp"
-        android:layout_height="@dimen/_20sdp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginTop="10dp"
-        android:padding="2dp"
-        android:contentDescription="@string/app_name"
-        android:src="@drawable/ic_share"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/use_light_blue" />
+    </soup.neumorphism.NeumorphCardView>
 
     <ImageView
         android:id="@+id/imageView2"
@@ -69,16 +79,30 @@
         app:layout_constraintTop_toTopOf="@+id/share"
         tools:ignore="ImageContrastCheck" />
 
+    <ImageView
+        android:id="@+id/share"
+        android:layout_width="@dimen/_22sdp"
+        android:layout_height="@dimen/_22sdp"
+        android:layout_marginEnd="15dp"
+        android:padding="2dp"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/ic_share"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tit"
+        app:tint="@color/use_light_blue" />
 
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/share">
+        app:layout_constraintTop_toBottomOf="@+id/imageView2">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -219,210 +243,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="@tools:sample/us_phones" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/parent_dist"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/quicksand_bold"
-                android:text="Appellants - "
-                android:textColor="@color/use_light_blue"
-                android:textSize="@dimen/_11sdp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/appellants"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="10dp"
-                android:ellipsize="end"
-                android:fontFamily="@font/quicksand_bold"
-                android:maxLines="1"
-                android:paddingStart="1dp"
-                android:paddingEnd="15dp"
-                android:textColor="@color/use_light_blue"
-                android:textSize="@dimen/_10sdp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="Rajnandgaon" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/pr_case_no"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/quicksand_bold"
-                android:text="Respondents - "
-                android:textColor="@color/use_light_blue"
-                android:textSize="@dimen/_11sdp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/respondents"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="10dp"
-                android:ellipsize="end"
-                android:fontFamily="@font/quicksand_bold"
-                android:maxLines="1"
-                android:paddingStart="1dp"
-                android:paddingEnd="15dp"
-                android:textColor="@color/use_light_blue"
-                android:textSize="@dimen/_10sdp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="7292/2020" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/case_yr"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/quicksand_bold"
-                android:text="Time limit for Filling of reply - "
-                android:textColor="@color/use_light_blue"
-                android:textSize="@dimen/_11sdp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/time_limit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="10dp"
-                android:ellipsize="end"
-                android:fontFamily="@font/quicksand_bold"
-                android:maxLines="1"
-                android:paddingStart="1dp"
-                android:paddingEnd="15dp"
-                android:textColor="@color/use_light_blue"
-                android:textSize="@dimen/_10sdp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="7292/2020" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/notice_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/quicksand_bold"
-                android:text="Synopsis - "
-                android:textColor="@color/use_light_blue"
-                android:textSize="@dimen/_11sdp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/summarytxt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="10dp"
-                android:ellipsize="end"
-                android:fontFamily="@font/quicksand_bold"
-                android:paddingStart="1dp"
-                android:paddingEnd="15dp"
-                android:textColor="@color/use_light_blue"
-                android:textSize="@dimen/_10sdp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="7292/2020" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/hearing_dt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/quicksand_bold"
-                android:text="Date of submission of reply - "
-                android:textColor="@color/use_light_blue"
-                android:textSize="@dimen/_11sdp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/hearing_dt_ed"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="10dp"
-                android:ellipsize="end"
-                android:fontFamily="@font/quicksand_bold"
-                android:maxLines="1"
-                android:paddingStart="1dp"
-                android:paddingEnd="15dp"
-                android:textColor="@color/use_light_blue"
-                android:textSize="@dimen/_10sdp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="7292/2020" />
 
         </LinearLayout>
 
@@ -587,24 +407,8 @@
 
         </LinearLayout>
     </LinearLayout>
-    <TextView
-        android:id="@+id/view"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/_30sdp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:background="@drawable/bg_view"
-        android:fontFamily="@font/quicksand_medium"
-        android:gravity="center"
-        android:paddingStart="20dp"
-        android:paddingTop="3dp"
-        android:paddingEnd="20dp"
-        android:paddingBottom="3dp"
-        android:text="@string/view"
-        android:textColor="@color/use_blue"
-        android:textSize="@dimen/_9sdp"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="@+id/linearLayout2"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
-        tools:ignore="TextContrastCheck" />
+
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

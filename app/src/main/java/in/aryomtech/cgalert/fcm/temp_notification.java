@@ -28,6 +28,7 @@ import in.aryomtech.cgalert.Fragments.model.Excel_data;
 import in.aryomtech.cgalert.NoticeVictim.model.Notice_model;
 import in.aryomtech.cgalert.R;
 import in.aryomtech.cgalert.Splash;
+import in.aryomtech.cgalert.Writ.Model.WritModel;
 import in.aryomtech.cgalert.databinding.ActivityTempNotificationBinding;
 
 public class temp_notification extends AppCompatActivity {
@@ -37,6 +38,7 @@ public class temp_notification extends AppCompatActivity {
     String key,which_section;
     List<Excel_data> excel_data=new ArrayList<>();
     List<Notice_model> notice_data=new ArrayList<>();
+    List<WritModel> writ_data=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,10 +93,71 @@ public class temp_notification extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
-
+                    binding.writ.getRoot().setVisibility(View.VISIBLE);
+                    Log.e("writ",key+"");
+                    ref_writ.child(key+"").child("seen").setValue("1");
+                    populate_writ();
                 }
             }@Override public void onCancelled(@NonNull DatabaseError error) {}
         });
+    }
+
+    private void populate_writ() {
+        ref_writ.child(key+"").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                writ_data.add(snapshot.getValue(WritModel.class));
+                show_writ();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
+    }
+
+    private void show_writ() {
+        binding.writ.districtEd.setText(writ_data.get(0).getDistrict());
+        binding.writ.dateOfFiling.setText(writ_data.get(0).getDateOfFiling());
+        binding.writ.nature.setText(writ_data.get(0).getCase_nature());
+        binding.writ.caseNo.setText(writ_data.get(0).getCaseNo());
+        binding.writ.caseYear.setText(writ_data.get(0).getCaseYear());
+        binding.writ.judgementDate.setText(writ_data.get(0).getJudgementDate());
+        binding.writ.judgementType.setText(writ_data.get(0).getJudgement());
+
+        if(writ_data.get(0).getDecisionDate()!=null) {
+            if (writ_data.get(0).getDecisionDate().equals("")) {
+                binding.layout.setBackgroundResource(R.drawable.bg_card_red);
+            } else {
+                binding.layout.setBackgroundResource(R.drawable.bg_card_white);
+            }
+        }
+        if(writ_data.get(0).getJudgement()!=null) {
+            if (writ_data.get(0).getJudgement().equals("DISMISSED")) {
+                binding.layout.setBackgroundResource(R.drawable.bg_card_white);
+            } else {
+                binding.layout.setBackgroundResource(R.drawable.bg_card_white);
+            }
+        }
+
+        //tick logic
+        if (writ_data.get(0).getReminded() != null) {
+            if (writ_data.get(0).getReminded().equals("once")) {
+                binding.writ.imageView2.setVisibility(View.VISIBLE);
+                binding.writ.imageView2.setImageResource(R.drawable.ic_blue_tick);
+            } else if (writ_data.get(0).getReminded().equals("twice")) {
+                binding.writ.imageView2.setVisibility(View.VISIBLE);
+                binding.writ.imageView2.setImageResource(R.drawable.ic_green_tick);
+            }
+        }
+
+        binding.notice.imageView4.setOnClickListener(v -> {
+            Intent intent = new Intent(temp_notification.this, Splash.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        });
+
+        binding.notice.progressBar2.setVisibility(View.GONE);
+
     }
 
     private void populate_notice() {

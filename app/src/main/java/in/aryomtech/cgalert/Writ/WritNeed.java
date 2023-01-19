@@ -66,6 +66,7 @@ public class WritNeed extends Fragment {
     EditText search;
     List<String> list_string=new ArrayList<>();
     WritAdapter adapter;
+    ImageView back;
     List<WritModel> mylist;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -100,44 +101,46 @@ public class WritNeed extends Fragment {
                 .getString("Yes_of","none");
         if(sp_of.equals("none")) {
             if(tinyDB.getInt("num_station")==0){
-                //getDataForIG();
+                getDataForIG();
             }
             else if(tinyDB.getInt("num_station")==10){
-                //getDataForSDOP();
+                getDataForSDOP();
             }
             else{
                 if(ps_or_admin.equals("home")) {
                     get_data();
                 }
                 else if(ps_or_admin.equals("p_home")){
-                    //get_ps_data();
+                    get_ps_data();
                 }
             }
         }
         else
-            // getdata_for_sp();
-            mSwipeRefreshLayout.setOnRefreshListener(() -> {
-                if(sp_of.equals("none")) {
-                    if(tinyDB.getInt("num_station")==0){
-                        //getDataForIG();
+             getdata_for_sp();
+        mSwipeRefreshLayout.setOnRefreshListener(() -> {
+            if(sp_of.equals("none")) {
+                if(tinyDB.getInt("num_station")==0){
+                    getDataForIG();
+                }
+                else if(tinyDB.getInt("num_station")==10){
+                    getDataForSDOP();
+                }
+                else{
+                    if(ps_or_admin.equals("home")) {
+                        get_data();
                     }
-                    else if(tinyDB.getInt("num_station")==10){
-                        //getDataForSDOP();
-                    }
-                    else{
-                        if(ps_or_admin.equals("home")) {
-                            get_data();
-                        }
-                        else if(ps_or_admin.equals("p_home")){
-                            // get_ps_data();
-                        }
+                    else if(ps_or_admin.equals("p_home")){
+                         get_ps_data();
                     }
                 }
-                else {
-                    //getdata_for_sp();
-                }
-            });
-
+            }
+            else {
+                getdata_for_sp();
+            }
+        });
+        view.findViewById(R.id.imageView4).setOnClickListener(v->{
+            back();
+        });
         search.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {}
@@ -163,20 +166,28 @@ public class WritNeed extends Fragment {
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),callback);
         return view;
     }
-
+    void back(){
+        FragmentManager fm = ((FragmentActivity) getContextNullSafety()).getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        if (fm.getBackStackEntryCount() > 0) {
+            fm.popBackStack();
+        }
+        ft.commit();
+    }
     private void getdata_for_sp() {
-        Date dNow = new Date( );
-        SimpleDateFormat ft =
-                new SimpleDateFormat ("dd.MM.yyyy", Locale.getDefault());
-        String cr_dt=ft.format(dNow);
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for (DataSnapshot ds:snapshot.getChildren()) {
-                    if(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class).trim().toUpperCase().equals(sp_of)) {
-                        list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
+                    if(snapshot.child(Objects.requireNonNull(ds.getKey())).child("dueDate").getValue(String.class)!=null) {
+                        if ((!snapshot.child(Objects.requireNonNull(ds.getKey())).child("dueDate").getValue(String.class).trim().equals(""))
+                                && snapshot.child(ds.getKey()).child("decisionDate").getValue(String.class).equals("") && !snapshot.child(ds.getKey()).child("Judgement").getValue(String.class).equals("DISMISSED")) {
+                            if(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class).trim().toUpperCase().equals(sp_of)) {
+                                list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
+                            }
+                        }
                     }
                 }
                 if(list.size()!=0){
@@ -196,18 +207,16 @@ public class WritNeed extends Fragment {
         });
     }
     private void get_data() {
-        Date dNow = new Date( );
-        SimpleDateFormat ft =
-                new SimpleDateFormat ("dd.MM.yyyy", Locale.getDefault());
-        String cr_dt=ft.format(dNow);
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for(DataSnapshot ds:snapshot.getChildren()){
-                    if ((!snapshot.child(Objects.requireNonNull(ds.getKey())).child("dueDate").getValue(String.class).trim().equals(""))
-                        && snapshot.child(ds.getKey()).child("decisionDate").getValue(String.class).equals(""))  {
-                        list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
+                    if(snapshot.child(Objects.requireNonNull(ds.getKey())).child("dueDate").getValue(String.class)!=null) {
+                        if ((!snapshot.child(Objects.requireNonNull(ds.getKey())).child("dueDate").getValue(String.class).trim().equals(""))
+                                && snapshot.child(ds.getKey()).child("decisionDate").getValue(String.class).equals("") && !snapshot.child(ds.getKey()).child("Judgement").getValue(String.class).equals("DISMISSED")) {
+                            list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
+                        }
                     }
                 }
                 if(list.size()!=0){
@@ -230,19 +239,19 @@ public class WritNeed extends Fragment {
 
 
     private void getDataForSDOP() {
-        Date dNow = new Date( );
-        SimpleDateFormat ft =
-                new SimpleDateFormat ("dd.MM.yyyy",Locale.getDefault());
-        String cr_dt=ft.format(dNow);
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for (DataSnapshot ds:snapshot.getChildren()) {
-                    if (tinyDB.getListString("districts_list").contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())
-                            && tinyDB.getListString("stations_list").contains("PS "+Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("station").getValue(String.class)).trim().toUpperCase())) {
-                        list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
+                    if(snapshot.child(Objects.requireNonNull(ds.getKey())).child("dueDate").getValue(String.class)!=null) {
+                        if ((!snapshot.child(Objects.requireNonNull(ds.getKey())).child("dueDate").getValue(String.class).trim().equals(""))
+                                && snapshot.child(ds.getKey()).child("decisionDate").getValue(String.class).equals("") && !snapshot.child(ds.getKey()).child("Judgement").getValue(String.class).equals("DISMISSED")) {
+                            if (tinyDB.getListString("districts_list").contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())) {
+                                list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
+                            }
+                        }
                     }
                 }
                 if(list.size()!=0){
@@ -263,49 +272,19 @@ public class WritNeed extends Fragment {
     }
 
     private void getDataForIG() {
-        Date dNow = new Date( );
-        SimpleDateFormat ft =
-                new SimpleDateFormat ("dd.MM.yyyy",Locale.getDefault());
-        String cr_dt=ft.format(dNow);
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for (DataSnapshot ds:snapshot.getChildren()) {
-                    if (tinyDB.getListString("districts_list").contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())) {
-                        list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
-                    }
-                }
-                if(list.size()!=0){
-                    cg_logo.setVisibility(View.GONE);
-                    no_data.setVisibility(View.GONE);
-                }
-                WritAdapter adapter = new WritAdapter( list, getContextNullSafety());
-                adapter.notifyDataSetChanged();
-                mSwipeRefreshLayout.setRefreshing(false);
-                recyclerView.setAdapter(adapter);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-    private void get_ps_data() {
-        Date dNow = new Date( );
-        SimpleDateFormat ft =
-                new SimpleDateFormat ("dd.MM.yyyy",Locale.getDefault());
-        String cr_dt=ft.format(dNow);
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @SuppressLint("NotifyDataSetChanged")
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                list.clear();
-                for (DataSnapshot ds:snapshot.getChildren()) {
-                    if ((Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("station").getValue(String.class)).trim()).toUpperCase().equals(stat_name.substring(3).trim())) {
-                        list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
+                    if(snapshot.child(Objects.requireNonNull(ds.getKey())).child("dueDate").getValue(String.class)!=null) {
+                        if ((!snapshot.child(Objects.requireNonNull(ds.getKey())).child("dueDate").getValue(String.class).trim().equals(""))
+                                && snapshot.child(ds.getKey()).child("decisionDate").getValue(String.class).equals("") && !snapshot.child(ds.getKey()).child("Judgement").getValue(String.class).equals("DISMISSED")) {
+                            if (tinyDB.getListString("districts_list").contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())) {
+                                list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
+                            }
+                        }
                     }
                 }
                 if(list.size()!=0){
@@ -324,6 +303,36 @@ public class WritNeed extends Fragment {
             }
         });
     }
+    private void get_ps_data() {
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                list.clear();
+                for(DataSnapshot ds:snapshot.getChildren()){
+                    if(snapshot.child(Objects.requireNonNull(ds.getKey())).child("dueDate").getValue(String.class)!=null) {
+                        if ((!snapshot.child(Objects.requireNonNull(ds.getKey())).child("dueDate").getValue(String.class).trim().equals(""))
+                                && snapshot.child(ds.getKey()).child("decisionDate").getValue(String.class).equals("") && !snapshot.child(ds.getKey()).child("Judgement").getValue(String.class).equals("DISMISSED")) {
+                            list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
+                        }
+                    }
+                }
+                if(list.size()!=0){
+                    cg_logo.setVisibility(View.GONE);
+                    no_data.setVisibility(View.GONE);
+                }
+                Collections.reverse(list);
+                WritAdapter adapter = new WritAdapter(list, getContextNullSafety());
+                adapter.notifyDataSetChanged();
+                recyclerView.setAdapter(adapter);
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 
 
     private void convert_to_list(WritModel object) {
@@ -333,13 +342,13 @@ public class WritNeed extends Fragment {
             list_string.add(object.getJudgement().toLowerCase());
             list_string.add(object.getCaseYear().toLowerCase());
             list_string.add(object.getCaseNo().toLowerCase());
-            list_string.add(object.getNature().toLowerCase());
+            list_string.add(object.getCase_nature().toLowerCase());
             list_string.add(object.getPushkey().toLowerCase());
             list_string.add(object.getDateOfFiling().toLowerCase());
             list_string.add(object.getDistrict().toLowerCase());
             list_string.add(object.getJudgementDate().toLowerCase());
             list_string.add(object.getDueDate().toLowerCase());
-            list_string.add(String.valueOf(object.getAppellants()));
+            list_string.add(String.valueOf(object.getAppellant()));
             list_string.add(String.valueOf(object.getRespondents()));
             list_string.add(object.getSummary().toLowerCase());
             list_string.add(object.getdSummary().toLowerCase());
@@ -350,11 +359,12 @@ public class WritNeed extends Fragment {
     }
 
     private void search(String str) {
-        if (str.equals("")) {
+        if(str.equals("")){
             adapter = new WritAdapter(list, getContextNullSafety());
             recyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
-        } else {
+        }
+        else {
             String[] str_Args = str.toLowerCase().split(" ");
             mylist.clear();
             int count = 0;
@@ -367,12 +377,13 @@ public class WritNeed extends Fragment {
                         if (str_arg.contains("/") && not_once) {
                             String sub1 = str_arg.substring(0, str_arg.indexOf("/"));
                             String sub2 = str_arg.substring(str_arg.indexOf("/") + 1);
-                            if (list_string.get(4).contains(sub1) && list_string.get(6).contains(sub2)) {
-                                count++;
-                                not_once = false;
-                            } else if (list_string.get(7).contains(sub1) && list_string.get(8).contains(sub2)) {
-                                count++;
-                                not_once = false;
+                            try {
+                                if (list_string.get(3).contains(sub1) && list_string.get(2).contains(sub2)) {
+                                    count++;
+                                    not_once = false;
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         } else if (s.contains(str_arg)) {
                             count++;
@@ -381,7 +392,7 @@ public class WritNeed extends Fragment {
                 }
                 c_list.add(count);
                 System.out.println(c_list + "");
-                if (count == str_Args.length)
+                if (count >= str_Args.length)
                     mylist.add(object);
                 count = 0;
             }

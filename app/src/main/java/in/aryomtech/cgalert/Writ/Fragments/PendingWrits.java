@@ -102,41 +102,41 @@ public class PendingWrits extends Fragment {
                 .getString("Yes_of","none");
         if(sp_of.equals("none")) {
             if(tinyDB.getInt("num_station")==0){
-                //getDataForIG();
+                getDataForIG();
             }
             else if(tinyDB.getInt("num_station")==10){
-                //getDataForSDOP();
+                getDataForSDOP();
             }
             else{
                 if(ps_or_admin.equals("home")) {
                     get_data();
                 }
                 else if(ps_or_admin.equals("p_home")){
-                    //get_ps_data();
+                    get_ps_data();
                 }
             }
         }
         else
-           // getdata_for_sp();
+            getdata_for_sp();
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
             if(sp_of.equals("none")) {
                 if(tinyDB.getInt("num_station")==0){
-                    //getDataForIG();
+                    getDataForIG();
                 }
                 else if(tinyDB.getInt("num_station")==10){
-                    //getDataForSDOP();
+                    getDataForSDOP();
                 }
                 else{
                     if(ps_or_admin.equals("home")) {
                         get_data();
                     }
                     else if(ps_or_admin.equals("p_home")){
-                       // get_ps_data();
+                        get_ps_data();
                     }
                 }
             }
             else {
-                //getdata_for_sp();
+                getdata_for_sp();
             }
         });
 
@@ -167,18 +167,16 @@ public class PendingWrits extends Fragment {
     }
 
     private void getdata_for_sp() {
-        Date dNow = new Date( );
-        SimpleDateFormat ft =
-                new SimpleDateFormat ("dd.MM.yyyy", Locale.getDefault());
-        String cr_dt=ft.format(dNow);
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for (DataSnapshot ds:snapshot.getChildren()) {
-                    if(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class).trim().toUpperCase().equals(sp_of)) {
-                        list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
+                    if (snapshot.child(Objects.requireNonNull(ds.getKey())).child("judgementDate").getValue(String.class)==null && snapshot.child(Objects.requireNonNull(ds.getKey())).child("case_nature").getValue(String.class) != null && snapshot.child(Objects.requireNonNull(ds.getKey())).child("caseNo").getValue(String.class) != null && snapshot.child(Objects.requireNonNull(ds.getKey())).child("dateOfFiling").getValue(String.class) != null) {
+                        if (snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class).trim().toUpperCase().equals(sp_of)) {
+                            list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
+                        }
                     }
                 }
                 if(list.size()!=0){
@@ -198,16 +196,12 @@ public class PendingWrits extends Fragment {
         });
     }
     private void get_data() {
-        Date dNow = new Date( );
-        SimpleDateFormat ft =
-                new SimpleDateFormat ("dd.MM.yyyy", Locale.getDefault());
-        String cr_dt=ft.format(dNow);
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
-                for(DataSnapshot ds:snapshot.getChildren()){
-                    if (snapshot.child(Objects.requireNonNull(ds.getKey())).child("judgementDate").getValue(String.class).trim().equals("")) {
+                for(DataSnapshot ds:snapshot.getChildren()) {
+                    if (snapshot.child(Objects.requireNonNull(ds.getKey())).child("judgementDate").getValue(String.class)==null && snapshot.child(Objects.requireNonNull(ds.getKey())).child("case_nature").getValue(String.class) != null && snapshot.child(Objects.requireNonNull(ds.getKey())).child("caseNo").getValue(String.class) != null && snapshot.child(Objects.requireNonNull(ds.getKey())).child("dateOfFiling").getValue(String.class) != null) {
                         list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
                     }
                 }
@@ -231,19 +225,16 @@ public class PendingWrits extends Fragment {
 
 
     private void getDataForSDOP() {
-        Date dNow = new Date( );
-        SimpleDateFormat ft =
-                new SimpleDateFormat ("dd.MM.yyyy",Locale.getDefault());
-        String cr_dt=ft.format(dNow);
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for (DataSnapshot ds:snapshot.getChildren()) {
-                    if (tinyDB.getListString("districts_list").contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())
-                            && tinyDB.getListString("stations_list").contains("PS "+Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("station").getValue(String.class)).trim().toUpperCase())) {
-                        list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
+                    if (snapshot.child(Objects.requireNonNull(ds.getKey())).child("judgementDate").getValue(String.class)==null && snapshot.child(Objects.requireNonNull(ds.getKey())).child("case_nature").getValue(String.class) != null && snapshot.child(Objects.requireNonNull(ds.getKey())).child("caseNo").getValue(String.class) != null && snapshot.child(Objects.requireNonNull(ds.getKey())).child("dateOfFiling").getValue(String.class) != null) {
+                        if (tinyDB.getListString("districts_list").contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())) {
+                            list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
+                        }
                     }
                 }
                 if(list.size()!=0){
@@ -274,8 +265,10 @@ public class PendingWrits extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for (DataSnapshot ds:snapshot.getChildren()) {
-                    if (tinyDB.getListString("districts_list").contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())) {
-                        list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
+                    if (snapshot.child(Objects.requireNonNull(ds.getKey())).child("judgementDate").getValue(String.class)==null && snapshot.child(Objects.requireNonNull(ds.getKey())).child("case_nature").getValue(String.class) != null && snapshot.child(Objects.requireNonNull(ds.getKey())).child("caseNo").getValue(String.class) != null && snapshot.child(Objects.requireNonNull(ds.getKey())).child("dateOfFiling").getValue(String.class) != null) {
+                        if (tinyDB.getListString("districts_list").contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())) {
+                            list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
+                        }
                     }
                 }
                 if(list.size()!=0){
@@ -295,18 +288,16 @@ public class PendingWrits extends Fragment {
         });
     }
     private void get_ps_data() {
-        Date dNow = new Date( );
-        SimpleDateFormat ft =
-                new SimpleDateFormat ("dd.MM.yyyy",Locale.getDefault());
-        String cr_dt=ft.format(dNow);
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for (DataSnapshot ds:snapshot.getChildren()) {
-                    if ((Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("station").getValue(String.class)).trim()).toUpperCase().equals(stat_name.substring(3).trim())) {
-                        list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
+                    if (snapshot.child(Objects.requireNonNull(ds.getKey())).child("judgementDate").getValue(String.class)==null && snapshot.child(Objects.requireNonNull(ds.getKey())).child("case_nature").getValue(String.class) != null && snapshot.child(Objects.requireNonNull(ds.getKey())).child("caseNo").getValue(String.class) != null && snapshot.child(Objects.requireNonNull(ds.getKey())).child("dateOfFiling").getValue(String.class) != null) {
+                        if (tinyDB.getListString("districts_list").contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())) {
+                            list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
+                        }
                     }
                 }
                 if(list.size()!=0){
@@ -334,13 +325,13 @@ public class PendingWrits extends Fragment {
             list_string.add(object.getJudgement().toLowerCase());
             list_string.add(object.getCaseYear().toLowerCase());
             list_string.add(object.getCaseNo().toLowerCase());
-            list_string.add(object.getNature().toLowerCase());
+            list_string.add(object.getCase_nature().toLowerCase());
             list_string.add(object.getPushkey().toLowerCase());
             list_string.add(object.getDateOfFiling().toLowerCase());
             list_string.add(object.getDistrict().toLowerCase());
             list_string.add(object.getJudgementDate().toLowerCase());
             list_string.add(object.getDueDate().toLowerCase());
-            list_string.add(String.valueOf(object.getAppellants()));
+            list_string.add(String.valueOf(object.getAppellant()));
             list_string.add(String.valueOf(object.getRespondents()));
             list_string.add(object.getSummary().toLowerCase());
             list_string.add(object.getdSummary().toLowerCase());
@@ -351,11 +342,12 @@ public class PendingWrits extends Fragment {
     }
 
     private void search(String str) {
-        if (str.equals("")) {
+        if(str.equals("")){
             adapter = new WritAdapter(list, getContextNullSafety());
             recyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
-        } else {
+        }
+        else {
             String[] str_Args = str.toLowerCase().split(" ");
             mylist.clear();
             int count = 0;
@@ -368,12 +360,13 @@ public class PendingWrits extends Fragment {
                         if (str_arg.contains("/") && not_once) {
                             String sub1 = str_arg.substring(0, str_arg.indexOf("/"));
                             String sub2 = str_arg.substring(str_arg.indexOf("/") + 1);
-                            if (list_string.get(4).contains(sub1) && list_string.get(6).contains(sub2)) {
-                                count++;
-                                not_once = false;
-                            } else if (list_string.get(7).contains(sub1) && list_string.get(8).contains(sub2)) {
-                                count++;
-                                not_once = false;
+                            try {
+                                if (list_string.get(3).contains(sub1) && list_string.get(2).contains(sub2)) {
+                                    count++;
+                                    not_once = false;
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         } else if (s.contains(str_arg)) {
                             count++;
@@ -382,7 +375,7 @@ public class PendingWrits extends Fragment {
                 }
                 c_list.add(count);
                 System.out.println(c_list + "");
-                if (count == str_Args.length)
+                if (count >= str_Args.length)
                     mylist.add(object);
                 count = 0;
             }

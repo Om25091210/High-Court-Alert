@@ -2,6 +2,7 @@ package in.aryomtech.cgalert.Writ.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,16 +33,11 @@ public class WritAdapter extends RecyclerView.Adapter<WritAdapter.ViewHolder> {
     Context context;
     String  appellant_list = "";
     String  respondent_list = "";
-    private Timer timer;
     String pushkey;
 
     public WritAdapter(List<WritModel> list, Context context) {
         this.list = list;
         this.context = context;
-    }
-    public void setTasks(List<WritModel> todoList) {
-        this.list = todoList;
-        notifyDataSetChanged();
     }
 
 
@@ -57,30 +53,89 @@ public class WritAdapter extends RecyclerView.Adapter<WritAdapter.ViewHolder> {
 
         holder.district.setText(list.get(position).getDistrict());
         holder.dateOfFiling.setText(list.get(position).getDateOfFiling());
-        holder.nature.setText(list.get(position).getNature());
-        //holder.appellants.setText(Arrays.toString(list.get(position).getAppellants()));
-        //holder.respondents.setText(Arrays.toString(list.get(position).getRespondents()));
+        holder.nature.setText(list.get(position).getCase_nature());
         holder.summary.setText(list.get(position).getSummary());
-        holder.judgementDate.setText(list.get(position).getJudgementDate());
+        if(list.get(position).getJudgementDate()!=null) {
+            holder.judgementDate.setText(list.get(position).getJudgementDate());
+        }
+        else{
+            holder.judgementDate.setText("--");
+        }
         holder.caseYear.setText("/" + list.get(position).getCaseYear());
         holder.caseNo.setText("/" + list.get(position).getCaseNo());
-        holder.judgement.setText(list.get(position).getJudgement());
-
-
-
-        if (!list.get(position).getJudgement().equals("DISMISSED")) {
-            //holder.layoutJudge.setVisibility(View.VISIBLE);
-            holder.layoutDue.setVisibility(View.VISIBLE);
-            holder.dueDays.setText(list.get(position).getDueDate());
-            //holder.judgementSummary.setText(list.get(position).getdSummary());
+        if(list.get(position).getJudgement()!=null) {
+            holder.judgement.setText(list.get(position).getJudgement());
         }
+        else{
+            holder.judgement.setText("--");
+        }
+
+        if(list.get(position).getReminded()!=null) {
+            if(list.get(position).getReminded().equals("once")){
+                holder.tick.setVisibility(View.VISIBLE);
+                holder.tick.setImageResource(R.drawable.ic_blue_tick);
+            }
+            else if(list.get(position).getReminded().equals("twice")){
+                holder.tick.setVisibility(View.VISIBLE);
+                holder.tick.setImageResource(R.drawable.ic_green_tick);
+            }
+        }
+        else
+            holder.tick.setVisibility(View.GONE);
+
+        if(list.get(position).getSeen()!=null)
+            holder.seen.setVisibility(View.VISIBLE);
+        else
+            holder.seen.setVisibility(View.GONE);
+
+        if(list.get(position).getSent()!=null)
+            holder.notified.setVisibility(View.VISIBLE);
+        else
+            holder.notified.setVisibility(View.GONE);
+
+        if(list.get(position).getDecisionDate()!=null) {
+            if (list.get(position).getDecisionDate().equals("")) {
+                holder.writLayout.setBackgroundResource(R.drawable.bg_card_red);
+            } else {
+                holder.writLayout.setBackgroundResource(R.drawable.bg_card_white);
+            }
+        }
+        if(list.get(position).getJudgement()!=null) {
+            if (list.get(position).getJudgement().equals("DISMISSED")) {
+                holder.writLayout.setBackgroundResource(R.drawable.bg_card_white);
+            } else {
+                holder.writLayout.setBackgroundResource(R.drawable.bg_card_white);
+            }
+        }
+
+        if(list.get(position).getJudgement()!=null) {
+            if (!list.get(position).getJudgement().equals("DISMISSED")) {
+                //holder.layoutJudge.setVisibility(View.VISIBLE);
+                holder.layoutDue.setVisibility(View.VISIBLE);
+                holder.dueDays.setText(list.get(position).getDueDate());
+                //holder.judgementSummary.setText(list.get(position).getdSummary());
+            }
+        }
+        holder.view.setOnClickListener(v->{
+            try {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW);
+                browserIntent.setDataAndType(Uri.parse(list.get(position).getUploaded_file()), "application/pdf");
+
+                Intent chooser = Intent.createChooser(browserIntent, "View PDF");
+                chooser.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // optional
+
+                context.startActivity(chooser);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
 
         pushkey = list.get(position).getPushkey();
 
         holder.writLayout.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
             bundle.putStringArrayList("respondents", list.get(position).getRespondents());
-            bundle.putStringArrayList("appellants", list.get(position).getAppellants());
+            bundle.putStringArrayList("appellants", list.get(position).getAppellant());
             bundle.putString("judge_summary", list.get(position).getdSummary());
             bundle.putString("synopsis", list.get(position).getSummary());
             bundle.putString("pushkey", list.get(position).getPushkey());
@@ -89,11 +144,11 @@ public class WritAdapter extends RecyclerView.Adapter<WritAdapter.ViewHolder> {
             fragment.setArguments(bundle);
             FragmentManager manager = ((AppCompatActivity) context).getSupportFragmentManager();
             FragmentTransaction ft = manager.beginTransaction();
-            ft.add(R.id.swipe, fragment);
+            ft.add(R.id.swipe, fragment,"writform");
             ft.addToBackStack(null);
             ft.commit();
         });
-        ArrayList<String> appellants = list.get(position).getAppellants();
+        ArrayList<String> appellants = list.get(position).getAppellant();
         ArrayList<String> respondents = list.get(position).getRespondents();
 
         if (appellants != null) {
@@ -111,7 +166,7 @@ public class WritAdapter extends RecyclerView.Adapter<WritAdapter.ViewHolder> {
         String message = "रिट केस अलर्ट :- "+"\n" +
                 "District - " + list.get(position).getDistrict() + "\n" +
                 "Date of filling - " + list.get(position).getDateOfFiling()+ "\n" +
-                "Nature of the case - " +list.get(position).getNature() + "\nCase Number - " + list.get(position).getCaseNo() +"\nCase Year  - "+ list.get(position).getCaseYear()+"\n" +
+                "Nature of the case - " +list.get(position).getCase_nature() + "\nCase Number - " + list.get(position).getCaseNo() +"\nCase Year  - "+ list.get(position).getCaseYear()+"\n" +
                 "Judgement date - " + list.get(position).getJudgementDate() +  "\n" +
                 "Due days - " + list.get(position).getDueDate()+  "\n" +
                 "Appellants list -\n" + appellant_list +"\nRespondents list -\n"+ respondent_list+  "\n" +
@@ -134,15 +189,12 @@ public class WritAdapter extends RecyclerView.Adapter<WritAdapter.ViewHolder> {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView district, dateOfFiling, nature, appellants, respondents, summary, judgementDate, judgement, judgementSummary, dueDays, caseNo, caseYear;
+        TextView district,view, dateOfFiling, nature, appellants, respondents, summary, judgementDate, judgement, judgementSummary, dueDays, caseNo, caseYear;
         ConstraintLayout writLayout;
-        ImageView share;
+        ImageView share,notified,seen,tick;
         LinearLayout layoutJudge, layoutDue;
-
-
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
             district = itemView.findViewById(R.id.district_ed);
             dateOfFiling = itemView.findViewById(R.id.date_of_filing);
             nature = itemView.findViewById(R.id.nature);
@@ -159,6 +211,10 @@ public class WritAdapter extends RecyclerView.Adapter<WritAdapter.ViewHolder> {
             caseNo = itemView.findViewById(R.id.case_no);
             caseYear = itemView.findViewById(R.id.case_year);
             share = itemView.findViewById(R.id.share);
+            view  = itemView.findViewById(R.id.view);
+            seen  = itemView.findViewById(R.id.seen);
+            notified  = itemView.findViewById(R.id.notified);
+            tick  = itemView.findViewById(R.id.imageView2);
         }
     }
 }

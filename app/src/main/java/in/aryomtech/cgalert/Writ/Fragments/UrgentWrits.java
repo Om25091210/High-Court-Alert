@@ -15,6 +15,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,11 +25,21 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 import in.aryomtech.cgalert.Writ.Adapter.WritAdapter;
 import in.aryomtech.cgalert.Writ.Model.WritModel;
@@ -151,21 +162,24 @@ public class UrgentWrits extends Fragment {
     }
 
     private void get_data() {
-       /* reference.addListenerForSingleValueEvent(new ValueEventListener() {
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
+                Date dNow = new Date();
                 for(DataSnapshot ds:snapshot.getChildren()){
                     try {
-                        Date dNow = new Date();
-                        SimpleDateFormat ft =
-                                new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
-
-                        Date list1 = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(snapshot.child(ds.getKey()).child("hearingDate").getValue(String.class) + "");
-                        Date current = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(ft.format(dNow));
-                        Log.e("date", list1.before(current) + "");
-                        if (list1.before(current)) {
-                            list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
+                        if (snapshot.child(Objects.requireNonNull(ds.getKey())).child("judgementDate").getValue(String.class) != null) {
+                            String stringDate=snapshot.child(Objects.requireNonNull(ds.getKey())).child("judgementDate").getValue(String.class);
+                            Date date1 = new SimpleDateFormat("dd.MM.yyyy",Locale.getDefault()).parse(stringDate);
+                            Calendar cal = Calendar.getInstance();
+                            cal.setTime(date1);
+                            cal.add(Calendar.DAY_OF_MONTH, 5);
+                            if (cal.getTime().before(dNow)) {
+                                if (snapshot.child(Objects.requireNonNull(ds.getKey())).child("case_nature").getValue(String.class) != null && snapshot.child(Objects.requireNonNull(ds.getKey())).child("caseNo").getValue(String.class) != null && snapshot.child(Objects.requireNonNull(ds.getKey())).child("dateOfFiling").getValue(String.class) != null) {
+                                    list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
+                                }
+                            }
                         }
                     } catch (ParseException e) {
                         e.printStackTrace();
@@ -186,27 +200,29 @@ public class UrgentWrits extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });*/
+        });
     }
 
     private void getdata_for_sp() {
-       /* reference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @SuppressLint("NotifyDataSetChanged")
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
-                for (DataSnapshot ds:snapshot.getChildren()) {
+                Date dNow = new Date();
+                for(DataSnapshot ds:snapshot.getChildren()){
                     try {
-                        Date dNow = new Date();
-                        SimpleDateFormat ft =
-                                new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
-
-                        Date list1 = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(snapshot.child(ds.getKey()).child("hearingDate").getValue(String.class) + "");
-                        Date current = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(ft.format(dNow));
-                        Log.e("date", list1.before(current) + "");
-                        if (list1.before(current)) {
-                            if (Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase().equals(sp_of)) {
-                                list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
+                        if (snapshot.child(Objects.requireNonNull(ds.getKey())).child("judgementDate").getValue(String.class) != null) {
+                            String stringDate=snapshot.child(Objects.requireNonNull(ds.getKey())).child("judgementDate").getValue(String.class);
+                            Date date1 = new SimpleDateFormat("dd.MM.yyyy",Locale.getDefault()).parse(stringDate);
+                            Calendar cal = Calendar.getInstance();
+                            cal.setTime(date1);
+                            cal.add(Calendar.DAY_OF_MONTH, 5);
+                            if (cal.getTime().before(dNow)) {
+                                if (snapshot.child(Objects.requireNonNull(ds.getKey())).child("case_nature").getValue(String.class) != null && snapshot.child(Objects.requireNonNull(ds.getKey())).child("caseNo").getValue(String.class) != null && snapshot.child(Objects.requireNonNull(ds.getKey())).child("dateOfFiling").getValue(String.class) != null) {
+                                    if (snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class).trim().toUpperCase().equals(sp_of)) {
+                                        list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
+                                    }
+                                }
                             }
                         }
                     } catch (ParseException e) {
@@ -227,28 +243,30 @@ public class UrgentWrits extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });*/
+        });
     }
 
     private void getDataForSDOP() {
-        /*reference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @SuppressLint("NotifyDataSetChanged")
+        //SDOP will see all the data of districts.
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
-                for (DataSnapshot ds:snapshot.getChildren()) {
+                Date dNow = new Date();
+                for(DataSnapshot ds:snapshot.getChildren()){
                     try {
-                        Date dNow = new Date();
-                        SimpleDateFormat ft =
-                                new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
-
-                        Date list1 = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(snapshot.child(ds.getKey()).child("hearingDate").getValue(String.class) + "");
-                        Date current = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(ft.format(dNow));
-                        Log.e("date", list1.before(current) + "");
-                        if (list1.before(current)) {
-                            if (tinyDB.getListString("districts_list").contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())
-                                    && tinyDB.getListString("stations_list").contains("PS "+Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("station").getValue(String.class)).trim().toUpperCase())) {
-                                list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
+                        if (snapshot.child(Objects.requireNonNull(ds.getKey())).child("judgementDate").getValue(String.class) != null) {
+                            String stringDate=snapshot.child(Objects.requireNonNull(ds.getKey())).child("judgementDate").getValue(String.class);
+                            Date date1 = new SimpleDateFormat("dd.MM.yyyy",Locale.getDefault()).parse(stringDate);
+                            Calendar cal = Calendar.getInstance();
+                            cal.setTime(date1);
+                            cal.add(Calendar.DAY_OF_MONTH, 5);
+                            if (cal.getTime().before(dNow)) {
+                                if (snapshot.child(Objects.requireNonNull(ds.getKey())).child("case_nature").getValue(String.class) != null && snapshot.child(Objects.requireNonNull(ds.getKey())).child("caseNo").getValue(String.class) != null && snapshot.child(Objects.requireNonNull(ds.getKey())).child("dateOfFiling").getValue(String.class) != null) {
+                                    if (tinyDB.getListString("districts_list").contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())) {
+                                        list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
+                                    }
+                                }
                             }
                         }
                     } catch (ParseException e) {
@@ -269,27 +287,29 @@ public class UrgentWrits extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });*/
+        });
     }
 
     private void getDataForIG() {
-       /* reference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @SuppressLint("NotifyDataSetChanged")
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
-                for (DataSnapshot ds:snapshot.getChildren()) {
+                Date dNow = new Date();
+                for(DataSnapshot ds:snapshot.getChildren()){
                     try {
-                        Date dNow = new Date();
-                        SimpleDateFormat ft =
-                                new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
-
-                        Date list1 = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(snapshot.child(ds.getKey()).child("hearingDate").getValue(String.class) + "");
-                        Date current = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(ft.format(dNow));
-                        Log.e("date", list1.before(current) + "");
-                        if (list1.before(current)) {
-                            if (tinyDB.getListString("districts_list").contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())) {
-                                list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
+                        if (snapshot.child(Objects.requireNonNull(ds.getKey())).child("judgementDate").getValue(String.class) != null) {
+                            String stringDate=snapshot.child(Objects.requireNonNull(ds.getKey())).child("judgementDate").getValue(String.class);
+                            Date date1 = new SimpleDateFormat("dd.MM.yyyy",Locale.getDefault()).parse(stringDate);
+                            Calendar cal = Calendar.getInstance();
+                            cal.setTime(date1);
+                            cal.add(Calendar.DAY_OF_MONTH, 5);
+                            if (cal.getTime().before(dNow)) {
+                                if (snapshot.child(Objects.requireNonNull(ds.getKey())).child("case_nature").getValue(String.class) != null && snapshot.child(Objects.requireNonNull(ds.getKey())).child("caseNo").getValue(String.class) != null && snapshot.child(Objects.requireNonNull(ds.getKey())).child("dateOfFiling").getValue(String.class) != null) {
+                                    if (tinyDB.getListString("districts_list").contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())) {
+                                        list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
+                                    }
+                                }
                             }
                         }
                     } catch (ParseException e) {
@@ -310,26 +330,26 @@ public class UrgentWrits extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });*/
+        });
     }
     private void get_ps_data() {
-       /* reference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @SuppressLint("NotifyDataSetChanged")
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
-                for (DataSnapshot ds:snapshot.getChildren()) {
+                Date dNow = new Date();
+                for(DataSnapshot ds:snapshot.getChildren()){
                     try {
-                        Date dNow = new Date();
-                        SimpleDateFormat ft =
-                                new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
-
-                        Date list1 = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(snapshot.child(ds.getKey()).child("hearingDate").getValue(String.class) + "");
-                        Date current = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(ft.format(dNow));
-                        Log.e("date", list1.before(current) + "");
-                        if (list1.before(current)) {
-                            if ((Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("station").getValue(String.class)).trim()).toUpperCase().equals(stat_name.substring(3).trim())) {
-                                list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
+                        if (snapshot.child(Objects.requireNonNull(ds.getKey())).child("judgementDate").getValue(String.class) != null) {
+                            String stringDate=snapshot.child(Objects.requireNonNull(ds.getKey())).child("judgementDate").getValue(String.class);
+                            Date date1 = new SimpleDateFormat("dd.MM.yyyy",Locale.getDefault()).parse(stringDate);
+                            Calendar cal = Calendar.getInstance();
+                            cal.setTime(date1);
+                            cal.add(Calendar.DAY_OF_MONTH, 5);
+                            if (cal.getTime().before(dNow)) {
+                                if (snapshot.child(Objects.requireNonNull(ds.getKey())).child("case_nature").getValue(String.class) != null && snapshot.child(Objects.requireNonNull(ds.getKey())).child("caseNo").getValue(String.class) != null && snapshot.child(Objects.requireNonNull(ds.getKey())).child("dateOfFiling").getValue(String.class) != null) {
+                                    list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
+                                }
                             }
                         }
                     } catch (ParseException e) {
@@ -340,17 +360,18 @@ public class UrgentWrits extends Fragment {
                     cg_logo.setVisibility(View.GONE);
                     no_data.setVisibility(View.GONE);
                 }
-                WritAdapter adapter = new WritAdapter(list, getContextNullSafety());
+                Collections.reverse(list);
+                WritAdapter adapter = new WritAdapter(list , getContextNullSafety());
                 adapter.notifyDataSetChanged();
-                mSwipeRefreshLayout.setRefreshing(false);
                 recyclerView.setAdapter(adapter);
+                mSwipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });*/
+        });
     }
 
     private void convert_to_list(WritModel object) {
@@ -360,13 +381,13 @@ public class UrgentWrits extends Fragment {
             list_string.add(object.getJudgement().toLowerCase());
             list_string.add(object.getCaseYear().toLowerCase());
             list_string.add(object.getCaseNo().toLowerCase());
-            list_string.add(object.getNature().toLowerCase());
+            list_string.add(object.getCase_nature().toLowerCase());
             list_string.add(object.getPushkey().toLowerCase());
             list_string.add(object.getDateOfFiling().toLowerCase());
             list_string.add(object.getDistrict().toLowerCase());
             list_string.add(object.getJudgementDate().toLowerCase());
             list_string.add(object.getDueDate().toLowerCase());
-            list_string.add(String.valueOf(object.getAppellants()));
+            list_string.add(String.valueOf(object.getAppellant()));
             list_string.add(String.valueOf(object.getRespondents()));
             list_string.add(object.getSummary().toLowerCase());
             list_string.add(object.getdSummary().toLowerCase());
@@ -377,11 +398,12 @@ public class UrgentWrits extends Fragment {
     }
 
     private void search(String str) {
-        if (str.equals("")) {
+        if(str.equals("")){
             adapter = new WritAdapter(list, getContextNullSafety());
             recyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
-        } else {
+        }
+        else {
             String[] str_Args = str.toLowerCase().split(" ");
             mylist.clear();
             int count = 0;
@@ -394,12 +416,13 @@ public class UrgentWrits extends Fragment {
                         if (str_arg.contains("/") && not_once) {
                             String sub1 = str_arg.substring(0, str_arg.indexOf("/"));
                             String sub2 = str_arg.substring(str_arg.indexOf("/") + 1);
-                            if (list_string.get(4).contains(sub1) && list_string.get(6).contains(sub2)) {
-                                count++;
-                                not_once = false;
-                            } else if (list_string.get(7).contains(sub1) && list_string.get(8).contains(sub2)) {
-                                count++;
-                                not_once = false;
+                            try {
+                                if (list_string.get(3).contains(sub1) && list_string.get(2).contains(sub2)) {
+                                    count++;
+                                    not_once = false;
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         } else if (s.contains(str_arg)) {
                             count++;
@@ -408,7 +431,7 @@ public class UrgentWrits extends Fragment {
                 }
                 c_list.add(count);
                 System.out.println(c_list + "");
-                if (count == str_Args.length)
+                if (count >= str_Args.length)
                     mylist.add(object);
                 count = 0;
             }

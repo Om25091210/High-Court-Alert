@@ -1,5 +1,6 @@
 package in.aryomtech.cgalert.Writ;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -12,13 +13,20 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import in.aryomtech.cgalert.R;
 import in.aryomtech.cgalert.Writ.Fragments.AllWrits;
@@ -34,10 +42,12 @@ import soup.neumorphism.NeumorphCardView;
 public class WritsMain extends AppCompatActivity {
 
     List<WritModel> list;
-    ImageView form;
-    String stat_name;
+    ImageView form,back;
+    TextView decided,department;
+    int decided_count=0,department_count=0;
     FirebaseAuth auth;
     FirebaseUser user;
+    DatabaseReference writ_ref;
     NeumorphCardView blue,orange;
 
     @Override
@@ -55,11 +65,17 @@ public class WritsMain extends AppCompatActivity {
       /*  stat_name = getSharedPreferences("station_name_K", MODE_PRIVATE)
                 .getString("the_station_name2003", "");*/
         list = new ArrayList<>();
-
+        writ_ref= FirebaseDatabase.getInstance().getReference().child("writ");
         form = findViewById(R.id.form);
         blue = findViewById(R.id.blue);
         orange = findViewById(R.id.back);
+        decided = findViewById(R.id.textView6);
+        department = findViewById(R.id.textView8);
+        back = findViewById(R.id.imageView4);
 
+        back.setOnClickListener(v->{
+            onBackPressed();
+        });
         blue.setOnClickListener(v->{
             WritsMain.this.getSupportFragmentManager()
                     .beginTransaction()
@@ -111,6 +127,31 @@ public class WritsMain extends AppCompatActivity {
         });
         findViewById(R.id.imageView4).setOnClickListener(v->{
             finish();
+        });
+        get_counts();
+    }
+
+    private void get_counts() {
+        writ_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot ds:snapshot.getChildren()){
+                    if(snapshot.child(Objects.requireNonNull(ds.getKey())).child("decisionDate").exists()){
+                        if(snapshot.child(ds.getKey()).child("decisionDate").getValue(String.class).equals("") && !snapshot.child(Objects.requireNonNull(ds.getKey())).child("Judgement").getValue(String.class).equals("DISMISSED")){
+                            decided_count++;
+                        }
+                    }
+                    if(snapshot.child(Objects.requireNonNull(ds.getKey())).child("decisionDate").exists() || snapshot.child(Objects.requireNonNull(ds.getKey())).child("Judgement").exists()){
+                        if(!snapshot.child(ds.getKey()).child("decisionDate").getValue(String.class).equals("") || snapshot.child(Objects.requireNonNull(ds.getKey())).child("Judgement").getValue(String.class).equals("DISMISSED")){
+                            department_count++;
+                        }
+                    }
+                }
+                decided.setText(decided_count+"");
+                department.setText(department_count+"");
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
 
