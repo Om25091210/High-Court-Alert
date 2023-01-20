@@ -138,20 +138,140 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/synop_edt" />
 
-            <TextView
+            <EditText
                 android:id="@+id/summary_edt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="15dp"
-                android:background="@drawable/border_amount_bg"
-                android:fontFamily="@font/quicksand_medium"
-                android:padding="20dp"
-                android:textAllCaps="false"
-                android:textColor="@color/black"
-                android:textSize="13sp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/bg_edt_text"
+                android:ems="10"
+                android:gravity="start"
+                android:hint="@string/detailed_summary"
+                android:importantForAutofill="no"
+                android:inputType="textMultiLine"
+                android:padding="15dp"
+                android:textSize="16sp"
+                android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/judge_summary" />
+                app:layout_constraintTop_toBottomOf="@+id/judge_summary"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <TextView
+                android:id="@+id/judgement_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:fontFamily="@font/quicksand_bold"
+                android:text="@string/judgement_date"
+                android:textColor="@color/use_orange"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/judge_summary"
+                app:layout_constraintStart_toStartOf="@+id/judge_summary"
+                app:layout_constraintTop_toBottomOf="@+id/summary_edt" />
+
+            <TextView
+                android:id="@+id/judgement_date_edt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/bg_edt_text"
+                android:ems="10"
+                android:hint="@string/date_of_judgement"
+                android:importantForAutofill="no"
+                android:padding="15dp"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/summary_edt"
+                app:layout_constraintStart_toStartOf="@+id/judgement_date"
+                app:layout_constraintTop_toBottomOf="@+id/judgement_date"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout13"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="@+id/judgement_date_edt"
+                app:layout_constraintStart_toStartOf="@+id/judgement_date_edt"
+                app:layout_constraintTop_toBottomOf="@+id/judgement_date_edt">
+
+                <CheckBox
+                    android:id="@+id/allowed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="3dp"
+                    android:layout_marginStart="40dp"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/use_orange"
+                    android:text="@string/allowed"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <CheckBox
+                    android:id="@+id/disposed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="3dp"
+                    android:layout_marginStart="40dp"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/use_orange"
+                    android:text="@string/disposed"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <CheckBox
+                    android:id="@+id/dismissed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="3dp"
+                    android:layout_marginEnd="40dp"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/use_orange"
+                    android:text="@string/dismissed"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/due"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:fontFamily="@font/quicksand_bold"
+                android:text="Due Days"
+                android:textColor="@color/use_orange"
+                android:textSize="16sp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="@+id/linearLayout13"
+                app:layout_constraintStart_toStartOf="@+id/linearLayout13"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout13" />
+
+            <EditText
+                android:id="@+id/due_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/bg_edt_text"
+                android:ems="10"
+                android:gravity="start"
+                android:hint="30 days"
+                android:importantForAutofill="no"
+                android:inputType="number"
+                android:padding="15dp"
+                android:textSize="16sp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="@+id/linearLayout13"
+                app:layout_constraintStart_toStartOf="@+id/due"
+                app:layout_constraintTop_toBottomOf="@+id/due"
+                tools:ignore="SpeakableTextPresentCheck" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

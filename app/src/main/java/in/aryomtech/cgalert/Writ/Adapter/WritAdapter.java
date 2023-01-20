@@ -95,7 +95,11 @@ public class WritAdapter extends RecyclerView.Adapter<WritAdapter.ViewHolder> {
 
         if(list.get(position).getDecisionDate()!=null) {
             if (list.get(position).getDecisionDate().equals("")) {
-                holder.writLayout.setBackgroundResource(R.drawable.bg_card_red);
+                if(list.get(position).getJudgement().equals("DISMISSED")){
+                    holder.writLayout.setBackgroundResource(R.drawable.bg_card_white);
+                }else {
+                    holder.writLayout.setBackgroundResource(R.drawable.bg_card_red);
+                }
             } else {
                 holder.writLayout.setBackgroundResource(R.drawable.bg_card_white);
             }
@@ -104,7 +108,11 @@ public class WritAdapter extends RecyclerView.Adapter<WritAdapter.ViewHolder> {
             if (list.get(position).getJudgement().equals("DISMISSED")) {
                 holder.writLayout.setBackgroundResource(R.drawable.bg_card_white);
             } else {
-                holder.writLayout.setBackgroundResource(R.drawable.bg_card_white);
+                if(!list.get(position).getDecisionDate().equals("")) {
+                    holder.writLayout.setBackgroundResource(R.drawable.bg_card_white);
+                }else{
+                    holder.writLayout.setBackgroundResource(R.drawable.bg_card_red);
+                }
             }
         }
 

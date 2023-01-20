@@ -108,7 +108,7 @@ public class WritForm extends Fragment {
     int x=1;
     private Context contextNullSafe;
     EditText dispose_summary, summary, due_date, case_no , case_year;
-    TextView date_reply, judgement_date, time_limit, days, summ, submit, date_of_filing, due;
+    TextView date_reply, judgement_date, time_limit, summ, submit, date_of_filing, due;
     CheckBox legal1, legal2, allowed, disposed, dismissed;
     int check_;
 
@@ -449,19 +449,6 @@ public class WritForm extends Fragment {
             dialog.show();
         });
 
-        /*due_date.setOnClickListener(v->{
-            Calendar cal = Calendar.getInstance();
-            int year = cal.get(Calendar.YEAR);
-            int month = cal.get(Calendar.MONTH);
-            int day = cal.get(Calendar.DAY_OF_MONTH);
-            DatePickerDialog dialog = new DatePickerDialog(
-                    getActivity(),
-                    mDateSetListener,
-                    year, month, day);
-            check_ = 4;
-            dialog.show();
-        });*/
-
         mDateSetListener = (datePicker, year, month, day) -> {
 
             String d = String.valueOf(day);
@@ -612,7 +599,6 @@ public class WritForm extends Fragment {
                                     Calendar cal = Calendar.getInstance();
                                     SimpleDateFormat simpleDateFormat=new SimpleDateFormat("EEEE, dd MMMM yyyy HH:mm a", Locale.getDefault());
                                     reference.child(pushkey).child("uploaded_date").setValue(simpleDateFormat.format(cal.getTime()));
-                                    Notify_admins();
                                     NOtify_officers();
                                     dialog1.dismiss();
                                     Snackbar.make(lay,"Data Uploaded Successfully.",Snackbar.LENGTH_LONG)
@@ -628,28 +614,6 @@ public class WritForm extends Fragment {
         for (int i = 0; i < token_list.size(); i++) {
             specific.noti("CG Sangyan", "Writ Attachment added. Tap to see", Objects.requireNonNull(token_list.get(i)), pushkey, "writ");
         }
-    }
-
-    private void Notify_admins() {
-        user_ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
-                    for(DataSnapshot ds:snapshot.getChildren()){
-                        if(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("name").getValue(String.class)).equals("admin2.0")){
-                            for(DataSnapshot ds_token:snapshot.child(ds.getKey()).child("token").getChildren()){
-                                String token=snapshot.child(ds.getKey()).child("token").child(Objects.requireNonNull(ds_token.getKey())).getValue(String.class);
-                                Specific specific=new Specific();
-                                specific.noti("CG Sangyan","Writ Attachment added. Tap to see", Objects.requireNonNull(token),pushkey,"writ");
-                                //this will enable eye feature from admin side but it will have no effect as user has uploaded the needy document.
-                            }
-                        }
-                    }
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
-        });
     }
 
     @Override
@@ -837,9 +801,7 @@ public class WritForm extends Fragment {
             reference.child(pushkey).child("district").setValue(district.getText().toString().toUpperCase());
             reference.child(pushkey).child("dateOfFiling").setValue(date_of_filing.getText().toString().toUpperCase());
             reference.child(pushkey).child("case_nature").setValue(nature.getText().toString().toUpperCase());
-            reference.child(pushkey).child("timeLimit").setValue(time_limit.getText().toString().toUpperCase());//
             reference.child(pushkey).child("summary").setValue(summary.getText().toString().toUpperCase());
-            reference.child(pushkey).child("dateReply").setValue(date_reply.getText().toString().toUpperCase());//
             reference.child(pushkey).child("judgementDate").setValue(judgement_date.getText().toString().toUpperCase());
             reference.child(pushkey).child("Judgement").setValue(type.toUpperCase());
             reference.child(pushkey).child("dSummary").setValue(dispose_summary.getText().toString().toUpperCase());
