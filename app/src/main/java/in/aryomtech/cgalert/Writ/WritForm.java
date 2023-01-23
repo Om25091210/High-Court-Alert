@@ -63,6 +63,10 @@ import com.google.firebase.storage.StorageReference;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -71,6 +75,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import in.aryomtech.cgalert.Login;
 import in.aryomtech.cgalert.R;
@@ -153,7 +162,7 @@ public class WritForm extends Fragment {
         recyclerView2.setDrawingCacheEnabled(true);
         recyclerView2.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         recyclerView2.setLayoutManager(layoutManager2);
-
+        disableSSLCertificateChecking();
         send = view.findViewById(R.id.send);
         allowed = view.findViewById(R.id.allowed);
         disposed = view.findViewById(R.id.disposed);
@@ -875,5 +884,33 @@ public class WritForm extends Fragment {
         return null;
 
     }
+    private static void disableSSLCertificateChecking() {
+        TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+            public X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
 
+            @Override
+            public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+                // Not implemented
+            }
+
+            @Override
+            public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+                // Not implemented
+            }
+        } };
+
+        try {
+            SSLContext sc = SSLContext.getInstance("TLS");
+
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+    }
 }

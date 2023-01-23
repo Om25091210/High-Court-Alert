@@ -18,6 +18,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,7 +55,7 @@ public class AllWrits extends Fragment {
     Context contextNullSafe;
     List<WritModel> list;
     DatabaseReference reference;
-    String stat_name;
+    String stat_name,ds_name;
     FirebaseAuth auth;
     FirebaseUser user;
     String sp_of;
@@ -81,6 +82,8 @@ public class AllWrits extends Fragment {
         search = view.findViewById(R.id.search);
         stat_name= getContextNullSafety().getSharedPreferences("station_name_K",MODE_PRIVATE)
                 .getString("the_station_name2003","");
+        ds_name=getContextNullSafety().getSharedPreferences("district_name_K",MODE_PRIVATE)
+                .getString("the_district_name2002","");
 
         cg_logo=view.findViewById(R.id.imageView3);
         no_data=view.findViewById(R.id.no_data);
@@ -373,7 +376,9 @@ public class AllWrits extends Fragment {
                 list.clear();
                 for (DataSnapshot ds:snapshot.getChildren()) {
                     if (snapshot.child(Objects.requireNonNull(ds.getKey())).child("case_nature").getValue(String.class) != null && snapshot.child(Objects.requireNonNull(ds.getKey())).child("caseNo").getValue(String.class) != null && snapshot.child(Objects.requireNonNull(ds.getKey())).child("dateOfFiling").getValue(String.class) !=null) {
-                        list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
+                        if (ds_name.equals(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())) {
+                            list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
+                        }
                     }
                 }
                 if(list.size()!=0){

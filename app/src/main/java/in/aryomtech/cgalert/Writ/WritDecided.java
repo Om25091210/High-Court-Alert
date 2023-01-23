@@ -54,7 +54,7 @@ public class WritDecided extends Fragment {
     Context contextNullSafe;
     List<WritModel> list;
     DatabaseReference reference;
-    String stat_name;
+    String stat_name,ds_name;
     FirebaseAuth auth;
     FirebaseUser user;
     String sp_of;
@@ -80,6 +80,8 @@ public class WritDecided extends Fragment {
 
         stat_name= getContextNullSafety().getSharedPreferences("station_name_K",MODE_PRIVATE)
                 .getString("the_station_name2003","");
+        ds_name=getContextNullSafety().getSharedPreferences("district_name_K",MODE_PRIVATE)
+                .getString("the_district_name2002","");
 
         cg_logo=view.findViewById(R.id.imageView3);
         no_data=view.findViewById(R.id.no_data);
@@ -305,7 +307,9 @@ public class WritDecided extends Fragment {
                 for (DataSnapshot ds:snapshot.getChildren()) {
                     if (snapshot.child(Objects.requireNonNull(ds.getKey())).child("decisionDate").getValue(String.class)!=null && snapshot.child(Objects.requireNonNull(ds.getKey())).child("case_nature").getValue(String.class) != null && snapshot.child(Objects.requireNonNull(ds.getKey())).child("caseNo").getValue(String.class) != null && snapshot.child(Objects.requireNonNull(ds.getKey())).child("dateOfFiling").getValue(String.class) !=null) {
                         if (!Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("decisionDate").getValue(String.class)).trim().equals("") || snapshot.child(Objects.requireNonNull(ds.getKey())).child("Judgement").getValue(String.class).equals("DISMISSED")) {
-                            list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
+                            if (ds_name.equals(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())) {
+                                list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(WritModel.class));
+                            }
                         }
                     }
                 }

@@ -70,7 +70,7 @@ public class Login extends AppCompatActivity {
     private PhoneAuthProvider.ForceResendingToken resendOTPtoken;
     // variable for FirebaseAuth class
     private FirebaseAuth mAuth;
-    String station_name;
+    String station_name,ds_name;
     // string for storing our verification ID
     private String verificationId;
     DatabaseReference user_reference,reference;
@@ -134,6 +134,10 @@ public class Login extends AppCompatActivity {
 
         getSharedPreferences("Is_IG",MODE_PRIVATE).edit()
                 .putString("Yes_of","none").apply();
+
+        getSharedPreferences("district_name_K",MODE_PRIVATE).edit()
+                .putString("the_district_name2002","").apply();
+
         linearLayout.setOnClickListener(v->{
             if(!send_otp.getText().toString().trim().equals("Verify")) {
                 if (edtEmail.getGetTextValue().trim().length() == 10) {
@@ -324,6 +328,7 @@ public class Login extends AppCompatActivity {
                         if (edtEmail.getGetTextValue().trim().equals(ds_1.getValue(String.class))){
                             count=1;
                             station_name=ds_1.getKey();
+                            ds_name=ds.getKey();
                             Log.e("Entered count","Count = 1");
                             if(Objects.requireNonNull(station_name).startsWith("SP")){
                                 getSharedPreferences("Is_SP",MODE_PRIVATE).edit()
@@ -331,6 +336,9 @@ public class Login extends AppCompatActivity {
                             }
                             getSharedPreferences("station_name_K",MODE_PRIVATE).edit()
                                     .putString("the_station_name2003",station_name).apply();
+
+                            getSharedPreferences("district_name_K",MODE_PRIVATE).edit()
+                                    .putString("the_district_name2002",ds_name).apply();
                             break;
                         }
                     }

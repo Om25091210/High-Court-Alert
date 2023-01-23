@@ -62,7 +62,7 @@ public class AppellantFragment extends Fragment {
     DatabaseReference reference,user_ref;
     TextView decisionDate,due,due_date,judgement_date,judgement_date_edt;
     String pushkey;
-    LinearLayout layout_checkbox;
+    LinearLayout layout_checkbox,linearLayout;
     ConstraintLayout layout;
     String type;
     EditText judgement_summary;
@@ -92,6 +92,7 @@ public class AppellantFragment extends Fragment {
         layout = view.findViewById(R.id.cons_lay);
         due = view.findViewById(R.id.due);
         layout_checkbox = view.findViewById(R.id.linearLayout13);
+        linearLayout = view.findViewById(R.id.linearLayout12);
         reference = FirebaseDatabase.getInstance().getReference().child("writ").child(pushkey);
         user_ref = FirebaseDatabase.getInstance().getReference().child("users");
         decisionDate = view.findViewById(R.id.decision_date);
@@ -117,6 +118,7 @@ public class AppellantFragment extends Fragment {
             judgement_date.setVisibility(View.VISIBLE);
             layout_checkbox.setVisibility(View.VISIBLE);
             due.setVisibility(View.VISIBLE);
+            linearLayout.setVisibility(View.VISIBLE);
             due_date.setVisibility(View.VISIBLE);
             judgement_date_edt.setVisibility(View.VISIBLE);
         }
@@ -125,6 +127,7 @@ public class AppellantFragment extends Fragment {
             layout_checkbox.setVisibility(View.GONE);
             judgement_date.setVisibility(View.GONE);
             due.setVisibility(View.GONE);
+            linearLayout.setVisibility(View.GONE);
             due_date.setVisibility(View.GONE);
             judgement_date_edt.setVisibility(View.GONE);
         }

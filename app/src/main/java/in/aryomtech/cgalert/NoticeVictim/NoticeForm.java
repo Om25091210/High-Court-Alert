@@ -52,13 +52,21 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.security.KeyManagementException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import in.aryomtech.cgalert.R;
 import in.aryomtech.cgalert.fcm.Specific;
@@ -118,7 +126,7 @@ public class NoticeForm extends Fragment {
         hearing_date = view.findViewById(R.id.next_hearing_date);
         advocate = view.findViewById(R.id.name_edt);
         submit = view.findViewById(R.id.submit_txt);
-
+        disableSSLCertificateChecking();
         crr = view.findViewById(R.id.crr);
         cra = view.findViewById(R.id.cra);
         mcrc = view.findViewById(R.id.mcrc);
@@ -633,5 +641,34 @@ public class NoticeForm extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         contextNullSafe = context;
+    }
+    private static void disableSSLCertificateChecking() {
+        TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+            public X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
+
+            @Override
+            public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+                // Not implemented
+            }
+
+            @Override
+            public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+                // Not implemented
+            }
+        } };
+
+        try {
+            SSLContext sc = SSLContext.getInstance("TLS");
+
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
     }
 }

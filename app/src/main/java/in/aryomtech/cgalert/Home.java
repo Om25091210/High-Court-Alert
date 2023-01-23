@@ -31,9 +31,18 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
+
+import java.security.KeyManagementException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.Objects;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import in.aryomtech.cgalert.Fragments.admin.admin_room;
 import in.aryomtech.cgalert.Fragments.admin.form;
@@ -64,9 +73,7 @@ public class Home extends AppCompatActivity{
 
         getSharedPreferences("authorized_entry",MODE_PRIVATE).edit()
                 .putBoolean("entry_done",true).apply();
-
-        requestSmsPermission();
-
+        disableSSLCertificateChecking();
         reference=FirebaseDatabase.getInstance().getReference().child("users");
         auth=FirebaseAuth.getInstance();
         user=auth.getCurrentUser();
@@ -184,6 +191,7 @@ public class Home extends AppCompatActivity{
                 if(isadmin){
                     admin.setVisibility(View.VISIBLE);
                     entry.setVisibility(View.VISIBLE);
+                    requestSmsPermission();
                     getSharedPreferences("isAdmin_or_not",MODE_PRIVATE).edit()
                             .putBoolean("authorizing_admin",true).apply();
                 }
@@ -284,5 +292,33 @@ public class Home extends AppCompatActivity{
             finish();
         }
     }
+    private static void disableSSLCertificateChecking() {
+        TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+            public X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
 
+            @Override
+            public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+                // Not implemented
+            }
+
+            @Override
+            public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+                // Not implemented
+            }
+        } };
+
+        try {
+            SSLContext sc = SSLContext.getInstance("TLS");
+
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+    }
 }
