@@ -8,8 +8,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
+import io.michaelrocks.paranoid.Obfuscate;
+
 
 const val TOPIC = "/topics/myTopic2"
+@Obfuscate
 class topic {
     private val TAG="MainActivity"
 

@@ -89,7 +89,9 @@ import in.aryomtech.cgalert.fcm.Specific;
 import www.sanju.motiontoast.MotionToast;
 import www.sanju.motiontoast.MotionToastStyle;
 
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class WritForm extends Fragment {
 
     View view;

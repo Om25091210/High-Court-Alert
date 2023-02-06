@@ -24,7 +24,9 @@ import in.aryomtech.cgalert.Fragments.holder.Excel_holder;
 import in.aryomtech.cgalert.Fragments.model.Excel_data;
 import in.aryomtech.cgalert.R;
 
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class total_data extends Fragment {
 
     View view;

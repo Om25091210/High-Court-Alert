@@ -27,7 +27,9 @@ import java.util.List;
 import in.aryomtech.cgalert.NoticeVictim.Interface.onUploadInterface;
 import in.aryomtech.cgalert.NoticeVictim.model.Notice_model;
 import in.aryomtech.cgalert.R;
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class ServedAdapter extends RecyclerView.Adapter<ServedAdapter.ViewHolder>{
 
     List<Notice_model> list;

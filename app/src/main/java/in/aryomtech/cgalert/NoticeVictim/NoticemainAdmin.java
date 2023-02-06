@@ -9,6 +9,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,6 +43,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import in.aryomtech.cgalert.CheckRooted.RootUtil;
 import in.aryomtech.cgalert.DB.TinyDB;
 import in.aryomtech.cgalert.NoticeVictim.Adapter.NoticeAdapter;
 import in.aryomtech.cgalert.NoticeVictim.Fragments.AllNTV;
@@ -51,10 +53,13 @@ import in.aryomtech.cgalert.NoticeVictim.Fragments.UrgentNTV;
 import in.aryomtech.cgalert.NoticeVictim.Fragments.Served;
 import in.aryomtech.cgalert.NoticeVictim.model.Notice_model;
 import in.aryomtech.cgalert.R;
+import in.aryomtech.cgalert.Splash;
 import in.aryomtech.myapplication.v4.FragmentPagerItemAdapter;
 import in.aryomtech.myapplication.v4.FragmentPagerItems;
 import soup.neumorphism.NeumorphCardView;
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class NoticemainAdmin extends AppCompatActivity {
 
     String stat_name;
@@ -83,7 +88,10 @@ public class NoticemainAdmin extends AppCompatActivity {
         user = auth.getCurrentUser();
         stat_name= getSharedPreferences("station_name_K",MODE_PRIVATE)
                 .getString("the_station_name2003","");
-        disableSSLCertificateChecking();
+        if(RootUtil.isDeviceRooted()){
+            Toast.makeText(this, "Device Rooted", Toast.LENGTH_SHORT).show();
+            NoticemainAdmin.this.finish();
+        }
         list = new ArrayList<>();
         tinyDB=new TinyDB(getApplicationContext());
         form = findViewById(R.id.form);
@@ -307,33 +315,4 @@ public class NoticemainAdmin extends AppCompatActivity {
         });
     }
 
-    private static void disableSSLCertificateChecking() {
-        TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
-            public X509Certificate[] getAcceptedIssuers() {
-                return null;
-            }
-
-            @Override
-            public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
-                // Not implemented
-            }
-
-            @Override
-            public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
-                // Not implemented
-            }
-        } };
-
-        try {
-            SSLContext sc = SSLContext.getInstance("TLS");
-
-            sc.init(null, trustAllCerts, new java.security.SecureRandom());
-
-            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-    }
 }

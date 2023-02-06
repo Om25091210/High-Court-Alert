@@ -43,7 +43,9 @@ import in.aryomtech.cgalert.Writ.Adapter.AppellantAdapter;
 import in.aryomtech.cgalert.Writ.Adapter.RespondentAdapter;
 import in.aryomtech.cgalert.Writ.Model.WritModel;
 
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class AppellantFragment extends Fragment {
 
 

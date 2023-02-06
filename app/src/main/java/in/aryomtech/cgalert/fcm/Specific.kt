@@ -6,7 +6,9 @@ import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 class Specific {
     private val TAG="send"
 

@@ -21,7 +21,9 @@ import java.util.Locale;
 
 import in.aryomtech.cgalert.Fragments.model.Excel_data;
 import in.aryomtech.cgalert.R;
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class Excel_holder extends RecyclerView.ViewHolder {
     TextView day_left;
     TextView textViewTitle;

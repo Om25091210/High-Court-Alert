@@ -30,7 +30,9 @@ import in.aryomtech.cgalert.R;
 import in.aryomtech.cgalert.Splash;
 import in.aryomtech.cgalert.Writ.Model.WritModel;
 import in.aryomtech.cgalert.databinding.ActivityTempNotificationBinding;
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class temp_notification extends AppCompatActivity {
 
     ActivityTempNotificationBinding binding;

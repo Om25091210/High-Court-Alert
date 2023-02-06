@@ -19,7 +19,9 @@ import in.aryomtech.cgalert.Fragments.model.Excel_data;
 import in.aryomtech.cgalert.Fragments.model.filterdata;
 import in.aryomtech.cgalert.Fragments.showing_similar_coll;
 import in.aryomtech.cgalert.R;
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class similarAdapter extends RecyclerView.Adapter<similarAdapter.ViewHolder> {
 
     List<filterdata> filtered_data;

@@ -41,7 +41,9 @@ import in.aryomtech.cgalert.Fragments.model.Excel_data;
 import in.aryomtech.cgalert.Fragments.model.filterdata;
 import in.aryomtech.cgalert.R;
 
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class Similar_Collection extends Fragment {
 
     View view;

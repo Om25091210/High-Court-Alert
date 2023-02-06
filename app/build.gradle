@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'com.google.firebase.crashlytics'
 }
+apply plugin: 'io.michaelrocks.paranoid'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-android'
 android {

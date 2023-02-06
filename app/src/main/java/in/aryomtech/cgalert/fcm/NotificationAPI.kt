@@ -9,7 +9,9 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 interface NotificationAPI {
 
     @Headers("Authorization: key=$SERVER_KEY","Content_Type:$CONTENT_TYPE")

@@ -37,7 +37,9 @@ import java.util.Objects;
 
 import in.aryomtech.cgalert.Login;
 import in.aryomtech.cgalert.R;
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class p_Home extends AppCompatActivity{
 
     TextView station_name_txt;

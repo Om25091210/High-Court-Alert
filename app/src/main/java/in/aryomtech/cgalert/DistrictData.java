@@ -27,7 +27,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class DistrictData extends Fragment {
 
     View view;

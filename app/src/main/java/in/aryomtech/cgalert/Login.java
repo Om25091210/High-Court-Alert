@@ -54,7 +54,9 @@ import in.aryomtech.cgalert.DB.TinyDB;
 import in.aryomtech.cgalert.Fragments.Select_District;
 import www.sanju.motiontoast.MotionToast;
 import www.sanju.motiontoast.MotionToastStyle;
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class Login extends AppCompatActivity {
 
     LinearLayout linearLayout,logo_layout;

@@ -49,7 +49,9 @@ import in.aryomtech.cgalert.Fragments.model.Excel_data;
 import in.aryomtech.cgalert.Fragments.Interface.onAgainClickInterface;
 import in.aryomtech.cgalert.Fragments.Interface.onClickInterface;
 import in.aryomtech.cgalert.R;
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class Return_Adapter extends RecyclerView.Adapter<Return_Adapter.ViewHolder> {
 
     Context context;

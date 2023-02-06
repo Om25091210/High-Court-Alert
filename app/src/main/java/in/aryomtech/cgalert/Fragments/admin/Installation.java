@@ -34,7 +34,9 @@ import in.aryomtech.cgalert.Fragments.Adapter.installation_Adapter;
 import in.aryomtech.cgalert.Fragments.model.user_data;
 import in.aryomtech.cgalert.R;
 
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class Installation extends Fragment {
 
     View view;

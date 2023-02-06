@@ -14,6 +14,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,7 +29,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import in.aryomtech.cgalert.CheckRooted.RootUtil;
 import in.aryomtech.cgalert.R;
+import in.aryomtech.cgalert.Splash;
 import in.aryomtech.cgalert.Writ.Fragments.AllWrits;
 import in.aryomtech.cgalert.Writ.Fragments.DisposedDismissedWrits;
 import in.aryomtech.cgalert.Writ.Fragments.PendingWrits;
@@ -38,7 +41,9 @@ import in.aryomtech.cgalert.Writ.Model.WritModel;
 import in.aryomtech.myapplication.v4.FragmentPagerItemAdapter;
 import in.aryomtech.myapplication.v4.FragmentPagerItems;
 import soup.neumorphism.NeumorphCardView;
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class WritsMain extends AppCompatActivity {
 
     List<WritModel> list;
@@ -128,6 +133,10 @@ public class WritsMain extends AppCompatActivity {
         findViewById(R.id.imageView4).setOnClickListener(v->{
             finish();
         });
+        if(RootUtil.isDeviceRooted()){
+            Toast.makeText(this, "Device Rooted", Toast.LENGTH_SHORT).show();
+            WritsMain.this.finish();
+        }
         get_counts();
     }
 

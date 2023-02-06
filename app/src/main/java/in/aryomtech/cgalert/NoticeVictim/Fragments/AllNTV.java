@@ -75,7 +75,9 @@ import in.aryomtech.cgalert.NoticeVictim.model.Notice_model;
 import in.aryomtech.cgalert.R;
 import in.aryomtech.cgalert.fcm.Specific;
 import www.sanju.motiontoast.MotionToast;
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class AllNTV extends Fragment {
 
     View view;

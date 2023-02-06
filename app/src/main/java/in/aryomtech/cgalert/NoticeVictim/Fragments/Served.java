@@ -39,7 +39,9 @@ import in.aryomtech.cgalert.NoticeVictim.Adapter.NoticeAdapter;
 import in.aryomtech.cgalert.NoticeVictim.Adapter.ServedAdapter;
 import in.aryomtech.cgalert.NoticeVictim.model.Notice_model;
 import in.aryomtech.cgalert.R;
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class Served extends Fragment implements RobotoCalendarView.RobotoCalendarListener, LocationListener {
 
     RobotoCalendarView robotoCalendarView;

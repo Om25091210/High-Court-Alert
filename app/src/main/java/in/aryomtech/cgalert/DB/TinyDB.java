@@ -19,7 +19,9 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class TinyDB {
 
     private Context context;

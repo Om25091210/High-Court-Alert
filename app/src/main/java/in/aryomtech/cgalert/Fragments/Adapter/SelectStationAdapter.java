@@ -18,7 +18,9 @@ import java.util.List;
 
 import in.aryomtech.cgalert.DB.TinyDB;
 import in.aryomtech.cgalert.R;
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class SelectStationAdapter  extends RecyclerView.Adapter<SelectStationAdapter.ViewHolder> {
 
     List<String> list;

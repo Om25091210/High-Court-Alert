@@ -16,7 +16,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
 import in.aryomtech.cgalert.R;
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class RespondentAdapter extends RecyclerView.Adapter<RespondentAdapter.ViewHolder> {
 
     Context context;

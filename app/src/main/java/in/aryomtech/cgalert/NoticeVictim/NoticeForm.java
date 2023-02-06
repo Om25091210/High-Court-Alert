@@ -71,7 +71,9 @@ import javax.net.ssl.X509TrustManager;
 import in.aryomtech.cgalert.R;
 import in.aryomtech.cgalert.fcm.Specific;
 
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class NoticeForm extends Fragment {
 
     View view;
@@ -384,7 +386,7 @@ public class NoticeForm extends Fragment {
                 +caseNo.getText().toString().toUpperCase()+"-"
                 +case_year.getText().toString().toUpperCase();
         Log.e("GS",gsID);
-        String URL = "https://script.google.com/macros/s/"
+        String URL = "http://script.google.com/macros/s/"
                 + gsID+"/exec?"
                 +"noticeDate="+notice_date.getText().toString().toUpperCase()
                 +"&policeStation="+station.getText().toString().toUpperCase()

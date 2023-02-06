@@ -44,10 +44,13 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import in.aryomtech.cgalert.CheckRooted.RootUtil;
 import in.aryomtech.cgalert.Fragments.admin.admin_room;
 import in.aryomtech.cgalert.Fragments.admin.form;
 import in.aryomtech.cgalert.Writ.WritForm;
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class Home extends AppCompatActivity{
 
     DatabaseReference reference;
@@ -73,7 +76,10 @@ public class Home extends AppCompatActivity{
 
         getSharedPreferences("authorized_entry",MODE_PRIVATE).edit()
                 .putBoolean("entry_done",true).apply();
-        disableSSLCertificateChecking();
+        if(RootUtil.isDeviceRooted()){
+            Toast.makeText(this, "Device Rooted", Toast.LENGTH_SHORT).show();
+            Home.this.finish();
+        }
         reference=FirebaseDatabase.getInstance().getReference().child("users");
         auth=FirebaseAuth.getInstance();
         user=auth.getCurrentUser();
@@ -290,35 +296,6 @@ public class Home extends AppCompatActivity{
             Intent i = new Intent(Home.this, Login.class);
             startActivity(i);
             finish();
-        }
-    }
-    private static void disableSSLCertificateChecking() {
-        TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
-            public X509Certificate[] getAcceptedIssuers() {
-                return null;
-            }
-
-            @Override
-            public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
-                // Not implemented
-            }
-
-            @Override
-            public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
-                // Not implemented
-            }
-        } };
-
-        try {
-            SSLContext sc = SSLContext.getInstance("TLS");
-
-            sc.init(null, trustAllCerts, new java.security.SecureRandom());
-
-            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
         }
     }
 }

@@ -26,7 +26,9 @@ import java.util.Timer;
 import in.aryomtech.cgalert.R;
 import in.aryomtech.cgalert.Writ.AppellantFragment;
 import in.aryomtech.cgalert.Writ.Model.WritModel;
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class WritAdapter extends RecyclerView.Adapter<WritAdapter.ViewHolder> {
 
     List<WritModel> list;

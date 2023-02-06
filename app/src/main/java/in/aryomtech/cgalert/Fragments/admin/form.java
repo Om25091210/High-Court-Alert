@@ -71,7 +71,9 @@ import javax.net.ssl.X509TrustManager;
 
 import in.aryomtech.cgalert.Fragments.model.Excel_data;
 import in.aryomtech.cgalert.R;
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class form extends Fragment {
 
     View view;
@@ -1011,15 +1013,19 @@ public class form extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot dataSnapshot:snapshot.child(district).getChildren()) {
-                    if (dataSnapshot.getKey().substring(0, 2).equals("PS")) {
-                        ps_list.add(dataSnapshot.getKey().substring(2));
-                        //Creating the instance of ArrayAdapter containing list of language names
-                        ArrayAdapter<String> adapter = new ArrayAdapter<String>
-                                (getContextNullSafety(), android.R.layout.select_dialog_item, ps_list);
-                        //Getting the instance of AutoCompleteTextView
-                        policeStation.setThreshold(1);//will start working from first character
-                        policeStation.setAdapter(adapter);//setting the adapter data into the AutoCompleteTextView
-                        policeStation.setTextColor(Color.RED);
+                    try {
+                        if (dataSnapshot.getKey().substring(0, 2).equals("PS")) {
+                            ps_list.add(dataSnapshot.getKey().substring(2));
+                            //Creating the instance of ArrayAdapter containing list of language names
+                            ArrayAdapter<String> adapter = new ArrayAdapter<String>
+                                    (getContextNullSafety(), android.R.layout.select_dialog_item, ps_list);
+                            //Getting the instance of AutoCompleteTextView
+                            policeStation.setThreshold(1);//will start working from first character
+                            policeStation.setAdapter(adapter);//setting the adapter data into the AutoCompleteTextView
+                            policeStation.setTextColor(Color.RED);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
                 Log.e("PS = ",ps_list+"");

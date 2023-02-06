@@ -31,8 +31,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import in.aryomtech.cgalert.R;
+import io.michaelrocks.paranoid.Obfuscate;
 
-
+@Obfuscate
 public class about extends Fragment {
 
     private ViewPager screenPager;

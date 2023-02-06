@@ -22,7 +22,9 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import kotlin.random.Random
 
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 private const val CHANNEL_ID="my_channel"
 
 class FirebaseService : FirebaseMessagingService(){

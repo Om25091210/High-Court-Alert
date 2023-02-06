@@ -18,7 +18,9 @@ import java.util.List;
 import in.aryomtech.cgalert.Fragments.Adapter.Return_Adapter;
 import in.aryomtech.cgalert.Fragments.model.stationData;
 import in.aryomtech.cgalert.Fragments.pending_coll;
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class Adapter_dataShow extends RecyclerView.Adapter<Adapter_dataShow.ViewHolder> {
 
     List<String> list;

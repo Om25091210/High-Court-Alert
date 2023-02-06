@@ -44,7 +44,9 @@ import in.aryomtech.myapplication.v4.FragmentPagerItemAdapter;
 import in.aryomtech.myapplication.v4.FragmentPagerItems;
 import soup.neumorphism.NeumorphCardView;
 
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class Frag_p_Home extends Fragment {
 
     String stat_name;

@@ -47,7 +47,9 @@ import in.aryomtech.cgalert.R;
 import in.aryomtech.cgalert.Writ.Adapter.WritAdapter;
 import in.aryomtech.cgalert.Writ.Model.WritModel;
 
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class AllWrits extends Fragment {
 
     View view;

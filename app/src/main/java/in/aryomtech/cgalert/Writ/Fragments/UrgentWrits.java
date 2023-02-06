@@ -46,7 +46,9 @@ import in.aryomtech.cgalert.Writ.Model.WritModel;
 import in.aryomtech.cgalert.DB.TinyDB;
 import in.aryomtech.cgalert.R;
 
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class UrgentWrits extends Fragment {
 
     View view;

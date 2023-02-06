@@ -4,7 +4,9 @@ import `in`.aryomtech.cgalert.fcm.Constants.Companion.BASE_URL
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 class RetrofirInstance {
 
     companion object{

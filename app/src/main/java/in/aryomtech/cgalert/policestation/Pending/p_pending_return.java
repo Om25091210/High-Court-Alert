@@ -53,7 +53,9 @@ import in.aryomtech.cgalert.Fragments.model.Excel_data;
 import in.aryomtech.cgalert.R;
 import soup.neumorphism.NeumorphButton;
 
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class p_pending_return extends Fragment {
 
     View view;

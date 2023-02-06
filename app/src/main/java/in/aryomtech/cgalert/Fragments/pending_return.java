@@ -84,7 +84,9 @@ import in.aryomtech.cgalert.R;
 import in.aryomtech.cgalert.fcm.Specific;
 import soup.neumorphism.NeumorphButton;
 
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class pending_return extends Fragment {
 
     View view;
@@ -981,7 +983,7 @@ public class pending_return extends Fragment {
             }
 
             RequestQueue requestQueue = Volley.newRequestQueue(getContextNullSafety());
-            String URL = "https://sangyan.co.in/sendmsg";
+            String URL = "http://sangyan.co.in/sendmsg";
 
             JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, URL, jsonBody,
                     new com.android.volley.Response.Listener<JSONObject>() {
@@ -1058,7 +1060,7 @@ public class pending_return extends Fragment {
         Log.e("ps case",j_dates_list.get(0).getB());
         String prev_keygen=j_dates_list.get(0).getB()+"-"+j_dates_list.get(0).getE();
 
-        String URL = "https://script.google.com/macros/s/"
+        String URL = "http://script.google.com/macros/s/"
                 + gsID+"/exec?"
                 +"data="+jsonExcelList
                 +"&j_column="+j_date
@@ -1143,7 +1145,7 @@ public class pending_return extends Fragment {
         dialogD.dismiss();
         String prev_keygen=delete_list.get(0).getB()+"-"+delete_list.get(0).getE();
 
-        String URL = "https://script.google.com/macros/s/"
+        String URL = "http://script.google.com/macros/s/"
                 + gsID+"/exec?"
                 +"data="+jsonExcelList
                 +"&keygen="+hashGenerator(prev_keygen)

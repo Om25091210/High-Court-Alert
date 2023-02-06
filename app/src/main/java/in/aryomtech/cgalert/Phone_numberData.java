@@ -35,7 +35,9 @@ import java.util.Objects;
 
 import in.aryomtech.cgalert.Fragments.model.stationData;
 
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class Phone_numberData extends Fragment {
 
     View view;

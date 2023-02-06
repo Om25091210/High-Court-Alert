@@ -80,7 +80,9 @@ import in.aryomtech.cgalert.R;
 import in.aryomtech.cgalert.fcm.Specific;
 import soup.neumorphism.NeumorphButton;
 
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class today extends Fragment {
 
     View view;
@@ -659,7 +661,7 @@ public class today extends Fragment {
                 if(phone_numbers.size()!=0) {
                     for (int pos = 0; pos < phone_numbers.size(); pos++) {
                         if (type.equals("sms")) {
-                            //httpCall("https://2factor.in/API/R1/?module=TRANS_SMS&apikey=89988543-35b9-11ec-a13b-0200cd936042&to="+phone_numbers.get(pos)+"&from=OMSAIT&templatename=TESTING&var1="+"Himanshi"+"&var2="+"OM is Love");
+                            //httpCall("http://2factor.in/API/R1/?module=TRANS_SMS&apikey=89988543-35b9-11ec-a13b-0200cd936042&to="+phone_numbers.get(pos)+"&from=OMSAIT&templatename=TESTING&var1="+"Himanshi"+"&var2="+"OM is Love");
                         } else if (type.equals("phonesms")) {
                             send_phone_sms(phone_numbers);
                             break;
@@ -735,7 +737,7 @@ public class today extends Fragment {
             }
 
             RequestQueue requestQueue = Volley.newRequestQueue(getContextNullSafety());
-            String URL = "https://sangyan.co.in/sendmsg";
+            String URL = "http://sangyan.co.in/sendmsg";
 
             JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, URL, jsonBody,
                     new com.android.volley.Response.Listener<JSONObject>() {
@@ -1046,7 +1048,7 @@ public class today extends Fragment {
         Log.e("ps case",j_dates_list.get(0).getB());
         String prev_keygen=j_dates_list.get(0).getB()+"-"+j_dates_list.get(0).getE();
 
-        String URL = "https://script.google.com/macros/s/"
+        String URL = "http://script.google.com/macros/s/"
                 + gsID+"/exec?"
                 +"data="+jsonExcelList
                 +"&j_column="+j_date
@@ -1131,7 +1133,7 @@ public class today extends Fragment {
         dialogD.dismiss();
         String prev_keygen=delete_list.get(0).getB()+"-"+delete_list.get(0).getE();
 
-        String URL = "https://script.google.com/macros/s/"
+        String URL = "http://script.google.com/macros/s/"
                 + gsID+"/exec?"
                 +"data="+jsonExcelList
                 +"&keygen="+hashGenerator(prev_keygen)

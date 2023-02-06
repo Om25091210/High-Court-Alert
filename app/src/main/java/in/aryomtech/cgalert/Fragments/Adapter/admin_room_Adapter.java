@@ -20,7 +20,9 @@ import java.util.Locale;
 
 import in.aryomtech.cgalert.Fragments.model.Excel_data;
 import in.aryomtech.cgalert.R;
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class admin_room_Adapter extends RecyclerView.Adapter<admin_room_Adapter.ViewHolder> {
 
     Context context;

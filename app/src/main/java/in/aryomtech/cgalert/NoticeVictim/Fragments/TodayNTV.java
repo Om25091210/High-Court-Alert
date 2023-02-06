@@ -70,7 +70,9 @@ import in.aryomtech.cgalert.NoticeVictim.model.Notice_model;
 import in.aryomtech.cgalert.R;
 import in.aryomtech.cgalert.fcm.Specific;
 
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class TodayNTV extends Fragment {
 
     View view;

@@ -20,7 +20,9 @@ import in.aryomtech.cgalert.Fragments.model.filterdata;
 import in.aryomtech.cgalert.Fragments.showing_similar_coll;
 import in.aryomtech.cgalert.Fragments.showing_similar_return;
 import in.aryomtech.cgalert.R;
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class similarAdapter2  extends RecyclerView.Adapter<similarAdapter2.ViewHolder> {
 
     List<filterdata> filtered_data;
