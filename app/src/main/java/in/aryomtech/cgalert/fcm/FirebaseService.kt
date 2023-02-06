@@ -24,9 +24,9 @@ import kotlin.random.Random
 
 import io.michaelrocks.paranoid.Obfuscate;
 
-@Obfuscate
-private const val CHANNEL_ID="my_channel"
 
+private const val CHANNEL_ID="my_channel"
+@Obfuscate
 class FirebaseService : FirebaseMessagingService(){
 
     override fun onNewToken(p0: String) {
