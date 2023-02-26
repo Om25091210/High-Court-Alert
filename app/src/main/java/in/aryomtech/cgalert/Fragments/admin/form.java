@@ -222,7 +222,7 @@ public class form extends Fragment {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
             @Override
             public void afterTextChanged(Editable editable) {
-                get_police_station(ac_district.getText().toString().trim());
+                get_police_station(ac_district.getText().toString().trim().replaceAll("[^-()a-zA-Z0-9]", ""));
             }
         });
 
@@ -394,22 +394,22 @@ public class form extends Fragment {
         diary_re_txt.setVisibility(View.VISIBLE);
         diary.setVisibility(View.VISIBLE);
 
-        ac_district.setText(excel_data.getC());
-        policeStation.setText(excel_data.getB());
-        crime_no_edt.setText(excel_data.getH());
-        crime_year_edt.setText(excel_data.getI());
-        ac_caseType.setText(excel_data.getD());
-        case_no_edt.setText(excel_data.getE());
-        case_year_edt.setText(excel_data.getG());
-        case_year_edt.setText(excel_data.getG());
-        name_edt.setText(excel_data.getF());
-        rm.setText(excel_data.getK());
-        String year=excel_data.getK().substring(6);
-        String month=excel_data.getK().substring(3,5);
-        String day=excel_data.getK().substring(0,2);
+        ac_district.setText(excel_data.getCc());
+        policeStation.setText(excel_data.getBb());
+        crime_no_edt.setText(excel_data.getHh());
+        crime_year_edt.setText(excel_data.getIi());
+        ac_caseType.setText(excel_data.getDd());
+        case_no_edt.setText(excel_data.getEe());
+        case_year_edt.setText(excel_data.getGg());
+        case_year_edt.setText(excel_data.getGg());
+        name_edt.setText(excel_data.getFf());
+        rm.setText(excel_data.getKk());
+        String year=excel_data.getKk().substring(6);
+        String month=excel_data.getKk().substring(3,5);
+        String day=excel_data.getKk().substring(0,2);
         rm_Date=year+month+day;
         fd_dot=year+"-"+month+"-"+day;
-        before.setText(excel_data.getL());
+        before.setText(excel_data.getLl());
         if(excel_data.getType().equals("RM CALL")){
             checkBox_RM_call.setChecked(true);
             checkBox_RM_return.setChecked(false);
@@ -418,10 +418,10 @@ public class form extends Fragment {
             checkBox_RM_return.setChecked(true);
             checkBox_RM_call.setChecked(false);
         }
-        if(excel_data.getJ().equals("None"))
+        if(excel_data.getJj().equals("None"))
             diary.setText("");
         else
-            diary.setText(excel_data.getJ());
+            diary.setText(excel_data.getJj());
     }
 
     private void push_to_database_and_excel(String sheet) {
@@ -508,15 +508,15 @@ public class form extends Fragment {
             pushkey=excel_data.getPushkey();
         Map<String,String> data_packet=new HashMap<>();
         data_packet.put("A","");
-        data_packet.put("B",policeStation.getText().toString().trim().toUpperCase());
-        data_packet.put("C",ac_district.getText().toString().trim().toUpperCase());
-        data_packet.put("D",ac_caseType.getText().toString().trim().toUpperCase());
-        data_packet.put("E",case_no_edt.getText().toString().trim());
-        data_packet.put("F",name_edt.getText().toString().trim().toUpperCase());
-        data_packet.put("G",case_year_edt.getText().toString().trim());
-        data_packet.put("H",crime_no_edt.getText().toString().trim());
-        data_packet.put("I",crime_year_edt.getText().toString().trim());
-        data_packet.put("number",number);
+        data_packet.put("B",policeStation.getText().toString().trim().toUpperCase().replaceAll("[^-()a-zA-Z0-9]", ""));
+        data_packet.put("C",ac_district.getText().toString().trim().toUpperCase().replaceAll("[^-()a-zA-Z0-9]", ""));
+        data_packet.put("D",ac_caseType.getText().toString().trim().toUpperCase().replaceAll("[^-()a-zA-Z0-9]", ""));
+        data_packet.put("E",case_no_edt.getText().toString().trim().replaceAll("[^-()a-zA-Z0-9]", ""));
+        data_packet.put("F",name_edt.getText().toString().trim().toUpperCase().replaceAll("[^-()a-zA-Z0-9]", ""));
+        data_packet.put("G",case_year_edt.getText().toString().trim().replaceAll("[^-()a-zA-Z0-9]", ""));
+        data_packet.put("H",crime_no_edt.getText().toString().trim().replaceAll("[^-()a-zA-Z0-9]", ""));
+        data_packet.put("I",crime_year_edt.getText().toString().trim().replaceAll("[^-()a-zA-Z0-9]", ""));
+        data_packet.put("number",number.replaceAll("[^-()a-zA-Z0-9]", ""));
         if(diary.getText().toString().trim().equals(""))
             data_packet.put("J","None");
         else

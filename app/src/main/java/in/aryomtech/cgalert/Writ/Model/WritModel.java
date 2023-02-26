@@ -1,36 +1,39 @@
 package in.aryomtech.cgalert.Writ.Model;
 
+import androidx.annotation.Keep;
+
+import java.io.Serializable;
 import java.util.ArrayList;
+@Keep
+public class WritModel implements Serializable {
 
-public class WritModel {
-
-    private String Judgement;
-    private String dSummary;
-    private String dateOfFiling;
-    private String dateReply;
-    private String district;
-    private String dueDate;
-    private String judgementDate;
-    private String case_nature;
-    private String pushkey;
-    private String summary;
-    private String caseNo;
-    private String caseYear;
-    private String timeLimit;
-    private String decisionDate;
-    private String uploaded_date;
-    private String uploaded_file;
-    private ArrayList<String> appellant;
-    private ArrayList<String> respondents;
-    private String reminded;
-    private String seen;
-    private String sent;
+    public String Judgement;
+    public String dSummary;
+    public String dateOfFiling;
+    public String dateReply;
+    public String district;
+    public String dueDate;
+    public String judgementDate;
+    public String case_nature;
+    public String pushkey;
+    public String summary;
+    public String caseNo;
+    public String caseYear;
+    public String timeLimit;
+    public String decisionDate;
+    public String uploaded_date;
+    public String uploaded_file;
+    public ArrayList<String> appellant;
+    public ArrayList<String> respondents;
+    public String reminded;
+    public String seen;
+    public String sent;
 
     public WritModel() {
     }
 
     public WritModel(String judgement, String dSummary, String dateOfFiling, String dateReply, String district, String dueDate, String judgementDate, String case_nature, String pushkey, String summary, String caseNo, String caseYear, String timeLimit, String decisionDate, String uploaded_date, String uploaded_file, ArrayList<String> appellant, ArrayList<String> respondents, String reminded) {
-        Judgement = judgement;
+        this.Judgement = judgement;
         this.dSummary = dSummary;
         this.dateOfFiling = dateOfFiling;
         this.dateReply = dateReply;
@@ -51,11 +54,11 @@ public class WritModel {
         this.reminded = reminded;
     }
 
-    public String getSeen() {
+    public String getSeenn() {
         return seen;
     }
 
-    public String getSent() {
+    public String getSentt() {
         return sent;
     }
 
@@ -63,7 +66,7 @@ public class WritModel {
         return appellant;
     }
 
-    public String getReminded() {
+    public String getRemind() {
         return reminded;
     }
 
@@ -83,7 +86,7 @@ public class WritModel {
         return caseYear;
     }
 
-    public String getJudgement() {
+    public String getJudgementt() {
         return Judgement;
     }
 
@@ -119,7 +122,7 @@ public class WritModel {
         return respondents;
     }
 
-    public String getPushkey() {
+    public String getkey() {
         return pushkey;
     }
 

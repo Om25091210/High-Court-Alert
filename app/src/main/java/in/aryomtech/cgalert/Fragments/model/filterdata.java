@@ -1,6 +1,10 @@
 package in.aryomtech.cgalert.Fragments.model;
 
-public class filterdata {
+import androidx.annotation.Keep;
+
+import java.io.Serializable;
+@Keep
+public class filterdata implements Serializable {
     String cn,year,stn,dis_n;
 
     public filterdata() {

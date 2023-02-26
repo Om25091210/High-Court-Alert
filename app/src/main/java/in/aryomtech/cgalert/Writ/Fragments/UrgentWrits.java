@@ -383,11 +383,11 @@ public class UrgentWrits extends Fragment {
         list_string.clear();
         try{
             list_string.add(object.getDistrict().toLowerCase());
-            list_string.add(object.getJudgement().toLowerCase());
+            list_string.add(object.getJudgementt().toLowerCase());
             list_string.add(object.getCaseYear().toLowerCase());
             list_string.add(object.getCaseNo().toLowerCase());
             list_string.add(object.getCase_nature().toLowerCase());
-            list_string.add(object.getPushkey().toLowerCase());
+            list_string.add(object.getkey().toLowerCase());
             list_string.add(object.getDateOfFiling().toLowerCase());
             list_string.add(object.getDistrict().toLowerCase());
             list_string.add(object.getJudgementDate().toLowerCase());

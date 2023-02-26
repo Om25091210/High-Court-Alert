@@ -480,20 +480,20 @@ public class showing_similar_coll extends Fragment {
     private void convert_to_list(Excel_data object) {
         list.clear();
         try{
-            list.add(object.getA().toLowerCase());
-            list.add(object.getB().toLowerCase());
-            list.add(object.getC().toLowerCase());
-            list.add(object.getD().toLowerCase());
-            list.add(object.getE().toLowerCase());
-            list.add(object.getF().toLowerCase());
-            list.add(object.getG().toLowerCase());
-            list.add(object.getH().toLowerCase());
-            list.add(object.getI().toLowerCase());
-            list.add(object.getJ().toLowerCase());
-            list.add(object.getK().toLowerCase());
-            list.add(object.getL().toLowerCase());
-            list.add(object.getM().toLowerCase());
-            list.add(object.getN().toLowerCase());
+            list.add(object.getAa().toLowerCase());
+            list.add(object.getBb().toLowerCase());
+            list.add(object.getCc().toLowerCase());
+            list.add(object.getDd().toLowerCase());
+            list.add(object.getEe().toLowerCase());
+            list.add(object.getFf().toLowerCase());
+            list.add(object.getGg().toLowerCase());
+            list.add(object.getHh().toLowerCase());
+            list.add(object.getIi().toLowerCase());
+            list.add(object.getJj().toLowerCase());
+            list.add(object.getKk().toLowerCase());
+            list.add(object.getLl().toLowerCase());
+            list.add(object.getMm().toLowerCase());
+            list.add(object.getNn().toLowerCase());
             list.add(object.getDate().toLowerCase());
             list.add(object.getType().toLowerCase());
             list.add(object.getPushkey().toLowerCase());
@@ -864,7 +864,7 @@ public class showing_similar_coll extends Fragment {
         join.setText(txt);
         filter_excel_data.clear();
         for(int i=0;i<excel_data.size();i++){
-            if(excel_data.get(i).getH().trim().equals(data_case_number)){
+            if(excel_data.get(i).getHh().trim().equals(data_case_number)){
                 filter_excel_data.add(excel_data.get(i));
             }
         }
@@ -881,8 +881,8 @@ public class showing_similar_coll extends Fragment {
         join.setText(txt);
         filter_excel_data.clear();
         for(int i=0;i<excel_data.size();i++){
-            if(excel_data.get(i).getH().trim().equals(data_case_number)){
-                if(excel_data.get(i).getC().equals(sp_of)) {
+            if(excel_data.get(i).getHh().trim().equals(data_case_number)){
+                if(excel_data.get(i).getCc().equals(sp_of)) {
                     filter_excel_data.add(excel_data.get(i));
                 }
             }
@@ -901,8 +901,8 @@ public class showing_similar_coll extends Fragment {
         join.setText(txt);
         filter_excel_data.clear();
         for(int i=0;i<excel_data.size();i++){
-            if(excel_data.get(i).getH().trim().equals(data_case_number)){
-                if(tinyDB.getListString("districts_list").contains(excel_data.get(i).getC())) {
+            if(excel_data.get(i).getHh().trim().equals(data_case_number)){
+                if(tinyDB.getListString("districts_list").contains(excel_data.get(i).getCc())) {
                     filter_excel_data.add(excel_data.get(i));
                 }
             }
@@ -921,10 +921,10 @@ public class showing_similar_coll extends Fragment {
         join.setText(txt);
         filter_excel_data.clear();
         for(int i=0;i<excel_data.size();i++){
-            if(excel_data.get(i).getH().trim().equals(data_case_number)){
+            if(excel_data.get(i).getHh().trim().equals(data_case_number)){
                 if(tinyDB.getListString("districts_list")
-                        .contains(excel_data.get(i).getC())
-                        && tinyDB.getListString("stations_list").contains("PS "+excel_data.get(i).getB())) {
+                        .contains(excel_data.get(i).getCc())
+                        && tinyDB.getListString("stations_list").contains("PS "+excel_data.get(i).getBb())) {
                     filter_excel_data.add(excel_data.get(i));
                 }
             }
@@ -948,8 +948,8 @@ public class showing_similar_coll extends Fragment {
         String jsonExcelList = gson.toJson(j_dates_list);
         // print your generated json
         Log.e("jsonCartList: " , jsonExcelList);
-        Log.e("ps case",j_dates_list.get(0).getB());
-        String prev_keygen=j_dates_list.get(0).getB()+"-"+j_dates_list.get(0).getE();
+        Log.e("ps case",j_dates_list.get(0).getBb());
+        String prev_keygen=j_dates_list.get(0).getBb()+"-"+j_dates_list.get(0).getEe();
 
         String URL = "http://script.google.com/macros/s/"
                 + gsID+"/exec?"
@@ -1034,7 +1034,7 @@ public class showing_similar_coll extends Fragment {
         // print your generated json
         Log.e("jsonCartList: " , jsonExcelList);
         dialogD.dismiss();
-        String prev_keygen=delete_list.get(0).getB()+"-"+delete_list.get(0).getE();
+        String prev_keygen=delete_list.get(0).getBb()+"-"+delete_list.get(0).getEe();
 
         String URL = "http://script.google.com/macros/s/"
                 + gsID+"/exec?"

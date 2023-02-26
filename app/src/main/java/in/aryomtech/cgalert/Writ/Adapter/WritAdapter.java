@@ -65,19 +65,19 @@ public class WritAdapter extends RecyclerView.Adapter<WritAdapter.ViewHolder> {
         }
         holder.caseYear.setText("/" + list.get(position).getCaseYear());
         holder.caseNo.setText("/" + list.get(position).getCaseNo());
-        if(list.get(position).getJudgement()!=null) {
-            holder.judgement.setText(list.get(position).getJudgement());
+        if(list.get(position).getJudgementt()!=null) {
+            holder.judgement.setText(list.get(position).getJudgementt());
         }
         else{
             holder.judgement.setText("--");
         }
 
-        if(list.get(position).getReminded()!=null) {
-            if(list.get(position).getReminded().equals("once")){
+        if(list.get(position).getRemind()!=null) {
+            if(list.get(position).getRemind().equals("once")){
                 holder.tick.setVisibility(View.VISIBLE);
                 holder.tick.setImageResource(R.drawable.ic_blue_tick);
             }
-            else if(list.get(position).getReminded().equals("twice")){
+            else if(list.get(position).getRemind().equals("twice")){
                 holder.tick.setVisibility(View.VISIBLE);
                 holder.tick.setImageResource(R.drawable.ic_green_tick);
             }
@@ -85,19 +85,19 @@ public class WritAdapter extends RecyclerView.Adapter<WritAdapter.ViewHolder> {
         else
             holder.tick.setVisibility(View.GONE);
 
-        if(list.get(position).getSeen()!=null)
+        if(list.get(position).getSeenn()!=null)
             holder.seen.setVisibility(View.VISIBLE);
         else
             holder.seen.setVisibility(View.GONE);
 
-        if(list.get(position).getSent()!=null)
+        if(list.get(position).getSentt()!=null)
             holder.notified.setVisibility(View.VISIBLE);
         else
             holder.notified.setVisibility(View.GONE);
 
         if(list.get(position).getDecisionDate()!=null) {
             if (list.get(position).getDecisionDate().equals("")) {
-                if(list.get(position).getJudgement().equals("DISMISSED")){
+                if(list.get(position).getJudgementt().equals("DISMISSED")){
                     holder.writLayout.setBackgroundResource(R.drawable.bg_card_white);
                 }else {
                     holder.writLayout.setBackgroundResource(R.drawable.bg_card_red);
@@ -106,8 +106,8 @@ public class WritAdapter extends RecyclerView.Adapter<WritAdapter.ViewHolder> {
                 holder.writLayout.setBackgroundResource(R.drawable.bg_card_white);
             }
         }
-        if(list.get(position).getJudgement()!=null) {
-            if (list.get(position).getJudgement().equals("DISMISSED")) {
+        if(list.get(position).getJudgementt()!=null) {
+            if (list.get(position).getJudgementt().equals("DISMISSED")) {
                 holder.writLayout.setBackgroundResource(R.drawable.bg_card_white);
             } else {
                 if(!list.get(position).getDecisionDate().equals("")) {
@@ -118,8 +118,8 @@ public class WritAdapter extends RecyclerView.Adapter<WritAdapter.ViewHolder> {
             }
         }
 
-        if(list.get(position).getJudgement()!=null) {
-            if (!list.get(position).getJudgement().equals("DISMISSED")) {
+        if(list.get(position).getJudgementt()!=null) {
+            if (!list.get(position).getJudgementt().equals("DISMISSED")) {
                 //holder.layoutJudge.setVisibility(View.VISIBLE);
                 holder.layoutDue.setVisibility(View.VISIBLE);
                 holder.dueDays.setText(list.get(position).getDueDate());
@@ -140,7 +140,7 @@ public class WritAdapter extends RecyclerView.Adapter<WritAdapter.ViewHolder> {
             }
         });
 
-        pushkey = list.get(position).getPushkey();
+        pushkey = list.get(position).getkey();
 
         holder.writLayout.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
@@ -148,7 +148,7 @@ public class WritAdapter extends RecyclerView.Adapter<WritAdapter.ViewHolder> {
             bundle.putStringArrayList("appellants", list.get(position).getAppellant());
             bundle.putString("judge_summary", list.get(position).getdSummary());
             bundle.putString("synopsis", list.get(position).getSummary());
-            bundle.putString("pushkey", list.get(position).getPushkey());
+            bundle.putString("pushkey", list.get(position).getkey());
             bundle.putString("decision", list.get(position).getDecisionDate());
             Fragment fragment = new AppellantFragment();
             fragment.setArguments(bundle);

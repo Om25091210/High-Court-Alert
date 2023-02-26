@@ -1,27 +1,31 @@
 package in.aryomtech.cgalert.NoticeVictim.model;
 
-public class Notice_model {
+import androidx.annotation.Keep;
 
-    private String advocate;
-    private String caseType;
-    private String caseYear;
-    private String crimeNo;
-    private String crimeYear;
-    private String pushkey;
-    private String doc_url;
-    private String district;
-    private String hearingDate;
-    private String noticeDate;
-    private String station;
-    private String appellant;
-    private String caseNo;
-    private String reminded;
-    private String seen;
-    private String sent;
-    private String number;
-    private String uploaded_file;
-    private String uploaded_date;
-    private String uid;
+import java.io.Serializable;
+@Keep
+public class Notice_model implements Serializable {
+
+    public String advocate;
+    public String caseType;
+    public String caseYear;
+    public String crimeNo;
+    public String crimeYear;
+    public String pushkey;
+    public String doc_url;
+    public String district;
+    public String hearingDate;
+    public String noticeDate;
+    public String station;
+    public String appellant;
+    public String caseNo;
+    public String reminded;
+    public String seen;
+    public String sent;
+    public String number;
+    public String uploaded_file;
+    public String uploaded_date;
+    public String uid;
 
     public Notice_model(){}
 

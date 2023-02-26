@@ -123,7 +123,7 @@ public class temp_notification extends AppCompatActivity {
         binding.writ.caseNo.setText(writ_data.get(0).getCaseNo());
         binding.writ.caseYear.setText(writ_data.get(0).getCaseYear());
         binding.writ.judgementDate.setText(writ_data.get(0).getJudgementDate());
-        binding.writ.judgementType.setText(writ_data.get(0).getJudgement());
+        binding.writ.judgementType.setText(writ_data.get(0).getJudgementt());
 
         if(writ_data.get(0).getDecisionDate()!=null) {
             if (writ_data.get(0).getDecisionDate().equals("")) {
@@ -132,8 +132,8 @@ public class temp_notification extends AppCompatActivity {
                 binding.layout.setBackgroundResource(R.drawable.bg_card_white);
             }
         }
-        if(writ_data.get(0).getJudgement()!=null) {
-            if (writ_data.get(0).getJudgement().equals("DISMISSED")) {
+        if(writ_data.get(0).getJudgementt()!=null) {
+            if (writ_data.get(0).getJudgementt().equals("DISMISSED")) {
                 binding.layout.setBackgroundResource(R.drawable.bg_card_white);
             } else {
                 binding.layout.setBackgroundResource(R.drawable.bg_card_white);
@@ -141,11 +141,11 @@ public class temp_notification extends AppCompatActivity {
         }
 
         //tick logic
-        if (writ_data.get(0).getReminded() != null) {
-            if (writ_data.get(0).getReminded().equals("once")) {
+        if (writ_data.get(0).getRemind() != null) {
+            if (writ_data.get(0).getRemind().equals("once")) {
                 binding.writ.imageView2.setVisibility(View.VISIBLE);
                 binding.writ.imageView2.setImageResource(R.drawable.ic_blue_tick);
-            } else if (writ_data.get(0).getReminded().equals("twice")) {
+            } else if (writ_data.get(0).getRemind().equals("twice")) {
                 binding.writ.imageView2.setVisibility(View.VISIBLE);
                 binding.writ.imageView2.setImageResource(R.drawable.ic_green_tick);
             }
@@ -256,30 +256,30 @@ public class temp_notification extends AppCompatActivity {
         binding.caseDiary.imageView2.setVisibility(View.VISIBLE);
         binding.caseDiary.share.setVisibility(View.VISIBLE);
 
-        binding.caseDiary.lastDate.setText(excel_data.get(0).getL());
-        binding.caseDiary.stationName.setText(excel_data.get(0).getB());
-        binding.caseDiary.distName.setText(excel_data.get(0).getC());
-        binding.caseDiary.caseNo.setText(excel_data.get(0).getE() + "/" + excel_data.get(0).getG());
-        binding.caseDiary.nameRm.setText(excel_data.get(0).getK());
-        binding.caseDiary.caseType.setText(excel_data.get(0).getD());
-        binding.caseDiary.personName.setText(excel_data.get(0).getF());
-        binding.caseDiary.crimeNo.setText(excel_data.get(0).getH() + "/" + excel_data.get(0).getI());
-        binding.caseDiary.receivingDate.setText(excel_data.get(0).getJ());
+        binding.caseDiary.lastDate.setText(excel_data.get(0).getLl());
+        binding.caseDiary.stationName.setText(excel_data.get(0).getBb());
+        binding.caseDiary.distName.setText(excel_data.get(0).getCc());
+        binding.caseDiary.caseNo.setText(excel_data.get(0).getEe() + "/" + excel_data.get(0).getGg());
+        binding.caseDiary.nameRm.setText(excel_data.get(0).getKk());
+        binding.caseDiary.caseType.setText(excel_data.get(0).getDd());
+        binding.caseDiary.personName.setText(excel_data.get(0).getFf());
+        binding.caseDiary.crimeNo.setText(excel_data.get(0).getHh() + "/" + excel_data.get(0).getIi());
+        binding.caseDiary.receivingDate.setText(excel_data.get(0).getJj());
 
         //return call logic
         if (excel_data.get(0).getType().equals("RM CALL")) {
-            binding.caseDiary.message.setText("उपरोक्त मूल केश डायरी दिनाँक " + excel_data.get(0).getK() + " तक बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय छतीसगढ़ में  अनिवार्यतः जमा करें।");
+            binding.caseDiary.message.setText("उपरोक्त मूल केश डायरी दिनाँक " + excel_data.get(0).getKk() + " तक बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय छतीसगढ़ में  अनिवार्यतः जमा करें।");
             binding.caseDiary.type.setVisibility(View.VISIBLE);
             binding.caseDiary.type.setImageResource(R.drawable.ic_submit_type);
         } else if (excel_data.get(0).getType().equals("RM RETURN")) {
-            binding.caseDiary.message.setText("उपरोक्त मूल केश डायरी " + excel_data.get(0).getK() + " से पांच दिवस के भीतर बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय से वापिस ले जावें।");
+            binding.caseDiary.message.setText("उपरोक्त मूल केश डायरी " + excel_data.get(0).getKk() + " से पांच दिवस के भीतर बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय से वापिस ले जावें।");
             binding.caseDiary.type.setVisibility(View.VISIBLE);
             binding.caseDiary.type.setImageResource(R.drawable.ic_return_type);
         } else
             binding.caseDiary.type.setVisibility(View.GONE);
 
         //red white logic
-        if (excel_data.get(0).getJ().equals("None") || excel_data.get(0).getJ().equals("nan"))
+        if (excel_data.get(0).getJj().equals("None") || excel_data.get(0).getJj().equals("nan"))
             binding.layout.setBackgroundColor(Color.parseColor("#FAD8D9"));
         else
             binding.layout.setBackgroundColor(Color.parseColor("#FFFFFF"));
@@ -295,14 +295,14 @@ public class temp_notification extends AppCompatActivity {
             }
         }
 
-        if (excel_data.get(0).getL() != null) {
-            if (!excel_data.get(0).getL().equals("None")) {
+        if (excel_data.get(0).getLl() != null) {
+            if (!excel_data.get(0).getLl().equals("None")) {
                 binding.caseDiary.dayLeft.setVisibility(View.VISIBLE);
-                if (nDays_Between_Dates(excel_data.get(0).getL()) == 0) {
+                if (nDays_Between_Dates(excel_data.get(0).getLl()) == 0) {
                     binding.caseDiary.dayLeft.setText("0d");
                     binding.caseDiary.dayLeft.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_clock_time, 0, 0, 0);
-                } else if (nDays_Between_Dates(excel_data.get(0).getL()) <= 5) {
-                    binding.caseDiary.dayLeft.setText(nDays_Between_Dates(excel_data.get(0).getL()) + "d");
+                } else if (nDays_Between_Dates(excel_data.get(0).getLl()) <= 5) {
+                    binding.caseDiary.dayLeft.setText(nDays_Between_Dates(excel_data.get(0).getLl()) + "d");
                     binding.caseDiary.dayLeft.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_clock_time, 0, 0, 0);
                 } else {
                     binding.caseDiary.dayLeft.setText("--");
@@ -314,28 +314,28 @@ public class temp_notification extends AppCompatActivity {
             binding.caseDiary.dayLeft.setVisibility(View.GONE);
         String message;
         if(excel_data.get(0).getType().equals("RM CALL")) {
-             message= "हाईकोर्ट अलर्ट:-डायरी माँग" + "\nदिनाँक:- " + excel_data.get(0).getDate() + "\n\n" + "Last Date - " + excel_data.get(0).getL() + "\n"
-                    + "District - " + excel_data.get(0).getC() + "\n" +
-                    "Police Station - " + excel_data.get(0).getB() + "\n" +
-                    excel_data.get(0).getD() + " No. - " + excel_data.get(0).getE() + "/" + excel_data.get(0).getG() + "\n" +
-                    "RM Date - " + excel_data.get(0).getK() + "\n" +
-                    "Case Type - " + excel_data.get(0).getD() + "\n" +
-                    "Name - " + excel_data.get(0).getF() + "\n" +
-                    "Crime No. - " + excel_data.get(0).getH() + "/" + excel_data.get(0).getI() + "\n" +
-                    "Received - " + excel_data.get(0).getJ() + "\n\n"
-                    + "उपरोक्त मूल केश डायरी दिनाँक " + excel_data.get(0).getL() + " तक बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय छतीसगढ़ में  अनिवार्यतः जमा करें।";
+             message= "हाईकोर्ट अलर्ट:-डायरी माँग" + "\nदिनाँक:- " + excel_data.get(0).getDate() + "\n\n" + "Last Date - " + excel_data.get(0).getLl() + "\n"
+                    + "District - " + excel_data.get(0).getCc() + "\n" +
+                    "Police Station - " + excel_data.get(0).getBb() + "\n" +
+                    excel_data.get(0).getDd() + " No. - " + excel_data.get(0).getEe() + "/" + excel_data.get(0).getGg() + "\n" +
+                    "RM Date - " + excel_data.get(0).getKk() + "\n" +
+                    "Case Type - " + excel_data.get(0).getDd() + "\n" +
+                    "Name - " + excel_data.get(0).getFf() + "\n" +
+                    "Crime No. - " + excel_data.get(0).getHh() + "/" + excel_data.get(0).getIi() + "\n" +
+                    "Received - " + excel_data.get(0).getJj() + "\n\n"
+                    + "उपरोक्त मूल केश डायरी दिनाँक " + excel_data.get(0).getLl() + " तक बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय छतीसगढ़ में  अनिवार्यतः जमा करें।";
         }
         else{
-            message = "हाईकोर्ट अलर्ट:-डायरी वापसी"+"\nदिनाँक:- "+ excel_data.get(0).getDate()  +" \n\n" + "Last Date - " + excel_data.get(0).getL() + "\n"
-                    + "District - " + excel_data.get(0).getC() + "\n" +
-                    "Police Station - " + excel_data.get(0).getB() + "\n"+
-                    excel_data.get(0).getD() + " No. - " + excel_data.get(0).getE() +"/"+ excel_data.get(0).getG()+"\n" +
-                    "RM Date - " + excel_data.get(0).getK()+ "\n" +
-                    "Case Type - " + excel_data.get(0).getD() +  "\n" +
-                    "Name - " + excel_data.get(0).getF()+  "\n" +
-                    "Crime No. - " + excel_data.get(0).getH() +"/"+ excel_data.get(0).getI()+  "\n" +
-                    "Received - " + excel_data.get(0).getJ() + "\n\n" + "1)उपरोक्त मूल केश डायरी  महाधिवक्ता कार्यालय द्वारा दी गयी मूल पावती लाने पर ही दी जाएगी।\n"
-                    +"2) उपरोक्त मूल केश डायरी "+ excel_data.get(0).getK() +" से पांच दिवस के भीतर बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय से वापिस ले जावें।";
+            message = "हाईकोर्ट अलर्ट:-डायरी वापसी"+"\nदिनाँक:- "+ excel_data.get(0).getDate()  +" \n\n" + "Last Date - " + excel_data.get(0).getLl() + "\n"
+                    + "District - " + excel_data.get(0).getCc() + "\n" +
+                    "Police Station - " + excel_data.get(0).getBb() + "\n"+
+                    excel_data.get(0).getDd() + " No. - " + excel_data.get(0).getEe() +"/"+ excel_data.get(0).getGg()+"\n" +
+                    "RM Date - " + excel_data.get(0).getKk()+ "\n" +
+                    "Case Type - " + excel_data.get(0).getDd() +  "\n" +
+                    "Name - " + excel_data.get(0).getFf()+  "\n" +
+                    "Crime No. - " + excel_data.get(0).getHh() +"/"+ excel_data.get(0).getIi()+  "\n" +
+                    "Received - " + excel_data.get(0).getJj() + "\n\n" + "1)उपरोक्त मूल केश डायरी  महाधिवक्ता कार्यालय द्वारा दी गयी मूल पावती लाने पर ही दी जाएगी।\n"
+                    +"2) उपरोक्त मूल केश डायरी "+ excel_data.get(0).getKk() +" से पांच दिवस के भीतर बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय से वापिस ले जावें।";
 
         }
         binding.caseDiary.share.setOnClickListener(v -> {

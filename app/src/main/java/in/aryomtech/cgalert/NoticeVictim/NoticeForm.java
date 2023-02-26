@@ -178,7 +178,10 @@ public class NoticeForm extends Fragment {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
             @Override
             public void afterTextChanged(Editable editable) {
-                get_police_station(district.getText().toString().trim());
+                if(district.getText().toString().trim().contains("/")){
+                    district.setText(district.getText().toString().replaceAll("[^-()a-zA-Z0-9]", ""));
+                }
+                get_police_station(district.getText().toString().trim().replaceAll("[^-()a-zA-Z0-9]", ""));
             }
         });
 
@@ -566,20 +569,20 @@ public class NoticeForm extends Fragment {
         return sb.toString();
     }
     public void datasend(String url){
-        reference.child(pushkey).child("district").setValue(district.getText().toString().trim().toUpperCase());
-        reference.child(pushkey).child("station").setValue(station.getText().toString().trim().toUpperCase());
-        reference.child(pushkey).child("crimeNo").setValue(crime_no.getText().toString().trim().toUpperCase());
-        reference.child(pushkey).child("crimeYear").setValue(crime_year.getText().toString().trim().toUpperCase());
-        reference.child(pushkey).child("caseYear").setValue(case_year.getText().toString().trim().toUpperCase());
-        reference.child(pushkey).child("noticeDate").setValue(notice_date.getText().toString().trim().toUpperCase());
-        reference.child(pushkey).child("hearingDate").setValue(hearing_date.getText().toString().trim().toUpperCase());
-        reference.child(pushkey).child("advocate").setValue(advocate.getText().toString().trim().toUpperCase());
-        reference.child(pushkey).child("appellant").setValue(appellant.getText().toString().trim().toUpperCase());
+        reference.child(pushkey).child("district").setValue(district.getText().toString().trim().toUpperCase().replaceAll("[^-()a-zA-Z0-9]", ""));
+        reference.child(pushkey).child("station").setValue(station.getText().toString().trim().toUpperCase().replaceAll("[^-()a-zA-Z0-9]", ""));
+        reference.child(pushkey).child("crimeNo").setValue(crime_no.getText().toString().trim().toUpperCase().replaceAll("[^-()a-zA-Z0-9]", ""));
+        reference.child(pushkey).child("crimeYear").setValue(crime_year.getText().toString().trim().toUpperCase().replaceAll("[^-()a-zA-Z0-9]", ""));
+        reference.child(pushkey).child("caseYear").setValue(case_year.getText().toString().trim().toUpperCase().replaceAll("[^-()a-zA-Z0-9]", ""));
+        reference.child(pushkey).child("noticeDate").setValue(notice_date.getText().toString().trim().toUpperCase().replaceAll("[^-()a-zA-Z0-9]", ""));
+        reference.child(pushkey).child("hearingDate").setValue(hearing_date.getText().toString().trim().toUpperCase().replaceAll("[^-()a-zA-Z0-9]", ""));
+        reference.child(pushkey).child("advocate").setValue(advocate.getText().toString().trim().toUpperCase().replaceAll("[^-()a-zA-Z0-9]", ""));
+        reference.child(pushkey).child("appellant").setValue(appellant.getText().toString().trim().toUpperCase().replaceAll("[^-()a-zA-Z0-9]", ""));
         reference.child(pushkey).child("reminded").setValue("once");
-        reference.child(pushkey).child("caseNo").setValue(caseNo.getText().toString().trim().toUpperCase());
+        reference.child(pushkey).child("caseNo").setValue(caseNo.getText().toString().trim().toUpperCase().replaceAll("[^-()a-zA-Z0-9]", ""));
         reference.child(pushkey).child("pushkey").setValue(pushkey);
         reference.child(pushkey).child("doc_url").setValue(url.trim());
-        reference.child(pushkey).child("caseType").setValue(case_type);
+        reference.child(pushkey).child("caseType").setValue(case_type.replaceAll("[^-()a-zA-Z0-9]", ""));
         reference.child(pushkey).child("uid").setValue(user.getUid());
     }
 

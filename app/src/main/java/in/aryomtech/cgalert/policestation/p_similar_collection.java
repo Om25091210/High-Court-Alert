@@ -152,8 +152,8 @@ public class p_similar_collection extends Fragment {
                     if (snapshot.child(ds.getKey()).child("B").getValue(String.class) != null) {
                         if (snapshot.child(ds.getKey()).child("B").getValue(String.class).toUpperCase().equals(stat_name.substring(3))) {
                             excel_data.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Excel_data.class));
-                            joined_list.add(excel_data.get(excel_data.size() - 1).getH().trim() + " " + excel_data.get(excel_data.size() - 1).getI().trim() + "=" + excel_data.get(excel_data.size() - 1).getB().toUpperCase().trim() + " " + excel_data.get(excel_data.size() - 1).getC().toUpperCase().trim());
-                            station_dist.add(excel_data.get(excel_data.size() - 1).getB().toUpperCase().trim() + " " + excel_data.get(excel_data.size() - 1).getC().toUpperCase().trim());
+                            joined_list.add(excel_data.get(excel_data.size() - 1).getHh().trim() + " " + excel_data.get(excel_data.size() - 1).getIi().trim() + "=" + excel_data.get(excel_data.size() - 1).getBb().toUpperCase().trim() + " " + excel_data.get(excel_data.size() - 1).getCc().toUpperCase().trim());
+                            station_dist.add(excel_data.get(excel_data.size() - 1).getBb().toUpperCase().trim() + " " + excel_data.get(excel_data.size() - 1).getCc().toUpperCase().trim());
                         }
                     }
                 }

@@ -164,7 +164,6 @@ public class WritForm extends Fragment {
         recyclerView2.setDrawingCacheEnabled(true);
         recyclerView2.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         recyclerView2.setLayoutManager(layoutManager2);
-        disableSSLCertificateChecking();
         send = view.findViewById(R.id.send);
         allowed = view.findViewById(R.id.allowed);
         disposed = view.findViewById(R.id.disposed);
@@ -670,7 +669,7 @@ public class WritForm extends Fragment {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
             @Override
             public void afterTextChanged(Editable editable) {
-                get_police_station(district_ac.getText().toString().trim());
+                get_police_station(district_ac.getText().toString().trim().replaceAll("[^-()a-zA-Z0-9]", ""));
             }
         });
 
@@ -685,7 +684,7 @@ public class WritForm extends Fragment {
         add.setOnClickListener(v -> {
             if (!district_ac.getText().toString().trim().equals("") && !officer.getText().toString().trim().equals("")) {
                 msg.setVisibility(View.VISIBLE);
-                fetch_token_tick(officer.getText().toString().trim());
+                fetch_token_tick(officer.getText().toString().trim().replaceAll("[^-()a-zA-Z0-9]", " "));
             } else
                 MotionToast.Companion.darkColorToast(requireActivity(),
                         "Info",
@@ -715,7 +714,8 @@ public class WritForm extends Fragment {
                 }
                 if(!task_list.contains(district_ac.getText().toString().trim() + " - " + officer.getText().toString().trim())) {
                     recyclerView2.setVisibility(View.VISIBLE);
-                    task_list.add(district_ac.getText().toString().trim() + " - " + officer.getText().toString().trim());
+                    task_list.add(district_ac.getText().toString().trim().replaceAll("[^-()a-zA-Z0-9]", "") +
+                            " - " + officer.getText().toString().trim().replaceAll("[^-()a-zA-Z0-9]", ""));
                     Collections.reverse(task_list);
                     if (c[0] == 1) {
                         RespondentAdapter = new RespondentAdapter(getContext(), task_list, 1);
@@ -775,17 +775,18 @@ public class WritForm extends Fragment {
           && !district.getText().toString().trim().equals("")
           && appellant_list.size()!=0
           && task_list.size()!=0
-          && !summary.getText().toString().trim().equals("")) {
+          && !summary.getText().toString().trim().equals("")
+          && !selected_uri_pdf.toString().trim().equals("")) {
 
-            reference.child(pushkey).child("dateOfFiling").setValue(date_of_filing.getText().toString().toUpperCase());
-            reference.child(pushkey).child("case_nature").setValue(nature.getText().toString().toUpperCase());
-            reference.child(pushkey).child("caseNo").setValue(case_no.getText().toString().toUpperCase());
-            reference.child(pushkey).child("caseYear").setValue(case_year.getText().toString().toUpperCase());
-            reference.child(pushkey).child("district").setValue(district.getText().toString().toUpperCase());
+            reference.child(pushkey).child("dateOfFiling").setValue(date_of_filing.getText().toString().toUpperCase().replaceAll("[^-()a-zA-Z0-9]", ""));
+            reference.child(pushkey).child("case_nature").setValue(nature.getText().toString().toUpperCase().replaceAll("[^-()a-zA-Z0-9]", ""));
+            reference.child(pushkey).child("caseNo").setValue(case_no.getText().toString().toUpperCase().replaceAll("[^-()a-zA-Z0-9]", ""));
+            reference.child(pushkey).child("caseYear").setValue(case_year.getText().toString().toUpperCase().replaceAll("[^-()a-zA-Z0-9]", ""));
+            reference.child(pushkey).child("district").setValue(district.getText().toString().toUpperCase().replaceAll("[^-()a-zA-Z0-9]", ""));
             reference.child(pushkey).child("appellant").setValue(appellant_list);
             reference.child(pushkey).child("respondents").setValue(task_list);
             reference.child(pushkey).child("pushkey").setValue(pushkey);
-            reference.child(pushkey).child("summary").setValue(summary.getText().toString().toUpperCase());
+            reference.child(pushkey).child("summary").setValue(summary.getText().toString().toUpperCase().replaceAll("[^-()a-zA-Z0-9]", ""));
             upload_to_database();
         }
         else{
@@ -809,16 +810,16 @@ public class WritForm extends Fragment {
                 && !judgement_date.getText().toString().trim().equals("")
                 && type!=null) {
 
-            reference.child(pushkey).child("district").setValue(district.getText().toString().toUpperCase());
-            reference.child(pushkey).child("dateOfFiling").setValue(date_of_filing.getText().toString().toUpperCase());
-            reference.child(pushkey).child("case_nature").setValue(nature.getText().toString().toUpperCase());
-            reference.child(pushkey).child("summary").setValue(summary.getText().toString().toUpperCase());
-            reference.child(pushkey).child("judgementDate").setValue(judgement_date.getText().toString().toUpperCase());
-            reference.child(pushkey).child("Judgement").setValue(type.toUpperCase());
-            reference.child(pushkey).child("dSummary").setValue(dispose_summary.getText().toString().toUpperCase());
-            reference.child(pushkey).child("dueDate").setValue(due_date.getText().toString().toUpperCase());
-            reference.child(pushkey).child("caseNo").setValue(case_no.getText().toString().toUpperCase());
-            reference.child(pushkey).child("caseYear").setValue(case_year.getText().toString().toUpperCase());
+            reference.child(pushkey).child("district").setValue(district.getText().toString().toUpperCase().replaceAll("[^-()a-zA-Z0-9]", ""));
+            reference.child(pushkey).child("dateOfFiling").setValue(date_of_filing.getText().toString().toUpperCase().replaceAll("[^-()a-zA-Z0-9]", ""));
+            reference.child(pushkey).child("case_nature").setValue(nature.getText().toString().toUpperCase().replaceAll("[^-()a-zA-Z0-9]", ""));
+            reference.child(pushkey).child("summary").setValue(summary.getText().toString().toUpperCase().replaceAll("[^-()a-zA-Z0-9]", ""));
+            reference.child(pushkey).child("judgementDate").setValue(judgement_date.getText().toString().toUpperCase().replaceAll("[^-()a-zA-Z0-9]", ""));
+            reference.child(pushkey).child("Judgement").setValue(type.toUpperCase().replaceAll("[^-()a-zA-Z0-9]", ""));
+            reference.child(pushkey).child("dSummary").setValue(dispose_summary.getText().toString().toUpperCase().replaceAll("[^-()a-zA-Z0-9]", ""));
+            reference.child(pushkey).child("dueDate").setValue(due_date.getText().toString().toUpperCase().replaceAll("[^-()a-zA-Z0-9]", ""));
+            reference.child(pushkey).child("caseNo").setValue(case_no.getText().toString().toUpperCase().replaceAll("[^-()a-zA-Z0-9]", ""));
+            reference.child(pushkey).child("caseYear").setValue(case_year.getText().toString().toUpperCase().replaceAll("[^-()a-zA-Z0-9]", ""));
             reference.child(pushkey).child("appellant").setValue(appellant_list);
             reference.child(pushkey).child("respondents").setValue(task_list);
             reference.child(pushkey).child("decisionDate").setValue("");
@@ -849,7 +850,7 @@ public class WritForm extends Fragment {
         add.setOnClickListener(v -> {
             if (!task_content.getText().toString().trim().equals("")) {
                 recyclerView3.setVisibility(View.VISIBLE);
-                appellant_list.add(task_content.getText().toString().trim());
+                appellant_list.add(task_content.getText().toString().trim().replaceAll("[^-()a-zA-Z0-9]", ""));
                 Collections.reverse(appellant_list);
                 appellantAdapter = new AppellantAdapter(getContext(), appellant_list);
                 appellantAdapter.notifyDataSetChanged();
@@ -885,34 +886,5 @@ public class WritForm extends Fragment {
 
         return null;
 
-    }
-    private static void disableSSLCertificateChecking() {
-        TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
-            public X509Certificate[] getAcceptedIssuers() {
-                return null;
-            }
-
-            @Override
-            public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
-                // Not implemented
-            }
-
-            @Override
-            public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
-                // Not implemented
-            }
-        } };
-
-        try {
-            SSLContext sc = SSLContext.getInstance("TLS");
-
-            sc.init(null, trustAllCerts, new java.security.SecureRandom());
-
-            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
     }
 }

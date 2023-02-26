@@ -1,15 +1,19 @@
 package in.aryomtech.cgalert.Fragments.model;
 
-public class smsData {
-    private String currentDate;
-    private String case_no;
-    private String crime_no;
-    private String ps;
-    private String deadline;
-    private String tid;
-    private String mob_no;
-    private String case_type;
-    private String pushkey;
+import androidx.annotation.Keep;
+
+import java.io.Serializable;
+@Keep
+public class smsData implements Serializable {
+    public String currentDate;
+    public String case_no;
+    public String crime_no;
+    public String ps;
+    public String deadline;
+    public String tid;
+    public String mob_no;
+    public String case_type;
+    public String pushkey;
 
     public smsData(String currentDate, String case_no, String crime_no, String ps, String deadline, String tid, String mob_no, String case_type, String pushkey) {
         this.currentDate = currentDate;

@@ -1,49 +1,51 @@
 package in.aryomtech.cgalert.Fragments.model;
 
-import java.io.Serializable;
+import androidx.annotation.Keep;
 
+import java.io.Serializable;
+@Keep
 public class Excel_data implements Serializable {
 
-    private String A;
-    private String B;
-    private String C;
-    private String D;
-    private String E;
-    private String F;
-    private String G;
-    private String H;
-    private String I;
-    private String J;
-    private String K;
-    private String L;
-    private String M;
-    private String N;
-    private String date;
-    private String type;
-    private String pushkey;
-    private String reminded;
-    private String seen;
-    private String date_of_alert;
-    private String sent;
-    private String number;
-    private String url;
-    private String uid;
+    public String A;
+    public String B;
+    public String C;
+    public String D;
+    public String E;
+    public String F;
+    public String G;
+    public String H;
+    public String I;
+    public String J;
+    public String K;
+    public String L;
+    public String M;
+    public String N;
+    public String date;
+    public String type;
+    public String pushkey;
+    public String reminded;
+    public String seen;
+    public String date_of_alert;
+    public String sent;
+    public String number;
+    public String url;
+    public String uid;
 
     public Excel_data(String a, String b, String c, String d, String e, String f, String g, String h, String i, String j, String k, String l, String m, String n, String date, String type, String pushkey, String reminded, String seen, String date_of_alert, String sent, String number, String url, String uid) {
-        A = a;
-        B = b;
-        C = c;
-        D = d;
-        E = e;
-        F = f;
-        G = g;
-        H = h;
-        I = i;
-        J = j;
-        K = k;
-        L = l;
-        M = m;
-        N = n;
+        this.A = a;
+        this.B = b;
+        this.C = c;
+        this.D = d;
+        this.E = e;
+        this.F = f;
+        this.G = g;
+        this.H = h;
+        this.I = i;
+        this.J = j;
+        this.K = k;
+        this.L = l;
+        this.M = m;
+        this.N = n;
         this.date = date;
         this.type = type;
         this.pushkey = pushkey;
@@ -75,59 +77,59 @@ public class Excel_data implements Serializable {
         return seen;
     }
 
-    public String getA() {
+    public String getAa() {
         return A;
     }
 
-    public String getB() {
+    public String getBb() {
         return B;
     }
 
-    public String getC() {
+    public String getCc() {
         return C;
     }
 
-    public String getD() {
+    public String getDd() {
         return D;
     }
 
-    public String getE() {
+    public String getEe() {
         return E;
     }
 
-    public String getF() {
+    public String getFf() {
         return F;
     }
 
-    public String getG() {
+    public String getGg() {
         return G;
     }
 
-    public String getH() {
+    public String getHh() {
         return H;
     }
 
-    public String getI() {
+    public String getIi() {
         return I;
     }
 
-    public String getJ() {
+    public String getJj() {
         return J;
     }
 
-    public String getK() {
+    public String getKk() {
         return K;
     }
 
-    public String getL() {
+    public String getLl() {
         return L;
     }
 
-    public String getM() {
+    public String getMm() {
         return M;
     }
 
-    public String getN() {
+    public String getNn() {
         return N;
     }
 

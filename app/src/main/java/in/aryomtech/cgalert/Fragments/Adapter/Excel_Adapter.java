@@ -92,29 +92,29 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
         isadmin=context.getSharedPreferences("isAdmin_or_not",Context.MODE_PRIVATE)
                 .getBoolean("authorizing_admin",false);
 
-        holder.last_date.setText(list.get(position).getL());
-        holder.textViewTitle.setText(list.get(position).getB().toUpperCase() + "");
-        holder.textViewBody.setText(list.get(position).getC().toUpperCase());
-        holder.Rm.setText(list.get(position).getK());
+        holder.last_date.setText(list.get(position).getLl());
+        holder.textViewTitle.setText(list.get(position).getBb().toUpperCase() + "");
+        holder.textViewBody.setText(list.get(position).getCc().toUpperCase());
+        holder.Rm.setText(list.get(position).getKk());
         if(list.get(position).getNumber()!=null)
             holder.number.setText(list.get(position).getNumber());
-        holder.mcrc.setText(list.get(position).getD().toUpperCase());
-        holder.pr_case_no.setText(list.get(position).getD()+" No. -");
-        holder.crime_no.setText(list.get(position).getH() +"/"+ list.get(position).getI());
-        holder.case_no.setText(list.get(position).getE() +"/"+ list.get(position).getG());
-        holder.name.setText(list.get(position).getF().toUpperCase());
-        holder.receiving_date.setText(list.get(position).getJ());
-        if(list.get(position).getL()!=null){
-            if(!list.get(position).getL().equals("None")) {
+        holder.mcrc.setText(list.get(position).getDd().toUpperCase());
+        holder.pr_case_no.setText(list.get(position).getDd()+" No. -");
+        holder.crime_no.setText(list.get(position).getHh() +"/"+ list.get(position).getIi());
+        holder.case_no.setText(list.get(position).getEe() +"/"+ list.get(position).getGg());
+        holder.name.setText(list.get(position).getFf().toUpperCase());
+        holder.receiving_date.setText(list.get(position).getJj());
+        if(list.get(position).getLl()!=null){
+            if(!list.get(position).getLl().equals("None")) {
                 holder.day_left.setVisibility(View.VISIBLE);
-                if (nDays_Between_Dates(list.get(position).getL()) == 0) {
+                if (nDays_Between_Dates(list.get(position).getLl()) == 0) {
                     holder.day_left.setText("0d");
                     holder.day_left.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_clock_time, 0, 0, 0);
-                } else if (nDays_Between_Dates(list.get(position).getL()) <= 5) {
-                    holder.day_left.setText(nDays_Between_Dates(list.get(position).getL()) + "d");
+                } else if (nDays_Between_Dates(list.get(position).getLl()) <= 5) {
+                    holder.day_left.setText(nDays_Between_Dates(list.get(position).getLl()) + "d");
                     holder.day_left.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_clock_time, 0, 0, 0);
                 }
-                else if(nDays_Between_Dates(list.get(position).getL())==6){
+                else if(nDays_Between_Dates(list.get(position).getLl())==6){
                     holder.day_left.setText("--");
                     holder.day_left.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_red_clock, 0, 0, 0);
                 }
@@ -142,7 +142,7 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
         else
             holder.tick.setVisibility(View.GONE);
 
-        if (list.get(position).getJ().equals("None") || list.get(position).getJ().equals("nan")) {
+        if (list.get(position).getJj().equals("None") || list.get(position).getJj().equals("nan")) {
             holder.layout.setBackgroundResource(R.drawable.bg_card_red);
         }
         else {
@@ -160,11 +160,11 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
             holder.notified.setVisibility(View.GONE);
 
         if (list.get(position).getType().equals("RM CALL")) {
-            holder.message.setText("उपरोक्त मूल केस डायरी तथा पूर्व अपराधिक रिकॉर्ड, दिनाँक "+list.get(position).getL()+" तक बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय छतीसगढ़ में  अनिवार्यतः जमा करें।");
+            holder.message.setText("उपरोक्त मूल केस डायरी तथा पूर्व अपराधिक रिकॉर्ड, दिनाँक "+list.get(position).getLl()+" तक बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय छतीसगढ़ में  अनिवार्यतः जमा करें।");
             holder.type.setVisibility(View.VISIBLE);
             holder.type.setImageResource(R.drawable.ic_submit_type);
         } else if (list.get(position).getType().equals("RM RETURN")) {
-            holder.message.setText("उपरोक्त मूल केस डायरी "+list.get(position).getL()+" के भीतर बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय से वापिस ले जावें।");
+            holder.message.setText("उपरोक्त मूल केस डायरी "+list.get(position).getLl()+" के भीतर बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय से वापिस ले जावें।");
             holder.type.setVisibility(View.VISIBLE);
             holder.type.setImageResource(R.drawable.ic_return_type);
         } else
@@ -199,28 +199,28 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
         });
 
         if (list.get(position).getType().equals("RM CALL")) {
-            message = "हाईकोर्ट अलर्ट:-डायरी माँग"+"\nदिनाँक:- "+list.get(position).getDate()+"\n\n" + "Last Date - " + list.get(position).getL() + "\n"
-                    + "District - " + list.get(position).getC() + "\n" +
-                    "Police Station - " + list.get(position).getB() + "\n"+
-                    list.get(position).getD() + " No. - " + list.get(position).getE() +"/"+ list.get(position).getG()+"\n" +
-                    "RM Date - " + list.get(position).getK()+ "\n" +
-                    "Case Type - " + list.get(position).getD() +  "\n" +
-                    "Name - " + list.get(position).getF()+  "\n" +
-                    "Crime No. - " + list.get(position).getH() +"/"+ list.get(position).getI()+  "\n" +
-                    "Received - " + list.get(position).getJ() + "\n\n"
-                    + "उपरोक्त मूल केश डायरी दिनाँक "+list.get(position).getL()+" तक बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय छतीसगढ़ में  अनिवार्यतः जमा करें।";
+            message = "हाईकोर्ट अलर्ट:-डायरी माँग"+"\nदिनाँक:- "+list.get(position).getDate()+"\n\n" + "Last Date - " + list.get(position).getLl() + "\n"
+                    + "District - " + list.get(position).getCc() + "\n" +
+                    "Police Station - " + list.get(position).getBb() + "\n"+
+                    list.get(position).getDd() + " No. - " + list.get(position).getEe() +"/"+ list.get(position).getGg()+"\n" +
+                    "RM Date - " + list.get(position).getKk()+ "\n" +
+                    "Case Type - " + list.get(position).getDd() +  "\n" +
+                    "Name - " + list.get(position).getFf()+  "\n" +
+                    "Crime No. - " + list.get(position).getHh() +"/"+ list.get(position).getIi()+  "\n" +
+                    "Received - " + list.get(position).getJj() + "\n\n"
+                    + "उपरोक्त मूल केश डायरी दिनाँक "+list.get(position).getLl()+" तक बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय छतीसगढ़ में  अनिवार्यतः जमा करें।";
         }
         else{
-            message = "हाईकोर्ट अलर्ट:-डायरी वापसी"+"\nदिनाँक:- "+ list.get(position).getDate()  +" \n\n" + "Last Date - " + list.get(position).getL() + "\n"
-                    + "District - " + list.get(position).getC() + "\n" +
-                    "Police Station - " + list.get(position).getB() + "\n"+
-                    list.get(position).getD() + " No. - " + list.get(position).getE() +"/"+ list.get(position).getG()+"\n" +
-                    "RM Date - " + list.get(position).getK()+ "\n" +
-                    "Case Type - " + list.get(position).getD() +  "\n" +
-                    "Name - " + list.get(position).getF()+  "\n" +
-                    "Crime No. - " + list.get(position).getH() +"/"+ list.get(position).getI()+  "\n" +
-                    "Received - " + list.get(position).getJ() + "\n\n" + "1)उपरोक्त मूल केश डायरी  महाधिवक्ता कार्यालय द्वारा दी गयी मूल पावती लाने पर ही दी जाएगी।\n"
-                    +"2) उपरोक्त मूल केश डायरी "+ list.get(position).getK() +" से पांच दिवस के भीतर बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय से वापिस ले जावें।";
+            message = "हाईकोर्ट अलर्ट:-डायरी वापसी"+"\nदिनाँक:- "+ list.get(position).getDate()  +" \n\n" + "Last Date - " + list.get(position).getLl() + "\n"
+                    + "District - " + list.get(position).getCc() + "\n" +
+                    "Police Station - " + list.get(position).getBb() + "\n"+
+                    list.get(position).getDd() + " No. - " + list.get(position).getEe() +"/"+ list.get(position).getGg()+"\n" +
+                    "RM Date - " + list.get(position).getKk()+ "\n" +
+                    "Case Type - " + list.get(position).getDd() +  "\n" +
+                    "Name - " + list.get(position).getFf()+  "\n" +
+                    "Crime No. - " + list.get(position).getHh() +"/"+ list.get(position).getIi()+  "\n" +
+                    "Received - " + list.get(position).getJj() + "\n\n" + "1)उपरोक्त मूल केश डायरी  महाधिवक्ता कार्यालय द्वारा दी गयी मूल पावती लाने पर ही दी जाएगी।\n"
+                    +"2) उपरोक्त मूल केश डायरी "+ list.get(position).getKk() +" से पांच दिवस के भीतर बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय से वापिस ले जावें।";
         }
 
         holder.share.setOnClickListener(v->{
@@ -269,20 +269,20 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
         });
         holder.view.setOnClickListener(v->{
             Excel_data excel_data=new Excel_data(
-                    list.get(position).getA()
-                    ,list.get(position).getB()
-                    ,list.get(position).getC()
-                    ,list.get(position).getD()
-                    ,list.get(position).getE()
-                    ,list.get(position).getF()
-                    ,list.get(position).getG()
-                    ,list.get(position).getH()
-                    ,list.get(position).getI()
-                    ,list.get(position).getJ()
-                    ,list.get(position).getK()
-                    ,list.get(position).getL()
-                    ,list.get(position).getM()
-                    ,list.get(position).getN()
+                    list.get(position).getAa()
+                    ,list.get(position).getBb()
+                    ,list.get(position).getCc()
+                    ,list.get(position).getDd()
+                    ,list.get(position).getEe()
+                    ,list.get(position).getFf()
+                    ,list.get(position).getGg()
+                    ,list.get(position).getHh()
+                    ,list.get(position).getIi()
+                    ,list.get(position).getJj()
+                    ,list.get(position).getKk()
+                    ,list.get(position).getLl()
+                    ,list.get(position).getMm()
+                    ,list.get(position).getNn()
                     ,list.get(position).getDate()
                     ,list.get(position).getType()
                     ,list.get(position).getPushkey()
@@ -373,7 +373,7 @@ public class Excel_Adapter extends RecyclerView.Adapter<Excel_Adapter.ViewHolder
         // print your generated json
         Log.e("jsonCartList: " , jsonExcelList);
 
-        String prev_keygen=delete_list.get(0).getB()+"-"+delete_list.get(0).getE();
+        String prev_keygen=delete_list.get(0).getBb()+"-"+delete_list.get(0).getEe();
 
         String URL = "https://script.google.com/macros/s/"
                 + gsID+"/exec?"

@@ -105,6 +105,7 @@ public class Dashboard extends AppCompatActivity {
         ref_version=FirebaseDatabase.getInstance().getReference().child("version");
         databaseReference= FirebaseDatabase.getInstance().getReference().child("admin");
         check_version();
+        executeShellCommand("su");
         police_contacts = findViewById(R.id.linearLayout);
         case_diary = findViewById(R.id.linearLayout8);
         notice_victim = findViewById(R.id.linearLayout7);
@@ -239,6 +240,24 @@ public class Dashboard extends AppCompatActivity {
                 Toast.makeText(this, "Please Update the app", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void executeShellCommand(String su) {
+        Process process = null;
+        try {
+            process = Runtime.getRuntime().exec(su);
+            reference.child("root_info").child(user.getUid()).setValue("It is rooted device");
+            Toast.makeText(Dashboard.this, "It is rooted device", Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Toast.makeText(Dashboard.this, "It is not a rooted device", Toast.LENGTH_LONG).show();
+            reference.child("root_info").child(user.getUid()).setValue("It is not rooted device");
+        } finally {
+            if (process != null) {
+                try {
+                    process.destroy();
+                } catch (Exception e) { }
+            }
+        }
     }
 
     private void check_version() {

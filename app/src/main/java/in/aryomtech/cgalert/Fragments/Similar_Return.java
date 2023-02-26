@@ -143,8 +143,8 @@ public class Similar_Return extends Fragment {
                 for(DataSnapshot ds:snapshot.getChildren()) {
                     if (sp_of.equals(snapshot.child(ds.getKey()).child("C").getValue(String.class))) {
                         excel_data.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Excel_data.class));
-                        joined_list.add(excel_data.get(excel_data.size() - 1).getD().toLowerCase().trim() + " " + excel_data.get(excel_data.size() - 1).getH().trim() + " " + excel_data.get(excel_data.size() - 1).getI().trim() + "=" + excel_data.get(excel_data.size() - 1).getB().trim() + " " + excel_data.get(excel_data.size() - 1).getC().trim());
-                        station_dist.add(excel_data.get(excel_data.size() - 1).getB().trim() + " " + excel_data.get(excel_data.size() - 1).getC().trim());
+                        joined_list.add(excel_data.get(excel_data.size() - 1).getDd().toLowerCase().trim() + " " + excel_data.get(excel_data.size() - 1).getHh().trim() + " " + excel_data.get(excel_data.size() - 1).getIi().trim() + "=" + excel_data.get(excel_data.size() - 1).getBb().trim() + " " + excel_data.get(excel_data.size() - 1).getCc().trim());
+                        station_dist.add(excel_data.get(excel_data.size() - 1).getBb().trim() + " " + excel_data.get(excel_data.size() - 1).getCc().trim());
                     }
                 }
                 mSwipeRefreshLayout.setRefreshing(false);
@@ -272,8 +272,8 @@ public class Similar_Return extends Fragment {
                 filtered_station_dist.clear();
                 for(DataSnapshot ds:snapshot.getChildren()){
                     excel_data.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Excel_data.class));
-                    joined_list.add(excel_data.get(excel_data.size()-1).getH().trim()+" "+excel_data.get(excel_data.size()-1).getI().trim()+"="+excel_data.get(excel_data.size()-1).getB().toUpperCase().trim()+" "+excel_data.get(excel_data.size()-1).getC().toUpperCase().trim());
-                    station_dist.add(excel_data.get(excel_data.size()-1).getB().toUpperCase().trim()+" "+excel_data.get(excel_data.size()-1).getC().toUpperCase().trim());
+                    joined_list.add(excel_data.get(excel_data.size()-1).getHh().trim()+" "+excel_data.get(excel_data.size()-1).getIi().trim()+"="+excel_data.get(excel_data.size()-1).getBb().toUpperCase().trim()+" "+excel_data.get(excel_data.size()-1).getCc().toUpperCase().trim());
+                    station_dist.add(excel_data.get(excel_data.size()-1).getBb().toUpperCase().trim()+" "+excel_data.get(excel_data.size()-1).getCc().toUpperCase().trim());
                 }
                 mSwipeRefreshLayout.setRefreshing(false);
                 Collections.reverse(excel_data);

@@ -266,19 +266,19 @@ public class p_pending_return extends Fragment {
     private void search(String str) {
         mylist.clear();
         for(Excel_data object:excel_data) {
-            if (object.getB().toLowerCase().contains(str.toLowerCase().trim())) {
+            if (object.getBb().toLowerCase().contains(str.toLowerCase().trim())) {
                 mylist.add(object);
-            } else if (object.getC().toLowerCase().contains(str.toLowerCase().trim())) {
+            } else if (object.getCc().toLowerCase().contains(str.toLowerCase().trim())) {
                 mylist.add(object);
-            } else if (object.getE().toLowerCase().contains(str.toLowerCase().trim())) {
+            } else if (object.getEe().toLowerCase().contains(str.toLowerCase().trim())) {
                 mylist.add(object);
-            } else if (object.getH().toLowerCase().contains(str.toLowerCase().trim())) {
-                mylist.add(object);
-            }
-            else if(object.getK().toLowerCase().contains(str.toLowerCase().trim())){
+            } else if (object.getHh().toLowerCase().contains(str.toLowerCase().trim())) {
                 mylist.add(object);
             }
-            else if(object.getJ().toLowerCase().contains(str.toLowerCase().trim())){
+            else if(object.getKk().toLowerCase().contains(str.toLowerCase().trim())){
+                mylist.add(object);
+            }
+            else if(object.getJj().toLowerCase().contains(str.toLowerCase().trim())){
                 mylist.add(object);
             }
             else if(object.getDate().toLowerCase().contains(str.toLowerCase().trim())){
