@@ -55,7 +55,9 @@ import in.aryomtech.cgalert.R;
 import in.aryomtech.cgalert.fcm.Specific;
 import soup.neumorphism.NeumorphButton;
 
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class today extends Fragment {
 
 
@@ -234,13 +236,7 @@ public class today extends Fragment {
         OnBackPressedCallback callback=new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if(onback==0){
-                    Toast.makeText(contextNullSafe, "Press back again to exit", Toast.LENGTH_SHORT).show();
-                    onback=1;
-                }
-                else{
-                    ((FragmentActivity) getContextNullSafety()).finish();
-                }
+                ((FragmentActivity) getContextNullSafety()).finish();
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),callback);
@@ -408,7 +404,7 @@ public class today extends Fragment {
                                     String token = snapshot.child(ds.getKey()).child("token").child(Objects.requireNonNull(dd.getKey())).getValue(String.class);
                                     if (token != null) {
                                         Specific specific = new Specific();
-                                        specific.noti("High Court Alert", body, token,keys_copy_selected_phone.get(i));
+                                        specific.noti("High Court Alert", body, token,keys_copy_selected_phone.get(i),"data");
                                     }
                                 }
                             }
@@ -536,19 +532,19 @@ public class today extends Fragment {
     private void search(String str) {
         mylist.clear();
         for(Excel_data object:excel_data) {
-            if (object.getB().toLowerCase().contains(str.toLowerCase().trim())) {
+            if (object.getBb().toLowerCase().contains(str.toLowerCase().trim())) {
                 mylist.add(object);
-            } else if (object.getC().toLowerCase().contains(str.toLowerCase().trim())) {
+            } else if (object.getCc().toLowerCase().contains(str.toLowerCase().trim())) {
                 mylist.add(object);
-            } else if (object.getE().toLowerCase().contains(str.toLowerCase().trim())) {
+            } else if (object.getEe().toLowerCase().contains(str.toLowerCase().trim())) {
                 mylist.add(object);
-            } else if (object.getH().toLowerCase().contains(str.toLowerCase().trim())) {
-                mylist.add(object);
-            }
-            else if(object.getK().toLowerCase().contains(str.toLowerCase().trim())){
+            } else if (object.getHh().toLowerCase().contains(str.toLowerCase().trim())) {
                 mylist.add(object);
             }
-            else if(object.getJ().toLowerCase().contains(str.toLowerCase().trim())){
+            else if(object.getKk().toLowerCase().contains(str.toLowerCase().trim())){
+                mylist.add(object);
+            }
+            else if(object.getJj().toLowerCase().contains(str.toLowerCase().trim())){
                 mylist.add(object);
             }
             else if(object.getDate().toLowerCase().contains(str.toLowerCase().trim())){
@@ -575,9 +571,11 @@ public class today extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 excel_data.clear();
                 for(DataSnapshot ds:snapshot.getChildren()){
-                    if(snapshot.child(ds.getKey()).child("B").getValue(String.class).toUpperCase().equals(stat_name.substring(3))) {
-                        if (cr_dt.equals(snapshot.child(ds.getKey()).child("K").getValue(String.class))) {
-                            excel_data.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Excel_data.class));
+                    if(snapshot.child(ds.getKey()).child("B").getValue(String.class)!=null) {
+                        if (snapshot.child(ds.getKey()).child("B").getValue(String.class).toUpperCase().equals(stat_name.substring(3))) {
+                            if (cr_dt.equals(snapshot.child(ds.getKey()).child("K").getValue(String.class))) {
+                                excel_data.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Excel_data.class));
+                            }
                         }
                     }
                 }

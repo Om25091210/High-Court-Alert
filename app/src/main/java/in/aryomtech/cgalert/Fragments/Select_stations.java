@@ -22,7 +22,9 @@ import in.aryomtech.cgalert.DB.TinyDB;
 import in.aryomtech.cgalert.Fragments.Adapter.SelectStationAdapter;
 import in.aryomtech.cgalert.databinding.ActivitySelectStationsBinding;
 import in.aryomtech.cgalert.Dashboard;
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class Select_stations extends AppCompatActivity {
 
     ActivitySelectStationsBinding binding;

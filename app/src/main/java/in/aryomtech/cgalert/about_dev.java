@@ -21,7 +21,9 @@ import android.widget.Toast;
 
 import soup.neumorphism.NeumorphCardView;
 
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class about_dev extends Fragment {
 
     View view;

@@ -1,24 +1,21 @@
 package in.aryomtech.cgalert.NoticeVictim;
 
-import static android.content.Context.MODE_PRIVATE;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.core.content.ContextCompat;
+import androidx.viewpager.widget.ViewPager;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,67 +24,209 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
-import in.aryomtech.cgalert.Fragments.model.Excel_data;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
+import in.aryomtech.cgalert.CheckRooted.RootUtil;
+import in.aryomtech.cgalert.DB.TinyDB;
+import in.aryomtech.cgalert.NoticeVictim.Adapter.NoticeAdapter;
+import in.aryomtech.cgalert.NoticeVictim.Fragments.AllNTV;
+import in.aryomtech.cgalert.NoticeVictim.Fragments.PendingNTV;
+import in.aryomtech.cgalert.NoticeVictim.Fragments.TodayNTV;
+import in.aryomtech.cgalert.NoticeVictim.Fragments.UrgentNTV;
+import in.aryomtech.cgalert.NoticeVictim.Fragments.Served;
+import in.aryomtech.cgalert.NoticeVictim.model.Notice_model;
 import in.aryomtech.cgalert.R;
+import in.aryomtech.cgalert.Splash;
+import in.aryomtech.myapplication.v4.FragmentPagerItemAdapter;
+import in.aryomtech.myapplication.v4.FragmentPagerItems;
+import soup.neumorphism.NeumorphCardView;
+import io.michaelrocks.paranoid.Obfuscate;
 
-public class NoticemainAdmin extends Fragment {
+@Obfuscate
+public class NoticemainAdmin extends AppCompatActivity {
 
-    View view;
-    RecyclerView recyclerView;
-    Context contextNullSafe;
-    List<Notice_model> list;
-    DatabaseReference reference;
-    ImageView form, back;
-    TextView station;
-    boolean isadmin = false;
     String stat_name;
+    List<Notice_model> list;
+    ImageView form;
+    TinyDB tinyDB;
+    TextView pending_txt,served_txt;
+    int total_pending=0,total_served=0;
+    DatabaseReference reference;
+    NeumorphCardView pending,served;
     FirebaseAuth auth;
+    String ps_or_admin="";
     FirebaseUser user;
-
+    String sp_of;
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_noticemain_admin, container, false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_noticemain_admin);
 
-
+        Window window = NoticemainAdmin.this.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(ContextCompat.getColor(NoticemainAdmin.this, R.color.use_bg));
+        pending_txt=findViewById(R.id.textView6);
+        served_txt=findViewById(R.id.textView8);
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
-
-        stat_name = getContextNullSafety().getSharedPreferences("station_name_K", MODE_PRIVATE)
-                .getString("the_station_name2003", "");
-
-        recyclerView = view.findViewById(R.id.rv);
+        stat_name= getSharedPreferences("station_name_K",MODE_PRIVATE)
+                .getString("the_station_name2003","");
+        if(RootUtil.isDeviceRooted()){
+            Toast.makeText(this, "Device Rooted", Toast.LENGTH_SHORT).show();
+            NoticemainAdmin.this.finish();
+        }
         list = new ArrayList<>();
-        NoticeAdapter adapter = new NoticeAdapter(getContextNullSafety(), list);
-        LinearLayoutManager mManager = new LinearLayoutManager(getContextNullSafety());
-        recyclerView.setItemViewCacheSize(500);
-        recyclerView.setDrawingCacheEnabled(true);
-        recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
-        recyclerView.setLayoutManager(mManager);
-        reference = FirebaseDatabase.getInstance().getReference().child("notice");
-        form = view.findViewById(R.id.form);
-        station = view.findViewById(R.id.textView10);
-        back = view.findViewById(R.id.imageView4);
-        station.setText("ADMIN");
-       // get_status_of_admin();
+        tinyDB=new TinyDB(getApplicationContext());
+        form = findViewById(R.id.form);
+        served = findViewById(R.id.served);
+        pending = findViewById(R.id.pending);
+        reference= FirebaseDatabase.getInstance().getReference().child("notice");
+        FragmentPagerItemAdapter adapter1 = new FragmentPagerItemAdapter(
+                getSupportFragmentManager(), FragmentPagerItems.with(NoticemainAdmin.this)
+                .add("Today Notices", TodayNTV.class)
+                .add("Urgent Notices", UrgentNTV.class)
+                .add("All Notices", AllNTV.class)
+                .create());
 
-        reference.addValueEventListener(new ValueEventListener() {
+        ViewPager viewPager = findViewById(R.id.viewpager);
+        viewPager.setAdapter(adapter1);
+
+        SmartTabLayout viewPagerTab = findViewById(R.id.viewpagertab);
+        viewPagerTab.setViewPager(viewPager);
+        ps_or_admin=getSharedPreferences("useris?",MODE_PRIVATE)
+                .getString("the_user_is?","");
+        boolean isadmin=getSharedPreferences("isAdmin_or_not", Context.MODE_PRIVATE)
+                .getBoolean("authorizing_admin",false);
+        if(isadmin){
+            form.setVisibility(View.VISIBLE);
+        }
+        else{
+            form.setVisibility(View.GONE);
+        }
+        sp_of=getSharedPreferences("Is_SP",MODE_PRIVATE)
+                .getString("Yes_of","none");
+        if(sp_of.equals("none")) {
+            if(tinyDB.getInt("num_station")==0){
+                getDataForIG();
+            }
+            else if(tinyDB.getInt("num_station")==10){
+                getDataForSDOP();
+            }
+            else{
+                if(ps_or_admin.equals("home")) {
+                    get_data();
+                }
+                else if(ps_or_admin.equals("p_home")){
+                    get_ps_data();
+                }
+            }
+        }
+        else
+            getdata_for_sp();
+        form.setOnClickListener(v->{
+            NoticemainAdmin.this.getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations( R.anim.enter_from_right, R.anim.exit_to_left,R.anim.enter_from_left, R.anim.exit_to_right)
+                    .add(R.id.constraint,new NoticeForm(),"noticeform")
+                    .addToBackStack(null)
+                    .commit();
+        });
+        served.setOnClickListener(v->{
+            NoticemainAdmin.this.getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations( R.anim.enter_from_right, R.anim.exit_to_left,R.anim.enter_from_left, R.anim.exit_to_right)
+                    .add(R.id.constraint,new Served(),"noticeform")
+                    .addToBackStack(null)
+                    .commit();
+        });
+        pending.setOnClickListener(v->{
+            NoticemainAdmin.this.getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations( R.anim.enter_from_right, R.anim.exit_to_left,R.anim.enter_from_left, R.anim.exit_to_right)
+                    .add(R.id.constraint,new PendingNTV(),"noticeform")
+                    .addToBackStack(null)
+                    .commit();
+        });
+        findViewById(R.id.imageView4).setOnClickListener(v->{
+            finish();
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Fragment test = getSupportFragmentManager().findFragmentByTag("noticeform");
+        if (test != null && test.isVisible()) {
+            Log.e("frag","fragment showing");//just for dummy line hehe :)
+        }
+        else {
+            finish();
+        }
+    }
+    private void get_data() {
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot ds:snapshot.getChildren()) {
+                    if (snapshot.child(ds.getKey()).child("district").exists()) {
+                        if (snapshot.child(ds.getKey()).child("advocate").exists()) {
+                            if (!snapshot.child(Objects.requireNonNull(ds.getKey())).child("uploaded_date").exists()) {
+                                total_pending++;
+                            } else {
+                                total_served++;
+                            }
+                        }
+                    }
+                }
+                pending_txt.setText(total_pending+"");
+                served_txt.setText(total_served+"");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void getdata_for_sp() {
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                list.clear();
-                for(DataSnapshot ds:snapshot.getChildren()){
-                    list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
+                for (DataSnapshot ds:snapshot.getChildren()) {
+                    if(snapshot.child(ds.getKey()).child("district").exists()) {
+                        if (snapshot.child(ds.getKey()).child("advocate").exists()) {
+                            if (snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class).trim().toUpperCase().equals(sp_of)) {
+                                if (!snapshot.child(Objects.requireNonNull(ds.getKey())).child("uploaded_date").exists()) {
+                                    total_pending++;
+                                } else {
+                                    total_served++;
+                                }
+                            }
+                        }
+                    }
                 }
-                NoticeAdapter adapter = new NoticeAdapter(getContextNullSafety(), list);
-                adapter.notifyDataSetChanged();
-                recyclerView.setAdapter(adapter);
+                pending_txt.setText(total_pending+"");
+                served_txt.setText(total_served+"");
+
             }
 
             @Override
@@ -95,71 +234,85 @@ public class NoticemainAdmin extends Fragment {
 
             }
         });
-
-        back.setOnClickListener(v -> {
-            FragmentManager fm = ((FragmentActivity) getContextNullSafety()).getSupportFragmentManager();
-            FragmentTransaction ft = fm.beginTransaction();
-            if (fm.getBackStackEntryCount() > 0) {
-                fm.popBackStack();
-            }
-            ft.commit();
-        });
-
-
-        form.setOnClickListener(v -> {
-            Fragment fragment = new NoticeForm();
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.layout, fragment);
-            ft.addToBackStack(null);
-            ft.commit();
-        });
-
-        return view;
     }
 
-
-    private void get_status_of_admin() {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("admin");
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+    private void getDataForSDOP() {
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                isadmin = snapshot.child(user.getPhoneNumber().substring(3) + "").exists();
-                if (isadmin) {
-                    form.setVisibility(View.VISIBLE);
-                    station.setText(stat_name);
-                    getContextNullSafety().getSharedPreferences("isAdmin_or_not", MODE_PRIVATE).edit()
-                            .putBoolean("authorizing_admin", true).apply();
-                } else {
-                    form.setVisibility(View.GONE);
-                    station.setText("ADMIN");
-                    getContextNullSafety().getSharedPreferences("isAdmin_or_not", MODE_PRIVATE).edit()
-                            .putBoolean("authorizing_admin", false).apply();
+                for (DataSnapshot ds:snapshot.getChildren()) {
+                    if(snapshot.child(ds.getKey()).child("district").exists()) {
+                        if (snapshot.child(ds.getKey()).child("advocate").exists()) {
+                            if (tinyDB.getListString("districts_list").contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())
+                                    && tinyDB.getListString("stations_list").contains("PS " + Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("station").getValue(String.class)).trim().toUpperCase())) {
+                                if (!snapshot.child(Objects.requireNonNull(ds.getKey())).child("uploaded_date").exists()) {
+                                    total_pending++;
+                                } else {
+                                    total_served++;
+                                }
+                            }
+                        }
+                    }
                 }
+                pending_txt.setText(total_pending+"");
+                served_txt.setText(total_served+"");
             }
-
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
+            public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
 
-    public Context getContextNullSafety() {
-        if (getContext() != null) return getContext();
-        if (getActivity() != null) return getActivity();
-        if (contextNullSafe != null) return contextNullSafe;
-        if (getView() != null && getView().getContext() != null) return getView().getContext();
-        if (requireContext() != null) return requireContext();
-        if (requireActivity() != null) return requireActivity();
-        if (requireView() != null && requireView().getContext() != null)
-            return requireView().getContext();
+    private void getDataForIG() {
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot ds:snapshot.getChildren()) {
+                    if(snapshot.child(ds.getKey()).child("district").exists()) {
+                        if (snapshot.child(ds.getKey()).child("advocate").exists()) {
+                            if (tinyDB.getListString("districts_list").contains(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("district").getValue(String.class)).trim().toUpperCase())) {
+                                if (!snapshot.child(Objects.requireNonNull(ds.getKey())).child("uploaded_date").exists()) {
+                                    total_pending++;
+                                } else {
+                                    total_served++;
+                                }
+                            }
+                        }
+                    }
+                }
+                pending_txt.setText(total_pending+"");
+                served_txt.setText(total_served+"");
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
+    }
+    private void get_ps_data() {
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot ds:snapshot.getChildren()) {
+                    if(snapshot.child(ds.getKey()).child("district").exists()) {
+                        if (snapshot.child(ds.getKey()).child("advocate").exists()) {
+                            if ((Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("station").getValue(String.class)).trim()).toUpperCase().equals(stat_name.substring(3).trim())) {
+                                if (!snapshot.child(Objects.requireNonNull(ds.getKey())).child("uploaded_date").exists()) {
+                                    total_pending++;
+                                } else {
+                                    total_served++;
+                                }
+                            }
+                        }
+                    }
+                }
+                pending_txt.setText(total_pending+"");
+                served_txt.setText(total_served+"");
 
-        return null;
-
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
     }
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        contextNullSafe = context;
-    }
 }

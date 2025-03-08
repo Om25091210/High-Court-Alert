@@ -20,7 +20,9 @@ import java.util.Locale;
 
 import in.aryomtech.cgalert.Fragments.model.Excel_data;
 import in.aryomtech.cgalert.R;
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class admin_room_Adapter extends RecyclerView.Adapter<admin_room_Adapter.ViewHolder> {
 
     Context context;
@@ -43,23 +45,23 @@ public class admin_room_Adapter extends RecyclerView.Adapter<admin_room_Adapter.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        holder.textViewTitle.setText(list.get(position).getB() + "");
-        holder.textViewBody.setText(list.get(position).getC());
-        holder.Rm.setText(list.get(position).getK());
-        holder.mcrc.setText(list.get(position).getD());
-        holder.pr_case_no.setText(list.get(position).getD()+" No.");
-        holder.crime_no.setText(list.get(position).getH() +"/"+ list.get(position).getI());
-        holder.case_no.setText(list.get(position).getE() +"/"+ list.get(position).getG());
-        holder.name.setText(list.get(position).getF());
-        holder.receiving_date.setText(list.get(position).getJ());
-        if(list.get(position).getL()!=null){
-            if(!list.get(position).getL().equals("None")) {
+        holder.textViewTitle.setText(list.get(position).getBb() + "");
+        holder.textViewBody.setText(list.get(position).getCc());
+        holder.Rm.setText(list.get(position).getKk());
+        holder.mcrc.setText(list.get(position).getDd());
+        holder.pr_case_no.setText(list.get(position).getDd()+" No.");
+        holder.crime_no.setText(list.get(position).getHh() +"/"+ list.get(position).getIi());
+        holder.case_no.setText(list.get(position).getEe() +"/"+ list.get(position).getGg());
+        holder.name.setText(list.get(position).getFf());
+        holder.receiving_date.setText(list.get(position).getJj());
+        if(list.get(position).getLl()!=null){
+            if(!list.get(position).getLl().equals("None")) {
                 holder.day_left.setVisibility(View.VISIBLE);
-                if (nDays_Between_Dates(list.get(position).getL()) == 0) {
+                if (nDays_Between_Dates(list.get(position).getLl()) == 0) {
                     holder.day_left.setText("0d");
                     holder.day_left.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_clock_time, 0, 0, 0);
-                } else if (nDays_Between_Dates(list.get(position).getL()) <= 5) {
-                    holder.day_left.setText(nDays_Between_Dates(list.get(position).getL()) + "d");
+                } else if (nDays_Between_Dates(list.get(position).getLl()) <= 5) {
+                    holder.day_left.setText(nDays_Between_Dates(list.get(position).getLl()) + "d");
                     holder.day_left.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_clock_time, 0, 0, 0);
                 } else {
                     holder.day_left.setText("--");
@@ -80,7 +82,7 @@ public class admin_room_Adapter extends RecyclerView.Adapter<admin_room_Adapter.
                 holder.tick.setImageResource(R.drawable.ic_green_tick);
             }
         }
-        if (list.get(position).getJ().equals("None") || list.get(position).getJ().equals("nan"))
+        if (list.get(position).getJj().equals("None") || list.get(position).getJj().equals("nan"))
             holder.layout.setBackgroundResource(R.drawable.bg_card_red);
         else
             holder.layout.setBackgroundResource(R.drawable.bg_card_white);

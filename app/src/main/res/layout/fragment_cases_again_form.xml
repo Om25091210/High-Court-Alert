@@ -111,6 +111,57 @@
                 tools:ignore="SpeakableTextPresentCheck" />
 
             <TextView
+                android:id="@+id/case_no_txt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15sp"
+                android:fontFamily="@font/quicksand_bold"
+                android:text="@string/case_no_"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/case_no_edt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:importantForAutofill="no"
+                android:background="@drawable/bg_edt_text"
+                android:ems="10"
+                android:gravity="start|top"
+                android:hint="@string/case_no_"
+                android:inputType="number"
+                android:padding="15dp"
+                android:textSize="16sp"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <TextView
+                android:id="@+id/year_case"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15sp"
+                android:fontFamily="@font/quicksand_bold"
+                android:text="@string/case_year"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/case_year_edt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:importantForAutofill="no"
+                android:background="@drawable/bg_edt_text"
+                android:ems="10"
+                android:maxLength="4"
+                android:gravity="start|top"
+                android:hint="@string/year_of_case"
+                android:inputType="number"
+                android:padding="15dp"
+                android:textSize="16sp"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <TextView
                 android:id="@+id/crime_no_txt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -129,7 +180,7 @@
                 android:background="@drawable/bg_edt_text"
                 android:ems="10"
                 android:gravity="start|top"
-                android:hint="@string/district"
+                android:hint="@string/enter_district"
                 android:inputType="textNoSuggestions"
                 android:padding="15dp"
                 android:textSize="16sp"
@@ -263,32 +314,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15sp"
+                android:visibility="gone"
                 android:fontFamily="@font/quicksand_bold"
                 android:text="Time limit for Filling of reply"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/time_limit_edt"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:importantForAutofill="no"
+                android:layout_weight="1"
+                android:hint="Time Limit"
+                android:padding="15dp"
+                android:textSize="16sp"
+                android:visibility="gone"
                 android:orientation="horizontal"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/bg_edt_text"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/time_limit_edt"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:importantForAutofill="no"
-                    android:ems="10"
-                    android:layout_weight="1"
-                    android:hint="Time Limit"
-                    android:padding="15dp"
-                    android:textSize="16sp"
-                    tools:ignore="SpeakableTextPresentCheck" />
-
-
-            </LinearLayout>
+                tools:ignore="SpeakableTextPresentCheck" />
 
 
             <TextView
@@ -297,7 +342,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10sp"
                 android:fontFamily="@font/quicksand_bold"
-                android:text="@string/summary"
+                android:text="Synopsis of the case"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
@@ -316,6 +361,66 @@
                 android:textSize="16sp"
                 tools:ignore="SpeakableTextPresentCheck" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/add_attachment"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:padding="13dp"
+                    android:contentDescription="@string/image"
+                    android:layout_weight="1"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/bg_card_red"
+                    android:backgroundTint="@color/use_orange"
+                    android:src="@drawable/link_clip"
+                    app:tint="@color/white" />
+
+                <ImageView
+                    android:id="@+id/voice_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:padding="13dp"
+                    android:contentDescription="@string/image"
+                    android:layout_weight="1"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/bg_card_red"
+                    android:backgroundTint="@color/use_orange"
+                    android:src="@drawable/ic_voice"
+                    app:tint="@color/white" />
+
+                <TextView
+                    android:id="@+id/send"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="1dp"
+                    android:background="@drawable/bg_card_red"
+                    android:backgroundTint="@color/use_orange"
+                    android:fontFamily="@font/quicksand_bold"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="15dp"
+                    android:text="Send"
+                    android:layout_weight="1"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    tools:ignore="TextContrastCheck"
+                    />
+
+
+            </LinearLayout>
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -412,6 +517,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15sp"
+                android:visibility="gone"
                 android:fontFamily="@font/quicksand_bold"
                 android:text="@string/date_of_submission_of_reply"
                 android:textColor="@color/black"
@@ -423,6 +529,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:importantForAutofill="no"
+                android:visibility="gone"
                 android:background="@drawable/bg_edt_text"
                 android:ems="10"
                 android:gravity="start|top"
@@ -467,7 +574,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="40dp"
                     android:layout_weight="1"
-                    android:layout_margin="5dp"
+                    android:layout_margin="3dp"
                     android:buttonTint="@color/use_orange"
                     android:text="@string/allowed"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -480,7 +587,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="40dp"
                     android:layout_weight="1"
-                    android:layout_margin="5dp"
+                    android:layout_margin="3dp"
                     android:buttonTint="@color/use_orange"
                     android:text="@string/disposed"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -492,7 +599,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_margin="5dp"
+                    android:layout_margin="3dp"
                     android:layout_marginEnd="40dp"
                     android:buttonTint="@color/use_orange"
                     android:text="@string/dismissed"
@@ -509,7 +616,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10sp"
                 android:fontFamily="@font/quicksand_bold"
-                android:text="@string/summary"
+                android:text="@string/judgement_summary"
                 android:visibility="gone"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
@@ -525,11 +632,37 @@
                 android:visibility="gone"
                 android:inputType="textMultiLine"
                 android:gravity="start"
-                android:hint="Detailed Summary"
+                android:hint="@string/detailed_summary"
                 android:padding="15dp"
                 android:textSize="16sp"
                 tools:ignore="SpeakableTextPresentCheck" />
 
+            <TextView
+                android:id="@+id/due"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15sp"
+                android:fontFamily="@font/quicksand_bold"
+                android:text="Due Days"
+                android:visibility="gone"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/due_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:layout_marginTop="10dp"
+                android:importantForAutofill="no"
+                android:background="@drawable/bg_edt_text"
+                android:ems="10"
+                android:visibility="gone"
+                android:gravity="start"
+                android:hint="30 days"
+                android:padding="15dp"
+                android:textSize="16sp"
+                tools:ignore="SpeakableTextPresentCheck" />
 
             <TextView
                 android:id="@+id/submit_txt"

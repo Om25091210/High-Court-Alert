@@ -170,45 +170,6 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/case_pr"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/quicksand_bold"
-                android:text="@string/case_type"
-                android:textColor="@color/use_light_blue"
-                android:textSize="@dimen/_11sdp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/case_type"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="10dp"
-                android:ellipsize="end"
-                android:fontFamily="@font/quicksand_bold"
-                android:maxLines="1"
-                android:paddingStart="1dp"
-                android:paddingEnd="15dp"
-                android:textColor="@color/use_light_blue"
-                android:textSize="@dimen/_10sdp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="MCRC" />
-
-        </LinearLayout>
     </LinearLayout>
 
 

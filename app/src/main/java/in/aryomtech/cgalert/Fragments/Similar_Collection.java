@@ -41,7 +41,9 @@ import in.aryomtech.cgalert.Fragments.model.Excel_data;
 import in.aryomtech.cgalert.Fragments.model.filterdata;
 import in.aryomtech.cgalert.R;
 
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class Similar_Collection extends Fragment {
 
     View view;
@@ -116,13 +118,7 @@ public class Similar_Collection extends Fragment {
         OnBackPressedCallback callback=new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if(onback==0){
-                    Toast.makeText(contextNullSafe, "Press back again to exit", Toast.LENGTH_SHORT).show();
-                    onback=1;
-                }
-                else{
-                    ((FragmentActivity) getContextNullSafety()).finish();
-                }
+                ((FragmentActivity) getContextNullSafety()).finish();
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),callback);
@@ -147,8 +143,8 @@ public class Similar_Collection extends Fragment {
                 for(DataSnapshot ds:snapshot.getChildren()) {
                     if (sp_of.equals(snapshot.child(ds.getKey()).child("C").getValue(String.class))) {
                         excel_data.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Excel_data.class));
-                        joined_list.add(excel_data.get(excel_data.size() - 1).getD().toLowerCase().trim() + " " + excel_data.get(excel_data.size() - 1).getH().trim() + " " + excel_data.get(excel_data.size() - 1).getI().trim() + "=" + excel_data.get(excel_data.size() - 1).getB().trim() + " " + excel_data.get(excel_data.size() - 1).getC().trim());
-                        station_dist.add(excel_data.get(excel_data.size() - 1).getB().trim() + " " + excel_data.get(excel_data.size() - 1).getC().trim());
+                        joined_list.add(excel_data.get(excel_data.size() - 1).getDd().toLowerCase().trim() + " " + excel_data.get(excel_data.size() - 1).getHh().trim() + " " + excel_data.get(excel_data.size() - 1).getIi().trim() + "=" + excel_data.get(excel_data.size() - 1).getBb().trim() + " " + excel_data.get(excel_data.size() - 1).getCc().trim());
+                        station_dist.add(excel_data.get(excel_data.size() - 1).getBb().trim() + " " + excel_data.get(excel_data.size() - 1).getCc().trim());
                     }
                 }
                 mSwipeRefreshLayout.setRefreshing(false);
@@ -227,10 +223,7 @@ public class Similar_Collection extends Fragment {
                         if (str_arg.contains("/") && not_once) {
                             String sub1 = str_arg.substring(0, str_arg.indexOf("/"));
                             String sub2 = str_arg.substring(str_arg.indexOf("/") + 1);
-                            if (list.get(4).contains(sub1) && list.get(6).contains(sub2)) {
-                                count++;
-                                not_once = false;
-                            } else if (list.get(7).contains(sub1) && list.get(8).contains(sub2)) {
+                            if (list.get(0).contains(sub1) && list.get(1).contains(sub2)) {
                                 count++;
                                 not_once = false;
                             }
@@ -255,7 +248,6 @@ public class Similar_Collection extends Fragment {
         list.clear();
         try{
             list.add(object.getCn().toLowerCase());
-            list.add(object.getCt().toLowerCase());
             list.add(object.getYear().toLowerCase());
             list.add(object.getStn().toLowerCase());
             list.add(object.getDis_n().toLowerCase());
@@ -280,8 +272,8 @@ public class Similar_Collection extends Fragment {
                 filtered_station_dist.clear();
                 for(DataSnapshot ds:snapshot.getChildren()){
                     excel_data.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Excel_data.class));
-                    joined_list.add(excel_data.get(excel_data.size()-1).getD().toUpperCase().trim()+" "+excel_data.get(excel_data.size()-1).getH().trim()+" "+excel_data.get(excel_data.size()-1).getI().trim()+"="+excel_data.get(excel_data.size()-1).getB().toUpperCase().trim()+" "+excel_data.get(excel_data.size()-1).getC().toUpperCase().trim());
-                    station_dist.add(excel_data.get(excel_data.size()-1).getB().toUpperCase().trim()+" "+excel_data.get(excel_data.size()-1).getC().toUpperCase().trim());
+                    joined_list.add(excel_data.get(excel_data.size()-1).getHh().trim()+" "+excel_data.get(excel_data.size()-1).getIi().trim()+"="+excel_data.get(excel_data.size()-1).getBb().toUpperCase().trim()+" "+excel_data.get(excel_data.size()-1).getCc().toUpperCase().trim());
+                    station_dist.add(excel_data.get(excel_data.size()-1).getBb().toUpperCase().trim()+" "+excel_data.get(excel_data.size()-1).getCc().toUpperCase().trim());
                 }
                 mSwipeRefreshLayout.setRefreshing(false);
                 Collections.reverse(excel_data);
@@ -319,24 +311,15 @@ public class Similar_Collection extends Fragment {
     }
 
     private void remove_spaces_and_store(List<String> filtered_data,List<String> filtered_station_dist) {
-        String case_type="",case_no="",year="",station_name="",district="";
+        String case_no="",year="",station_name="",district="";
         for(int i=0;i<filtered_data.size();i++){
             String str=filtered_data.get(i);
             String stat_dist=filtered_station_dist.get(i);
-            int count=0;
             int temp_j=0;
-            int space_pos=0;
             for(int j=0;j<str.length();j++) {
                 if(' '==str.charAt(j)){
-                    if(count==0) {
-                        case_type = str.substring(0,j);
-                        count++;
-                        space_pos=j;
-                    }
-                    else if(count==1){
-                        case_no= str.substring(space_pos+1,j);
-                        temp_j=j;
-                    }
+                    case_no = str.substring(0,j);
+                    temp_j=j;
                 }
                 if('='==str.charAt(j)){
                     year=str.substring(temp_j,j);
@@ -351,7 +334,7 @@ public class Similar_Collection extends Fragment {
                 }
             }
         }
-        save_locally_list.add(new filterdata(case_type,case_no,year,station_name,district));
+        save_locally_list.add(new filterdata(case_no,year,station_name,district));
 
     }
 

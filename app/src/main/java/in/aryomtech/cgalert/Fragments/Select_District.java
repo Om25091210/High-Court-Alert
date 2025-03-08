@@ -23,7 +23,9 @@ import in.aryomtech.cgalert.Fragments.Adapter.SelectDistrictAdapter;
 import in.aryomtech.cgalert.Login;
 import in.aryomtech.cgalert.databinding.ActivitySelectDistrictBinding;
 import in.aryomtech.cgalert.Dashboard;
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class Select_District extends AppCompatActivity {
 
     ActivitySelectDistrictBinding binding;

@@ -22,6 +22,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -49,7 +51,9 @@ import in.aryomtech.cgalert.Fragments.model.Excel_data;
 import in.aryomtech.cgalert.R;
 import soup.neumorphism.NeumorphButton;
 
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class p_pending_coll extends Fragment {
 
     View view;
@@ -61,6 +65,8 @@ public class p_pending_coll extends Fragment {
     List<Excel_data> excel_data=new ArrayList<>();
     List<Excel_data> mylist=new ArrayList<>();
     EditText search;
+    ImageView cg_logo;
+    TextView no_data;
     CheckBox select_all;
     List<String> phone_numbers=new ArrayList<>();
     List<String> station_name_list=new ArrayList<>();
@@ -84,6 +90,8 @@ public class p_pending_coll extends Fragment {
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
         );
         added_list=new ArrayList<>();
+        cg_logo=view.findViewById(R.id.imageView3);
+        no_data=view.findViewById(R.id.no_data);
         mSwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         search=view.findViewById(R.id.search);
         select_all=view.findViewById(R.id.checkBox4);
@@ -253,19 +261,19 @@ public class p_pending_coll extends Fragment {
     private void search(String str) {
         mylist.clear();
         for(Excel_data object:excel_data) {
-            if (object.getB().toLowerCase().contains(str.toLowerCase().trim())) {
+            if (object.getBb().toLowerCase().contains(str.toLowerCase().trim())) {
                 mylist.add(object);
-            } else if (object.getC().toLowerCase().contains(str.toLowerCase().trim())) {
+            } else if (object.getCc().toLowerCase().contains(str.toLowerCase().trim())) {
                 mylist.add(object);
-            } else if (object.getE().toLowerCase().contains(str.toLowerCase().trim())) {
+            } else if (object.getEe().toLowerCase().contains(str.toLowerCase().trim())) {
                 mylist.add(object);
-            } else if (object.getH().toLowerCase().contains(str.toLowerCase().trim())) {
-                mylist.add(object);
-            }
-            else if(object.getK().toLowerCase().contains(str.toLowerCase().trim())){
+            } else if (object.getHh().toLowerCase().contains(str.toLowerCase().trim())) {
                 mylist.add(object);
             }
-            else if(object.getJ().toLowerCase().contains(str.toLowerCase().trim())){
+            else if(object.getKk().toLowerCase().contains(str.toLowerCase().trim())){
+                mylist.add(object);
+            }
+            else if(object.getJj().toLowerCase().contains(str.toLowerCase().trim())){
                 mylist.add(object);
             }
             else if(object.getDate().toLowerCase().contains(str.toLowerCase().trim())){
@@ -285,11 +293,17 @@ public class p_pending_coll extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 excel_data.clear();
                 for(DataSnapshot ds:snapshot.getChildren()){
-                    if(snapshot.child(ds.getKey()).child("B").getValue(String.class).toUpperCase().equals(stat_name.substring(3))) {
-                        if (snapshot.child(ds.getKey()).child("J").getValue(String.class).equals("None")) {
-                            excel_data.add(snapshot.child(ds.getKey()).getValue(Excel_data.class));
+                    if (snapshot.child(ds.getKey()).child("B").getValue(String.class) != null) {
+                        if (snapshot.child(ds.getKey()).child("B").getValue(String.class).toUpperCase().equals(stat_name.substring(3))) {
+                            if (snapshot.child(ds.getKey()).child("J").getValue(String.class).equals("None")) {
+                                excel_data.add(snapshot.child(ds.getKey()).getValue(Excel_data.class));
+                            }
                         }
                     }
+                }
+                if(excel_data.size()!=0){
+                    cg_logo.setVisibility(View.GONE);
+                    no_data.setVisibility(View.GONE);
                 }
                 added_list.clear();
                 String txt="Send "+"("+added_list.size()+")";

@@ -11,7 +11,24 @@
     android:id="@+id/lay1"
     >
 
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/animation_view"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lottie_autoPlay="true"
+        app:lottie_fileName="done.json"
+        app:lottie_loop="true" />
+
     <ScrollView
+        android:id="@+id/scrollView3"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -74,11 +91,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:importantForAutofill="no"
                 android:background="@drawable/bg_edt_text"
                 android:ems="10"
                 android:gravity="start|top"
                 android:hint="@string/district_name"
+                android:importantForAutofill="no"
                 android:inputType="textNoSuggestions"
                 android:padding="15dp"
                 android:textSize="16sp"
@@ -103,11 +120,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:importantForAutofill="no"
                 android:background="@drawable/bg_edt_text"
                 android:ems="10"
                 android:gravity="start|top"
                 android:hint="@string/police_station_name"
+                android:importantForAutofill="no"
                 android:inputType="textNoSuggestions"
                 android:padding="15dp"
                 android:textSize="16sp"
@@ -128,11 +145,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:importantForAutofill="no"
                 android:background="@drawable/bg_edt_text"
                 android:ems="10"
                 android:gravity="start|top"
                 android:hint="@string/crime_no_"
+                android:importantForAutofill="no"
                 android:inputType="number"
                 android:padding="15dp"
                 android:textSize="16sp"
@@ -153,13 +170,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:importantForAutofill="no"
                 android:background="@drawable/bg_edt_text"
                 android:ems="10"
-                android:inputType="number"
-                android:maxLength="4"
                 android:gravity="start|top"
                 android:hint="@string/year_of_crime"
+                android:importantForAutofill="no"
+                android:inputType="number"
+                android:maxLength="4"
                 android:padding="15dp"
                 android:textSize="16sp"
                 tools:ignore="SpeakableTextPresentCheck" />
@@ -178,64 +195,87 @@
             <LinearLayout
                 android:id="@+id/layout1"
                 android:layout_width="match_parent"
-                android:orientation="horizontal"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/app_name"
-                android:layout_height="wrap_content">
+                app:layout_constraintTop_toBottomOf="@+id/app_name">
 
                 <TextView
                     android:id="@+id/crr"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_margin="10dp"
                     android:layout_weight="1"
+                    android:background="@drawable/bg_selector"
                     android:fontFamily="@font/quicksand_bold"
                     android:gravity="center"
-                    android:layout_margin="10dp"
                     android:padding="8dp"
                     android:text="@string/crr"
-                    android:background="@drawable/bg_button2"
-                    android:textSize="17sp"
                     android:textColor="@color/use_blue"
-                    android:textStyle="bold"
-                    />
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/cra"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_selector"
                     android:fontFamily="@font/quicksand_bold"
                     android:gravity="center"
-                    android:layout_weight="1"
                     android:padding="8dp"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/bg_button2"
                     android:text="@string/cra"
-                    android:textSize="17sp"
                     android:textColor="@color/use_blue"
-                    android:textStyle="bold"
-                    />
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/mcrc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_selector"
                     android:fontFamily="@font/quicksand_bold"
                     android:gravity="center"
                     android:padding="8dp"
-                    android:layout_weight="1"
-                    android:layout_margin="10dp"
                     android:text="@string/mcrc"
-                    android:background="@drawable/bg_button2"
-                    android:textSize="17sp"
                     android:textColor="@color/use_blue"
-                    android:textStyle="bold"
-                    />
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/no_case"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15sp"
+                android:fontFamily="@font/quicksand_bold"
+                android:text="@string/case_number"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/case_no_edt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_edt_text"
+                android:gravity="start|top"
+                android:hint="@string/enter_case_number"
+                android:importantForAutofill="no"
+                android:inputType="number"
+                android:padding="15dp"
+                android:textSize="16sp"
+                tools:ignore="SpeakableTextPresentCheck" />
+
 
             <TextView
                 android:id="@+id/year_case"
@@ -252,13 +292,36 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:importantForAutofill="no"
                 android:background="@drawable/bg_edt_text"
                 android:ems="10"
                 android:gravity="start|top"
-                android:maxLength="4"
                 android:hint="@string/year_of_case"
+                android:importantForAutofill="no"
                 android:inputType="number"
+                android:maxLength="4"
+                android:padding="15dp"
+                android:textSize="16sp"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15sp"
+                android:fontFamily="@font/quicksand_bold"
+                android:text="Appellant"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/appellant_edt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_edt_text"
+                android:ems="10"
+                android:gravity="start|top"
+                android:hint="@string/name_of_the_appellant"
+                android:importantForAutofill="no"
                 android:padding="15dp"
                 android:textSize="16sp"
                 tools:ignore="SpeakableTextPresentCheck" />
@@ -279,11 +342,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/bg_edt_text"
-                android:padding="15dp"
                 android:hint="@string/tap_to_select"
+                android:padding="15dp"
                 android:textColor="@color/black"
-                android:textSize="15sp"
-                />
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/next_date_txt"
@@ -301,11 +363,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/bg_edt_text"
-                android:padding="15dp"
                 android:hint="@string/tap_to_select"
+                android:padding="15dp"
                 android:textColor="@color/black"
-                android:textSize="15sp"
-                />
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/advocate_name"
@@ -322,11 +383,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:importantForAutofill="no"
                 android:background="@drawable/bg_edt_text"
                 android:ems="10"
                 android:gravity="start|top"
                 android:hint="@string/name_of_the_govt_advocate"
+                android:importantForAutofill="no"
                 android:inputType="textNoSuggestions"
                 android:padding="15dp"
                 android:textSize="16sp"
@@ -337,21 +398,39 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:gravity="center"
                 android:layout_marginStart="20dp"
+                android:layout_marginTop="35dp"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/bg_card_red"
                 android:backgroundTint="@color/use_orange"
                 android:fontFamily="@font/quicksand_bold"
+                android:gravity="center"
                 android:paddingTop="15dp"
                 android:paddingBottom="15dp"
-                android:layout_marginBottom="35dp"
                 android:text="@string/submit_amp_send_alert"
-                android:layout_marginTop="35dp"
                 android:textColor="@color/white"
                 android:textSize="18sp"
-                tools:ignore="TextContrastCheck"
-                />
+                tools:ignore="TextContrastCheck" />
+
+            <TextView
+                android:id="@+id/today_victim"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="35dp"
+                android:background="@drawable/bg_card_red"
+                android:backgroundTint="@color/use_orange"
+                android:fontFamily="@font/quicksand_bold"
+                android:gravity="center"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:text="@string/view_today_notices"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                tools:ignore="TextContrastCheck" />
 
         </LinearLayout>
     </ScrollView>

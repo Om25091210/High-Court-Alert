@@ -51,7 +51,9 @@ import in.aryomtech.cgalert.Fragments.Adapter.Excel_Adapter;
 import in.aryomtech.cgalert.Fragments.model.Excel_data;
 import in.aryomtech.cgalert.R;
 import soup.neumorphism.NeumorphButton;
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class urgent_data extends Fragment {
 
     View view;
@@ -180,13 +182,7 @@ public class urgent_data extends Fragment {
         OnBackPressedCallback callback=new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if(onback==0){
-                    Toast.makeText(contextNullSafe, "Press back again to exit", Toast.LENGTH_SHORT).show();
-                    onback=1;
-                }
-                else{
-                    ((FragmentActivity) getContextNullSafety()).finish();
-                }
+                ((FragmentActivity) getContextNullSafety()).finish();
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),callback);
@@ -279,19 +275,19 @@ public class urgent_data extends Fragment {
     private void search(String str) {
         mylist.clear();
         for(Excel_data object:excel_data) {
-            if (object.getB().toLowerCase().contains(str.toLowerCase().trim())) {
+            if (object.getBb().toLowerCase().contains(str.toLowerCase().trim())) {
                 mylist.add(object);
-            } else if (object.getC().toLowerCase().contains(str.toLowerCase().trim())) {
+            } else if (object.getCc().toLowerCase().contains(str.toLowerCase().trim())) {
                 mylist.add(object);
-            } else if (object.getE().toLowerCase().contains(str.toLowerCase().trim())) {
+            } else if (object.getEe().toLowerCase().contains(str.toLowerCase().trim())) {
                 mylist.add(object);
-            } else if (object.getH().toLowerCase().contains(str.toLowerCase().trim())) {
-                mylist.add(object);
-            }
-            else if(object.getK().toLowerCase().contains(str.toLowerCase().trim())){
+            } else if (object.getHh().toLowerCase().contains(str.toLowerCase().trim())) {
                 mylist.add(object);
             }
-            else if(object.getJ().toLowerCase().contains(str.toLowerCase().trim())){
+            else if(object.getKk().toLowerCase().contains(str.toLowerCase().trim())){
+                mylist.add(object);
+            }
+            else if(object.getJj().toLowerCase().contains(str.toLowerCase().trim())){
                 mylist.add(object);
             }
             else if(object.getDate().toLowerCase().contains(str.toLowerCase().trim())){
@@ -311,23 +307,25 @@ public class urgent_data extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 excel_data.clear();
-                for(DataSnapshot ds:snapshot.getChildren()){
-                    if(snapshot.child(ds.getKey()).child("B").getValue(String.class).toUpperCase().equals(stat_name.substring(3))) {
-                        try {
-                            Date dNow = new Date( );
-                            SimpleDateFormat ft =
-                                    new SimpleDateFormat ("dd.MM.yyyy",Locale.getDefault());
+                for(DataSnapshot ds:snapshot.getChildren()) {
+                    if (snapshot.child(Objects.requireNonNull(ds.getKey())).child("B").getValue(String.class) != null) {
+                        if (Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("B").getValue(String.class)).toUpperCase().equals(stat_name.substring(3))) {
+                            try {
+                                Date dNow = new Date();
+                                SimpleDateFormat ft =
+                                        new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
 
-                            Date list = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(snapshot.child(ds.getKey()).child("L").getValue(String.class) + "");
-                            Date current = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(ft.format(dNow));
-                            Log.e("date",list.before(current)+"");
-                            if(list.before(current)){
-                                excel_data.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Excel_data.class));
+                                Date list = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(snapshot.child(ds.getKey()).child("L").getValue(String.class) + "");
+                                Date current = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(ft.format(dNow));
+                                Log.e("date", list.before(current) + "");
+                                if (list.before(current)) {
+                                    excel_data.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Excel_data.class));
+                                }
+                            } catch (ParseException e) {
+                                e.printStackTrace();
                             }
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
 
+                        }
                     }
                 }
                 if(excel_data.size()!=0){

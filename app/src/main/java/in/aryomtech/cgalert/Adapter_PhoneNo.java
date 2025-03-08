@@ -33,7 +33,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import in.aryomtech.cgalert.Fragments.model.stationData;
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class Adapter_PhoneNo extends RecyclerView.Adapter<Adapter_PhoneNo.ViewHolder> {
 
     List<stationData> list;

@@ -19,20 +19,19 @@
         app:layout_constraintStart_toStartOf="@+id/imageView4"
         app:layout_constraintTop_toTopOf="@+id/neumorphCardView2"
         app:srcCompat="@drawable/ic_filter"
-        android:contentDescription="@string/tag_menu" />
+        android:contentDescription="@string/image" />
 
     <View
         android:id="@+id/imageView4"
         android:layout_width="50dp"
         android:layout_height="0dp"
-        android:contentDescription="@string/tag_menu"
+        android:contentDescription="@string/image"
         app:layout_constraintBottom_toBottomOf="@+id/neumorphCardView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/neumorphCardView2"
         app:layout_constraintTop_toTopOf="parent"
         >
     </View>
-
 
     <ImageView
         android:id="@+id/imageView"
@@ -45,16 +44,30 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/neumorphCardView2" />
 
+    <ImageView
+        android:id="@+id/back"
+        android:layout_width="35dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:background="@drawable/bg_back_view"
+        android:backgroundTint="@color/use_neumorph_orange"
+        android:contentDescription="@string/image"
+        android:padding="10dp"
+        android:src="@drawable/ic_back"
+        app:layout_constraintBottom_toBottomOf="@+id/neumorphCardView2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/neumorphCardView2"
+        tools:ignore="ImageContrastCheck" />
+
     <soup.neumorphism.NeumorphCardView
         android:id="@+id/neumorphCardView2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
         android:layout_marginTop="8dp"
         android:background="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/recycler_view"
         app:layout_constraintEnd_toStartOf="@+id/imageView4"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/back"
         app:layout_constraintTop_toTopOf="parent"
         app:neumorph_shadowColorDark="@color/gray"
         app:neumorph_shadowColorLight="@color/white"

@@ -39,7 +39,9 @@ import in.aryomtech.cgalert.Fragments.model.Excel_data;
 import in.aryomtech.cgalert.Fragments.model.filterdata;
 import in.aryomtech.cgalert.R;
 
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class p_similar_return extends Fragment {
 
     View view;
@@ -104,13 +106,7 @@ public class p_similar_return extends Fragment {
         OnBackPressedCallback callback=new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if(onback==0){
-                    Toast.makeText(contextNullSafe, "Press back again to exit", Toast.LENGTH_SHORT).show();
-                    onback=1;
-                }
-                else{
-                    ((FragmentActivity) getContextNullSafety()).finish();
-                }
+                ((FragmentActivity) getContextNullSafety()).finish();
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),callback);
@@ -121,8 +117,6 @@ public class p_similar_return extends Fragment {
         filtered_mylist.clear();
         for(filterdata object:save_locally_list){
             if (object.getCn().toLowerCase().contains(str.toLowerCase().trim())) {
-                filtered_mylist.add(object);
-            } else if (object.getCt().toLowerCase().contains(str.toLowerCase().trim())) {
                 filtered_mylist.add(object);
             } else if (object.getYear().toLowerCase().contains(str.toLowerCase().trim())) {
                 filtered_mylist.add(object);
@@ -154,11 +148,13 @@ public class p_similar_return extends Fragment {
                 filtered_data.clear();
                 station_dist.clear();
                 filtered_station_dist.clear();
-                for(DataSnapshot ds:snapshot.getChildren()){
-                    if (snapshot.child(ds.getKey()).child("B").getValue(String.class).toUpperCase().equals(stat_name.substring(3))) {
-                        excel_data.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Excel_data.class));
-                        joined_list.add(excel_data.get(excel_data.size() - 1).getD().toUpperCase().trim() + " " + excel_data.get(excel_data.size() - 1).getH().trim() + " " + excel_data.get(excel_data.size() - 1).getI().trim()+"="+excel_data.get(excel_data.size()-1).getB().toUpperCase().trim()+" "+excel_data.get(excel_data.size()-1).getC().toUpperCase().trim());
-                        station_dist.add(excel_data.get(excel_data.size() - 1).getB().toUpperCase().trim() + " " + excel_data.get(excel_data.size() - 1).getC().toUpperCase().trim());
+                for(DataSnapshot ds:snapshot.getChildren()) {
+                    if (snapshot.child(ds.getKey()).child("B").getValue(String.class) != null) {
+                        if (snapshot.child(ds.getKey()).child("B").getValue(String.class).toUpperCase().equals(stat_name.substring(3))) {
+                            excel_data.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Excel_data.class));
+                            joined_list.add(excel_data.get(excel_data.size() - 1).getHh().trim() + " " + excel_data.get(excel_data.size() - 1).getIi().trim() + "=" + excel_data.get(excel_data.size() - 1).getBb().toUpperCase().trim() + " " + excel_data.get(excel_data.size() - 1).getCc().toUpperCase().trim());
+                            station_dist.add(excel_data.get(excel_data.size() - 1).getBb().toUpperCase().trim() + " " + excel_data.get(excel_data.size() - 1).getCc().toUpperCase().trim());
+                        }
                     }
                 }
                 mSwipeRefreshLayout.setRefreshing(false);
@@ -195,24 +191,15 @@ public class p_similar_return extends Fragment {
     }
 
     private void remove_spaces_and_store(List<String> filtered_data,List<String> filtered_station_dist) {
-        String case_type="",case_no="",year="",station_name="",district="";
+        String case_no="",year="",station_name="",district="";
         for(int i=0;i<filtered_data.size();i++){
             String str=filtered_data.get(i);
             String stat_dist=filtered_station_dist.get(i);
-            int count=0;
             int temp_j=0;
-            int space_pos=0;
             for(int j=0;j<str.length();j++) {
                 if(' '==str.charAt(j)){
-                    if(count==0) {
-                        case_type = str.substring(0,j);
-                        count++;
-                        space_pos=j;
-                    }
-                    else if(count==1){
-                        case_no= str.substring(space_pos+1,j);
-                        temp_j=j;
-                    }
+                    case_no = str.substring(0,j);
+                    temp_j=j;
                 }
                 if('='==str.charAt(j)){
                     year=str.substring(temp_j,j);
@@ -227,7 +214,7 @@ public class p_similar_return extends Fragment {
                 }
             }
         }
-        save_locally_list.add(new filterdata(case_type,case_no,year,station_name,district));
+        save_locally_list.add(new filterdata(case_no,year,station_name,district));
 
     }
 

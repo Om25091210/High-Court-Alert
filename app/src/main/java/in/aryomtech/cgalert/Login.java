@@ -54,7 +54,9 @@ import in.aryomtech.cgalert.DB.TinyDB;
 import in.aryomtech.cgalert.Fragments.Select_District;
 import www.sanju.motiontoast.MotionToast;
 import www.sanju.motiontoast.MotionToastStyle;
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class Login extends AppCompatActivity {
 
     LinearLayout linearLayout,logo_layout;
@@ -70,7 +72,7 @@ public class Login extends AppCompatActivity {
     private PhoneAuthProvider.ForceResendingToken resendOTPtoken;
     // variable for FirebaseAuth class
     private FirebaseAuth mAuth;
-    String station_name;
+    String station_name,ds_name;
     // string for storing our verification ID
     private String verificationId;
     DatabaseReference user_reference,reference;
@@ -87,6 +89,10 @@ public class Login extends AppCompatActivity {
 
         getSharedPreferences("isAdmin_or_not",MODE_PRIVATE).edit()
                 .putBoolean("authorizing_admin",false).apply();
+
+        getSharedPreferences("valid_version",MODE_PRIVATE).edit()
+                .putBoolean("valid_ver",false).apply();
+
         TinyDB tinyDB=new TinyDB(Login.this);
         Log.e("this cache1",tinyDB.getInt("num_districts")+"");
         deleteCache(this);
@@ -130,6 +136,10 @@ public class Login extends AppCompatActivity {
 
         getSharedPreferences("Is_IG",MODE_PRIVATE).edit()
                 .putString("Yes_of","none").apply();
+
+        getSharedPreferences("district_name_K",MODE_PRIVATE).edit()
+                .putString("the_district_name2002","").apply();
+
         linearLayout.setOnClickListener(v->{
             if(!send_otp.getText().toString().trim().equals("Verify")) {
                 if (edtEmail.getGetTextValue().trim().length() == 10) {
@@ -315,11 +325,14 @@ public class Login extends AppCompatActivity {
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Log.e("lohhing","logging");
                 for(DataSnapshot ds : snapshot.getChildren()){
+                    Log.e("lohhing","logging");
                     for (DataSnapshot ds_1 : ds.getChildren()){
                         if (edtEmail.getGetTextValue().trim().equals(ds_1.getValue(String.class))){
                             count=1;
                             station_name=ds_1.getKey();
+                            ds_name=ds.getKey();
                             Log.e("Entered count","Count = 1");
                             if(Objects.requireNonNull(station_name).startsWith("SP")){
                                 getSharedPreferences("Is_SP",MODE_PRIVATE).edit()
@@ -327,6 +340,9 @@ public class Login extends AppCompatActivity {
                             }
                             getSharedPreferences("station_name_K",MODE_PRIVATE).edit()
                                     .putString("the_station_name2003",station_name).apply();
+
+                            getSharedPreferences("district_name_K",MODE_PRIVATE).edit()
+                                    .putString("the_district_name2002",ds_name).apply();
                             break;
                         }
                     }
@@ -340,32 +356,7 @@ public class Login extends AppCompatActivity {
                     getSharedPreferences("useris?",MODE_PRIVATE).edit()
                             .putString("the_user_is?","p_home").apply();
 
-                    if(DeviceToken!=null){
-                        user_reference.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {//.child(user.getUid()).child("token")
-                                int c=0;
-                                if(snapshot.child(user.getUid()).child("token").exists()) {
-                                    for (DataSnapshot ds : snapshot.child(user.getUid()).child("token").getChildren()) {
-                                        Log.e("forloop", "YES");
-                                        if (Objects.requireNonNull(snapshot.child(user.getUid()).child("token").child(Objects.requireNonNull(ds.getKey())).getValue(String.class)).equals(DeviceToken)) {
-                                            c = 1;
-                                            Log.e("loop if", "YES");
-                                        }
-                                    }
-                                    if (c == 0) {
-                                        user_reference.child(user.getUid()).child("token").child(pkey).setValue(DeviceToken);
-                                    }
-                                }
-                                else{
-                                    user_reference.child(user.getUid()).child("token").child(pkey).setValue(DeviceToken);
-                                }
-                            }
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {}
-                        });
-                    }
-
+                    check_device_token(pkey);
                     user=mAuth.getCurrentUser();
                     countDownTimer.cancel();
                     user_reference.child(user.getUid()).child("phone").setValue(user.getPhoneNumber());
@@ -381,31 +372,7 @@ public class Login extends AppCompatActivity {
                     getSharedPreferences("useris?",MODE_PRIVATE).edit()
                             .putString("the_user_is?","home").apply();
 
-                    if(DeviceToken!=null){
-                        user_reference.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {//.child(user.getUid()).child("token")
-                                int c=0;
-                                if(snapshot.child(user.getUid()).child("token").exists()) {
-                                    for (DataSnapshot ds : snapshot.child(user.getUid()).child("token").getChildren()) {
-                                        Log.e("forloop", "YES");
-                                        if (Objects.requireNonNull(snapshot.child(user.getUid()).child("token").child(Objects.requireNonNull(ds.getKey())).getValue(String.class)).equals(DeviceToken)) {
-                                            c = 1;
-                                            Log.e("loop if", "YES");
-                                        }
-                                    }
-                                    if (c == 0) {
-                                        user_reference.child(user.getUid()).child("token").child(pkey).setValue(DeviceToken);
-                                    }
-                                }
-                                else{
-                                    user_reference.child(user.getUid()).child("token").child(pkey).setValue(DeviceToken);
-                                }
-                            }
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {}
-                        });
-                    }
+                    check_device_token(pkey);
 
                     user = mAuth.getCurrentUser();
                     countDownTimer.cancel();
@@ -459,6 +426,35 @@ public class Login extends AppCompatActivity {
         });
     }
 
+    private void check_device_token(String pkey) {
+        if(DeviceToken!=null){
+            user_reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {//.child(user.getUid()).child("token")
+                    int c=0;
+                    if(snapshot.child(user.getUid()).child("token").exists()) {
+                        for (DataSnapshot ds : snapshot.child(user.getUid()).child("token").getChildren()) {
+                            Log.e("forloop", "YES");
+                            if (Objects.requireNonNull(snapshot.child(user.getUid()).child("token").child(Objects.requireNonNull(ds.getKey())).getValue(String.class)).equals(DeviceToken)) {
+                                c = 1;
+                                Log.e("loop if", "YES");
+                            }
+                        }
+                        if (c == 0) {
+                            user_reference.child(user.getUid()).child("token").child(pkey).setValue(DeviceToken);
+                        }
+                    }
+                    else{
+                        user_reference.child(user.getUid()).child("token").child(pkey).setValue(DeviceToken);
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {}
+            });
+        }
+
+    }
+
     private void check_for_admin() {
         Log.e("Entered count","Admin body");
         String pkey=user_reference.push().getKey();
@@ -478,39 +474,14 @@ public class Login extends AppCompatActivity {
                     getSharedPreferences("useris?",MODE_PRIVATE).edit()
                             .putString("the_user_is?","home").apply();
 
-                    if(DeviceToken!=null){
+                    check_device_token(pkey);
 
-                        user_reference.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {//.child(user.getUid()).child("token")
-                                int c=0;
-                                if(snapshot.child(user.getUid()).child("token").exists()) {
-                                    for (DataSnapshot ds : snapshot.child(user.getUid()).child("token").getChildren()) {
-                                        Log.e("forloop", "YES");
-                                        if (Objects.requireNonNull(snapshot.child(user.getUid()).child("token").child(Objects.requireNonNull(ds.getKey())).getValue(String.class)).equals(DeviceToken)) {
-                                            c = 1;
-                                            Log.e("loop if", "YES");
-                                        }
-                                    }
-                                    if (c == 0) {
-                                        user_reference.child(user.getUid()).child("token").child(pkey).setValue(DeviceToken);
-                                    }
-                                }
-                                else{
-                                    Log.e("tokn",pkey+"");
-                                    user_reference.child(user.getUid()).child("token").child(pkey).setValue(DeviceToken);
-                                }
-                            }
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {}
-                        });
-                    }
                     TinyDB tinyDB=new TinyDB(Login.this);
                     tinyDB.putBoolean("entered_select_district",true);
                     user=mAuth.getCurrentUser();
                     countDownTimer.cancel();
                     user_reference.child(user.getUid()).child("phone").setValue(user.getPhoneNumber());
-                    user_reference.child(user.getUid()).child("name").setValue("admin");
+                    user_reference.child(user.getUid()).child("name").setValue("admin2.0");
                     user_reference.child(user.getUid()).child(Objects.requireNonNull(user.getPhoneNumber()).substring(3)).setValue(user.getPhoneNumber());
                     Intent i = new Intent(Login.this, Dashboard.class);
                     startActivity(i);

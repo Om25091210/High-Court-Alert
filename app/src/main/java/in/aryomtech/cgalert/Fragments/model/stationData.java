@@ -1,6 +1,10 @@
 package in.aryomtech.cgalert.Fragments.model;
 
-public class stationData {
+import androidx.annotation.Keep;
+
+import java.io.Serializable;
+@Keep
+public class stationData implements Serializable {
     String name;
     String num;
 

@@ -21,7 +21,9 @@ import java.util.Locale;
 
 import in.aryomtech.cgalert.Fragments.model.Excel_data;
 import in.aryomtech.cgalert.R;
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class Excel_holder extends RecyclerView.ViewHolder {
     TextView day_left;
     TextView textViewTitle;
@@ -69,15 +71,15 @@ public class Excel_holder extends RecyclerView.ViewHolder {
         else
             day_left.setVisibility(View.GONE);
 
-        textViewTitle.setText(post.getB()+"");
-        textViewBody.setText(post.getC());
-        Rm.setText(post.getK());
-        mcrc.setText(post.getD());
-        pr_case_no.setText(post.getD()+" No.");
-        crime_no.setText(post.getH() +"/"+ post.getI());
-        case_no.setText(post.getE() +"/"+ post.getG());
-        name.setText(post.getF());
-        receiving_date.setText(post.getJ());
+        textViewTitle.setText(post.getBb()+"");
+        textViewBody.setText(post.getCc());
+        Rm.setText(post.getKk());
+        mcrc.setText(post.getDd());
+        pr_case_no.setText(post.getDd()+" No.");
+        crime_no.setText(post.getHh() +"/"+ post.getIi());
+        case_no.setText(post.getEe() +"/"+ post.getGg());
+        name.setText(post.getFf());
+        receiving_date.setText(post.getJj());
         if(post.getReminded()!=null) {
             if(post.getReminded().equals("once")){
                 tick.setImageResource(R.drawable.ic_blue_tick);
@@ -89,7 +91,7 @@ public class Excel_holder extends RecyclerView.ViewHolder {
         else{
             tick.setImageResource(R.color.transparent);
         }
-        if(post.getJ().equals("None") || post.getJ().equals("nan"))
+        if(post.getJj().equals("None") || post.getJj().equals("nan"))
             layout.setBackgroundResource(R.drawable.bg_card_red);
         else
             layout.setBackgroundResource(R.drawable.bg_card_white);

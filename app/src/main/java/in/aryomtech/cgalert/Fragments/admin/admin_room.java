@@ -38,9 +38,12 @@ import java.util.List;
 import in.aryomtech.cgalert.DistrictData;
 import in.aryomtech.cgalert.Fragments.Adapter.admin_room_Adapter;
 import in.aryomtech.cgalert.Fragments.model.Excel_data;
+import in.aryomtech.cgalert.NoticeVictim.NoticeForm;
 import in.aryomtech.cgalert.R;
 
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class admin_room extends Fragment {
 
     View view;
@@ -55,7 +58,7 @@ public class admin_room extends Fragment {
             ,the_showing_return_not_list,the_showing_return_not_sms_list
             ,the_today_not_list,the_today_not_sms_list
             ,the_urgent_not_list,the_urgent_not_sms_list;
-    ImageView imageView;
+    ImageView imageView, back;
     DatabaseReference reference;
     List<Excel_data> list=new ArrayList<>();
     List<String> main_not_list=new ArrayList<>();
@@ -79,6 +82,13 @@ public class admin_room extends Fragment {
         recyclerView.setDrawingCacheEnabled(true);
         recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         recyclerView.setLayoutManager(mManager);
+        back = view.findViewById(R.id.back);
+
+
+        back.setOnClickListener(v->{
+            assert getFragmentManager() != null;
+            getFragmentManager().beginTransaction().remove(admin_room.this).commit();
+        });
 
         String the_call_not=getContextNullSafety().getSharedPreferences("saving_RM_Call_not_noti",Context.MODE_PRIVATE)
                 .getString("RM_CALL_list","");
@@ -179,6 +189,7 @@ public class admin_room extends Fragment {
         if(the_urgent_not_sms_list!=null)
             main_not_sms_list.addAll(the_urgent_not_sms_list);
 
+
         Log.e("size_total",main_not_list+"");
         Log.e("size_total",main_not_sms_list+"");
         imageView.setVisibility(View.VISIBLE);
@@ -256,6 +267,8 @@ public class admin_room extends Fragment {
 
         return view;
     }
+
+
 
     private void clear_all() {
         if(main_list!=null)

@@ -10,4 +10,4 @@ dependencyResolutionManagement {
 rootProject.name = "cg alert"
 include ':app'
 include ':myapplication'
-include ':myapplication2'
+include ':mylibrary'

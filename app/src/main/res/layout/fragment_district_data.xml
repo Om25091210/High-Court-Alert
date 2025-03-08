@@ -5,8 +5,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:id="@+id/data_show"
+    android:layout_marginTop="30dp"
     android:background="@color/use_bg"
     android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusable="true"
     tools:ignore="MissingClass">
 
     <ImageView

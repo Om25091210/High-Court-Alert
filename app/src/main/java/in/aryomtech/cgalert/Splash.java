@@ -10,15 +10,19 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import in.aryomtech.cgalert.CheckRooted.RootUtil;
 import in.aryomtech.cgalert.DB.TinyDB;
 import in.aryomtech.cgalert.Fragments.Select_District;
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class Splash extends AppCompatActivity {
 
 
@@ -38,6 +42,11 @@ public class Splash extends AppCompatActivity {
         user=mAuth.getCurrentUser();
 
         user_reference= FirebaseDatabase.getInstance().getReference().child("users");
+
+        if(RootUtil.isDeviceRooted()){
+            Toast.makeText(this, "Device Rooted", Toast.LENGTH_SHORT).show();
+            Splash.this.finish();
+        }
 
         new Handler(Looper.myLooper()).postDelayed(() -> {
             if(user!=null){
@@ -71,7 +80,12 @@ public class Splash extends AppCompatActivity {
                         finish();
                     }
                 }
-
+                else{
+                    Intent intent = new Intent(Splash.this, Login.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(intent);
+                    finish();
+                }
             }
             else {
                 Intent intent = new Intent(Splash.this, Login.class);

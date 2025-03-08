@@ -13,7 +13,9 @@ import java.util.List;
 
 import in.aryomtech.cgalert.Fragments.model.user_data;
 import in.aryomtech.cgalert.R;
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class installation_Adapter extends RecyclerView.Adapter<installation_Adapter.ViewHolder> {
 
     Context context;

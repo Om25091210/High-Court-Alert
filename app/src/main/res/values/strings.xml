@@ -16,6 +16,8 @@
     <string name="select_all">Select all</string>
     <string name="add__">Add</string>
     <string name="dash">-</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
     <string name="case_no">Case No. -</string>
     <string name="case_type">Case Type -</string>
     <string name="name">Name -</string>
@@ -87,7 +89,7 @@
     <string name="didn_t_you_receive_any_code">Didn\'t you receive any code?</string>
     <string name="resend_new_code">RESEND NEW CODE</string>
     <string name="m_b_sai_aditya">M.B.Sai Aditya</string>
-    <string name="web_developer">Web Developer</string>
+    <string name="web_developer">Lead Web Developer</string>
     <string name="control_panel">Control Panel</string>
     <string name="add_an_admin">Add an Admin</string>
     <string name="add_station_number">Add Station</string>
@@ -153,6 +155,33 @@
     <string name="dismissed">Dismissed</string>
     <string name="disposed">Disposed</string>
     <string name="allowed">Allowed</string>
+    <string name="tap_to_select_due_date">Tap to Select Due Date</string>
+    <string name="due_date">Due Date</string>
+    <string name="detailed_summary">Detailed Summary</string>
+    <string name="judgement_summary">Judgement Summary</string>
+    <string name="due_dateo">Due days -</string>
+    <string name="nature_of_the_caseo">Nature of the Case -</string>
+    <string name="add_attachment">Add Attachment</string>
+    <string name="name_of_the_appellant">Name of the Appellant</string>
+    <string name="enter_case_number">Enter Case Number</string>
+    <string name="case_number">Case Number</string>
+    <string name="upload">Upload</string>
+    <string name="appellantsO">Appellants</string>
+    <string name="respondentsO">Respondents</string>
+    <string name="do_you_want_to_upload_this_file">Do you want to Upload this file?</string>
+    <string name="appellants_list">Appellants List</string>
+    <string name="respondents_list">Respondents List</string>
+    <string name="synopsis_of_the_case">Synopsis of the Case</string>
+    <string name="judgement_summary_of_the_case">Judgement Summary of the Case</string>
+    <string name="deciding_date">Deciding Date</string>
+    <string name="judgement_summary_">Judgement Summary -</string>
+    <string name="enter_district">Enter District</string>
+    <string name="officer">Officer</string>
+    <string name="fetching_data">Fetching data . . .</string>
+    <string name="today_rm_call">Today RM Call</string>
+    <string name="today_rm_return">Today RM Return</string>
+    <string name="view_today_notices">View Today Notices</string>
+    <string name="lead_android_developer">Lead Android Developer</string>
 
 
     <array name="menuOptions">

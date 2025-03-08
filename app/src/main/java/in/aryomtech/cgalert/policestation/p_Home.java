@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
-import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -22,7 +21,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,23 +31,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.mosio.myapplication2.views.DuoDrawerLayout;
-import com.mosio.myapplication2.views.DuoMenuView;
-import com.mosio.myapplication2.widgets.DuoDrawerToggle;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 
-import in.aryomtech.cgalert.DistrictData;
-import in.aryomtech.cgalert.Home;
 import in.aryomtech.cgalert.Login;
 import in.aryomtech.cgalert.R;
-import in.aryomtech.cgalert.Splash;
-import in.aryomtech.cgalert.about_dev;
-import in.aryomtech.cgalert.duo_frags.about;
+import io.michaelrocks.paranoid.Obfuscate;
 
-public class p_Home extends AppCompatActivity implements DuoMenuView.OnMenuClickListener{
+@Obfuscate
+public class p_Home extends AppCompatActivity{
 
     TextView station_name_txt;
     String stat_name;
@@ -60,11 +51,9 @@ public class p_Home extends AppCompatActivity implements DuoMenuView.OnMenuClick
     private static final int PERMISSION_SEND_SMS = 123;
     public static final int REQUEST_CODE_STORAGE_PERMISSION = 1;
     int downspeed;
-    menuAdapter mMenuAdapter;
-    private ViewHolder mViewHolder;
     int upspeed;
     String DeviceToken;
-    ImageView phone_num;
+    ImageView phone_num,back;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,68 +71,20 @@ public class p_Home extends AppCompatActivity implements DuoMenuView.OnMenuClick
                 .putBoolean("entry_done",true).apply();
 
         station_name_txt=findViewById(R.id.textView4);
+        back=findViewById(R.id.imageView4);
         phone_num=findViewById(R.id.entry2);
         stat_name= getSharedPreferences("station_name_K",MODE_PRIVATE)
                 .getString("the_station_name2003","");
 
         station_name_txt.setText(stat_name);
-
-        mTitles = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.menuOptions)));
-
-        // Initialize the views
-        mViewHolder = new ViewHolder();
-
-        // Handle menu actions
-        handleMenu();
-
-        // Handle drawer actions
-        handleDrawer();
-
+        back.setOnClickListener(v->{
+            onBackPressed();
+        });
         // Show main fragment in container
         goToFragment(new Frag_p_Home());
-        mMenuAdapter.setViewSelected(0);
-        setTitle(mTitles.get(0));
 
         getting_device_token();
         check_if_token();
-        findViewById(R.id.card_fb).setOnClickListener(s-> {
-            String facebookUrl ="https://www.facebook.com/chhattisgarh.police";
-            Intent facebookAppIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(facebookUrl));
-            facebookAppIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-            startActivity(facebookAppIntent);
-        });
-        findViewById(R.id.card_twitter).setOnClickListener(s->{
-            String url = "https://twitter.com/CG_Police";
-            Intent twitterAppIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-            twitterAppIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-            startActivity(twitterAppIntent);
-        });
-
-        findViewById(R.id.card_whatsapp).setOnClickListener(s->{
-            String url = "https://api.whatsapp.com/send?phone=" +"+91"+ "8269737971";
-            try {
-                PackageManager pm = getPackageManager();
-                pm.getPackageInfo("com.whatsapp", PackageManager.GET_ACTIVITIES);
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(url));
-                startActivity(i);
-            } catch (PackageManager.NameNotFoundException e) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-            }
-        });
-        findViewById(R.id.card_insta).setOnClickListener(s->{
-            Intent insta_in;
-            String scheme = "http://instagram.com/_u/"+"chhattisgarhpolice_";
-            String path = "https://instagram.com/"+"chhattisgarhpolice_";
-            String nomPackageInfo ="com.instagram.android";
-            try {
-                getPackageManager().getPackageInfo(nomPackageInfo, 0);
-                insta_in = new Intent(Intent.ACTION_VIEW, Uri.parse(scheme));
-            } catch (Exception e) {
-                insta_in = new Intent(Intent.ACTION_VIEW, Uri.parse(path));
-            }
-            startActivity(insta_in);
-        });
 
     }
 
@@ -244,136 +185,10 @@ public class p_Home extends AppCompatActivity implements DuoMenuView.OnMenuClick
         }
     }
 
-    private void handleMenu() {
-        mMenuAdapter = new menuAdapter(mTitles);
-
-        mViewHolder.mDuoMenuView.setOnMenuClickListener(this);
-        mViewHolder.mDuoMenuView.setAdapter(mMenuAdapter);
-    }
-
-    private void handleDrawer() {
-        DuoDrawerToggle duoDrawerToggle = new DuoDrawerToggle(this,
-                mViewHolder.mDuoDrawerLayout,
-                mViewHolder.mToolbar,
-                R.string.navigation_drawer_open,
-                R.string.navigation_drawer_close);
-
-        mViewHolder.mDuoDrawerLayout.setDrawerListener(duoDrawerToggle);
-        duoDrawerToggle.syncState();
-
-    }
     private void goToFragment(Fragment fragment) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.add(R.id.container, fragment,"mainFrag").commit();
     }
-    @Override
-    public void onFooterClicked() {
-
-        auth.signOut();
-        startActivity(new Intent(p_Home.this , Splash.class));
-        finish();
-    }
-
-    @Override
-    public void onHeaderClicked() {
-
-    }
-
-    @Override
-    public void onOptionClicked(int position, Object objectClicked) {
-        // Set the toolbar title
-
-
-        // Set the right options selected
-        mMenuAdapter.setViewSelected(position);
-
-        // Navigate to the right fragment
-        if(position==1) {
-            p_Home.this.getSupportFragmentManager()
-                    .beginTransaction()
-                    .setCustomAnimations( R.anim.enter_from_right, R.anim.exit_to_left,R.anim.enter_from_left, R.anim.exit_to_right)
-                    .add(R.id.drawer,new about())
-                    .addToBackStack(null)
-                    .commit();
-            mMenuAdapter.setViewSelected(0);
-            mViewHolder.mDuoDrawerLayout.closeDrawer();
-        }
-        else if(position==2) {
-            String title ="*High Court Alert*"+"\n\n"+"*उच्च न्यायालय की केस डायरी को जामा और वपास लेजाने के लिए सतार्क और समय बतने वाले ऐप को डाउनलोड करे नीचे दीये गए लिंक से।*\n\nDownload this app to stay alerted and notified for the case diaries both for submission and return.Link below"; //Text to be shared
-            Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-            sharingIntent.setType("text/plain");
-            sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, title+"\n\n"+"This is a playstore link to download.. " + "https://play.google.com/store/apps/details?id=" + getPackageName());
-            startActivity(Intent.createChooser(sharingIntent, "Share using"));
-
-            mMenuAdapter.setViewSelected(0);
-            mViewHolder.mDuoDrawerLayout.closeDrawer();
-        }
-        else if(position==3) {
-            p_Home.this.getSupportFragmentManager()
-                    .beginTransaction()
-                    .setCustomAnimations( R.anim.enter_from_right, R.anim.exit_to_left,R.anim.enter_from_left, R.anim.exit_to_right)
-                    .add(R.id.drawer,new about_dev())
-                    .addToBackStack(null)
-                    .commit();
-            mMenuAdapter.setViewSelected(0);
-            mViewHolder.mDuoDrawerLayout.closeDrawer();
-        }
-        else if(position==4) {
-            DatabaseReference reference=FirebaseDatabase.getInstance().getReference().child("handles");
-            reference.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    String url = snapshot.child("privacy_policy").getValue(String.class);
-                    Intent twitterAppIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                    twitterAppIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-                    startActivity(twitterAppIntent);
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {}
-            });
-            mMenuAdapter.setViewSelected(0);
-            mViewHolder.mDuoDrawerLayout.closeDrawer();
-        }
-        else if(position==5){
-            DatabaseReference reference=FirebaseDatabase.getInstance().getReference().child("handles");
-            reference.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    String url = snapshot.child("terms_condition").getValue(String.class);
-                    Intent twitterAppIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                    twitterAppIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-                    startActivity(twitterAppIntent);
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {}
-            });
-            mMenuAdapter.setViewSelected(0);
-            mViewHolder.mDuoDrawerLayout.closeDrawer();
-        }
-        else if(position==6){
-
-            mMenuAdapter.setViewSelected(0);
-            mViewHolder.mDuoDrawerLayout.closeDrawer();
-        }
-        else {
-            mViewHolder.mDuoDrawerLayout.closeDrawer();
-        }
-        // Close the drawer
-
-    }
-
-    private class ViewHolder {
-        private final DuoDrawerLayout mDuoDrawerLayout;
-        private final DuoMenuView mDuoMenuView;
-        private final ImageView mToolbar;
-
-        ViewHolder() {
-            mDuoDrawerLayout =findViewById(R.id.drawer);
-            mDuoMenuView = (DuoMenuView) mDuoDrawerLayout.getMenuView();
-            mToolbar = findViewById(R.id.toolbar);
-        }
-    }
-
 
     @Override
     protected void onStart() {

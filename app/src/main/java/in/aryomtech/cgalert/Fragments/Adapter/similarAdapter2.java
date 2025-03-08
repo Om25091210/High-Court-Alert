@@ -20,7 +20,9 @@ import in.aryomtech.cgalert.Fragments.model.filterdata;
 import in.aryomtech.cgalert.Fragments.showing_similar_coll;
 import in.aryomtech.cgalert.Fragments.showing_similar_return;
 import in.aryomtech.cgalert.R;
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class similarAdapter2  extends RecyclerView.Adapter<similarAdapter2.ViewHolder> {
 
     List<filterdata> filtered_data;
@@ -43,7 +45,6 @@ public class similarAdapter2  extends RecyclerView.Adapter<similarAdapter2.ViewH
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        holder.case_type.setText(filtered_data.get(position).getCt());
         holder.case_no.setText(filtered_data.get(position).getCn()+"/"+filtered_data.get(position).getYear());
         holder.station_name.setText(filtered_data.get(position).getStn());
         holder.dist_name.setText(filtered_data.get(position).getDis_n());
@@ -51,7 +52,6 @@ public class similarAdapter2  extends RecyclerView.Adapter<similarAdapter2.ViewH
         holder.layout.setOnClickListener(v->{
             showing_similar_return showing_similar_return=new showing_similar_return();
             Bundle args=new Bundle();
-            args.putString("data_case_type",filtered_data.get(position).getCt());
             args.putString("data_case_number",filtered_data.get(position).getCn());
             args.putString("data_case_year",filtered_data.get(position).getYear());
             args.putString("data_station_name",filtered_data.get(position).getStn());
@@ -76,14 +76,13 @@ public class similarAdapter2  extends RecyclerView.Adapter<similarAdapter2.ViewH
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
 
-        TextView station_name,dist_name,case_no,case_type;
+        TextView station_name,dist_name,case_no;
         ConstraintLayout layout;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             station_name=itemView.findViewById(R.id.station_name);
             dist_name=itemView.findViewById(R.id.dist_name);
             case_no=itemView.findViewById(R.id.case_no);
-            case_type=itemView.findViewById(R.id.case_type);
             layout=itemView.findViewById(R.id.layout);
         }
 

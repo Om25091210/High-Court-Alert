@@ -54,8 +54,11 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.security.KeyManagementException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -65,6 +68,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
 import in.aryomtech.cgalert.DB.TinyDB;
 import in.aryomtech.cgalert.Fragments.Adapter.Excel_Adapter;
 import in.aryomtech.cgalert.Fragments.model.Excel_data;
@@ -73,7 +81,9 @@ import in.aryomtech.cgalert.R;
 import in.aryomtech.cgalert.fcm.Specific;
 import soup.neumorphism.NeumorphButton;
 
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class pending_coll extends Fragment {
 
     View view;
@@ -595,6 +605,7 @@ public class pending_coll extends Fragment {
                         String district_name = snapshot.child(added_list.get(h)).child("C").getValue(String.class).toUpperCase().trim();
 
                         String K = snapshot.child(added_list.get(h)).child("K").getValue(String.class).trim();
+                        String L = snapshot.child(added_list.get(h)).child("L").getValue(String.class).trim();
                         String C = snapshot.child(added_list.get(h)).child("C").getValue(String.class).trim();
                         String D = snapshot.child(added_list.get(h)).child("D").getValue(String.class).trim();
                         String E = snapshot.child(added_list.get(h)).child("E").getValue(String.class).trim();
@@ -604,7 +615,7 @@ public class pending_coll extends Fragment {
                         String B = snapshot.child(added_list.get(h)).child("B").getValue(String.class).trim();
                         String type = snapshot.child(added_list.get(h)).child("type").getValue(String.class).trim();
 
-                        case_data_list.add(type+"~"+K+"~"+C+"~"+D+"~"+E+"~"+G+"~"+H+"~"+I+"~"+B+"~");
+                        case_data_list.add(type+"~"+K+"~"+C+"~"+D+"~"+E+"~"+G+"~"+H+"~"+I+"~"+B+"~"+L);
                         district_name_list.add(district_name);
                         station_name_list.add(station_name);
                         keys_selected.add(added_list.get(h));
@@ -655,7 +666,7 @@ public class pending_coll extends Fragment {
                 if(phone_numbers.size()!=0) {
                     for (int pos = 0; pos < phone_numbers.size(); pos++) {
                         if (type.equals("sms")) {
-                            //httpCall("https://2factor.in/API/R1/?module=TRANS_SMS&apikey=89988543-35b9-11ec-a13b-0200cd936042&to="+phone_numbers.get(pos)+"&from=OMSAIT&templatename=TESTING&var1="+"Himanshi"+"&var2="+"OM is Love");
+                            //httpCall("http://2factor.in/API/R1/?module=TRANS_SMS&apikey=89988543-35b9-11ec-a13b-0200cd936042&to="+phone_numbers.get(pos)+"&from=OMSAIT&templatename=TESTING&var1="+"Himanshi"+"&var2="+"OM is Love");
                         } else if (type.equals("phonesms")) {
                             send_phone_sms(phone_numbers);
                             break;
@@ -723,14 +734,14 @@ public class pending_coll extends Fragment {
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         if (snapshot.child(ds.getKey()).child(phone_numbers.get(i)).exists()) {
                             check=1;
-                            String body=extract_data(i, phone_numbers.get(i), phone_numbers.get(i));
+                            String body=extract_data(i, keys_copy_selected_phone.get(i), phone_numbers.get(i));
                             if(snapshot.child(ds.getKey()).child("token").exists()) {
                                 reference.child(keys_copy_selected_phone.get(i)).child("reminded").setValue("once");
                                 for (DataSnapshot dd : snapshot.child(ds.getKey()).child("token").getChildren()) {
                                     String token = snapshot.child(ds.getKey()).child("token").child(Objects.requireNonNull(dd.getKey())).getValue(String.class);
                                     if (token != null) {
                                         Specific specific = new Specific();
-                                        specific.noti("High Court Alert", body, token,keys_copy_selected_phone.get(i));
+                                        specific.noti("CG Sangyan", body, token,keys_copy_selected_phone.get(i),"data");
                                     }
                                 }
                             }
@@ -808,7 +819,8 @@ public class pending_coll extends Fragment {
                 }
                 else if(B==null){
                     B=format.substring(temp,i);
-
+                    Log.e("Last date Format",format.substring(i+1)+"");
+                    L=format.substring(i+1);
                 }
             }
         }
@@ -831,7 +843,7 @@ public class pending_coll extends Fragment {
                     +"\n"+C+"\n"+D+" No. "+E+"/"+G+"\n"
                     +"Crime No. "+H+"/"+I+"\n"
                     +"Police station: "+B+"\n"
-                    +"उपरोक्त मूल केश डायरी तथा पूर्व अपराधिक रिकॉर्ड, दिनाँक "+K+" तक बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय छतीसगढ़ में  अनिवार्यतः जमा करें।";
+                    +"उपरोक्त मूल केश डायरी तथा पूर्व अपराधिक रिकॉर्ड, दिनाँक "+L+" तक बेल शाखा, कार्यालय महाधिवक्ता,उच्च न्यायालय छतीसगढ़ में  अनिवार्यतः जमा करें।";
         }
     }
     private void search(String str) {
@@ -881,20 +893,20 @@ public class pending_coll extends Fragment {
     private void convert_to_list(Excel_data object) {
         list.clear();
         try{
-            list.add(object.getA().toLowerCase());
-            list.add(object.getB().toLowerCase());
-            list.add(object.getC().toLowerCase());
-            list.add(object.getD().toLowerCase());
-            list.add(object.getE().toLowerCase());
-            list.add(object.getF().toLowerCase());
-            list.add(object.getG().toLowerCase());
-            list.add(object.getH().toLowerCase());
-            list.add(object.getI().toLowerCase());
-            list.add(object.getJ().toLowerCase());
-            list.add(object.getK().toLowerCase());
-            list.add(object.getL().toLowerCase());
-            list.add(object.getM().toLowerCase());
-            list.add(object.getN().toLowerCase());
+            list.add(object.getAa().toLowerCase());
+            list.add(object.getBb().toLowerCase());
+            list.add(object.getCc().toLowerCase());
+            list.add(object.getDd().toLowerCase());
+            list.add(object.getEe().toLowerCase());
+            list.add(object.getFf().toLowerCase());
+            list.add(object.getGg().toLowerCase());
+            list.add(object.getHh().toLowerCase());
+            list.add(object.getIi().toLowerCase());
+            list.add(object.getJj().toLowerCase());
+            list.add(object.getKk().toLowerCase());
+            list.add(object.getLl().toLowerCase());
+            list.add(object.getMm().toLowerCase());
+            list.add(object.getNn().toLowerCase());
             list.add(object.getDate().toLowerCase());
             list.add(object.getType().toLowerCase());
             list.add(object.getPushkey().toLowerCase());
@@ -952,82 +964,81 @@ public class pending_coll extends Fragment {
         // create a new Gson instance
         Gson gson = new Gson();
         // convert your list to json
-        String jsonExcelList = gson.toJson(smsDataList);
-        // print your generated json
-        Log.e("jsonCartList: " , jsonExcelList);
-        String prev_keygen=smsDataList.get(0).getTid()+"-"+smsDataList.get(0).getMob_no()+"-"+smsDataList.get(0).getCrime_no();
-        JSONObject jsonBody = new JSONObject();
-        try
-        {
-            jsonBody.put("data", jsonExcelList);
-            jsonBody.put("keygen",hashGenerator(prev_keygen));
-            Log.e("body", "httpCall_collect: "+hashGenerator(prev_keygen));
-        }
-        catch (Exception e)
-        {
-            Log.e("Error","JSON ERROR");
-        }
+        if (smsDataList.size() != 0) {
+            String jsonExcelList = gson.toJson(smsDataList);
+            // print your generated json
+            Log.e("jsonCartList: ", jsonExcelList);
+            String prev_keygen = smsDataList.get(0).getTid() + "-" + smsDataList.get(0).getMob_no() + "-" + smsDataList.get(0).getCrime_no();
+            JSONObject jsonBody = new JSONObject();
+            try {
+                jsonBody.put("data", jsonExcelList);
+                jsonBody.put("keygen", hashGenerator(prev_keygen));
+                Log.e("body", "httpCall_collect: " + hashGenerator(prev_keygen));
+            } catch (Exception e) {
+                Log.e("Error", "JSON ERROR");
+            }
 
-        RequestQueue requestQueue = Volley.newRequestQueue(getContextNullSafety());
-        String URL = "https://sangyan.co.in/sendmsg";
+            RequestQueue requestQueue = Volley.newRequestQueue(getContextNullSafety());
+            //String URL = "http://sangyan.co.in/sendmsg";
+            String URL = "https://sangyan.vercel.app/sendmsg";
 
-        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, URL,jsonBody,
-                new com.android.volley.Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        // enjoy your response
-                        String code=response.optString("code")+"";
-                        if(code.equals("202")){
-                            for(int i=0;i<smsDataList.size();i++){
-                                reference.child(smsDataList.get(i).getPushkey()).child("reminded").setValue("once");
+            JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, URL, jsonBody,
+                    new com.android.volley.Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            // enjoy your response
+                            String code = response.optString("code") + "";
+                            if (code.equals("202")) {
+                                for (int i = 0; i < smsDataList.size(); i++) {
+                                    reference.child(smsDataList.get(i).getPushkey()).child("reminded").setValue("once");
+                                }
+                                smsDataList.clear();
+                                Snackbar.make(join, "SMS sent Successfully.", Snackbar.LENGTH_LONG)
+                                        .setActionTextColor(Color.parseColor("#171746"))
+                                        .setTextColor(Color.parseColor("#FF7F5C"))
+                                        .setBackgroundTint(Color.parseColor("#171746"))
+                                        .show();
+                                dialog1.dismiss();
+                            } else {
+                                Snackbar.make(join, "Failed to send sms", Snackbar.LENGTH_LONG)
+                                        .setActionTextColor(Color.parseColor("#000000"))
+                                        .setTextColor(Color.parseColor("#000000"))
+                                        .setBackgroundTint(Color.parseColor("#FF5252"))
+                                        .show();
                             }
-                            smsDataList.clear();
-                            Snackbar.make(join,"SMS sent Successfully.",Snackbar.LENGTH_LONG)
-                                    .setActionTextColor(Color.parseColor("#171746"))
-                                    .setTextColor(Color.parseColor("#FF7F5C"))
-                                    .setBackgroundTint(Color.parseColor("#171746"))
-                                    .show();
-                            dialog1.dismiss();
+                            Log.e("BULK code", code + "");
+                            Log.e("response", response.toString());
                         }
-                        else{
-                            Snackbar.make(join,"Failed to send sms",Snackbar.LENGTH_LONG)
-                                    .setActionTextColor(Color.parseColor("#000000"))
-                                    .setTextColor(Color.parseColor("#000000"))
-                                    .setBackgroundTint(Color.parseColor("#FF5252"))
-                                    .show();
-                        }
-                        Log.e("BULK code",code+"");
-                        Log.e("response",response.toString());
-                    }
-                }, new com.android.volley.Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                // enjoy your error status
-                Log.e("Status of code = ","Wrong "+error);
-                Snackbar.make(join,"Failed to send sms.",Snackbar.LENGTH_LONG)
-                        .setActionTextColor(Color.parseColor("#000000"))
-                        .setTextColor(Color.parseColor("#000000"))
-                        .setBackgroundTint(Color.parseColor("#FF5252"))
-                        .show();
-            }
-        });
-        stringRequest.setRetryPolicy(new RetryPolicy() {
-            @Override
-            public int getCurrentTimeout() {
-                return 15000;
-            }
+                    }, new com.android.volley.Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    // enjoy your error status
+                    Log.e("Status of code = ", "Wrong " + error);
+                    Snackbar.make(join, "Failed to send sms.", Snackbar.LENGTH_LONG)
+                            .setActionTextColor(Color.parseColor("#000000"))
+                            .setTextColor(Color.parseColor("#000000"))
+                            .setBackgroundTint(Color.parseColor("#FF5252"))
+                            .show();
+                }
+            });
+            stringRequest.setRetryPolicy(new RetryPolicy() {
+                @Override
+                public int getCurrentTimeout() {
+                    return 15000;
+                }
 
-            @Override
-            public int getCurrentRetryCount() {
-                return 15000;
-            }
+                @Override
+                public int getCurrentRetryCount() {
+                    return 15000;
+                }
 
-            @Override
-            public void retry(VolleyError error) throws VolleyError {
-            }
-        });
-        Log.d("string", stringRequest.toString());
-        requestQueue.add(stringRequest);
+                @Override
+                public void retry(VolleyError error) throws VolleyError {
+                }
+            });
+            Log.d("string", stringRequest.toString());
+            requestQueue.add(stringRequest);
+        }
     }
 
     private void update_J_Excel(List<Excel_data> j_dates_list,String j_date) {
@@ -1043,10 +1054,10 @@ public class pending_coll extends Fragment {
         String jsonExcelList = gson.toJson(j_dates_list);
         // print your generated json
         Log.e("jsonCartList: " , jsonExcelList);
-        Log.e("ps case",j_dates_list.get(0).getB());
-        String prev_keygen=j_dates_list.get(0).getB()+"-"+j_dates_list.get(0).getE();
+        Log.e("ps case",j_dates_list.get(0).getBb());
+        String prev_keygen=j_dates_list.get(0).getBb()+"-"+j_dates_list.get(0).getEe();
 
-        String URL = "https://script.google.com/macros/s/"
+        String URL = "http://script.google.com/macros/s/"
                 + gsID+"/exec?"
                 +"data="+jsonExcelList
                 +"&j_column="+j_date
@@ -1129,9 +1140,9 @@ public class pending_coll extends Fragment {
         // print your generated json
         Log.e("jsonCartList: " , jsonExcelList);
         dialogD.dismiss();
-        String prev_keygen=delete_list.get(0).getB()+"-"+delete_list.get(0).getE();
+        String prev_keygen=delete_list.get(0).getBb()+"-"+delete_list.get(0).getEe();
 
-        String URL = "https://script.google.com/macros/s/"
+        String URL = "http://script.google.com/macros/s/"
                 + gsID+"/exec?"
                 +"data="+jsonExcelList
                 +"&keygen="+hashGenerator(prev_keygen)
@@ -1256,4 +1267,5 @@ public class pending_coll extends Fragment {
         super.onAttach(context);
         contextNullSafe = context;
     }
+
 }

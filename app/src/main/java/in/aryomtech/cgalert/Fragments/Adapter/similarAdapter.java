@@ -19,7 +19,9 @@ import in.aryomtech.cgalert.Fragments.model.Excel_data;
 import in.aryomtech.cgalert.Fragments.model.filterdata;
 import in.aryomtech.cgalert.Fragments.showing_similar_coll;
 import in.aryomtech.cgalert.R;
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class similarAdapter extends RecyclerView.Adapter<similarAdapter.ViewHolder> {
 
     List<filterdata> filtered_data;
@@ -42,7 +44,6 @@ public class similarAdapter extends RecyclerView.Adapter<similarAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        holder.case_type.setText(filtered_data.get(position).getCt());
         holder.case_no.setText(filtered_data.get(position).getCn()+"/"+filtered_data.get(position).getYear());
         holder.station_name.setText(filtered_data.get(position).getStn());
         holder.dist_name.setText(filtered_data.get(position).getDis_n());
@@ -50,7 +51,6 @@ public class similarAdapter extends RecyclerView.Adapter<similarAdapter.ViewHold
         holder.layout.setOnClickListener(v->{
             showing_similar_coll showing_similar_coll=new showing_similar_coll();
             Bundle args=new Bundle();
-            args.putString("data_case_type",filtered_data.get(position).getCt());
             args.putString("data_case_number",filtered_data.get(position).getCn());
             args.putString("data_case_year",filtered_data.get(position).getYear());
             args.putString("data_station_name",filtered_data.get(position).getStn());

@@ -24,6 +24,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -37,7 +38,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import in.aryomtech.cgalert.R;
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 
 public class Entries extends Fragment {
 
@@ -120,7 +123,10 @@ public class Entries extends Fragment {
 
         submit_txt.setOnClickListener(v->{
             if(!name_edt.getText().toString().trim().equals("")) {
-                reference.child(name_edt.getText().toString().trim()).setValue(name_edt.getText().toString().trim());
+                if(name_edt.getText().toString().contains("/")){
+                    name_edt.setText(name_edt.getText().toString().replaceAll("[^-()a-zA-Z0-9]", ""));
+                }
+                reference.child(name_edt.getText().toString().trim()).setValue(name_edt.getText().toString().trim().replaceAll("[^-()a-zA-Z0-9]", ""));
                 name_edt.setText("");
                 Snackbar.make(add_admin,"Number Uploaded!!",Snackbar.LENGTH_LONG)
                         .setActionTextColor(Color.parseColor("#171746"))
@@ -133,10 +139,12 @@ public class Entries extends Fragment {
             if(!num.getText().toString().trim().equals("")
                && !ac_district.getText().toString().trim().equals("")
                && !policeStation.getText().toString().trim().equals("")) {
-
+                if(policeStation.getText().toString().contains("/")){
+                    policeStation.setText(policeStation.getText().toString().replaceAll("[^-()a-zA-Z0-9]", ""));
+                }
                 reference_phone.child(ac_district.getText().toString().toUpperCase().trim())
-                        .child(prefix+" "+policeStation.getText().toString().toUpperCase().trim())
-                        .setValue(num.getText().toString().trim());
+                        .child(prefix+" "+policeStation.getText().toString().toUpperCase().trim().replaceAll("[^-()a-zA-Z0-9]", ""))
+                        .setValue(num.getText().toString().trim().replaceAll("[^-()a-zA-Z0-9]", ""));
 
                 num.setText("");
                 ac_district.setText("");
@@ -159,7 +167,11 @@ public class Entries extends Fragment {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
             @Override
             public void afterTextChanged(Editable editable) {
-                get_police_station(ac_district.getText().toString().trim());
+                if(ac_district.getText().toString().trim().contains("/")){
+                    ac_district.setText(ac_district.getText().toString().replaceAll("[^-()a-zA-Z0-9]", ""));
+                    Toast.makeText(contextNullSafe, "Wrong entry.", Toast.LENGTH_SHORT).show();
+                }
+                get_police_station(ac_district.getText().toString().trim().replaceAll("[^-()a-zA-Z0-9]", ""));
             }
         });
 

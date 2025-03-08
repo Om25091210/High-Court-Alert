@@ -22,6 +22,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -46,11 +48,14 @@ import java.util.Locale;
 import java.util.Objects;
 
 import in.aryomtech.cgalert.Fragments.Adapter.Excel_Adapter;
+import in.aryomtech.cgalert.Fragments.Adapter.Return_Adapter;
 import in.aryomtech.cgalert.Fragments.model.Excel_data;
 import in.aryomtech.cgalert.R;
 import soup.neumorphism.NeumorphButton;
 
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class p_pending_return extends Fragment {
 
     View view;
@@ -64,8 +69,10 @@ public class p_pending_return extends Fragment {
     EditText search;
     CheckBox select_all;
     LinkedList<String> phone_numbers=new LinkedList<>();
+    ImageView cg_logo;
+    TextView no_data;
     LinkedList<String> station_name_list=new LinkedList<>();
-    Excel_Adapter excel_adapter;
+    Return_Adapter excel_adapter;
     DatabaseReference phone_numbers_ref;
     ArrayList<String> added_list;
     NeumorphButton join;
@@ -87,6 +94,8 @@ public class p_pending_return extends Fragment {
         added_list=new ArrayList<>();
         mSwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         search=view.findViewById(R.id.search);
+        cg_logo=view.findViewById(R.id.imageView3);
+        no_data=view.findViewById(R.id.no_data);
         select_all=view.findViewById(R.id.checkBox4);
         join=view.findViewById(R.id.join);
         //Initialize RecyclerView
@@ -96,7 +105,7 @@ public class p_pending_return extends Fragment {
         mRecyclerView.setDrawingCacheEnabled(true);
         mRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         mRecyclerView.setLayoutManager(mManager);
-        excel_adapter= new Excel_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface,"");
+        excel_adapter= new Return_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface,"");
 
         stat_name= getContextNullSafety().getSharedPreferences("station_name_K",Context.MODE_PRIVATE)
                 .getString("the_station_name2003","");
@@ -127,13 +136,13 @@ public class p_pending_return extends Fragment {
                 }
                 String txt="Send "+"("+added_list.size()+")";
                 join.setText(txt);
-                excel_adapter.selectAll();
+                excel_adapter.selext_all();
             }
             else{
                 added_list.clear();
                 String txt="Send "+"("+added_list.size()+")";
                 join.setText(txt);
-                excel_adapter.unselectall();
+                excel_adapter.selext_all();
             }
             excel_adapter.notifyDataSetChanged();
             Log.e("added_peeps",added_list+"");
@@ -257,26 +266,26 @@ public class p_pending_return extends Fragment {
     private void search(String str) {
         mylist.clear();
         for(Excel_data object:excel_data) {
-            if (object.getB().toLowerCase().contains(str.toLowerCase().trim())) {
+            if (object.getBb().toLowerCase().contains(str.toLowerCase().trim())) {
                 mylist.add(object);
-            } else if (object.getC().toLowerCase().contains(str.toLowerCase().trim())) {
+            } else if (object.getCc().toLowerCase().contains(str.toLowerCase().trim())) {
                 mylist.add(object);
-            } else if (object.getE().toLowerCase().contains(str.toLowerCase().trim())) {
+            } else if (object.getEe().toLowerCase().contains(str.toLowerCase().trim())) {
                 mylist.add(object);
-            } else if (object.getH().toLowerCase().contains(str.toLowerCase().trim())) {
-                mylist.add(object);
-            }
-            else if(object.getK().toLowerCase().contains(str.toLowerCase().trim())){
+            } else if (object.getHh().toLowerCase().contains(str.toLowerCase().trim())) {
                 mylist.add(object);
             }
-            else if(object.getJ().toLowerCase().contains(str.toLowerCase().trim())){
+            else if(object.getKk().toLowerCase().contains(str.toLowerCase().trim())){
+                mylist.add(object);
+            }
+            else if(object.getJj().toLowerCase().contains(str.toLowerCase().trim())){
                 mylist.add(object);
             }
             else if(object.getDate().toLowerCase().contains(str.toLowerCase().trim())){
                 mylist.add(object);
             }
         }
-        excel_adapter=new Excel_Adapter(getContextNullSafety(),mylist,onClickInterface,onAgainClickInterface,"");
+        excel_adapter=new Return_Adapter(getContextNullSafety(),mylist,onClickInterface,onAgainClickInterface,"");
         excel_adapter.notifyDataSetChanged();
         if(mRecyclerView!=null)
             mRecyclerView.setAdapter(excel_adapter);
@@ -289,19 +298,25 @@ public class p_pending_return extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 excel_data.clear();
                 for(DataSnapshot ds:snapshot.getChildren()){
-                    if(snapshot.child(ds.getKey()).child("B").getValue(String.class).toUpperCase().equals(stat_name.substring(3))) {
-                        if (snapshot.child(ds.getKey()).child("J").getValue(String.class).equals("None")) {
-                            excel_data.add(snapshot.child(ds.getKey()).getValue(Excel_data.class));
+                    if (snapshot.child(ds.getKey()).child("B").getValue(String.class) != null) {
+                        if (snapshot.child(ds.getKey()).child("B").getValue(String.class).toUpperCase().equals(stat_name.substring(3))) {
+                            if (snapshot.child(ds.getKey()).child("J").getValue(String.class).equals("None")) {
+                                excel_data.add(snapshot.child(ds.getKey()).getValue(Excel_data.class));
+                            }
                         }
                     }
+                }
+                if(excel_data.size()!=0){
+                    cg_logo.setVisibility(View.GONE);
+                    no_data.setVisibility(View.GONE);
                 }
                 added_list.clear();
                 String txt="Send "+"("+added_list.size()+")";
                 join.setText(txt);
-                excel_adapter.unselectall();
+                excel_adapter.unselect_all();
                 mSwipeRefreshLayout.setRefreshing(false);
                 Collections.reverse(excel_data);
-                excel_adapter=new Excel_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface,"");
+                excel_adapter=new Return_Adapter(getContextNullSafety(),excel_data,onClickInterface,onAgainClickInterface,"");
                 excel_adapter.notifyDataSetChanged();
                 if(mRecyclerView!=null)
                     mRecyclerView.setAdapter(excel_adapter);

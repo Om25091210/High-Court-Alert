@@ -24,8 +24,17 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import in.aryomtech.cgalert.Fragments.model.Excel_data;
 import in.aryomtech.cgalert.R;
@@ -35,7 +44,9 @@ import in.aryomtech.myapplication.v4.FragmentPagerItemAdapter;
 import in.aryomtech.myapplication.v4.FragmentPagerItems;
 import soup.neumorphism.NeumorphCardView;
 
+import io.michaelrocks.paranoid.Obfuscate;
 
+@Obfuscate
 public class Frag_p_Home extends Fragment {
 
     String stat_name;
@@ -56,7 +67,7 @@ public class Frag_p_Home extends Fragment {
 
         stat_name= getContextNullSafety().getSharedPreferences("station_name_K",MODE_PRIVATE)
                 .getString("the_station_name2003","");
-
+        disableSSLCertificateChecking();
         blue=view.findViewById(R.id.blue);
         back=view.findViewById(R.id.back);
         blue.setOnClickListener(v->{
@@ -154,5 +165,34 @@ public class Frag_p_Home extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         contextNullSafe = context;
+    }
+    private static void disableSSLCertificateChecking() {
+        TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+            public X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
+
+            @Override
+            public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+                // Not implemented
+            }
+
+            @Override
+            public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+                // Not implemented
+            }
+        } };
+
+        try {
+            SSLContext sc = SSLContext.getInstance("TLS");
+
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
     }
 }
