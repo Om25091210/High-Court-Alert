@@ -964,7 +964,8 @@ public class Mcrc_Rm_Return extends Fragment {
             }
 
             RequestQueue requestQueue = Volley.newRequestQueue(getContextNullSafety());
-            String URL = "http://sangyan.co.in/sendmsg";
+            //String URL = "http://sangyan.co.in/sendmsg";
+            String URL = "https://sangyan.vercel.app/sendmsg";
 
             JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, URL, jsonBody,
                     new com.android.volley.Response.Listener<JSONObject>() {

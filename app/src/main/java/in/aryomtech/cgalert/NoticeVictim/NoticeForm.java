@@ -5,7 +5,9 @@ import static android.content.Context.MODE_PRIVATE;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
@@ -84,7 +86,7 @@ public class NoticeForm extends Fragment {
     Dialog dialog1;
     AutoCompleteTextView district,station;
     EditText crime_no,crime_year,case_year,advocate, appellant, caseNo;
-    TextView notice_date, hearing_date, submit , crr,cra,mcrc;
+    TextView notice_date, hearing_date, submit , crr,cra,mcrc,today_victim;
     FirebaseAuth auth;
     FirebaseUser user;
     int c=-1;
@@ -128,6 +130,7 @@ public class NoticeForm extends Fragment {
         hearing_date = view.findViewById(R.id.next_hearing_date);
         advocate = view.findViewById(R.id.name_edt);
         submit = view.findViewById(R.id.submit_txt);
+        today_victim = view.findViewById(R.id.today_victim);
         disableSSLCertificateChecking();
         crr = view.findViewById(R.id.crr);
         cra = view.findViewById(R.id.cra);
@@ -167,7 +170,7 @@ public class NoticeForm extends Fragment {
         back.setOnClickListener(v->{
             back();
         });
-
+        today_victim.setOnClickListener(v-> fun_todayNotices());
         district.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -367,6 +370,95 @@ public class NoticeForm extends Fragment {
         return view;
     }
 
+    private void fun_todayNotices() {
+        String URL = "https://script.google.com/macros/s/"
+                +gsID+ "/exec?"
+                +"&action=filterTodayNTV";
+
+        dialog1 = new Dialog(getContextNullSafety());
+        dialog1.setCancelable(false);
+        dialog1.setContentView(R.layout.loading_dialog);
+        dialog1.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        LottieAnimationView lottieAnimationView=dialog1.findViewById(R.id.animate);
+        lottieAnimationView.setAnimation("done.json");
+        dialog1.show();
+        Log.e("Sheet",URL);
+        RequestQueue queue = Volley.newRequestQueue(getContextNullSafety());
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        String code="";
+                        try {
+                            JSONObject jsonObj = new JSONObject(response);
+                            code=jsonObj.get("code")+"";
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        if(code.equals("202")){
+                            dialog1.dismiss();
+                            Snackbar.make(lay,"Data filtered, opening sheet.",Snackbar.LENGTH_LONG)
+                                    .setActionTextColor(Color.parseColor("#171746"))
+                                    .setTextColor(Color.parseColor("#FF7F5C"))
+                                    .setBackgroundTint(Color.parseColor("#171746"))
+                                    .show();
+                            OpenTodayData("926603155");
+                        }
+                        else{
+                            dialog1.dismiss();
+                            Snackbar.make(lay,"Failed to filter sheet.",Snackbar.LENGTH_LONG)
+                                    .setActionTextColor(Color.parseColor("#000000"))
+                                    .setTextColor(Color.parseColor("#000000"))
+                                    .setBackgroundTint(Color.parseColor("#FF5252"))
+                                    .show();
+                        }
+                        Log.e("BULK code", response +"");
+                        Log.e("BULK response",response.toString());
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                dialog1.dismiss();
+                // enjoy your error status
+                Log.e("Status of code = ","Wrong"+error.toString());
+                Snackbar.make(lay,"Failed to get data.",Snackbar.LENGTH_LONG)
+                        .setActionTextColor(Color.parseColor("#000000"))
+                        .setTextColor(Color.parseColor("#000000"))
+                        .setBackgroundTint(Color.parseColor("#FF5252"))
+                        .show();
+            }
+        });
+
+        queue.add(stringRequest);
+
+        stringRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
+    }
+    private void OpenTodayData(String gid){
+        String url="https://docs.google.com/spreadsheets/d/1FCq7LxEFUYtSjrHcRYXFGPdruuGmQur_JHuxrgp2zao/edit#gid="+gid;
+        Log.e("URLL",url);
+        try {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(browserIntent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     private void back() {
         FragmentManager fm=((FragmentActivity) getContextNullSafety()).getSupportFragmentManager();
         FragmentTransaction ft=fm.beginTransaction();
@@ -389,7 +481,7 @@ public class NoticeForm extends Fragment {
                 +caseNo.getText().toString().toUpperCase()+"-"
                 +case_year.getText().toString().toUpperCase();
         Log.e("GS",gsID);
-        String URL = "http://script.google.com/macros/s/"
+        String URL = "https://script.google.com/macros/s/"
                 + gsID+"/exec?"
                 +"noticeDate="+notice_date.getText().toString().toUpperCase()
                 +"&policeStation="+station.getText().toString().toUpperCase()
@@ -406,7 +498,7 @@ public class NoticeForm extends Fragment {
                 +"&action=victimData";
 
         RequestQueue queue = Volley.newRequestQueue(getContextNullSafety());
-
+        Log.e("URL",URL);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
                 new Response.Listener<String>() {
                     @Override
@@ -451,7 +543,7 @@ public class NoticeForm extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 // enjoy your error status
-                Log.e("Status of code = ","Wrong"+" "+error.toString());
+                Log.e("Status of code = ",error.getMessage());
                 Snackbar.make(lay,"Failed to Upload.",Snackbar.LENGTH_LONG)
                         .setActionTextColor(Color.parseColor("#000000"))
                         .setTextColor(Color.parseColor("#000000"))
@@ -499,34 +591,36 @@ public class NoticeForm extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
-                    for(DataSnapshot ds:snapshot.getChildren()){
-                        if(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("name").getValue(String.class)).equals("SP "+district.getText().toString().trim().toUpperCase())){
-                            c=0;
-                            for(DataSnapshot ds_token:snapshot.child(ds.getKey()).child("token").getChildren()){
-                                String token=snapshot.child(ds.getKey()).child("token").child(Objects.requireNonNull(ds_token.getKey())).getValue(String.class);
-                                Specific specific=new Specific();
-                                Log.e("logging_info",pushkey+"");
-                                specific.noti("CG Sangyan", body, Objects.requireNonNull(token),pushkey,"notice");
-                                Snackbar.make(lay,"Notification Sent to SP.",Snackbar.LENGTH_LONG)
+                    for(DataSnapshot ds:snapshot.getChildren()) {
+                        if (snapshot.child(Objects.requireNonNull(ds.getKey())).child("name").exists()) {
+                            if (Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("name").getValue(String.class)).equals("SP " + district.getText().toString().trim().toUpperCase())) {
+                                c = 0;
+                                for (DataSnapshot ds_token : snapshot.child(ds.getKey()).child("token").getChildren()) {
+                                    String token = snapshot.child(ds.getKey()).child("token").child(Objects.requireNonNull(ds_token.getKey())).getValue(String.class);
+                                    Specific specific = new Specific();
+                                    Log.e("logging_info", pushkey + "");
+                                    specific.noti("CG Sangyan", body, Objects.requireNonNull(token), pushkey, "notice");
+                                    Snackbar.make(lay, "Notification Sent to SP.", Snackbar.LENGTH_LONG)
+                                            .setActionTextColor(Color.parseColor("#171746"))
+                                            .setTextColor(Color.parseColor("#FF7F5C"))
+                                            .setBackgroundTint(Color.parseColor("#171746"))
+                                            .show();
+                                }
+                            }
+                            if (Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("name").getValue(String.class)).equals("PS " + station.getText().toString().trim().toUpperCase())) {
+                                c = 1;
+                                reference.child(pushkey).child("number").setValue(snapshot.child(Objects.requireNonNull(ds.getKey())).child("phone").getValue(String.class));
+                                for (DataSnapshot ds_token : snapshot.child(ds.getKey()).child("token").getChildren()) {
+                                    String token = snapshot.child(ds.getKey()).child("token").child(Objects.requireNonNull(ds_token.getKey())).getValue(String.class);
+                                    Specific specific = new Specific();
+                                    specific.noti("CG Sangyan", body, Objects.requireNonNull(token), pushkey, "notice");
+                                }
+                                Snackbar.make(lay, "Notification Sent to Police Station.", Snackbar.LENGTH_LONG)
                                         .setActionTextColor(Color.parseColor("#171746"))
                                         .setTextColor(Color.parseColor("#FF7F5C"))
                                         .setBackgroundTint(Color.parseColor("#171746"))
                                         .show();
                             }
-                        }
-                        if(Objects.requireNonNull(snapshot.child(Objects.requireNonNull(ds.getKey())).child("name").getValue(String.class)).equals("PS "+station.getText().toString().trim().toUpperCase())){
-                            c=1;
-                            reference.child(pushkey).child("number").setValue(snapshot.child(Objects.requireNonNull(ds.getKey())).child("phone").getValue(String.class));
-                            for(DataSnapshot ds_token:snapshot.child(ds.getKey()).child("token").getChildren()){
-                                String token=snapshot.child(ds.getKey()).child("token").child(Objects.requireNonNull(ds_token.getKey())).getValue(String.class);
-                                Specific specific=new Specific();
-                                specific.noti("CG Sangyan", body, Objects.requireNonNull(token),pushkey,"notice");
-                            }
-                            Snackbar.make(lay,"Notification Sent to Police Station.",Snackbar.LENGTH_LONG)
-                                    .setActionTextColor(Color.parseColor("#171746"))
-                                    .setTextColor(Color.parseColor("#FF7F5C"))
-                                    .setBackgroundTint(Color.parseColor("#171746"))
-                                    .show();
                         }
                     }
                     if(c==-1){
@@ -574,8 +668,8 @@ public class NoticeForm extends Fragment {
         reference.child(pushkey).child("crimeNo").setValue(crime_no.getText().toString().trim().toUpperCase().replaceAll("[^-()a-zA-Z0-9]", ""));
         reference.child(pushkey).child("crimeYear").setValue(crime_year.getText().toString().trim().toUpperCase().replaceAll("[^-()a-zA-Z0-9]", ""));
         reference.child(pushkey).child("caseYear").setValue(case_year.getText().toString().trim().toUpperCase().replaceAll("[^-()a-zA-Z0-9]", ""));
-        reference.child(pushkey).child("noticeDate").setValue(notice_date.getText().toString().trim().toUpperCase().replaceAll("[^-()a-zA-Z0-9]", ""));
-        reference.child(pushkey).child("hearingDate").setValue(hearing_date.getText().toString().trim().toUpperCase().replaceAll("[^-()a-zA-Z0-9]", ""));
+        reference.child(pushkey).child("noticeDate").setValue(notice_date.getText().toString().trim().toUpperCase());
+        reference.child(pushkey).child("hearingDate").setValue(hearing_date.getText().toString().trim().toUpperCase());
         reference.child(pushkey).child("advocate").setValue(advocate.getText().toString().trim().toUpperCase().replaceAll("[^-()a-zA-Z0-9]", ""));
         reference.child(pushkey).child("appellant").setValue(appellant.getText().toString().trim().toUpperCase().replaceAll("[^-()a-zA-Z0-9]", ""));
         reference.child(pushkey).child("reminded").setValue("once");

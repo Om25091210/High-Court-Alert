@@ -89,7 +89,7 @@
     <string name="didn_t_you_receive_any_code">Didn\'t you receive any code?</string>
     <string name="resend_new_code">RESEND NEW CODE</string>
     <string name="m_b_sai_aditya">M.B.Sai Aditya</string>
-    <string name="web_developer">Web Developer</string>
+    <string name="web_developer">Lead Web Developer</string>
     <string name="control_panel">Control Panel</string>
     <string name="add_an_admin">Add an Admin</string>
     <string name="add_station_number">Add Station</string>
@@ -178,6 +178,10 @@
     <string name="enter_district">Enter District</string>
     <string name="officer">Officer</string>
     <string name="fetching_data">Fetching data . . .</string>
+    <string name="today_rm_call">Today RM Call</string>
+    <string name="today_rm_return">Today RM Return</string>
+    <string name="view_today_notices">View Today Notices</string>
+    <string name="lead_android_developer">Lead Android Developer</string>
 
 
     <array name="menuOptions">

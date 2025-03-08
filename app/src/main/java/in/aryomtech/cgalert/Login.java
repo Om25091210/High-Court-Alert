@@ -325,7 +325,9 @@ public class Login extends AppCompatActivity {
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Log.e("lohhing","logging");
                 for(DataSnapshot ds : snapshot.getChildren()){
+                    Log.e("lohhing","logging");
                     for (DataSnapshot ds_1 : ds.getChildren()){
                         if (edtEmail.getGetTextValue().trim().equals(ds_1.getValue(String.class))){
                             count=1;

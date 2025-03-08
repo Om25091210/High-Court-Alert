@@ -77,7 +77,7 @@ import io.michaelrocks.paranoid.Obfuscate;
 public class form extends Fragment {
 
     View view;
-    TextView submit_txt,diary_re_txt;
+    TextView submit_txt,diary_re_txt,todayRMCall,todayRMReturn;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     TextView rm,before,diary;
     ImageView back,put_number;
@@ -126,6 +126,8 @@ public class form extends Fragment {
         submit_txt=view.findViewById(R.id.submit_txt);
         lay=view.findViewById(R.id.lay);
         back=view.findViewById(R.id.imageView4);
+        todayRMCall=view.findViewById(R.id.todayRMCall);
+        todayRMReturn=view.findViewById(R.id.todayRMReturn);
         back.setOnClickListener(v-> back());
 
         String[] caseType = {"CRA","CRR","MCRC", "MCRCA"};
@@ -355,17 +357,17 @@ public class form extends Fragment {
                         .show();
             }
         });
-        view.findViewById(R.id.download_txt).setOnClickListener(v->{
-            getFileUrl();
-        });
-        view.findViewById(R.id.put_number).setOnClickListener(v->{
-            ((FragmentActivity) getContextNullSafety()).getSupportFragmentManager()
-                    .beginTransaction()
-                    .setCustomAnimations( R.anim.enter_from_right, R.anim.exit_to_left,R.anim.enter_from_left, R.anim.exit_to_right)
-                    .add(R.id.drawer,new Entries())
-                    .addToBackStack(null)
-                    .commit();
-        });
+        view.findViewById(R.id.download_txt).setOnClickListener(v-> getFileUrl());
+        view.findViewById(R.id.put_number).setOnClickListener(v->
+                ((FragmentActivity) getContextNullSafety()).getSupportFragmentManager()
+                .beginTransaction()
+                .setCustomAnimations( R.anim.enter_from_right, R.anim.exit_to_left,R.anim.enter_from_left, R.anim.exit_to_right)
+                .add(R.id.drawer,new Entries())
+                .addToBackStack(null)
+                .commit());
+
+        todayRMCall.setOnClickListener(v-> fun_today("filterTodayRMCALL") );
+        todayRMReturn.setOnClickListener(v-> fun_today("filterTodayRMReturn") );
 
         OnBackPressedCallback callback=new OnBackPressedCallback(true) {
             @Override
@@ -769,7 +771,90 @@ public class form extends Fragment {
             }
         });
     }
+    private void fun_today(String Rm_OF){
+        String URL = "https://script.google.com/macros/s/"
+                +gsID+ "/exec?"
+                +"&action="+Rm_OF;
 
+        dialog1 = new Dialog(getContextNullSafety());
+        dialog1.setCancelable(false);
+        dialog1.setContentView(R.layout.loading_dialog);
+        dialog1.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        LottieAnimationView lottieAnimationView=dialog1.findViewById(R.id.animate);
+        lottieAnimationView.setAnimation("done.json");
+        dialog1.show();
+        Log.e("Sheet",URL);
+        RequestQueue queue = Volley.newRequestQueue(getContextNullSafety());
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        String code="";
+                        try {
+                            JSONObject jsonObj = new JSONObject(response);
+                            code=jsonObj.get("code")+"";
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        if(code.equals("202")){
+                            dialog1.dismiss();
+                            Snackbar.make(lay,"Data filtered, opening sheet.",Snackbar.LENGTH_LONG)
+                                    .setActionTextColor(Color.parseColor("#171746"))
+                                    .setTextColor(Color.parseColor("#FF7F5C"))
+                                    .setBackgroundTint(Color.parseColor("#171746"))
+                                    .show();
+                            if(Rm_OF.equals("filterTodayRMCALL")) {
+                                OpenTodayData("1131903541");
+                            }
+                            else{
+                                OpenTodayData("1585365748");
+                            }
+                        }
+                        else{
+                            dialog1.dismiss();
+                            Snackbar.make(lay,"Failed to filter sheet.",Snackbar.LENGTH_LONG)
+                                    .setActionTextColor(Color.parseColor("#000000"))
+                                    .setTextColor(Color.parseColor("#000000"))
+                                    .setBackgroundTint(Color.parseColor("#FF5252"))
+                                    .show();
+                        }
+                        Log.e("BULK code", response +"");
+                        Log.e("BULK response",response.toString());
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                dialog1.dismiss();
+                // enjoy your error status
+                Log.e("Status of code = ","Wrong");
+                Snackbar.make(lay,"Failed to get data.",Snackbar.LENGTH_LONG)
+                        .setActionTextColor(Color.parseColor("#000000"))
+                        .setTextColor(Color.parseColor("#000000"))
+                        .setBackgroundTint(Color.parseColor("#FF5252"))
+                        .show();
+            }
+        });
+
+        queue.add(stringRequest);
+
+        stringRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
+    }
     /*private void update_J_Excel(String sheet, Map<String, String> data_packet) {
         Log.e("Sheet",sheet.toUpperCase()+"");
         JSONObject jsonBody = new JSONObject();
@@ -976,7 +1061,16 @@ public class form extends Fragment {
         case_no_edt.setText("");
         name_edt.setText("");
     }
-
+    private void OpenTodayData(String gid){
+        String url="https://docs.google.com/spreadsheets/d/1FCq7LxEFUYtSjrHcRYXFGPdruuGmQur_JHuxrgp2zao/edit#gid="+gid;
+        Log.e("URLL",url);
+        try {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(browserIntent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     private void getFileUrl(){
         String url="https://docs.google.com/spreadsheets/d/1FCq7LxEFUYtSjrHcRYXFGPdruuGmQur_JHuxrgp2zao/edit?usp=sharing";
         try {

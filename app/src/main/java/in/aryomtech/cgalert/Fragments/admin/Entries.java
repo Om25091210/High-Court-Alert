@@ -126,7 +126,7 @@ public class Entries extends Fragment {
                 if(name_edt.getText().toString().contains("/")){
                     name_edt.setText(name_edt.getText().toString().replaceAll("[^-()a-zA-Z0-9]", ""));
                 }
-                reference.child(name_edt.getText().toString().trim()).setValue(name_edt.getText().toString().trim());
+                reference.child(name_edt.getText().toString().trim()).setValue(name_edt.getText().toString().trim().replaceAll("[^-()a-zA-Z0-9]", ""));
                 name_edt.setText("");
                 Snackbar.make(add_admin,"Number Uploaded!!",Snackbar.LENGTH_LONG)
                         .setActionTextColor(Color.parseColor("#171746"))
@@ -144,7 +144,7 @@ public class Entries extends Fragment {
                 }
                 reference_phone.child(ac_district.getText().toString().toUpperCase().trim())
                         .child(prefix+" "+policeStation.getText().toString().toUpperCase().trim().replaceAll("[^-()a-zA-Z0-9]", ""))
-                        .setValue(num.getText().toString().trim());
+                        .setValue(num.getText().toString().trim().replaceAll("[^-()a-zA-Z0-9]", ""));
 
                 num.setText("");
                 ac_district.setText("");

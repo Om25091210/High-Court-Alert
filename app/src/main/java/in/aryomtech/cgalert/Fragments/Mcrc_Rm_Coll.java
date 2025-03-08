@@ -559,9 +559,11 @@ public class Mcrc_Rm_Coll extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(int i=0;i<phone_numbers.size();i++) {
                     int check=0;
+                    Log.e("SMSphone",phone_numbers.get(i));
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         if (snapshot.child(ds.getKey()).child(phone_numbers.get(i)).exists()) {
                             check=1;
+                            Log.e("SMSphone",phone_numbers.get(i));
                             //reference.child(keys_copy_selected_phone.get(i)).child("reminded").setValue("once");
                             extract_data(i,keys_copy_selected_phone.get(i),phone_numbers.get(i));
                             //String body = extract_data(i,phone_numbers.get(i));
@@ -595,6 +597,7 @@ public class Mcrc_Rm_Coll extends Fragment {
     private void send_sms_api() {
         // create a new Gson instance
         Gson gson = new Gson();
+        Log.e("jsonCartList: ", smsDataList.size()+"");
         // convert your list to json
         if (smsDataList.size() != 0) {
             String jsonExcelList = gson.toJson(smsDataList);
@@ -611,7 +614,8 @@ public class Mcrc_Rm_Coll extends Fragment {
             }
 
             RequestQueue requestQueue = Volley.newRequestQueue(getContextNullSafety());
-            String URL = "http://sangyan.co.in/sendmsg";
+            //String URL = "http://sangyan.co.in/sendmsg";
+            String URL = "https://sangyan.vercel.app/sendmsg";
 
             JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, URL, jsonBody,
                     new com.android.volley.Response.Listener<JSONObject>() {

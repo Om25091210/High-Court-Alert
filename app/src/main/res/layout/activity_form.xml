@@ -144,7 +144,6 @@
                 android:layout_marginTop="10dp"
                 android:importantForAutofill="no"
                 android:background="@drawable/bg_edt_text"
-                android:ems="10"
                 android:gravity="start|top"
                 android:hint="@string/crime_no_"
                 android:inputType="number"
@@ -222,7 +221,6 @@
                 android:layout_marginTop="10dp"
                 android:importantForAutofill="no"
                 android:background="@drawable/bg_edt_text"
-                android:ems="10"
                 android:gravity="start|top"
                 android:hint="@string/case_no_"
                 android:inputType="number"
@@ -428,6 +426,47 @@
                 android:textSize="18sp"
                 tools:ignore="TextContrastCheck"
                 />
+
+            <TextView
+                android:id="@+id/todayRMCall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/bg_card_red"
+                android:backgroundTint="@color/use_orange"
+                android:fontFamily="@font/quicksand_bold"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:layout_marginBottom="30dp"
+                android:text="@string/today_rm_call"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                tools:ignore="TextContrastCheck"
+                />
+
+            <TextView
+                android:id="@+id/todayRMReturn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/bg_card_red"
+                android:backgroundTint="@color/use_orange"
+                android:fontFamily="@font/quicksand_bold"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:layout_marginBottom="30dp"
+                android:text="@string/today_rm_return"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                tools:ignore="TextContrastCheck"
+                />
+
         </LinearLayout>
     </ScrollView>
 

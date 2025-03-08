@@ -33,6 +33,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.provider.OpenableColumns;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -397,6 +398,7 @@ public class TodayNTV extends Fragment {
         SimpleDateFormat ft =
                 new SimpleDateFormat ("dd.MM.yyyy",Locale.getDefault());
         String cr_dt=ft.format(dNow);
+        Log.e("cr_dt",cr_dt);
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -404,6 +406,7 @@ public class TodayNTV extends Fragment {
                 for(DataSnapshot ds:snapshot.getChildren()){
                     if(snapshot.child(ds.getKey()).child("district").exists()) {
                         if (snapshot.child(ds.getKey()).child("advocate").exists()) {
+                            Log.e("advocateee",snapshot.child(ds.getKey()).child("noticeDate").getValue(String.class)+"");
                             if (cr_dt.equals(snapshot.child(ds.getKey()).child("noticeDate").getValue(String.class))) {
                                 list.add(snapshot.child(Objects.requireNonNull(ds.getKey())).getValue(Notice_model.class));
                             }

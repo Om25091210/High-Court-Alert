@@ -246,11 +246,11 @@ public class Dashboard extends AppCompatActivity {
         Process process = null;
         try {
             process = Runtime.getRuntime().exec(su);
-            reference.child("root_info").child(user.getUid()).setValue("It is rooted device");
+            finish();
             Toast.makeText(Dashboard.this, "It is rooted device", Toast.LENGTH_LONG).show();
         } catch (Exception e) {
-            Toast.makeText(Dashboard.this, "It is not a rooted device", Toast.LENGTH_LONG).show();
-            reference.child("root_info").child(user.getUid()).setValue("It is not rooted device");
+            //Toast.makeText(Dashboard.this, "It is not a rooted device", Toast.LENGTH_LONG).show();
+            Log.e("Check_env","It's not a rooted device");
         } finally {
             if (process != null) {
                 try {

@@ -6,12 +6,12 @@ apply plugin: 'io.michaelrocks.paranoid'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-android'
 android {
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "in.aryomtech.cgalert"
         minSdk 23
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -75,8 +75,8 @@ dependencies {
     implementation 'com.intuit.ssp:ssp-android:1.0.6'
     //pagging
     implementation 'android.arch.paging:runtime:1.0.1'
-    //Firebase Pagination Library
-    implementation 'com.shreyaspatil:FirebaseRecyclerPagination:1.0.1'
+//    //Firebase Pagination Library
+//    implementation 'com.shreyaspatil:FirebaseRecyclerPagination:1.0.1'
 
     //Firebase-UI Library
     implementation 'com.firebaseui:firebase-ui-database:7.1.1'

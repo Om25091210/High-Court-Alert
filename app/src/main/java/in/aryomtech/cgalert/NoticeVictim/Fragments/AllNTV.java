@@ -44,6 +44,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -54,6 +61,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -81,6 +91,8 @@ import io.michaelrocks.paranoid.Obfuscate;
 public class AllNTV extends Fragment {
 
     View view;
+    String gsID="";
+    DatabaseReference gs_ref;
     RecyclerView recyclerView;
     Context contextNullSafe;
     List<Notice_model> list;
@@ -117,7 +129,7 @@ public class AllNTV extends Fragment {
 
         String pdfpath = "PDF/";
         storageReference1 = FirebaseStorage.getInstance().getReference().child(pdfpath);
-
+        gs_ref = FirebaseDatabase.getInstance().getReference().child("gskey");
         cg_logo=view.findViewById(R.id.imageView3);
         no_data=view.findViewById(R.id.no_data);
         recyclerView = view.findViewById(R.id.rv);
@@ -187,6 +199,14 @@ public class AllNTV extends Fragment {
                 select_file();
             }
         };
+        gs_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                gsID=snapshot.getValue(String.class);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
         search.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {}
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -351,8 +371,88 @@ public class AllNTV extends Fragment {
                                             .setTextColor(Color.parseColor("#FF7F5C"))
                                             .setBackgroundTint(Color.parseColor("#171746"))
                                             .show();
+                                    Add_link_to_script(pdf_link);
                                     Notify_admins();
                                 }));
+    }
+
+    private void Add_link_to_script(String pdf_link) {
+        String URL = "https://script.google.com/macros/s/"
+                +gsID+ "/exec?"
+                +"&action=UploadFileDate&uploadFileUrl="+pdf_link;
+
+        dialog1 = new Dialog(getContextNullSafety());
+        dialog1.setCancelable(false);
+        dialog1.setContentView(R.layout.loading_dialog);
+        dialog1.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        LottieAnimationView lottieAnimationView=dialog1.findViewById(R.id.animate);
+        lottieAnimationView.setAnimation("done.json");
+        dialog1.show();
+        Log.e("Sheet",URL);
+        RequestQueue queue = Volley.newRequestQueue(getContextNullSafety());
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        String code="";
+                        try {
+                            JSONObject jsonObj = new JSONObject(response);
+                            code=jsonObj.get("code")+"";
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        if(code.equals("202")){
+                            dialog1.dismiss();
+                            Snackbar.make(recyclerView,"Data filtered, opening sheet.",Snackbar.LENGTH_LONG)
+                                    .setActionTextColor(Color.parseColor("#171746"))
+                                    .setTextColor(Color.parseColor("#FF7F5C"))
+                                    .setBackgroundTint(Color.parseColor("#171746"))
+                                    .show();
+                        }
+                        else{
+                            dialog1.dismiss();
+                            Snackbar.make(recyclerView,"Failed to filter sheet.",Snackbar.LENGTH_LONG)
+                                    .setActionTextColor(Color.parseColor("#000000"))
+                                    .setTextColor(Color.parseColor("#000000"))
+                                    .setBackgroundTint(Color.parseColor("#FF5252"))
+                                    .show();
+                        }
+                        Log.e("BULK code", response +"");
+                        Log.e("BULK response",response.toString());
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                dialog1.dismiss();
+                // enjoy your error status
+                Log.e("Status of code = ","Wrong"+error.toString());
+                Snackbar.make(recyclerView,"Failed to get data.",Snackbar.LENGTH_LONG)
+                        .setActionTextColor(Color.parseColor("#000000"))
+                        .setTextColor(Color.parseColor("#000000"))
+                        .setBackgroundTint(Color.parseColor("#FF5252"))
+                        .show();
+            }
+        });
+
+        queue.add(stringRequest);
+
+        stringRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
     }
 
     private void Notify_admins() {

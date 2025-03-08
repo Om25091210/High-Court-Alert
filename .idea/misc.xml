@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
@@ -189,7 +188,7 @@
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/drawable/stroke_bg.xml" value="0.228125" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/activity_entry_actiivity.xml" value="0.25" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/activity_form.xml" value="0.22" />
-        <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/activity_home.xml" value="0.3866305329719964" />
+        <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/activity_home.xml" value="0.22" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/activity_login.xml" value="0.22" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/activity_main.xml" value="0.21614583333333334" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/activity_navigation.xml" value="0.21197916666666666" />
@@ -251,6 +250,7 @@
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/fragment_urgent_data2.xml" value="0.33" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/fragment_writ_need.xml" value="0.21197916666666666" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/get_task_dialog.xml" value="0.20425724637681159" />
+        <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/glass_sub.xml" value="0.2109375" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/j_column_dialog.xml" value="0.33" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/layout_case_diary_notification.xml" value="0.21014492753623187" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/app/src/main/res/layout/layout_district_data.xml" value="0.20697463768115942" />
@@ -298,6 +298,8 @@
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/myapplication2/src/main/res/layout/duo_view_header.xml" value="0.1956521739130435" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/myapplication2/src/main/res/layout/duo_view_menu.xml" value="0.1956521739130435" />
         <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/myapplication2/src/main/res/layout/duo_view_option.xml" value="0.1956521739130435" />
+        <entry key="..\:/Users/pc/AndroidStudioProjects/cgalert/mylibrary/src/main/res/drawable/circle.xml" value="0.205" />
+        <entry key="..\:/Users/pc/AppData/Local/Android/Sdk/platforms/android-32/data/res/layout/select_dialog_item.xml" value="0.20516304347826086" />
         <entry key="..\:/Users/user/AndroidStudioProjects/HC Alert/app/src/main/res/layout/activity_home.xml" value="0.14130434782608695" />
         <entry key="..\:/Users/user/AndroidStudioProjects/HC Alert/app/src/main/res/layout/layout_screen.xml" value="0.14130434782608695" />
       </map>

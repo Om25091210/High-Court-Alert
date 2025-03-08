@@ -116,6 +116,7 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder
                 list.remove(actualPosition);
                 notifyItemRemoved(actualPosition);
                 notifyItemRangeChanged(actualPosition, list.size());
+                dialog.dismiss();
             });
         });
         holder.download.setOnClickListener(v->{
